@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage: Visual Editor for Astro, Edit on the Real Page</title>
+    <meta name="description" content="Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage: Visual Editor for Astro, Edit on the Real Page" />
+    <meta property="og:description" content="Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/home.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage: the visual editor for Astro. Edit Markdown on the real page." />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage: Visual Editor for Astro, Edit on the Real Page" />
+    <meta name="twitter:description" content="Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/home.png" />
+    <meta name="twitter:image:alt" content="Markstage: the visual editor for Astro. Edit Markdown on the real page." />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="./llms.txt" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Markstage",
+      "alternateName": "Markstage visual editor for Astro",
+      "description": "A self-hosted visual editor for Astro sites: writers edit Markdown and JSON content on the real page design, and every save is a clean git diff (with the Markstage server, a commit by the person who saved). Source-available, free to self-host.",
+      "url": "https://spcaeo.github.io/markstage/",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Content management system",
+      "operatingSystem": "Linux, macOS (Node.js 22.13 or newer)",
+      "softwareVersion": "0.3.0",
+      "softwareRequirements": "Node.js 22.13 or newer, git, an Astro site",
+      "image": "https://spcaeo.github.io/markstage/og/home.png",
+      "screenshot": "https://spcaeo.github.io/markstage/media/hero.webp",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true,
+      "license": "https://github.com/spcaeo/markstage/blob/main/LICENSE",
+      "codeRepository": "https://github.com/spcaeo/markstage",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      },
+      "keywords": "Astro CMS, visual editor for Astro, git-based CMS, Markdown editor, headless CMS alternative, self-hosted CMS"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Markstage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Markstage free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Markstage is source-available under the Elastic License 2.0: you may use, copy, change and self-host it for free, including in your business and for your clients’ sites. You may not offer it to others as a hosted or managed service without a commercial licence from Space-O Technologies."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the Markstage source code public?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The code is public on GitHub, free to read, change, use and self-host. Markstage is source-available, not open source in the OSI sense: it may not be resold as a hosted service without a commercial licence."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Markstage need a database for content?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Content stays as Markdown and JSON files in your git repo. One SQLite file on the server (node:sqlite, built into Node.js 22.13 and newer) holds people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log. There is no database server to install."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which frameworks does Markstage support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Astro today, through the @markstage/astro integration. The core (the document model and the Markdown converter) has no framework in it, so other adapters can follow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will Markstage rewrite my Markdown files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only the blocks you change. Opening and saving a file with no edit leaves it byte for byte the same, and moving a block and moving it back gives an identical file, so a review shows exactly what moved."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does Markstage run?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On your own computer in astro dev, with no sign-in and on 127.0.0.1 only, and on your own server for a team: Docker compose, or systemd and nginx. There is no Markstage cloud."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an AI agent edit my site through Markstage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live."
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Space-O Technologies",
+      "url": "https://www.spaceo.ca",
+      "email": "rp@spaceo.ca",
+      "founder": {
+        "@type": "Person",
+        "name": "Rakesh Patel"
+      },
+      "@id": "https://www.spaceo.ca/#organization"
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="./"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="./#features">Features</a>
+          <a href="./docs/">Docs</a>
+          <a href="./compare/">Compare</a>
+          <a href="./alternatives/">Alternatives</a>
+          <a href="./faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Source-available · Self-hosted · For Astro</p>
+          <h1>A visual editor for Astro: edit Markdown on the real page</h1>
+          <p class="lead">Markstage lets writers change your Astro site’s Markdown and JSON content on its own design, not in grey form fields. Every save is a clean git diff of exactly what changed, committed in the writer’s name on a Markstage server. No content database, no MDX, no cloud.</p>
+          <p class="cta-row"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get it on GitHub</span></a><a class="btn btn-secondary" href="#install"><span>Install in 3 steps</span></a><a class="btn btn-text" href="docs/"><span>Read the docs</span></a></p>
+          <ul class="pills" aria-label="In short">
+            <li>Free to self-host</li>
+            <li>Content stays in git</li>
+            <li>Surgical, byte-safe saves</li>
+            <li>Roles, releases and staging</li>
+          </ul>
+        </div>
+        <div class="wrap wide"><figure class="shot hero-shot"><a href="./media/hero.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit"><img src="./media/hero.webp" alt="The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit" width="1440" height="900" fetchpriority="high" decoding="async" /></a></figure></div>
+      </section>
+
+      <section class="band" id="features" aria-labelledby="features-title">
+        <div class="wrap">
+          <h2 id="features-title">What Markstage does</h2>
+          <p class="section-lead">Edit your Markdown on the real stage. Everything a content team needs from a CMS, on top of the files you already have.</p>
+        <article class="feature" id="canvas">
+          <div class="feature-text"><h3>Edit on the real page</h3><p>Writers change words, images, tables and links on the site’s own design: its components, its CSS, its column width. Alt text, captions and links are edited where they appear.</p></div>
+          <figure class="shot"><a href="./media/canvas.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage editor showing a blog post on the blog’s own design, with a numbered list and a table being edited"><img src="./media/canvas.webp" alt="The Markstage editor showing a blog post on the blog’s own design, with a numbered list and a table being edited" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature flip" id="outline">
+          <div class="feature-text"><h3>Blocks you can see and move</h3><p>The outline lists every heading, list, table and quote. Drag a block, or press Alt and an arrow, to move it. Locked blocks stay where the site put them.</p></div>
+          <figure class="shot"><a href="./media/outline.webp" class="shot-link" aria-label="Open the full-size screenshot: The outline panel listing the post’s headings, list, table and quote blocks beside the page"><img src="./media/outline.webp" alt="The outline panel listing the post’s headings, list, table and quote blocks beside the page" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature" id="history">
+          <div class="feature-text"><h3>Clean git diffs, and every version kept</h3><p>Open and save changes nothing; only the blocks you change are rewritten. With the Markstage server, every save is a commit with your name, and the history compares any two versions side by side.</p></div>
+          <figure class="shot"><a href="./media/history.webp" class="shot-link" aria-label="Open the full-size screenshot: The history screen comparing an older version of a post with the current text, changed words marked"><img src="./media/history.webp" alt="The history screen comparing an older version of a post with the current text, changed words marked" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature flip" id="seo">
+          <div class="feature-text"><h3>Search checks while you write</h3><p>See the search result as Google shows it, with the title and description measured in pixels, the headings in order, weak links and images without alt text.</p></div>
+          <figure class="shot"><a href="./media/seo.webp" class="shot-link" aria-label="Open the full-size screenshot: The SEO panel with a search result preview, title and description length bars, headings and link checks"><img src="./media/seo.webp" alt="The SEO panel with a search result preview, title and description length bars, headings and link checks" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature" id="library">
+          <div class="feature-text"><h3>A Library of parts to use again</h3><p>Page templates, sections and snippets in folders. Drag one onto a page, or start a page from a template. A synced snippet is edited once and every page that uses it follows.</p></div>
+          <figure class="shot"><a href="./media/library.webp" class="shot-link" aria-label="Open the full-size screenshot: The Library with snippets in folders such as Boxes and Calls to action, and a synced newsletter sign-up"><img src="./media/library.webp" alt="The Library with snippets in folders such as Boxes and Calls to action, and a synced newsletter sign-up" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature flip" id="releases">
+          <div class="feature-text"><h3>Go live together, now or later</h3><p>Put several changes into one release, preview it, have it approved, then publish it now or schedule it. Roll it back if you need to.</p></div>
+          <figure class="shot"><a href="./media/releases.webp" class="shot-link" aria-label="Open the full-size screenshot: The Go live screen listing an open release called Friday posts with three pages in it"><img src="./media/releases.webp" alt="The Go live screen listing an open release called Friday posts with three pages in it" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature" id="environments">
+          <div class="feature-text"><h3>Local, staging and production</h3><p>Each environment is a branch plus a server. Promote a branch to staging and then to production, with checks, screenshots and rules about who may do it.</p></div>
+          <figure class="shot"><a href="./media/environments.webp" class="shot-link" aria-label="Open the full-size screenshot: The Staging and live screen showing this environment, its branch, the remote and the branches to promote"><img src="./media/environments.webp" alt="The Staging and live screen showing this environment, its branch, the remote and the branches to promote" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature flip" id="inbox">
+          <div class="feature-text"><h3>Your forms, in your own inbox</h3><p>The site’s forms post to Markstage on your own host. Messages land in the Inbox with spam checks and daily limits, and the team gets an email for each one.</p></div>
+          <figure class="shot"><a href="./media/inbox.webp" class="shot-link" aria-label="Open the full-size screenshot: The Messages inbox with three contact form messages and one opened, showing name, email, topic and page"><img src="./media/inbox.webp" alt="The Messages inbox with three contact form messages and one opened, showing name, email, topic and page" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+        <article class="feature" id="media">
+          <div class="feature-text"><h3>Images and files in one place</h3><p>Upload, find and reuse images, see which ones have no alt text or are not used, and crop or replace one everywhere it appears.</p></div>
+          <figure class="shot"><a href="./media/media.webp" class="shot-link" aria-label="Open the full-size screenshot: The Images and files library with five uploaded pictures and filters for unused images and missing alt text"><img src="./media/media.webp" alt="The Images and files library with five uploaded pictures and filters for unused images and missing alt text" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+        </article>
+          <h3 class="sub">Also in the editor</h3>
+          <ul class="ticks two">
+            <li>Never lose typing: local recovery copies, offline retry, and a three-way merge when two people edit.</li>
+            <li>Menus, redirects, find and replace, bulk changes, trash, locks, backups, rollback and site health.</li>
+            <li>Roles and custom roles, two-factor sign-in and single sign-on with any OpenID Connect provider.</li>
+            <li>Topics and internal links: old pages learn about new ones, with link suggestions both ways.</li>
+            <li>Authors with profiles, page types with their own checks, and translation status for each locale.</li>
+            <li>An MCP server so an AI agent can draft changes for a person to review, and AI suggestions for alt text and search titles.</li>
+            <li>Webhooks, imports of entries and media, and WordPress imports for the Library and old form messages.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="wrap" id="how" aria-labelledby="how-title">
+        <h2 id="how-title">How it works</h2>
+        <ol class="cards four">
+          <li class="card"><h3>Your content stays in git</h3><p>Posts are Markdown files and pages are JSON files in your site’s repo. Markstage adds no database for content and no MDX.</p></li>
+          <li class="card"><h3>The editor draws your site</h3><p>In astro dev, the editor at /markstage/ draws each entry inside its real page, with your site’s CSS and components.</p></li>
+          <li class="card"><h3>A save is a surgical diff</h3><p>Only the blocks you changed are written back. Moving a block and moving it back gives a byte-identical file.</p></li>
+          <li class="card"><h3>The server runs it for a team</h3><p>A self-hosted Node server adds sign-in, roles, the Library, releases, environments, forms and history, and builds and deploys the site.</p></li>
+        </ol>
+      </section>
+
+      <section class="wrap" id="who" aria-labelledby="who-title">
+        <h2 id="who-title">Who it is for</h2>
+        <ul class="cards three">
+          <li class="card"><h3>Writers and editors</h3><p>Write on the page readers will see, with plain words, a guide inside the editor and no Markdown to learn.</p></li>
+          <li class="card"><h3>Developers and agencies</h3><p>Keep Astro, your components and your git workflow. Give clients a real editor without a hosted CMS or a content database.</p></li>
+          <li class="card"><h3>SEO and content teams</h3><p>Search checks, internal link suggestions, page types, redirects and site health for every page, before it goes live.</p></li>
+        </ul>
+        <figure class="shot"><a href="./media/home.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage home screen: edit a page, write a new post, read messages, go live, and the recent posts with their status"><img src="./media/home.webp" alt="The Markstage home screen: edit a page, write a new post, read messages, go live, and the recent posts with their status" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+      </section>
+
+      <section class="band" id="install" aria-labelledby="install-title">
+        <div class="wrap">
+          <h2 id="install-title">Install in three steps</h2>
+          <ol class="steps">
+          <li class="step"><div class="step-text"><h3>Try the example blog</h3><p>Markstage is not on npm yet: install it from a clone. Clone the repo, install, and open the editor on the example blog. Needs Node.js 22.13 or newer and git.</p><p>Then open <span class="copyable"><code class="copyable-value">http://127.0.0.1:18233/markstage/</code><button type="button" class="icon-btn copy-btn" data-copy="http://127.0.0.1:18233/markstage/" aria-label="Copy editor address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="http://127.0.0.1:18233/markstage/" target="_blank" rel="noopener" aria-label="Open editor address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p></div><div class="step-cmds"><div class="cmd"><span class="copyable"><code class="copyable-value">git clone https://github.com/spcaeo/markstage.git</code><button type="button" class="icon-btn copy-btn" data-copy="git clone https://github.com/spcaeo/markstage.git" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div><div class="cmd"><span class="copyable"><code class="copyable-value">cd markstage &amp;&amp; npm install</code><button type="button" class="icon-btn copy-btn" data-copy="cd markstage &amp;&amp; npm install" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div><div class="cmd"><span class="copyable"><code class="copyable-value">npm run dev -w examples/blog</code><button type="button" class="icon-btn copy-btn" data-copy="npm run dev -w examples/blog" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div></div></li>
+          <li class="step"><div class="step-text"><h3>Add it to your Astro site</h3><p>Your site needs Astro 7.4 or newer. In your site’s folder next to the clone, link the packages (they are not on npm yet), add markstage() to the integrations in astro.config.mjs and describe your collections in markstage.config.mjs.</p><p><a href="docs/config/">Read: markstage.config: every key</a></p></div><div class="step-cmds"><div class="cmd"><span class="copyable"><code class="copyable-value">npm install ../markstage/packages/core ../markstage/packages/editor ../markstage/packages/astro</code><button type="button" class="icon-btn copy-btn" data-copy="npm install ../markstage/packages/core ../markstage/packages/editor ../markstage/packages/astro" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div></div></li>
+          <li class="step"><div class="step-text"><h3>Run the server for your team</h3><p>Self-host the Markstage server with Docker compose, or with systemd and nginx, next to your static site. Sign-in, roles, releases and backups come with it.</p><p><a href="docs/deploy/">Read: Deploying Markstage</a></p></div><div class="step-cmds"></div></li>
+          </ol>
+          <p class="small muted">Markstage is in pre-release and in active development. The clone address: <span class="copyable"><code class="copyable-value">https://github.com/spcaeo/markstage.git</code><button type="button" class="icon-btn copy-btn" data-copy="https://github.com/spcaeo/markstage.git" aria-label="Copy clone address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Open clone address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+      </section>
+
+      <section class="wrap" id="compare" aria-labelledby="compare-title">
+        <h2 id="compare-title">How Markstage compares</h2>
+        <p>Markstage is for teams who want a visual editor without giving up Markdown files, git history and their own servers. See where it fits next to hosted and git-based CMSs, and where they lead.</p>
+        <p class="cta-row left"><a class="btn btn-secondary" href="compare/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>See the comparison</span></a><a class="btn btn-text" href="alternatives/"><span>Alternatives, one by one</span></a></p>
+      </section>
+
+      <section class="band" id="faq" aria-labelledby="faq-title">
+        <div class="wrap">
+          <h2 id="faq-title">Frequently asked questions</h2>
+          <div class="faq">
+            <div class="qa"><h3>What is Markstage?</h3><p>Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.</p></div>
+            <div class="qa"><h3>Is Markstage free?</h3><p>Yes. Markstage is source-available under the Elastic License 2.0: you may use, copy, change and self-host it for free, including in your business and for your clients’ sites. You may not offer it to others as a hosted or managed service without a commercial licence from Space-O Technologies.</p></div>
+            <div class="qa"><h3>Is the Markstage source code public?</h3><p>Yes. The code is public on GitHub, free to read, change, use and self-host. Markstage is source-available, not open source in the OSI sense: it may not be resold as a hosted service without a commercial licence.</p></div>
+            <div class="qa"><h3>Does Markstage need a database for content?</h3><p>No. Content stays as Markdown and JSON files in your git repo. One SQLite file on the server (node:sqlite, built into Node.js 22.13 and newer) holds people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log. There is no database server to install.</p></div>
+            <div class="qa"><h3>Which frameworks does Markstage support?</h3><p>Astro today, through the @markstage/astro integration. The core (the document model and the Markdown converter) has no framework in it, so other adapters can follow.</p></div>
+            <div class="qa"><h3>Will Markstage rewrite my Markdown files?</h3><p>Only the blocks you change. Opening and saving a file with no edit leaves it byte for byte the same, and moving a block and moving it back gives an identical file, so a review shows exactly what moved.</p></div>
+            <div class="qa"><h3>Where does Markstage run?</h3><p>On your own computer in astro dev, with no sign-in and on 127.0.0.1 only, and on your own server for a team: Docker compose, or systemd and nginx. There is no Markstage cloud.</p></div>
+            <div class="qa"><h3>Can an AI agent edit my site through Markstage?</h3><p>An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live.</p></div>
+          </div>
+          <p><a href="faq/">More questions and answers</a></p>
+        </div>
+      </section>
+
+      <section class="wrap cta-end" aria-labelledby="start-title">
+        <h2 id="start-title">Give your writers the real page</h2>
+        <p>Made by <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a>. Free to self-host under the Elastic License 2.0.</p>
+        <p class="cta-row"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star Markstage on GitHub</span></a><a class="btn btn-secondary" href="docs/writing/"><span>See how writing works</span></a></p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="./"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="./#features">Features</a>
+            <a href="./#install">Install</a>
+            <a href="./compare/">Compare</a>
+            <a href="./alternatives/">Alternatives</a>
+            <a href="./faq/">FAQ</a>
+            <a href="./glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="./docs/">All docs</a>
+            <a href="./docs/writing/">Writing with Markstage</a>
+            <a href="./docs/config/">Site config</a>
+            <a href="./docs/deploy/">Deploy the server</a>
+            <a href="./docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

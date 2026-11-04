@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Glossary: Astro, git-based CMS and visual editing terms</title>
+    <meta name="description" content="Plain-English meanings of the words used around Astro content editing: git-based CMS, headless CMS, content collections, front matter and more." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/glossary/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Glossary: Astro, git-based CMS and visual editing terms" />
+    <meta property="og:description" content="Plain-English meanings of the words used around Astro content editing: git-based CMS, headless CMS, content collections, front matter and more." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/glossary/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/learn.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage: answers and words for editing Markdown sites visually." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Glossary: Astro, git-based CMS and visual editing terms" />
+    <meta name="twitter:description" content="Plain-English meanings of the words used around Astro content editing: git-based CMS, headless CMS, content collections, front matter and more." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/learn.png" />
+    <meta name="twitter:image:alt" content="Markstage: answers and words for editing Markdown sites visually." />
+    <link rel="icon" href="../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../llms.txt" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Glossary",
+          "item": "https://spcaeo.github.io/markstage/glossary/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DefinedTermSet",
+      "name": "Markstage glossary",
+      "url": "https://spcaeo.github.io/markstage/glossary/",
+      "hasDefinedTerm": [
+        {
+          "@type": "DefinedTerm",
+          "name": "Astro",
+          "description": "A web framework for content sites. It builds pages from components and content files, and by default sends finished HTML to the browser.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#astro"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Content collections",
+          "description": "Astro's way to group content of the same shape, such as blog posts or product pages. A collection can read Markdown, MDX, Markdoc, YAML, TOML or JSON files, or load from an outside source, and can check each entry against a schema.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#content-collections"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Front matter",
+          "description": "The block of settings at the top of a Markdown file, between two --- lines: the title, date, description and other fields, written in YAML.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#front-matter"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Markdown",
+          "description": "A plain-text way to write formatted text: # for a heading, * for a list, [text](link) for a link. It is easy to read and to compare in git.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#markdown"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "MDX",
+          "description": "Markdown that can also contain components and code. Markstage does not edit MDX; it edits Markdown and JSON.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#mdx"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "JSON",
+          "description": "A plain-text format for structured data. Markstage uses it for pages made of typed sections, menus, authors and settings.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#json"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Headless CMS",
+          "description": "A content system with no front end of its own. It stores content, usually in a database, and your site reads it through an API.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#headless-cms"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Git-based CMS",
+          "description": "A content system that keeps content as files in a git repository instead of a database. Every change is a commit you can review, compare and undo.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#git-based-cms"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Visual editing",
+          "description": "Editing while seeing the page as visitors will see it. It ranges from a preview beside a form to typing directly on the page.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#visual-editing"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "On-page (inline) editing",
+          "description": "The strongest kind of visual editing: you click the text on the page and type. Markstage edits text and rich text this way, on the site's own design.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#on-page-inline-editing"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Live preview",
+          "description": "A preview that updates as you type, usually shown beside the form you type into.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#live-preview"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Static site",
+          "description": "A site built ahead of time into plain HTML files. It is fast and simple to host, because no code runs on each visit.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#static-site"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Server rendering (SSR) and adapters",
+          "description": "Building a page on each request instead of ahead of time. In Astro this needs an adapter for the host (Node, Vercel, Netlify, Cloudflare). Some editors need it; Markstage does not.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#server-rendering-ssr-and-adapters"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Environment",
+          "description": "A place where a copy of the site runs: on your computer (local), for review (staging), or for the public (production). In Markstage each is a git branch plus a server.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#environment"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Promotion",
+          "description": "Moving changes up from one environment to the next, for example from staging to production. In Markstage it is a git merge, so design and content move together.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#promotion"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Release",
+          "description": "A named bundle of changes that are previewed together and go live together, now or at a set time.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#release"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Share link",
+          "description": "A private address that lets someone without an account see a draft or a release. Markstage's share links expire and are kept out of search engines.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#share-link"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Roles",
+          "description": "What each person may do: write their own drafts, edit everything, publish, manage people. Markstage has five built-in roles and custom roles.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#roles"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Single sign-on (SSO)",
+          "description": "Signing in with an account your organisation already has, such as Google Workspace or Microsoft Entra ID. Markstage supports any OpenID Connect provider.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#single-sign-on-sso"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "MCP (Model Context Protocol)",
+          "description": "A standard way for AI assistants to use a tool. Through Markstage's MCP server, an AI agent can draft changes as a person; a person still reviews and publishes.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#mcp-model-context-protocol"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Source-available",
+          "description": "Software whose code you can read, change and run, under a licence with some limits. Markstage is source-available under the Elastic License 2.0: free to self-host, but not to resell as a hosted service.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#source-available"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Self-hosted",
+          "description": "Run on a server you control, rather than as someone else's hosted service.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#self-hosted"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Canvas",
+          "description": "The part of the Markstage editor where a writer edits an entry, drawn with the site’s own CSS and, in astro dev, inside the entry’s real page.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#canvas"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Block",
+          "description": "One piece of a page: a paragraph, heading, list, table, image, quote or a box the site defines. Blocks can be moved, locked and saved to the Library.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#block"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Surgical save",
+          "description": "A save that rewrites only the blocks that changed and leaves the rest of the file byte for byte as it was, so a git diff shows exactly the edit.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#surgical-save"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Library",
+          "description": "Markstage’s store of parts to use again: page templates, sections and snippets, kept as files in the site repo.",
+          "url": "https://spcaeo.github.io/markstage/glossary/#library"
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../#features">Features</a>
+          <a href="../docs/">Docs</a>
+          <a href="../compare/">Compare</a>
+          <a href="../alternatives/">Alternatives</a>
+          <a href="../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Glossary</li></ol></nav>
+      <h1>Glossary</h1>
+      <p class="lead left">Plain definitions of the words used around Markstage: visual editors, git-based and headless CMSs, Markdown, releases, environments and more.</p>
+      <nav class="toc" aria-label="Terms"><ul class="inline-list"><li><a href="#astro">Astro</a></li><li><a href="#content-collections">Content collections</a></li><li><a href="#front-matter">Front matter</a></li><li><a href="#markdown">Markdown</a></li><li><a href="#mdx">MDX</a></li><li><a href="#json">JSON</a></li><li><a href="#headless-cms">Headless CMS</a></li><li><a href="#git-based-cms">Git-based CMS</a></li><li><a href="#visual-editing">Visual editing</a></li><li><a href="#on-page-inline-editing">On-page (inline) editing</a></li><li><a href="#live-preview">Live preview</a></li><li><a href="#static-site">Static site</a></li><li><a href="#server-rendering-ssr-and-adapters">Server rendering (SSR) and adapters</a></li><li><a href="#environment">Environment</a></li><li><a href="#promotion">Promotion</a></li><li><a href="#release">Release</a></li><li><a href="#share-link">Share link</a></li><li><a href="#roles">Roles</a></li><li><a href="#single-sign-on-sso">Single sign-on (SSO)</a></li><li><a href="#mcp-model-context-protocol">MCP (Model Context Protocol)</a></li><li><a href="#source-available">Source-available</a></li><li><a href="#self-hosted">Self-hosted</a></li><li><a href="#canvas">Canvas</a></li><li><a href="#block">Block</a></li><li><a href="#surgical-save">Surgical save</a></li><li><a href="#library">Library</a></li></ul></nav>
+      <div class="glossary">
+      <section aria-labelledby="g-astro-and-cms-terms">
+        <h2 id="g-astro-and-cms-terms">Astro and CMS terms</h2>
+        <div class="term" id="astro"><h3>Astro</h3><p>A web framework for content sites. It builds pages from components and content files, and by default sends
+finished HTML to the browser.</p></div>
+        <div class="term" id="content-collections"><h3>Content collections</h3><p>Astro's way to group content of the same shape, such as blog posts or product pages. A collection can read
+Markdown, MDX, Markdoc, YAML, TOML or JSON files, or load from an outside source, and can check each entry against a
+schema.</p></div>
+        <div class="term" id="front-matter"><h3>Front matter</h3><p>The block of settings at the top of a Markdown file, between two <code>---</code> lines: the title, date, description and
+other fields, written in YAML.</p></div>
+        <div class="term" id="markdown"><h3>Markdown</h3><p>A plain-text way to write formatted text: <code>#</code> for a heading, <code>*</code> for a list, <code>[text](link)</code> for a link. It is easy
+to read and to compare in git.</p></div>
+        <div class="term" id="mdx"><h3>MDX</h3><p>Markdown that can also contain components and code. Markstage does not edit MDX; it edits Markdown and JSON.</p></div>
+        <div class="term" id="json"><h3>JSON</h3><p>A plain-text format for structured data. Markstage uses it for pages made of typed sections, menus, authors and
+settings.</p></div>
+        <div class="term" id="headless-cms"><h3>Headless CMS</h3><p>A content system with no front end of its own. It stores content, usually in a database, and your site reads it
+through an API.</p></div>
+        <div class="term" id="git-based-cms"><h3>Git-based CMS</h3><p>A content system that keeps content as files in a git repository instead of a database. Every change is a commit
+you can review, compare and undo.</p></div>
+        <div class="term" id="visual-editing"><h3>Visual editing</h3><p>Editing while seeing the page as visitors will see it. It ranges from a preview beside a form to typing directly on
+the page.</p></div>
+        <div class="term" id="on-page-inline-editing"><h3>On-page (inline) editing</h3><p>The strongest kind of visual editing: you click the text on the page and type. Markstage edits text and rich text
+this way, on the site's own design.</p></div>
+        <div class="term" id="live-preview"><h3>Live preview</h3><p>A preview that updates as you type, usually shown beside the form you type into.</p></div>
+        <div class="term" id="static-site"><h3>Static site</h3><p>A site built ahead of time into plain HTML files. It is fast and simple to host, because no code runs on each
+visit.</p></div>
+        <div class="term" id="server-rendering-ssr-and-adapters"><h3>Server rendering (SSR) and adapters</h3><p>Building a page on each request instead of ahead of time. In Astro this needs an adapter for the host (Node,
+Vercel, Netlify, Cloudflare). Some editors need it; Markstage does not.</p></div>
+        <div class="term" id="environment"><h3>Environment</h3><p>A place where a copy of the site runs: on your computer (local), for review (staging), or for the public
+(production). In Markstage each is a git branch plus a server.</p></div>
+        <div class="term" id="promotion"><h3>Promotion</h3><p>Moving changes up from one environment to the next, for example from staging to production. In Markstage it is a
+git merge, so design and content move together.</p></div>
+        <div class="term" id="release"><h3>Release</h3><p>A named bundle of changes that are previewed together and go live together, now or at a set time.</p></div>
+        <div class="term" id="share-link"><h3>Share link</h3><p>A private address that lets someone without an account see a draft or a release. Markstage's share links expire
+and are kept out of search engines.</p></div>
+        <div class="term" id="roles"><h3>Roles</h3><p>What each person may do: write their own drafts, edit everything, publish, manage people. Markstage has five
+built-in roles and custom roles.</p></div>
+        <div class="term" id="single-sign-on-sso"><h3>Single sign-on (SSO)</h3><p>Signing in with an account your organisation already has, such as Google Workspace or Microsoft Entra ID. Markstage
+supports any OpenID Connect provider.</p></div>
+        <div class="term" id="mcp-model-context-protocol"><h3>MCP (Model Context Protocol)</h3><p>A standard way for AI assistants to use a tool. Through Markstage's MCP server, an AI agent can draft changes as a
+person; a person still reviews and publishes.</p></div>
+        <div class="term" id="source-available"><h3>Source-available</h3><p>Software whose code you can read, change and run, under a licence with some limits. Markstage is source-available
+under the Elastic License 2.0: free to self-host, but not to resell as a hosted service.</p></div>
+        <div class="term" id="self-hosted"><h3>Self-hosted</h3><p>Run on a server you control, rather than as someone else's hosted service.</p></div>
+      </section>
+      <section aria-labelledby="g-words-used-in-markstage">
+        <h2 id="g-words-used-in-markstage">Words used in Markstage</h2>
+        <div class="term" id="canvas"><h3>Canvas</h3><p>The part of the Markstage editor where a writer edits an entry, drawn with the site’s own CSS and, in astro dev, inside the entry’s real page.</p></div>
+        <div class="term" id="block"><h3>Block</h3><p>One piece of a page: a paragraph, heading, list, table, image, quote or a box the site defines. Blocks can be moved, locked and saved to the Library.</p></div>
+        <div class="term" id="surgical-save"><h3>Surgical save</h3><p>A save that rewrites only the blocks that changed and leaves the rest of the file byte for byte as it was, so a git diff shows exactly the edit.</p></div>
+        <div class="term" id="library"><h3>Library</h3><p>Markstage’s store of parts to use again: page templates, sections and snippets, kept as files in the site repo.</p></div>
+      </section>
+      </div>
+      <p class="cta-row left"><a class="btn btn-secondary" href="../docs/writing/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>See how writing works</span></a><a class="btn btn-text" href="../faq/"><span>Questions and answers</span></a></p>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../#features">Features</a>
+            <a href="../#install">Install</a>
+            <a href="../compare/">Compare</a>
+            <a href="../alternatives/">Alternatives</a>
+            <a href="../faq/">FAQ</a>
+            <a href="../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../docs/">All docs</a>
+            <a href="../docs/writing/">Writing with Markstage</a>
+            <a href="../docs/config/">Site config</a>
+            <a href="../docs/deploy/">Deploy the server</a>
+            <a href="../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

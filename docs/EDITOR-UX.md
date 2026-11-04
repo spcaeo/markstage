@@ -1,9 +1,8 @@
 # The editor for non-technical people: the rulebook
 
 Markstage is used by writers, translators, SEO managers, a manager who reviews, and the site's owner. None of them is
-a developer. Every screen is built to the rules below (decided 2 Nov 2026). The
-companion files: `EDITOR-SCENARIOS.md` (250+ daily situations, each with its screen and button) and the editor audits
-of 2 Nov 2026 (kept with the pilot site, not in this repo).
+a developer. Every screen is built to the rules below. The writer's
+own guide to the screens is [WRITING.md](WRITING.md).
 
 ## 1. Principles (think like Google)
 
@@ -103,7 +102,7 @@ sends to staging), Manager (approves, goes live, people), Owner (everything, set
 - People sign in with email and password and a role. The role decides: save, send to staging, approve, go live,
   go live directly, restore, people, settings.
 - Every change is a commit with the person's name; History shows it as "Alex changed the title, Tue 3:10 PM".
-- One private GitHub repository. Your computer uses your own GitHub login. Each server has its own deploy key
+- One private repository on your git host (for example GitHub). Your computer uses your own login there. Each server has its own deploy key
   (read and write to this one repository only) in the server's locked secrets file; never in the editor or in Git.
 - Branches: `staging` (reviewed) and `live` (public); protection so only the servers' keys and the owner write
   to `live`. A key can be withdrawn in one click. A live server's GitHub connection is set up per site.
@@ -128,7 +127,7 @@ A matrix, every cell proven on real local copies, not read about:
   take back, pull the latest.
 - Each cell: what happens today (seen in a test, with paths), what a person expects, the gap, size S/M/L.
 
-The scenario catalog (`EDITOR-SCENARIOS.md`) and the two audits (`editor-qa-2026-11-02.md`,
-`editor-operations-2026-11-02.md`) feed one fix list, easiest and most valuable first. Screens are rebuilt in the
+The gaps found this way, together with a catalog of everyday situations, feed one fix list, easiest and most
+valuable first. Screens are rebuilt in the
 order people use them: Home, Pages and Blog posts, the page editor and its top bar, Go live, Messages, Images &
 files, Site settings, People & access, Backups, Languages.

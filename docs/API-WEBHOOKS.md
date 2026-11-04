@@ -87,7 +87,7 @@ Markstage-Delivery: wd_…
 Markstage-Signature: t=1761728400,v1=5f2b…
 
 {"id":"wd_…","event":"entry.published","at":"2026-10-29T09:00:00.000Z",
- "site":{"name":"Halden Logistics","url":"https://example.com"},
+ "site":{"name":"Example Co","url":"https://example.com"},
  "actor":{"id":"u_…","name":"Alice"},
  "entry":{"collection":"posts","id":"moving-day","url":"/blog/moving-day/"},
  "commit":"3f1c…"}

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Suggestions in Markstage: Alt Text and SEO Titles</title>
+    <meta name="description" content="Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-ai/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="AI Suggestions in Markstage: Alt Text and SEO Titles" />
+    <meta property="og:description" content="Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-ai/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AI Suggestions in Markstage: Alt Text and SEO Titles" />
+    <meta name="twitter:description" content="Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AI suggestions",
+          "item": "https://spcaeo.github.io/markstage/docs/api-ai/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "AI Suggestions in Markstage: Alt Text and SEO Titles",
+      "description": "Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-ai/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/" aria-current="page">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">AI suggestions</li></ol></nav>
+        <h1>AI suggestions</h1>
+        <p class="lead left">Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#turning-it-on">Turning it on</a></li><li><a href="#routes">Routes</a></li><li><a href="#kinds">Kinds</a></li><li><a href="#who-sees-what">Who sees what</a></li><li><a href="#limits">Limits</a></li><li><a href="#errors">Errors</a></li><li><a href="#what-is-kept-and-what-is-never">What is kept, and what is never</a></li><li><a href="#provider">Provider</a></li></ul></nav>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). A person in the editor asks a
+model for words they then read, change and save themselves: an image's alt text, a page's search title and
+description, a promotion plan's summary, or a draft of a title and description for another of the site's locales.
+Server code: <code>packages/server/src/ai/</code>.</p>
+<p><strong>A suggestion never commits.</strong> These routes write no file, no git commit and no content. They write one audit row.
+Accepting a suggestion goes through the editor's normal save routes, with the same rights, versions, locks and
+checks as any other save.</p>
+<h2 id="turning-it-on">Turning it on</h2>
+<p>The site owner brings the key, in one of two places (one rule for the suggestions and the plan summary of
+docs/API-ENV.md):</p>
+<ul><li><code>MARKSTAGE_AI_KEY</code> in the server's environment (the service's environment file), or</li><li><code>ai.keyFile</code>: the absolute path of a file that holds it, outside the site repo (a Docker secret such as
+<code>/run/secrets/markstage_ai_key</code>, or <code>/etc/markstage/ai.key</code>, mode 0600). A key file inside the content repo is
+refused at start: &quot;a file there can be committed, pushed and built into the site&quot;.</li></ul>
+<p>The environment wins when both are set. The key is never in config.json (<code>key</code> there is refused at start), the
+database, a URL, the audit, an answer or an error. With no key, everything else works and the editor says why the
+feature is off: &quot;AI suggestions are off: MARKSTAGE_AI_KEY is not set on the server and there is no ai.keyFile.&quot; (or
+&quot;…, and ai.keyFile cannot be read or is empty.&quot;). The key is read on every call, so a new key works without a
+restart.</p>
+<p>The server's <code>config.json</code> may tune it (all optional):</p>
+<pre data-lang="json"><code class="language-json">&quot;ai&quot;: { &quot;provider&quot;: &quot;anthropic&quot;, &quot;model&quot;: &quot;claude-sonnet-5-5&quot;, &quot;keyFile&quot;: &quot;/run/secrets/markstage_ai_key&quot;, &quot;perMinute&quot;: 10, &quot;perDay&quot;: 200 }</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Default</th><th scope="col">What</th></tr></thead><tbody><tr><td><code>provider</code></td><td><code>anthropic</code></td><td>Who answers. <code>stub</code> gives fixed answers with no network and is refused outside tests (<code>NODE_ENV=test</code>).</td></tr><tr><td><code>model</code></td><td><code>claude-sonnet-5-5</code></td><td>The model id, for the suggestions and the plan summary of docs/API-ENV.md alike.</td></tr><tr><td><code>keyFile</code></td><td>none</td><td>The file that holds the key, outside the repo (above).</td></tr><tr><td><code>perMinute</code>, <code>perDay</code></td><td>10, 200</td><td>Asks per person, rolling (the last 60 seconds, the last 24 hours). Whole numbers, at most 600 and 100,000.</td></tr><tr><td><code>timeoutSeconds</code></td><td>30</td><td>How long one ask may take.</td></tr><tr><td><code>endpoint</code></td><td><code>https://api.anthropic.com/v1/messages</code></td><td>Https, or a loopback address.</td></tr></tbody></table></div>
+<p><code>key</code> in config.json is refused at start. With no <code>ai</code> block, the defaults apply and the key alone turns it on.</p>
+<h2 id="routes">Routes</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Who</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET ai</code></td><td>signed in</td><td></td><td><code>{on, why, envVar, provider, model, kinds, limits: {perMinute, perDay}}</code></td></tr><tr><td><code>POST ai/suggest</code></td><td>signed in</td><td><code>{kind, …}</code> (below)</td><td><code>{kind, suggestion, provider, model}</code></td></tr></tbody></table></div>
+<ul><li><code>on</code>: whether a suggestion can be asked for now. <code>why</code>: the words to show when it is off, else <code>null</code>.
+<code>envVar</code>: always <code>MARKSTAGE_AI_KEY</code>.</li><li><code>kinds</code>: what this person may ask for here. <code>summary</code> is listed for editors and up. <code>translate</code> is listed when the
+site has more than one locale.</li><li>A browser session only. A command-line token and an AI assistant's (MCP) token are refused (<code>403</code>): an agent has
+its own model already.</li></ul>
+<h2 id="kinds">Kinds</h2>
+<p>Sizes are in characters. Too long is <code>413 too-large</code> with <code>field</code> and <code>max</code>, and nothing is sent to the model.</p>
+<h3 id="alt-alt-text-for-an-image"><code>alt</code>: alt text for an image</h3>
+<p><code>{kind: 'alt', image, collection?, id?, context?}</code> → <code>suggestion: {alt}</code></p>
+<ul><li><code>image</code>: the image as the site writes it: its address from the media URL template (<code>/uploads/2026/10/sky.png</code>), its
+path in the repo (<code>src/assets/uploads/2026/10/sky.png</code>), its path under the media folder (<code>2026/10/sky.png</code>), or,
+with <code>collection</code> and <code>id</code>, a path relative to that entry's file (<code>../../assets/uploads/2026/10/sky.png</code>). It must
+be a file inside the media folder, reached by no symbolic link; anything else is <code>404</code>, as if it did not exist.</li><li><code>collection</code>, <code>id</code>: the entry the image is on (optional). Its title helps the model. It must be one this person may
+read (below), else <code>404</code>.</li><li><code>context</code>: what the person says about the image, at most 2,000.</li><li>JPEG, PNG, GIF and WebP up to 3.5 MB are sent as they are. Another image type (AVIF), or a larger file, is sent as
+a JPEG copy at most 1,568 pixels on its longest side when the server has its image codec. A PDF, an SVG, or a file
+that is not an image: <code>422 image-type</code>.</li></ul>
+<h3 id="seo-a-search-title-and-description"><code>seo</code>: a search title and description</h3>
+<p><code>{kind: 'seo', collection, id, title?, text?}</code> → <code>suggestion: {title, description}</code></p>
+<ul><li>The entry must be one this person may read.</li><li><code>title</code> (at most 1,000) and <code>text</code> (at most 20,000): what the editor has now, unsaved. Without them, the entry's
+saved title and its text (a Markdown entry's body; a JSON entry's text values) are used, cut at 20,000.</li><li>The model is also told the search title and description the entry has now.</li></ul>
+<h3 id="summary-a-promotion-plan-in-plain-words"><code>summary</code>: a promotion plan in plain words</h3>
+<p><code>{kind: 'summary', plan}</code> → <code>suggestion: {text}</code></p>
+<ul><li>Editors and up; others <code>403</code>. A plan names every file it moves.</li><li><code>plan</code>: a plan's id (<code>GET env/plans</code>). None: <code>404</code>. Still preparing: <code>422 plan-not-ready</code>.</li><li>The model gets what the plan summary of docs/API-ENV.md gets: the facts JSON and the changed files' names, never a
+page's text. An answer that states a number the facts do not have is dropped: <code>502 ai-failed</code>, &quot;The model stated
+numbers the plan does not have…&quot;. The plan's own facts words always stand.</li></ul>
+<h3 id="translate-a-draft-for-another-locale"><code>translate</code>: a draft for another locale</h3>
+<p><code>{kind: 'translate', collection, id, locale, fields?: {title?, description?}}</code> → <code>suggestion</code> with the same keys</p>
+<ul><li><code>locale</code>: one of the site's locales (<code>locales</code> in markstage.config, docs/CONFIG.md &quot;Locales and hreflang&quot;). Another:
+<code>422 locale</code>, naming the ones there are.</li><li><code>fields</code>: the words to translate, at most 1,000 each (<code>field: 'fields.title'</code>). Without them, the entry's search
+title and description. Only <code>title</code> and <code>description</code>, and only the ones the locale takes as its own (its
+<code>overrides</code>); another is <code>422 locale</code> with <code>fields</code>.</li><li>The model is told the source locale (the default one) and the target, with their <code>variety</code>.</li><li><strong>The site's spelling.</strong> The answer goes through the locale's <code>spelling</code> module, the same text → text function the
+build and the editor's Region switch use, so an <code>en-CA</code> draft says &quot;colour&quot; whatever the model wrote. A module that
+does not load is <code>500 spelling</code>, said before the model is asked, so it costs nothing.</li></ul>
+<h2 id="who-sees-what">Who sees what</h2>
+<p>The same rule as the MCP server's reads (docs/API-MCP.md &quot;Reads follow the role&quot;): editors and up may ask about any
+entry; authors and contributors about live entries and their own drafts. Another entry's answer is
+<code>404 &quot;That entry is not available to you.&quot;</code>, the same as one that does not exist. A plan's summary is for editors and
+up.</p>
+<h2 id="limits">Limits</h2>
+<ul><li><strong>Per person:</strong> at most <code>perMinute</code> and <code>perDay</code> asks, counted from the audit (rolling) and the asks still running.
+Over: <code>429 ai-rate</code> with <code>Retry-After</code>, <code>retryAfter</code> seconds, <code>limit: 'minute' | 'day'</code> and <code>max</code>. The refusal is
+audited as <code>ai.limited</code>, at most once a minute per person.</li><li>An ask that is refused before the model is asked (rights, sizes, shape, the spelling module, off) does not count.</li></ul>
+<h2 id="errors">Errors</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col" class="num">Status</th><th scope="col"><code>error</code></th><th scope="col">When</th></tr></thead><tbody><tr><td class="num"><code>503</code></td><td><code>ai-off</code></td><td>No key (neither the variable nor a readable key file). <code>message</code> is the <code>why</code> of <code>GET ai</code>; <code>envVar: 'MARKSTAGE_AI_KEY'</code>.</td></tr><tr><td class="num"><code>429</code></td><td><code>ai-rate</code></td><td>This person's limit, or the provider is busy with the site's key (<code>retryAfter</code> from its <code>Retry-After</code>, else 30).</td></tr><tr><td class="num"><code>502</code></td><td><code>ai-failed</code></td><td>The provider failed, timed out, refused the key (&quot;The owner checks MARKSTAGE_AI_KEY or ai.keyFile.&quot;), declined, said nothing, or answered in another shape. Fixed words, never the provider's own.</td></tr><tr><td class="num"><code>403</code></td><td><code>forbidden</code></td><td>A summary below editor; a token instead of a session.</td></tr><tr><td class="num"><code>404</code></td><td><code>not-found</code></td><td>The entry, image or plan is not there or not available to this person.</td></tr><tr><td class="num"><code>413</code></td><td><code>too-large</code></td><td>A field over its size (<code>field</code>, <code>max</code>).</td></tr><tr><td class="num"><code>422</code></td><td><code>invalid</code>, <code>image-type</code>, <code>locale</code>, <code>plan-not-ready</code></td><td>A wrong kind or field, a file that is not an image, a locale or field the site does not have, a plan still preparing.</td></tr><tr><td class="num"><code>500</code></td><td><code>spelling</code></td><td>The locale's spelling module did not load.</td></tr></tbody></table></div>
+<h2 id="what-is-kept-and-what-is-never">What is kept, and what is never</h2>
+<ul><li><strong>The audit.</strong> Every ask the model gets is one <code>ai.suggest</code> row: who, the kind, the target (<code>posts/hello-world</code>,
+the image's repo path, or the plan id), the provider, the model, and <code>inputTokens</code> and <code>outputTokens</code>. A failed one
+is <code>ok: false</code> with the error code. Never the prompt, the page's text or the answer.</li><li><strong>The key</strong> goes in the provider's <code>x-api-key</code> header and nowhere else: never in the database, a URL, the audit,
+an answer or an error.</li><li><strong>No secrets to the model or back.</strong> What the model reads, every answer and every error go through the MCP server's
+scrubber (docs/API-MCP.md &quot;No secrets&quot;): secret-named environment values (the key among them), a form's CRM sign-in,
+the key read from <code>ai.keyFile</code>, secret-keyed config values, git remote addresses, a sign-in in a URL, and people's email addresses become
+<code>[hidden]</code>.</li><li><strong>Content is data.</strong> Each prompt tells the model that the page's words are data to work from, never instructions,
+and each answer is checked for its shape before anyone sees it.</li></ul>
+<h2 id="provider">Provider</h2>
+<p>Anthropic's Messages API over HTTPS (<code>anthropic-version: 2026-10-21</code>), with low effort: these are short, scoped
+answers. An image goes as a base64 image block. The server has no SDK dependency; tests pass their own <code>fetch</code>.</p>
+<p>Tests: <code>ai.test.mjs</code> (the stub provider: kinds, the readable rule, the summary for editors, sizes, limits, the audit,
+off, nothing committed, tokens refused) and <code>ai-provider.test.mjs</code> (the Anthropic provider with a fake fetch: the
+request, each failure, the key file, a planted key never out, from the environment or the file; translation
+drafts and the spelling). No test calls a real API or
+reads a key from the machine it runs on.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-AI.md" target="_blank" rel="noopener">docs/API-AI.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-mcp/"><span class="small muted">Previous</span>The MCP server: AI agents</a>
+          <a class="next" href="../api-library/"><span class="small muted">Next</span>The Library</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

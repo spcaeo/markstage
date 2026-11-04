@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Preview: Unsaved Changes on the Real Page</title>
+    <meta name="description" content="How Markstage shows a page with unsaved changes on the site’s own dev server, on an origin of its own, so author HTML never runs with the editor’s session." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-preview/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Preview: Unsaved Changes on the Real Page" />
+    <meta property="og:description" content="How Markstage shows a page with unsaved changes on the site’s own dev server, on an origin of its own, so author HTML never runs with the editor’s session." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-preview/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Preview: Unsaved Changes on the Real Page" />
+    <meta name="twitter:description" content="How Markstage shows a page with unsaved changes on the site’s own dev server, on an origin of its own, so author HTML never runs with the editor’s session." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Preview render",
+          "item": "https://spcaeo.github.io/markstage/docs/api-preview/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage Preview: Unsaved Changes on the Real Page",
+      "description": "How Markstage shows a page with unsaved changes on the site’s own dev server, on an origin of its own, so author HTML never runs with the editor’s session.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-preview/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/" aria-current="page">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Preview render</li></ol></nav>
+        <h1>Preview render</h1>
+        <p class="lead left">How Markstage shows a page with unsaved changes on the site’s own dev server, on an origin of its own, so author HTML never runs with the editor’s session.</p>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). Split out of docs/API.md;
+docs/SECURITY.md has its security model.</p>
+<p>The editor's device frame and &quot;Open preview&quot; use one URL per entry. The preview runs the author's HTML and the
+site's own scripts, so it lives on its <strong>own origin</strong> (<code>preview.origin</code>, e.g. <code>https://preview.example.com</code>,
+served by a second listener on <code>preview.port</code>, default 18245). It must never be the CMS origin, where those scripts
+could act with the viewer's session. It should be a sibling host of the CMS (same site), so the preview cookie
+works inside the editor's frame.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET preview/:c/:id[?region=en-US]</code> (API, signed in; <code>locale=</code> is the same)</td><td><code>{url}</code>: <code>https://preview.example.com/markstage/preview/&lt;c&gt;/&lt;id&gt;/</code> (plus <code>?region=</code> when given). Dev mode: <code>{url, devServer: true}</code>, the site's own dev server (<code>preview.devServer</code> + the entry's path). <code>region</code> is a locale code from the site config (any case): the preview opens that locale's copy (<code>/en-us/blog/x/</code>); none: the address as is. <code>404</code> when no preview is set up, <code>409</code> when the collection has no page URL, <code>422 {regions}</code> for an unknown region</td></tr><tr><td><code>PUT preview/:c/:id/state</code> (API)</td><td><code>{baseVersion, doc?, frontmatter?, source?, data?, changes?}</code> (an autosave's body) → <code>{ok}</code>. The editor's unsaved state for the preview only: kept in memory, never written as an autosave. The preview shows it (HMR refreshes the frame) until the entry changes, a later autosave replaces it, or <code>DELETE preview/:c/:id/state</code>. <code>409</code> stale <code>baseVersion</code>, <code>422</code> unsafe link, <code>403</code> without the right to edit the entry</td></tr><tr><td><code>GET /markstage/preview-auth?to=&lt;path&gt;</code> (CMS origin, not under <code>/api</code>)</td><td>Signed in: a page that posts a one-time ticket (60 s) and <code>to</code> to the preview origin in a form body, never in a URL. Else <code>401</code> &quot;Sign in first&quot;. Framable only by the CMS itself</td></tr><tr><td><code>POST /markstage/preview-enter</code> (preview origin)</td><td><code>ticket</code>, <code>to</code> (form). With a fresh ticket, <code>Origin</code> must be the CMS: sets the HttpOnly preview cookie, bound to the CMS session (it ends with sign-out, revoke, timeout or a disabled user), <code>303</code> to the ticket's <code>to</code>. A repeat without a usable ticket (used, older than a minute; a browser re-posts the form when the frame reloads after a cold first page) but with a live preview cookie: <code>303</code> to <code>to</code> (the form's, a safe path, else <code>/</code>); <code>Origin: null</code> is accepted on this path. No cookie: <code>403</code> &quot;This preview link has expired&quot; with one link, &quot;Open the preview again&quot; (<code>preview-auth?to=</code>), and, when framed, <code>postMessage({markstage: 'preview-expired'})</code> to the CMS origin so the editor retries by itself. Any other <code>Origin</code>: <code>403</code>, the ticket untouched</td></tr><tr><td><code>GET /markstage/preview/:c/:id/[?region=]</code> (preview origin)</td><td>Chooses that entry for this viewer, then <code>303</code> to its page path in that region (locale). No preview cookie: <code>303</code> to the CMS <code>preview-auth</code>. Unknown region: <code>400</code></td></tr><tr><td><code>GET /robots.txt</code> (preview origin; the CMS host the same)</td><td><code>User-agent: *</code> / <code>Disallow: /</code>. Every answer on both hosts for a known host name, errors too, carries <code>X-Robots-Tag: noindex, nofollow</code>, in production as well</td></tr><tr><td>any other <code>/markstage/*</code> (preview origin)</td><td><code>404</code>: Markstage's own addresses never reach the clone's dev server</td></tr><tr><td>anything else on the preview origin</td><td>Proxied to the site's dev server, with the HMR websocket. Pages are rendered with the viewer's own autosave of the chosen entry written into a private clone of the site, never the content repo. One viewer at a time per page load (serialized). Assets are not serialized. Answers carry <code>X-Robots-Tag: noindex</code>, <code>Cache-Control: no-store</code> and <code>frame-ancestors &lt;CMS origin&gt;</code>. Markstage cookies are removed before the request reaches site code</td></tr></tbody></table></div>
+<ul><li>Live refresh: the editor keeps autosaving (<code>PUT .../autosave</code>). When the clone shows this viewer's state of that
+entry, the server rewrites it, and the dev server's HMR refreshes the frame (about 1.4 s on the pilot site).</li><li>The dev server runs on an odd loopback port from <code>preview.ports</code>, which is checked free. With <code>preview.warm</code>
+(the default when <code>origin</code> is set) it starts together with Markstage, is asked for the site's home page once
+(Astro compiles the shared layout then), and is kept running: the log says <code>Preview warm in N s</code>, and the first
+page a writer opens after a restart or a deploy of a new Markstage does not wait for it. The warm-up runs in the
+background; a page asked for meanwhile waits for it (the editor's canvas says &quot;Preparing the preview…&quot;, opens the
+frame again once by itself after a minute, then offers Try again). With <code>warm: false</code> it starts on the first
+request (about 4 s warm, 40 s on a cold server with the first page's compile; the first time ever also copies
+the site's <code>node_modules</code>, 15 s) and stops after <code>preview.idleMinutes</code> (default 10) without use.</li><li>An autosave with an unsafe link (<code>422</code>) shows a plain &quot;cannot be previewed yet&quot; page. If the dev server cannot
+start, the page shows the site's own error message.</li><li>Config: <code>preview: { origin, port, ports: [18247, 18299], command: [&quot;npx&quot;, &quot;astro&quot;, &quot;dev&quot;, &quot;--host&quot;,
+&quot;127.0.0.1&quot;, &quot;--port&quot;, &quot;{port}&quot;, &quot;--ignore-lock&quot;], idleMinutes, startSeconds, warm, settleFile, settleMs, env,
+devServer, dir }</code>. <code>--ignore-lock</code> keeps Astro 7 in the foreground. <code>settleFile</code>
+(<code>.astro/data-store.json</code>) is how the server knows the dev server has re-read a change.</li></ul>
+<h2 id="device-checks-in-the-frame-the-preview-agent">Device checks in the frame (the preview agent)</h2>
+<p>The device frame is on another origin, so the editor cannot read the page to run the responsive checks. Instead
+the preview origin adds the <strong>preview agent</strong> to every HTML page it proxies. The agent measures the page in place
+and talks to the editor by <code>postMessage</code>.</p>
+<ul><li><strong>The script.</strong> <code>GET /markstage/preview-agent.js</code> on the preview origin serves <code>&lt;editorDir&gt;/preview-agent.js</code>.
+The editor build must emit <code>src/device/agent.ts</code> there as one self-contained <strong>classic</strong> script (not a module),
+because the agent reads <code>document.currentScript</code>. If the file is missing, no tag is added, and the editor shows
+&quot;The checks cannot reach this preview.&quot;</li><li><strong>The tag.</strong> It goes just before <code>&lt;/head&gt;</code> (else <code>&lt;/body&gt;</code>, else at the end):
+<code>&lt;script src=&quot;/markstage/preview-agent.js&quot; data-cms=&quot;https://cms.example.com [loopback aliases]&quot; async&gt;&lt;/script&gt;</code>.
+<code>data-cms</code> lists the CMS origins, space-separated. Pages that are compressed, not HTML, or over 16 MB pass through
+unchanged. Content-Length is fixed and the site's ETag is dropped. The dev server is asked for
+<code>Accept-Encoding: identity</code>.</li><li><strong>Messages.</strong> Every message is an object with a <code>markstage</code> key:</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">Direction</th><th scope="col">Message</th><th scope="col">When</th></tr></thead><tbody><tr><td>page → editor</td><td><code>{markstage: 'ready'}</code></td><td>the agent is listening: the page has rendered (again after each HMR reload). The page editor's canvas shows &quot;Preparing the preview…&quot; until the first one</td></tr><tr><td>page → editor</td><td><code>{markstage: 'preview-expired'}</code></td><td>not from the agent: the preview's own 403 page (preview-enter without a usable ticket or cookie) says the frame holds no page; the editor opens it again on a fresh preview URL once, then offers Try again</td></tr><tr><td>page → editor</td><td><code>{markstage: 'rendered', path, width}</code></td><td>the page has loaded, and again after each client-side navigation (<code>astro:page-load</code>); the editor measures on it</td></tr><tr><td>editor → page</td><td><code>{markstage: 'measure', run?}</code></td><td>the editor wants the checks (after <code>ready</code>, or after a resize); <code>run</code> is its own request number</td></tr><tr><td>page → editor</td><td><code>{markstage: 'measured', run, result: Measured}</code></td><td>the answer, <code>run</code> echoed: <code>{width, sideways, issues: [{id, kind: 'overflow'|'image'|'tap'|'font', text, label}]}</code>. The agent first loads lazy images and waits for fonts (2.5 s at most)</td></tr><tr><td>editor → page</td><td><code>{markstage: 'reveal', id}</code></td><td>scroll to an issue's element and outline it</td></tr><tr><td>editor → page</td><td><code>{markstage: 'mark', words}</code> / <code>{markstage: 'reveal-word', word}</code></td><td>highlight the words a locale respells (the page answers <code>{markstage: 'marked', count}</code>) / scroll to the next one</td></tr></tbody></table></div>
+<ul><li><strong>Origins, the agent's side.</strong> It sends <code>ready</code> to each <code>data-cms</code> origin; the browser drops the ones that are not
+the parent's (one console line each). It answers only messages whose <code>source</code> is <code>window.parent</code> and whose
+<code>origin</code> is in <code>data-cms</code>, and replies to that origin. It does nothing when not framed. Source:
+<code>packages/editor/src/device/agent.ts</code>; <code>markstage build-editor</code> writes it into the editor build (<code>editorDir</code>), and
+<code>npm run build:agent -w packages/editor</code> builds it alone to <code>packages/editor/dist/preview-agent.js</code>.</li><li><strong>Origins, the editor's side.</strong> It accepts a message only when <code>event.source === frame.contentWindow</code> and
+<code>event.origin</code> is the preview origin (<code>new URL(previewUrl).origin</code>). It posts to the frame with that origin as
+<code>targetOrigin</code>, never <code>'*'</code>.</li><li>Only the CMS can frame the preview (<code>frame-ancestors</code>), so no other page can talk to the agent.</li><li>If the site sends its own CSP in dev, its <code>script-src</code> must allow <code>'self'</code>. Astro's dev server sends none.</li><li>Proven in Chromium against the real site's <code>astro dev</code>, with the built agent. The CMS page frames the preview at
+390 px. The hand-off signs the frame in, and the page arrives with the tag. <code>ready</code> and <code>measured</code> (run echoed,
+width 390, real issues) reach the CMS page from the preview origin only. A message from the page itself, posing as the parent, gets no answer. A foreign origin
+cannot frame the preview.</li></ul>
+<h3 id="section-gallery-and-edit-this-page-on-the-live-site">Section gallery, and &quot;Edit this page&quot; on the live site</h3>
+<p><code>GET preview/gallery</code>, <code>GET preview/gallery/:c</code> (every section type and variation drawn alone through the preview),
+<code>GET site/edit-button</code> and <code>GET site/entry-at?path=</code> (the live site's edit link, its cookie and the entry at an
+address): docs/API-EDIT.md.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-PREVIEW.md" target="_blank" rel="noopener">docs/API-PREVIEW.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-integrations/"><span class="small muted">Previous</span>Integration fields</a>
+          <a class="next" href="../api-edit/"><span class="small muted">Next</span>Section gallery and “Edit this page”</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

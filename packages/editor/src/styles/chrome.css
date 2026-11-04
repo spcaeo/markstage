@@ -393,9 +393,9 @@
     min-width: 320px;
   }
 }
-/* a 1280 screen with the drawer open, or a side panel open as well: Publish keeps its icon; the title keeps 220px
-   (320px there pushed the account button 87px off the bar) */
-@container ms-main (max-width: 1080px) {
+/* a 1280 or 1366 screen with the drawer open, or a side panel open as well: Publish keeps its icon; the title keeps
+   220px (320px there pushed the account button 87px off the bar at 1280, and 5px at 1366) */
+@container ms-main (max-width: 1100px) {
   .ms-head [data-publish] span {
     display: none;
   }

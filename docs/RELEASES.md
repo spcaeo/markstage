@@ -11,7 +11,7 @@ Every editor screen ends with one small line, and the server reports the same on
 | `Nov 2, 2026 8:49 AM EST` | the time of that commit, in `MARKSTAGE_TIME_ZONE` (else `TZ`, else the machine's) | every commit |
 
 `packages/core/src/release.mjs` computes it. The server uses it for `markstage-server version`, Your account and
-`GET /markstage/api/release` (public: the line only, the owner's footer rule; the parts and the exact commit once signed in). The editor build (`markstage build-editor`, and the
+`GET /markstage/api/release` (public: the line only, so a site's footer can show it; the parts and the exact commit once signed in). The editor build (`markstage build-editor`, and the
 Astro integration in dev) stamps it into the bundle as `__MS_RELEASE__`, so the footer shows what the editor was
 built from even before anyone signs in.
 

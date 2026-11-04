@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Payload alternative for Astro sites: Markstage</title>
+    <meta name="description" content="Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/alternatives/payload/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Payload alternative for Astro sites: Markstage" />
+    <meta property="og:description" content="Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/alternatives/payload/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Payload alternative for Astro sites: Markstage" />
+    <meta name="twitter:description" content="Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta name="twitter:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Alternatives",
+          "item": "https://spcaeo.github.io/markstage/alternatives/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Payload",
+          "item": "https://spcaeo.github.io/markstage/alternatives/payload/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "A Payload alternative for Astro content sites",
+      "description": "Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026.",
+      "url": "https://spcaeo.github.io/markstage/alternatives/payload/",
+      "dateModified": "2026-11-03",
+      "about": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Markstage",
+          "url": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "Thing",
+          "name": "Payload"
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does Payload work with Astro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, as a headless source: Astro's docs have a Payload guide and link an official example project."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Payload free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Its repository is under the MIT licence. Some features (a visual editor, publishing workflows, SSO) are listed as Enterprise features."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When is Markstage the better fit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "When the site is an Astro content site, the team wants content as files in git, and nobody wants to run an application backend and database for it."
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/" aria-current="page">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc wide">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../alternatives/">Alternatives</a></li><li aria-current="page">Payload</li></ol></nav>
+      <h1>A Payload alternative for Astro content sites</h1>
+      <p class="lead left">Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026.</p>
+      <p class="small muted">Facts about Payload checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <div class="prose">
+<p>Payload is a Next.js-native headless CMS and application framework, with a database (MongoDB, Postgres or
+SQLite), very granular access control and Live Preview. With Astro, it is a separate backend that your site reads.
+Markstage is narrower: an editor for an Astro site's Markdown and JSON files in git.</p>
+<h2 id="who-each-one-is-for">Who each one is for</h2>
+<p><strong>Payload</strong> suits developers building an application, a shop or a content backend that needs custom code, a
+database and fine access control, often with Next.js.</p>
+<p><strong>Markstage</strong> suits an Astro content site whose writers should edit on the real design, with no application
+backend to build. Markstage is pre-release.</p>
+<h2 id="side-by-side">Side by side</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Payload</th></tr></thead><tbody><tr><td>What it is</td><td>An editor for an Astro site's content files</td><td>A Next.js-native CMS and app framework</td></tr><tr><td>Where content lives</td><td>Markdown and JSON in git</td><td>MongoDB, Postgres or SQLite</td></tr><tr><td>Editing</td><td>On the real page</td><td>Admin panel; Live Preview of your front end in an iframe</td></tr><tr><td>On-page visual editor</td><td>Included</td><td>Listed as &quot;coming soon&quot; among Enterprise features</td></tr><tr><td>Publishing workflows, SSO</td><td>Included</td><td>Listed among Enterprise features</td></tr><tr><td>Astro</td><td><code>@markstage/astro</code> integration</td><td>A guide and an example project in Astro's docs</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>MIT</td></tr></tbody></table></div>
+<h2 id="where-payload-is-stronger">Where Payload is stronger</h2>
+<ul><li><strong>A full backend:</strong> your own collections, hooks, APIs and access control, in code.</li><li><strong>Apps and shops,</strong> not only content sites.</li><li><strong>A very large community</strong> (about 45.6k GitHub stars on 3 November 2026).</li></ul>
+<h2 id="moving-from-payload-to-markstage">Moving from Payload to Markstage</h2>
+<p>For a content site, export your documents through Payload's API, convert rich text to Markdown, and run
+Markstage's import API (dry run first, imported as drafts, idempotent on each source id). Keep Payload if the same
+backend also runs an app.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<h3 id="does-payload-work-with-astro">Does Payload work with Astro?</h3>
+<p>Yes, as a headless source: Astro's docs have a Payload guide and link an official example project.</p>
+<h3 id="is-payload-free">Is Payload free?</h3>
+<p>Its repository is under the MIT licence. Some features (a visual editor, publishing workflows,
+SSO) are listed as Enterprise features.</p>
+<h3 id="when-is-markstage-the-better-fit">When is Markstage the better fit?</h3>
+<p>When the site is an Astro content site, the team wants content as files in git, and nobody wants to run an
+application backend and database for it.</p>
+<h2 id="sources">Sources</h2>
+<p>Checked on 2026-11-03: <a href="https://github.com/payloadcms/payload" rel="noopener">Payload on GitHub</a> ·
+<a href="https://payloadcms.com/docs/database/overview" rel="noopener">Payload database adapters</a> ·
+<a href="https://payloadcms.com/docs/live-preview/overview" rel="noopener">Payload Live Preview</a> ·
+<a href="https://payloadcms.com/enterprise/visual-editor" rel="noopener">Payload Visual Editor</a> ·
+<a href="https://docs.astro.build/en/guides/cms/payload/" rel="noopener">Astro: Payload guide</a>. Markstage facts: the
+<a href="../../compare/full/">full comparison</a>.</p>
+      </div>
+      <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a><a class="btn btn-secondary" href="../../compare/"><span>All comparisons</span></a><a class="btn btn-text" href="../../docs/"><span>Read the docs</span></a></p>
+      <section aria-labelledby="more-alt">
+        <h2 id="more-alt">More comparisons</h2>
+        <ul class="link-list"><li><a href="../../alternatives/builder-io/">A Builder.io alternative for Astro sites</a></li><li><a href="../../alternatives/cloudcannon/">A self-hosted CloudCannon alternative for Astro</a></li><li><a href="../../alternatives/contentful/">A Contentful alternative for Astro sites</a></li><li><a href="../../alternatives/decap-cms/">A Decap CMS alternative for Astro sites</a></li><li><a href="../../alternatives/emdash/">EmDash vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/front-matter-cms/">A Front Matter CMS alternative for Astro teams</a></li><li><a href="../../alternatives/keystatic/">A Keystatic alternative for Astro sites</a></li><li><a href="../../alternatives/outstatic/">An Outstatic alternative for Astro sites</a></li><li><a href="../../alternatives/pages-cms/">A Pages CMS alternative for Astro sites</a></li><li><a href="../../alternatives/prismic/">A Prismic alternative for Astro sites</a></li><li><a href="../../alternatives/sanity/">A Sanity alternative for Astro sites</a></li><li><a href="../../alternatives/sitepins/">A Sitepins alternative for Astro sites</a></li><li><a href="../../alternatives/statamic/">A Statamic alternative for Astro sites</a></li><li><a href="../../alternatives/storyblok/">A Storyblok alternative for Astro sites</a></li><li><a href="../../alternatives/strapi/">A Strapi alternative for Astro content sites</a></li><li><a href="../../alternatives/studiocms/">StudioCMS vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/sveltia-cms/">A Sveltia CMS alternative for Astro sites</a></li><li><a href="../../alternatives/tinacms/">A TinaCMS alternative for Astro sites</a></li><li><a href="../../alternatives/wordpress/">A WordPress alternative for Astro sites</a></li></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

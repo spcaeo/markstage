@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage FAQ: the visual editor for Astro sites</title>
+    <meta name="description" content="Answers about Markstage: what a visual editor for Astro is, price, licence, self-hosting, databases, MDX and how it differs from a headless CMS." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/faq/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage FAQ: the visual editor for Astro sites" />
+    <meta property="og:description" content="Answers about Markstage: what a visual editor for Astro is, price, licence, self-hosting, databases, MDX and how it differs from a headless CMS." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/faq/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/learn.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage: answers and words for editing Markdown sites visually." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage FAQ: the visual editor for Astro sites" />
+    <meta name="twitter:description" content="Answers about Markstage: what a visual editor for Astro is, price, licence, self-hosting, databases, MDX and how it differs from a headless CMS." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/learn.png" />
+    <meta name="twitter:image:alt" content="Markstage: answers and words for editing Markdown sites visually." />
+    <link rel="icon" href="../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../llms.txt" />
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "FAQ",
+          "item": "https://spcaeo.github.io/markstage/faq/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a visual editor for Astro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An editor where writers change an Astro site's content while looking at the site itself: its own components, fonts and layout, not grey form fields. Markstage shows the real page, lets people type text where it appears, and puts other settings (an image's alt text, a link, a section's options) in a side panel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Astro have a built-in CMS or editor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Astro's docs describe a CMS as a separate tool that \"lets you write content and manage assets outside of your Astro project\", and list many to choose from. Astro's content collections give your Markdown, MDX, YAML and JSON files a schema and type safety, but not an editing screen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Markstage free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, to self-host. You may use, copy, change and run it for free, in your business and for your clients' sites. There are no per-user, per-site or per-language fees. The one thing you may not do without a commercial licence is offer Markstage to others as a hosted or managed service."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Markstage free software under an OSI licence?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is not open source in the OSI sense. Markstage is source-available under the Elastic License 2.0: the code is public, and you may run and change it for free, with the one limit above."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is Markstage different from a headless CMS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A headless CMS keeps your content in its own database, usually hosted, and your site reads it through an API. Markstage keeps content as Markdown and JSON files in your git repository, and the Astro site reads them like any other files. There is no content database and no content API to depend on."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is it different from other git-based editors?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most git-based editors (Decap CMS, Sveltia CMS, Keystatic, Pages CMS) show a form, sometimes beside a preview. Markstage edits on the page. CloudCannon and TinaCMS also edit on the page: CloudCannon is a hosted service, and TinaCMS can be hosted or self-hosted. Markstage also includes staging, roles, single sign-on and a forms inbox at no cost. The full comparison has the details and sources."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a database?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not for content: that stays as files in git. One SQLite file on the server (the SQLite built into Node) holds people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log. There is no database server to install."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What do I need to self-host it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Node.js 22.13 or newer and git, on a server next to your site. The deploy guide covers Docker Compose, or systemd and nginx without Docker."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does my Astro site have to use server rendering?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Markstage's editing markup appears only in editor mode, so your production build stays exactly as it is and can stay fully static."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Markstage support MDX?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS, Keystatic or Outstatic fit better today."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can people without a GitHub account edit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. People sign in to Markstage with an email and password, with optional two-step sign-in, or through your single sign-on provider (OpenID Connect). Each save is still a git commit in their own name."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Markstage ready for production?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Markstage is pre-release and in active development. It is built and tested against a real 460-page Astro site, but most other products in this space have years of production use. Check the changelog and try it on a copy of your site first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who makes Markstage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Space-O Technologies (www.spaceo.ca). The author is Rakesh Patel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Markstage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which frameworks does Markstage support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Astro today, through the @markstage/astro integration. The core (the document model and the Markdown converter) has no framework in it, so other adapters can follow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will Markstage rewrite my Markdown files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only the blocks you change. Opening and saving a file with no edit leaves it byte for byte the same, and moving a block and moving it back gives an identical file, so a review shows exactly what moved."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an AI agent edit my site through Markstage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live."
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../#features">Features</a>
+          <a href="../docs/">Docs</a>
+          <a href="../compare/">Compare</a>
+          <a href="../alternatives/">Alternatives</a>
+          <a href="../faq/" aria-current="page">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">FAQ</li></ol></nav>
+      <h1>Frequently asked questions</h1>
+      <p class="lead left">What Markstage is, what it costs, where it runs and how it treats your files, answered in plain words.</p>
+      <section aria-labelledby="g-common-questions">
+        <h2 id="g-common-questions">Common questions</h2>
+        <div class="qa" id="what-is-a-visual-editor-for-astro"><h3>What is a visual editor for Astro?</h3><p>An editor where writers change an Astro site's content while looking at the site itself: its own components,
+fonts and layout, not grey form fields. Markstage shows the real page, lets people type text where it appears, and
+puts other settings (an image's alt text, a link, a section's options) in a side panel.</p></div>
+        <div class="qa" id="does-astro-have-a-built-in-cms-or-editor"><h3>Does Astro have a built-in CMS or editor?</h3><p>No. Astro's docs describe a CMS as a separate tool that &quot;lets you write content and manage assets outside of your
+Astro project&quot;, and list many to choose from. Astro's content collections give your Markdown, MDX, YAML and JSON
+files a schema and type safety, but not an editing screen.</p></div>
+        <div class="qa" id="is-markstage-free"><h3>Is Markstage free?</h3><p>Yes, to self-host. You may use, copy, change and run it for free, in your business and for your clients' sites.
+There are no per-user, per-site or per-language fees. The one thing you may not do without a commercial licence is
+offer Markstage to others as a hosted or managed service.</p></div>
+        <div class="qa" id="is-markstage-free-software-under-an-osi-licence"><h3>Is Markstage free software under an OSI licence?</h3><p>It is not open source in the OSI sense. Markstage is source-available under the Elastic License 2.0: the code is
+public, and you may run and change it for free, with the one limit above.</p></div>
+        <div class="qa" id="how-is-markstage-different-from-a-headless-cms"><h3>How is Markstage different from a headless CMS?</h3><p>A headless CMS keeps your content in its own database, usually hosted, and your site reads it through an API.
+Markstage keeps content as Markdown and JSON files in your git repository, and the Astro site reads them like any
+other files. There is no content database and no content API to depend on.</p></div>
+        <div class="qa" id="how-is-it-different-from-other-git-based-editors"><h3>How is it different from other git-based editors?</h3><p>Most git-based editors (Decap CMS, Sveltia CMS, Keystatic, Pages CMS) show a form, sometimes beside a preview.
+Markstage edits on the page. CloudCannon and TinaCMS also edit on the page: CloudCannon is a hosted service, and
+TinaCMS can be hosted or self-hosted. Markstage also includes staging, roles, single sign-on and a forms inbox at no
+cost. The <a href="../compare/full/">full comparison</a> has the details and
+sources.</p></div>
+        <div class="qa" id="do-i-need-a-database"><h3>Do I need a database?</h3><p>Not for content: that stays as files in git. One SQLite file on the server (the SQLite built into Node) holds
+people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log. There is no
+database server to install.</p></div>
+        <div class="qa" id="what-do-i-need-to-self-host-it"><h3>What do I need to self-host it?</h3><p>Node.js 22.13 or newer and git, on a server next to your site. The deploy guide covers Docker Compose, or systemd
+and nginx without Docker.</p></div>
+        <div class="qa" id="does-my-astro-site-have-to-use-server-rendering"><h3>Does my Astro site have to use server rendering?</h3><p>No. Markstage's editing markup appears only in editor mode, so your production build stays exactly as it is and
+can stay fully static.</p></div>
+        <div class="qa" id="does-markstage-support-mdx"><h3>Does Markstage support MDX?</h3><p>No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS,
+Keystatic or Outstatic fit better today.</p></div>
+        <div class="qa" id="can-people-without-a-github-account-edit"><h3>Can people without a GitHub account edit?</h3><p>Yes. People sign in to Markstage with an email and password, with optional two-step sign-in, or through your
+single sign-on provider (OpenID Connect). Each save is still a git commit in their own name.</p></div>
+        <div class="qa" id="is-markstage-ready-for-production"><h3>Is Markstage ready for production?</h3><p>Markstage is pre-release and in active development. It is built and tested against a real 460-page Astro site, but
+most other products in this space have years of production use. Check the changelog and try it on a copy of your
+site first.</p></div>
+        <div class="qa" id="who-makes-markstage"><h3>Who makes Markstage?</h3><p>Space-O Technologies (<a href="https://www.spaceo.ca" rel="noopener">www.spaceo.ca</a>). The author is Rakesh Patel.</p></div>
+      </section>
+      <section aria-labelledby="g-how-markstage-works">
+        <h2 id="g-how-markstage-works">How Markstage works</h2>
+        <div class="qa" id="what-is-markstage"><h3>What is Markstage?</h3><p>Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.</p></div>
+        <div class="qa" id="which-frameworks-does-markstage-support"><h3>Which frameworks does Markstage support?</h3><p>Astro today, through the @markstage/astro integration. The core (the document model and the Markdown converter) has no framework in it, so other adapters can follow.</p></div>
+        <div class="qa" id="will-markstage-rewrite-my-markdown-files"><h3>Will Markstage rewrite my Markdown files?</h3><p>Only the blocks you change. Opening and saving a file with no edit leaves it byte for byte the same, and moving a block and moving it back gives an identical file, so a review shows exactly what moved.</p></div>
+        <div class="qa" id="can-an-ai-agent-edit-my-site-through-markstage"><h3>Can an AI agent edit my site through Markstage?</h3><p>An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live.</p></div>
+      </section>
+      <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a><a class="btn btn-text" href="../docs/"><span>Read the docs</span></a></p>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../#features">Features</a>
+            <a href="../#install">Install</a>
+            <a href="../compare/">Compare</a>
+            <a href="../alternatives/">Alternatives</a>
+            <a href="../faq/">FAQ</a>
+            <a href="../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../docs/">All docs</a>
+            <a href="../docs/writing/">Writing with Markstage</a>
+            <a href="../docs/config/">Site config</a>
+            <a href="../docs/deploy/">Deploy the server</a>
+            <a href="../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

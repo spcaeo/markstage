@@ -37,9 +37,23 @@
   --ms-place: var(--ms-ok);
 }
 .ms-envbadge__branch {
+  max-width: 16ch;
+  overflow: hidden;
   color: var(--ms-muted);
   font-family: var(--ms-mono);
   font-size: 11px;
+  text-overflow: ellipsis;
+}
+/* an entry open in a column under 1480px: the chip keeps its coloured dot, and its words and branch stay in its
+   tooltip and label, so a long branch in astro dev never pushes Save, Help or the account button off the bar (the
+   e2e qa-round2 N11 checks the bar with the chip from 1280px to 1920px, Post settings open and closed) */
+@container ms-main (max-width: 1480px) {
+  .ms-app.has-entry:not(.is-screen) .ms-envbadge {
+    padding: 4px 8px;
+  }
+  .ms-app.has-entry:not(.is-screen) :is(.ms-envbadge strong, .ms-envbadge__branch) {
+    display: none;
+  }
 }
 a.ms-envbadge:hover {
   border-color: var(--ms-env-ribbon, var(--ms-accent));

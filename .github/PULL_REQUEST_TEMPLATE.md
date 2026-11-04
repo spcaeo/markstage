@@ -20,6 +20,11 @@
 - [ ] No passwords, tokens, keys, real IP addresses or a real site's names in code, tests, docs or commit messages
 - [ ] My commits are signed off (`git commit -s`)
 
+## How this lands
+
+This repository is made from a private one: once accepted, your change is re-applied there with you as the author,
+then synced back here as a commit that names you as co-author, and this pull request is closed with a link to it.
+
 ## Contributor licence agreement
 
 - [ ] I accept the Markstage Contributor Licence Agreement (v1.0) in `CONTRIBUTING.md`

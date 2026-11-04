@@ -474,14 +474,14 @@ describe('the second deep QA pass in a browser', { skip }, () => {
     assert.equal((await title.textContent()).length, 320, 'nothing was cut');
     await barFits('unsaved changes');
     // and at the other common desktop widths, drawer open
-    for (const width of [1280, 1440, 1536, 1680, 1920]) {
+    for (const width of [1280, 1366, 1440, 1536, 1680, 1920]) {
       await page.setViewportSize({ width, height: 860 });
       await page.waitForTimeout(150);
       await barFits(`unsaved changes at ${width} px`);
     }
     // with Post settings open beside the page as well
     await page.locator('.ms-head [data-settings]').click();
-    for (const width of [1280, 1380, 1440, 1920]) {
+    for (const width of [1280, 1366, 1380, 1440, 1536, 1920]) {
       await page.setViewportSize({ width, height: 860 });
       await page.waitForTimeout(150);
       await barFits(`unsaved changes, Post settings open, at ${width} px`);
@@ -493,7 +493,22 @@ describe('the second deep QA pass in a browser', { skip }, () => {
         await page.keyboard.press('Escape');
       }
     }
-    await page.locator('.ms-head [data-settings]').click();
+    // the place chip with a long branch, as astro dev draws it (environments/badge.ts): it gives way before Save does
+    await page.evaluate(() => {
+      const chip = Object.assign(document.createElement('span'), { className: 'ms-envbadge is-grey is-local', title: 'On my computer' });
+      chip.setAttribute('aria-label', 'Place: On my computer, branch a-rather-long-branch-name');
+      chip.append(Object.assign(document.createElement('strong'), { textContent: 'On my computer' }), Object.assign(document.createElement('span'), { className: 'ms-envbadge__branch', textContent: 'a-rather-long-branch-name' }));
+      document.querySelector('.ms-head__place')?.append(chip);
+    });
+    for (const open of [true, false]) {
+      for (const width of [1280, 1366, 1440, 1536, 1920]) {
+        await page.setViewportSize({ width, height: 860 });
+        await page.waitForTimeout(150);
+        await barFits(`with the place chip, Post settings ${open ? 'open' : 'closed'}, at ${width} px`);
+      }
+      if (open) await page.locator('.ms-head [data-settings]').click();
+    }
+    await page.evaluate(() => document.querySelector('.ms-head .ms-envbadge')?.remove());
     await page.setViewportSize({ width: 1380, height: 860 });
     await shot('n11-title-over');
     await page.keyboard.press('ControlOrMeta+s');

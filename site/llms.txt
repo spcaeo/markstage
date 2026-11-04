@@ -1,0 +1,73 @@
+# Markstage
+
+> Markstage is a self-hosted visual editor for Astro sites. Writers edit Markdown and JSON content on the site's real page design, and every save is a clean git diff of exactly what changed (with the Markstage server, a commit by the person who saved). No content database, no MDX, no cloud. Source-available under the Elastic License 2.0, free to self-host (not open source). Made by Space-O Technologies.
+
+Edit your Markdown on the real stage. Status: pre-release, in active development. Requires Node.js 22.13 or newer and git.
+
+- Source code: https://github.com/spcaeo/markstage (clone: https://github.com/spcaeo/markstage.git)
+- Licence: https://github.com/spcaeo/markstage/blob/main/LICENSE
+- Features: edit on the real page; blocks you can see and move; clean git diffs, and every version kept; search checks while you write; a library of parts to use again; go live together, now or later; local, staging and production; your forms, in your own inbox; images and files in one place.
+
+## Pages
+
+- [Markstage: Visual Editor for Astro, Edit on the Real Page](https://spcaeo.github.io/markstage/)
+- [Best CMS for Astro? Markstage Compared With 20 Others](https://spcaeo.github.io/markstage/compare/)
+- [Astro CMS Comparison: Markstage and 20 CMSs, Sourced](https://spcaeo.github.io/markstage/compare/full/)
+- [Markstage FAQ: the visual editor for Astro sites](https://spcaeo.github.io/markstage/faq/)
+- [Glossary: Astro, git-based CMS and visual editing terms](https://spcaeo.github.io/markstage/glossary/)
+
+## Docs
+
+- [Writing with Markstage](https://spcaeo.github.io/markstage/docs/writing/): How writers use Markstage: open and start articles, add blocks, save and go live, use the Library, fix links, check SEO and bring back an older version.
+- [markstage.config: every key](https://spcaeo.github.io/markstage/docs/config/): Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas.
+- [Deploying Markstage](https://spcaeo.github.io/markstage/docs/deploy/): Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.
+- [Environments: local, staging, production](https://spcaeo.github.io/markstage/docs/environments/): How Markstage moves content and code between local, staging and production: branches, promotions with checks and screenshots, rules and a shared git remote.
+- [Markstage server: security](https://spcaeo.github.io/markstage/docs/security/): How the self-hosted Markstage server protects a content site: sign-in, sessions, two-factor, roles, previews on their own origin, and the test behind each.
+- [Markstage API (contract)](https://spcaeo.github.io/markstage/docs/api/): The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes.
+- [The MCP server: AI agents](https://spcaeo.github.io/markstage/docs/api-mcp/): Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes.
+- [AI suggestions](https://spcaeo.github.io/markstage/docs/api-ai/): Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales.
+- [The Library](https://spcaeo.github.io/markstage/docs/api-library/): One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page.
+- [Releases and share links](https://spcaeo.github.io/markstage/docs/api-releases/): Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account.
+- [Environments API](https://spcaeo.github.io/markstage/docs/api-env/): The server routes and command line behind environments: status, branches on the remote, plans that promote or sync content, and the checks that guard them.
+- [Topics and internal links](https://spcaeo.github.io/markstage/docs/api-links/): Markstage keeps a map of every link in the site and suggests fixes both ways, so old pages link to new ones and new pages link to the right older ones.
+- [Page frames and page types](https://spcaeo.github.io/markstage/docs/api-page-types/): Two settings a page keeps in its own file: the frame the site lays it out in (full width, reading or plain) and its page type, with the checks each type needs.
+- [Authors](https://spcaeo.github.io/markstage/docs/api-authors/): Ghost-style author profiles kept as JSON files in the site content: one per person, linked from posts by slug, with co-authors and an author page each.
+- [Custom roles](https://spcaeo.github.io/markstage/docs/api-roles/): Beyond the five built-in roles: a custom role for a translator, a reviewer or an editor who may not upload, limited to collections, locales and fields.
+- [Permissions](https://spcaeo.github.io/markstage/docs/api-permissions/): Who may do what in Markstage, by role: owner, administrator, editor, author and contributor, the WordPress names, decided in one place on the server.
+- [Single sign-on (OpenID Connect)](https://spcaeo.github.io/markstage/docs/api-sso/): Let people sign in to Markstage with Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak or any OpenID Connect provider, with passwords kept or limited.
+- [Webhooks](https://spcaeo.github.io/markstage/docs/api-webhooks/): Tell another system when something happens on the site: an entry saved or published, a media file added, the site gone live. Each webhook lists its events.
+- [Importing entries and media](https://spcaeo.github.io/markstage/docs/api-import/): Bring entries and media files from another system as JSON: a dry-run plan first, nothing written or fetched, then the run of that plan as one job.
+- [Forms, messages and alerts](https://spcaeo.github.io/markstage/docs/api-inbox/): The site forms post to Markstage on your own host: spam checks, limits, team mail and thank-you mail, the Inbox for messages and who hears about which alerts.
+- [Translation status](https://spcaeo.github.io/markstage/docs/api-translations/): For a site with several locales: whether each entry’s words are missing, outdated or done in each language, and the list of what still needs translating.
+- [Integration fields](https://spcaeo.github.io/markstage/docs/api-integrations/): A Post settings choice whose options come from another system, such as a product catalogue or a CRM’s plans, fetched from a JSON address on a schedule.
+- [Preview render](https://spcaeo.github.io/markstage/docs/api-preview/): How Markstage shows a page with unsaved changes on the site’s own dev server, on an origin of its own, so author HTML never runs with the editor’s session.
+- [Section gallery and “Edit this page”](https://spcaeo.github.io/markstage/docs/api-edit/): Every section type the site’s pages use, drawn by the site’s own components, and an “Edit this page” link on the live site for people signed in to Markstage.
+
+## Alternatives
+
+- [A Builder.io alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/builder-io/): Markstage vs Builder.io for Astro: page editing on your site's real design with content in git, self-hosted, no per-user fees. Facts checked 3 Nov 2026.
+- [A self-hosted CloudCannon alternative for Astro](https://spcaeo.github.io/markstage/alternatives/cloudcannon/): Markstage vs CloudCannon: both git-based with on-page editing for Astro. Markstage runs on your own server for free. Facts checked 3 Nov 2026.
+- [A Contentful alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/contentful/): Markstage vs Contentful for Astro sites: content as files in your own git repository, edited on the real design, self-hosted for free. Checked 3 Nov 2026.
+- [A Decap CMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/decap-cms/): Markstage vs Decap CMS (formerly Netlify CMS): edit on your Astro site's real design, not a form beside a preview. Facts checked 3 Nov 2026.
+- [EmDash vs Markstage: which fits your Astro site?](https://spcaeo.github.io/markstage/alternatives/emdash/): EmDash keeps Astro content in a SQL database; Markstage keeps it as Markdown and JSON in git and edits on the real page. Facts checked 3 Nov 2026.
+- [A Front Matter CMS alternative for Astro teams](https://spcaeo.github.io/markstage/alternatives/front-matter-cms/): Front Matter CMS runs in VS Code for developers. Markstage gives your whole team a web editor on your Astro site's real design. Checked 3 Nov 2026.
+- [A Keystatic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/keystatic/): Markstage vs Keystatic: Markstage reads your Keystatic schema, edits pages on the real design and saves JSON byte-identical. Facts checked 3 Nov 2026.
+- [An Outstatic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/outstatic/): Markstage vs Outstatic: both git-based and free to self-host. Markstage edits on your Astro site's real design and includes roles. Checked 3 Nov 2026.
+- [A Pages CMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/pages-cms/): Markstage vs Pages CMS: both edit files in git. Markstage edits on your Astro site's real design and adds roles, staging and forms. Checked 3 Nov 2026.
+- [A Payload alternative for Astro content sites](https://spcaeo.github.io/markstage/alternatives/payload/): Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026.
+- [A Prismic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/prismic/): Markstage vs Prismic: page building, releases and share links with your content in git, self-hosted, no per-repository fees. Facts checked 3 Nov 2026.
+- [A Sanity alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/sanity/): Markstage vs Sanity for Astro: visual editing with content as files in your own git repository, self-hosted, no seat fees. Facts checked 3 Nov 2026.
+- [A Sitepins alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/sitepins/): Markstage vs Sitepins: both commit every save to git. Markstage edits on your Astro site's real design and runs on your server free. Checked 3 Nov 2026.
+- [A Statamic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/statamic/): Markstage vs Statamic: both keep content as files in git. Markstage edits on your Astro site's design with no PHP and no licence fee. Checked 3 Nov 2026.
+- [A Storyblok alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/storyblok/): Markstage vs Storyblok: visual editing on your Astro site with content in git, self-hosted, staging and custom roles included. Facts checked 3 Nov 2026.
+- [A Strapi alternative for Astro content sites](https://spcaeo.github.io/markstage/alternatives/strapi/): Markstage vs Strapi for an Astro site: edit on the real page with content in git; releases, roles and SSO with no plan fees. Facts checked 3 Nov 2026.
+- [StudioCMS vs Markstage: which fits your Astro site?](https://spcaeo.github.io/markstage/alternatives/studiocms/): StudioCMS is a server-rendered Astro CMS with a database; Markstage keeps content in git and edits on the real page. Facts checked 3 Nov 2026.
+- [A Sveltia CMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/sveltia-cms/): Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026.
+- [A TinaCMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/tinacms/): Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026.
+- [A WordPress alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/wordpress/): Moving from WordPress to Astro? Markstage gives writers a WordPress-style editor on your Astro site's real design, with content in git. Checked 3 Nov 2026.
+
+## Optional
+
+- [README](https://github.com/spcaeo/markstage/blob/main/README.md)
+- [Changelog](https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md)
+- [Security policy](https://github.com/spcaeo/markstage/blob/main/SECURITY.md)

@@ -1,5 +1,6 @@
-# Every push to main and every pull request into it: the repo's checks, every workspace's tests, the server's
-# browser tests, an audit of the runtime dependencies and a secrets scan. CONTRIBUTING.md says what each one guards.
+# Every push to main and every pull request into it: the repo's checks, every workspace's tests, the runtime tests
+# again on the oldest supported Node (22.13), the server's browser tests, an audit of the runtime dependencies and a
+# secrets scan. CONTRIBUTING.md says what each one guards.
 name: CI
 
 on:
@@ -45,6 +46,8 @@ jobs:
         run: npm run licence
       - name: Tests, repo scripts (publish kit, secret scan, SECURITY.md versions)
         run: npm run test:scripts
+      - name: Public site (site/ equals a fresh build; titles, descriptions, links, JSON-LD)
+        run: npm run site:test
       - name: Tests, core
         run: npm test -w packages/core
       # a few editor tests draw in a real browser (raw HTML, Word paste)
@@ -60,6 +63,33 @@ jobs:
         run: npm test -w examples/blog
       - name: Audit of the runtime dependencies
         run: npm audit --omit=dev --audit-level=high
+
+  # Markstage runs on Node 22.13 or newer (engines). The runtime packages' tests run on that oldest version too; the
+  # editor's own tests are TypeScript run directly by Node, which needs Node 24, so they stay in the job above.
+  node-22:
+    name: Runtime tests on Node 22.13 (core, Astro integration, server unit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # the release test counts commits for the build number
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.13.0
+          cache: npm
+      - name: Git identity for test commits
+        run: |
+          git config --global user.name "Markstage CI"
+          git config --global user.email "ci@example.com"
+      - name: Install (exactly the lockfile)
+        run: npm ci
+      - name: Tests, core
+        run: npm test -w packages/core
+      - name: Tests, Astro integration
+        run: npm test -w packages/astro
+      - name: Tests, server (unit)
+        run: npm run test:unit -w packages/server
 
   e2e:
     name: Server browser tests (Playwright, Chromium)

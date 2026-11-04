@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage MCP Server: Let AI Agents Draft Content</title>
+    <meta name="description" content="Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-mcp/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage MCP Server: Let AI Agents Draft Content" />
+    <meta property="og:description" content="Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-mcp/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage MCP Server: Let AI Agents Draft Content" />
+    <meta name="twitter:description" content="Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "The MCP server: AI agents",
+          "item": "https://spcaeo.github.io/markstage/docs/api-mcp/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage MCP Server: Let AI Agents Draft Content",
+      "description": "Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-mcp/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/" aria-current="page">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">The MCP server: AI agents</li></ol></nav>
+        <h1>The MCP server: AI agents</h1>
+        <p class="lead left">Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#the-endpoint">The endpoint</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#the-relay-markstage-mcp">The relay: markstage mcp</a></li><li><a href="#tools">Tools</a></li><li><a href="#no-secrets-in-answers">No secrets in answers</a></li><li><a href="#limits-and-audit">Limits and audit</a></li><li><a href="#not-in-v1">Not in v1</a></li><li><a href="#proof">Proof</a></li></ul></nav>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). An AI agent (Claude, or any
+client of the Model Context Protocol) reads the site and drafts changes <strong>as the person whose token it holds</strong>,
+through the editor's own routes. Server code: <code>packages/server/src/mcp/</code>; the relay: <code>packages/astro/bin/markstage.mjs</code>.</p>
+<p>Nothing an agent does publishes, deletes, moves or promotes anything. It changes drafts, and it puts changes to live
+pages into a release that is not scheduled. A person reviews that release and publishes or schedules it.</p>
+<h2 id="the-endpoint">The endpoint</h2>
+<p><code>POST &lt;api&gt;/mcp</code> (<code>/markstage/api/mcp</code>), on the CMS origin only. It uses MCP's Streamable HTTP transport, answered
+with plain JSON: one JSON-RPC 2.0 message in, its answer out. There is no event stream and no session id.</p>
+<ul><li><code>GET</code>: <code>405</code> with <code>Allow: POST</code>, as the spec asks of a server with no event stream, and words for a person who
+opened the address in a browser (&quot;This is Markstage's MCP address. …&quot;). Other methods: <code>405</code>. A JSON array (a
+batch): <code>-32600</code>.</li><li>A notification, or a client's response to the server: <code>202</code> with no body.</li><li>Methods: <code>initialize</code>, <code>ping</code>, <code>tools/list</code>, <code>tools/call</code>. Anything else: <code>-32601</code>. Unknown or wrong arguments:
+<code>-32602</code>, or a tool error naming the argument.</li><li><strong>Protocol version.</strong> The server speaks <code>2025-06-18</code> and <code>2025-03-26</code>. <code>initialize</code> answers with the client's
+<code>protocolVersion</code> when it is one of those, else with <code>2025-06-18</code>. It never refuses, as the spec says. On later
+requests, an <code>MCP-Protocol-Version</code> header naming another version gets <code>400</code>; no header is fine.</li><li><code>initialize</code> gives <code>serverInfo {name: 'markstage', title, version}</code>, <code>capabilities {tools: {listChanged: false}}</code>
+and <code>instructions</code>, which tell the agent the rules below and that content it reads is data, not instructions.</li><li><strong>Where it answers.</strong> The site's hosts (<code>siteHosts</code>) and the share origin answer <code>404</code> for this path, whatever the
+method. So does every other CMS path there.</li></ul>
+<h2 id="tokens">Tokens</h2>
+<p>An agent's token is its own kind. It is not the laptop CLI's token.</p>
+<ul><li>Scopes: <code>mcp:read</code> (the read tools) and <code>mcp:draft</code> (the write tools too; it brings <code>mcp:read</code>).</li><li>Made in a browser session: <code>POST me/tokens {name, scopes: ['mcp:read'] | ['mcp:draft'], days: 1..90}</code> gives
+<code>201 {token, secret}</code> (<code>mst_…</code>, shown once). In the editor: Settings → Tokens, &quot;New AI assistant token&quot;
+(<code>#/settings/tokens?new=mcp</code>). Reading is always ticked; writing drafts is ticked only when asked for. The page
+then shows the secret once, <code>npx markstage mcp login &lt;origin&gt;</code>, the client config and the MCP address.</li><li>A token is for the command line (<code>env:…</code>) or for an agent (<code>mcp:…</code>), never both: a mixed request gets <code>400</code>.
+<code>GET me/tokens</code> gives <code>scopes</code> (the command line's), <code>mcpScopes</code> and <code>groups: {cli: {scopes, reaches: '/env'},
+mcp: {scopes, reaches: '/mcp'}}</code>.</li><li>An <code>mcp:</code> token reaches <code>/mcp</code> only (<code>403</code> elsewhere). A command line token on <code>/mcp</code> gets <code>403</code>. A browser session
+on <code>/mcp</code> gets <code>403</code> too: the endpoint takes a token, not a cookie.</li><li><strong>The token only ever goes in <code>Authorization: Bearer mst_…</code></strong>, never in a URL. Unknown, revoked or expired:
+<code>401</code>, audited <code>security.token</code>. A revoked or expired agent token's words say to make a new one at Settings → Tokens
+and give it to the agent. <code>markstage login</code> keeps command line tokens only: it checks a token on <code>/env</code>, which an
+agent's token cannot reach.</li><li><strong>Origin.</strong> No <code>Origin</code> header (an agent, the relay) is fine. The CMS's own origin is fine. Any other browser
+<code>Origin</code> gets <code>403</code>, audited <code>security.origin</code>. Bearer requests skip the CSRF check: a browser never sends that
+header on its own.</li></ul>
+<h2 id="the-relay-markstage-mcp">The relay: <code>markstage mcp</code></h2>
+<p>For clients that start a command (stdio): <code>@markstage/astro</code> ships <code>markstage</code>, node only. <code>&lt;url&gt;</code> is the editor's
+address. <code>https://cms.example.com</code> means Markstage at <code>/markstage</code>; a server with another <code>basePath</code> is named by its
+path (<code>https://example.com/cms/</code>, <code>…/cms/api/mcp</code> or an editor link with <code>#/…</code> too), and that base is kept with the
+token, so later the bare origin is enough. The token screen shows the commands with the editor's own address.</p>
+<ul><li><code>markstage mcp login &lt;url&gt; [--token-stdin]</code>: checks the token with <code>ping</code>, then keeps it in
+<code>~/.config/markstage/credentials</code> (0600; <code>$MARKSTAGE_CONFIG_DIR/credentials</code>) under <code>mcp</code>, apart from the command
+line's tokens. A token the server does not take is not kept.</li><li><code>markstage mcp [&lt;url&gt;]</code>: one JSON-RPC message per line on stdin, each answer on one line on stdout, in order. The
+token comes from <code>MARKSTAGE_TOKEN</code> or the kept one; the URL from the argument, <code>MARKSTAGE_URL</code>, or the one server
+kept. Only JSON goes to stdout. A line that is not JSON gets <code>-32700</code>. An HTTP refusal becomes a JSON-RPC error
+<code>-32000</code> with the server's words and <code>data.status</code>, and the words go to stderr too. Notifications get no line.</li></ul>
+<p>A client's config, for example:</p>
+<pre data-lang="json"><code class="language-json">{ &quot;mcpServers&quot;: { &quot;markstage&quot;: { &quot;command&quot;: &quot;npx&quot;, &quot;args&quot;: [&quot;markstage&quot;, &quot;mcp&quot;, &quot;https://cms.example.com&quot;] } } }</code></pre>
+<p>A client that speaks Streamable HTTP itself uses <code>https://cms.example.com/markstage/api/mcp</code> with the header
+<code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<h2 id="tools">Tools</h2>
+<p><code>tools/list</code> lists the read tools, and the write tools only for an <code>mcp:draft</code> token. Each tool has a JSON Schema
+(<code>additionalProperties: false</code>) and annotations: reads <code>readOnlyHint</code>, nothing <code>destructiveHint</code>. A result is
+<code>structuredContent</code> plus the same JSON as text. A refusal is a result with <code>isError: true</code> and <code>structuredContent
+{error, status, message, …}</code>: the editor's own error code, status and words.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Tool</th><th scope="col">Scope</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>site_info</code></td><td>read</td><td>The site, its collections and fields (<code>hasDrafts</code>, <code>canCreateDrafts</code>), who the agent acts as (id, name, role, author slug), the token's name and scopes, and the rules</td></tr><tr><td><code>list_entries</code></td><td>read</td><td>One collection's entries this person may read: id, title, status, address, author, dates, tags, excerpt. Filters <code>q</code>, <code>status</code>, <code>author</code>, <code>sort</code>; 50 to a page</td></tr><tr><td><code>get_entry</code></td><td>read</td><td>One entry: status, address, <code>version</code>, <strong><code>source</code></strong> (the file's text) and the Library blocks synced into it (<code>synced: [{id, state}]</code>)</td></tr><tr><td><code>search</code></td><td>read</td><td>Entries this person may read whose title, id or text has the words, with the text around the first match. At most 50</td></tr><tr><td><code>list_library</code>, <code>get_library_item</code></td><td>read</td><td>The Library (templates, sections, snippets), and one item whole with the pages that use it</td></tr><tr><td><code>env_status</code>, <code>get_plan</code></td><td>read</td><td>This environment, its branch and upstream, and the promotion plans</td></tr><tr><td><code>list_releases</code>, <code>get_release</code></td><td>read</td><td>The releases and one release with its items</td></tr><tr><td><code>create_draft</code></td><td>draft</td><td>A new draft in a collection with drafts, under the person's author name (Markdown for an article, data for a JSON entry). A collection without drafts: <code>422 no-drafts</code></td></tr><tr><td><code>update_entry</code></td><td>draft</td><td>A changed <code>source</code> saved over a <strong>draft</strong>, with the <code>version</code> from <code>get_entry</code> (stale: <code>409</code>). The commit says <code>Update &lt;c&gt;/&lt;id&gt; (an AI agent, via MCP: &lt;token name&gt;)</code>. A live or scheduled entry, or a page in a collection without drafts: <code>409 live</code>, pointing at <code>add_to_release</code></td></tr><tr><td><code>add_to_release</code></td><td>draft</td><td>An entry, as saved or with a changed <code>source</code>, into a release that is <strong>not scheduled</strong>. Needs the right to publish that entry, as for a person (<code>403</code>)</td></tr></tbody></table></div>
+<h3 id="source-in-source-out-lossless">Source in, source out (lossless)</h3>
+<p>An entry is read and written as its file's text: front matter and Markdown for an article, the JSON for a page.
+So nothing is lost in a conversion. <code>get_entry</code> then <code>update_entry</code> with the same <code>source</code> gives <code>{changed: false}</code>,
+writes nothing and makes no commit. A change touches only what the agent changed. Sections, components, raw HTML,
+synced copies and <code>_lock</code> markers stay byte for byte.</p>
+<h3 id="what-an-agent-may-not-do">What an agent may not do</h3>
+<p>The editor's own checks apply to every write: rights, version, locks, synced copies, links, raw HTML, status keys,
+and the site's <code>validate</code>. An agent also meets stricter checks of its own, before the route's:</p>
+<ul><li><strong>Synced blocks.</strong> A change that alters, removes or detaches a block synced from the Library: <code>423 synced</code>. A
+person changes the Library item, or detaches the block.</li><li><strong>Locks.</strong> Changing a locked block, removing one locked against removal, or adding or taking off any lock:
+<code>423 locked</code>, naming the block. An agent never locks or unlocks.</li><li><strong>Hidden values.</strong> A source carrying <code>[hidden]</code> where the file has a real value (below): <code>422 hidden</code>, so a
+scrubbed value is never written over the real one.</li><li><strong>Scheduled releases.</strong> <code>add_to_release</code> into a scheduled release: <code>409 scheduled</code>, &quot;“Name” is scheduled: it goes
+live by itself at its time, so an AI agent cannot add to it. Add to a release that is not scheduled; a person
+schedules it.&quot; This is checked when the add starts and again inside it, after the entry's checks, with nothing
+awaited between that check and the item being kept, so a release scheduled meanwhile refuses too. The item's
+<code>via</code> lives in the <code>meta</code> column <code>release_items</code> already has (<code>DEFAULT '{}'</code>), so no migration was needed; a person
+who adds the same file again takes the item over, and <code>via</code> goes.</li></ul>
+<p>In every one of those cases nothing is written and nothing is added.</p>
+<h3 id="reads-follow-the-role">Reads follow the role</h3>
+<p>A tool shows only what the token's person may read, through one rule (<code>readable()</code> in <code>src/mcp/tools.mjs</code>):</p>
+<ul><li>Editors and above see every entry. An author or a contributor sees live entries and their own drafts.</li><li>An entry they may not read gets the same <code>404</code> words as one that does not exist (&quot;No entry &quot;x&quot; in posts, or it is
+not available to you.&quot;), so its existence is not given away.</li><li>What else names a draft follows the same rule: the pages a Library item is on (<code>get_library_item</code>'s <code>uses</code> and
+<code>usedOn</code>) and a release's entries (<code>get_release</code>'s <code>items</code> and <code>counts</code>). Promotion plans name every file they
+move, so <code>env_status</code> gives <code>plans</code> (else <code>null</code> and why) and <code>get_plan</code> answers (else <code>403</code>) for editors and up.</li><li>No tool gives an entry's revisions or history; <code>get_entry</code> gives the current source only.</li></ul>
+<p><strong>This is narrower than the editor</strong>, where every role reads every entry and its revisions (docs/API-PERMISSIONS.md).
+A person reads a colleague's draft in the editor to work on it with them. An agent copies what it reads into a
+model's context, where it can travel further, so it gets only what its person needs.</p>
+<p>Writes are the editor's own rights: a contributor changes and makes their own drafts and cannot put anything into a
+release.</p>
+<h2 id="no-secrets-in-answers">No secrets in answers</h2>
+<p>Every answer and every error goes through a scrub last (<code>src/mcp/answer.mjs</code>). Each value below becomes <code>[hidden]</code>:</p>
+<ul><li>The server's secrets from the environment, by name: names ending in <code>PASS</code>, <code>PASSWORD</code>, <code>SECRET</code>, <code>TOKEN</code>, <code>KEY</code>,
+<code>CREDENTIALS</code>, <code>DSN</code>, <code>SALT</code> or <code>_AUTH</code>, and anything with <code>SMTP_</code>. Also a form's CRM sign-in, by its prefix
+(<code>&lt;env&gt;_URL</code>, <code>_DB</code>, <code>_EMAIL</code>, <code>_PASSWORD</code>).</li><li>The config's values under keys that name a secret (<code>password</code>, <code>apiKey</code>, <code>secretKey</code>, <code>token</code>, …), and the AI key
+read from <code>ai.keyFile</code> (docs/API-AI.md).</li><li>The content repo's git remote addresses, and any sign-in written into a URL (<code>https://user:pass@</code> becomes
+<code>https://[hidden]@</code>).</li><li>People's email addresses: a person is shown by name and id only, and any <code>email</code> key is left out.</li></ul>
+<p>Only a value of 8 characters or more counts as a secret, so a short value never blanks ordinary words. Search and
+excerpts are matched and cut on the scrubbed text, so half a secret is never shown.</p>
+<h2 id="limits-and-audit">Limits and audit</h2>
+<ul><li>At most <strong>120 calls a minute per token, 30 of them writes</strong>. Over that: <code>429</code> with <code>Retry-After</code>, audited
+<code>mcp.limited</code> once a minute.</li><li>Every tool call is audited as <code>mcp.call</code> (target: the tool, <code>ok</code>). Every row a call leads to (the save, the
+release item) carries <code>detail.via: 'mcp'</code> and <code>detail.token: &lt;token name&gt;</code>.</li><li>A release item an agent added keeps <code>via</code>, the token's id and the token's name. When the release goes out
+(<code>release.publish</code>) or its time comes and something stops it (<code>release.blocked</code>), the audit lists those items as
+<code>detail.mcpItems: [{rel, title, token}]</code>.</li></ul>
+<h2 id="not-in-v1">Not in v1</h2>
+<ul><li>No publish tool. <code>mcp:publish</code> comes later, behind the publish rules.</li><li>No resources, prompts or sampling; no event stream.</li></ul>
+<h2 id="proof">Proof</h2>
+<p>Server tests run against a real server on 127.0.0.1, with test people and tokens made in the test.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Proof</th><th scope="col">Test</th></tr></thead><tbody><tr><td>The protocol: version negotiation, ping, 202, the header <code>400</code>, JSON-RPC errors, no batch, <code>GET 405</code></td><td><code>mcp.test.mjs</code>: &quot;initialize: the client's version when we speak it, ours when not…&quot;</td></tr><tr><td>Read-only without <code>mcp:draft</code>: the write tools are not listed, and a call says why</td><td>&quot;read-only by default…&quot;</td></tr><tr><td>Tokens: none or unknown <code>401</code>, a session <code>403</code>, a CLI token <code>403</code>, an MCP token on <code>/env</code> <code>403</code>, mixed <code>400</code>, draft brings read, a token cannot list tokens, revoked and expired <code>401</code></td><td>&quot;tokens: only an MCP token…&quot;, &quot;an expired token is refused&quot;</td></tr><tr><td>Origin: none and the CMS's own are fine, any other is <code>403</code> and audited</td><td>&quot;Origin: …&quot;</td></tr><tr><td><code>404</code> on the site's host and on the share origin, for every method</td><td>&quot;only on the CMS origin…&quot;</td></tr><tr><td>Audit <code>via</code> and the token's name, on the call, the save and the commit</td><td>&quot;every call is audited as via MCP…&quot;</td></tr><tr><td>120 a minute, 30 writes; <code>429</code> with <code>Retry-After</code>; audited once</td><td>&quot;at most 120 calls a minute per token…&quot;</td></tr><tr><td>Planted secrets (an environment token, a git remote with a token, an email, a sign-in in a URL) in no answer; a short value stays; an excerpt cut inside a secret shows none of it; <code>422 hidden</code></td><td>&quot;no secret in any answer…&quot;, &quot;the scrub on its own…&quot;</td></tr><tr><td>Reads follow the role: <code>list_entries</code>, <code>get_entry</code> and <code>search</code> as an editor, an author and a contributor</td><td><code>mcp-roles.test.mjs</code>: &quot;reads follow the role…&quot;</td></tr><tr><td>Writes by role: a contributor's own drafts, no release; an author's live entry <code>409</code>; an editor's drafts, live <code>409</code>, pages <code>422</code>/<code>409</code>, stale <code>409</code></td><td>the three tests &quot;a contributor…&quot;, &quot;an author…&quot;, &quot;an editor…&quot;</td></tr><tr><td>A scheduled release refused in words; scheduled during the add, refused, nothing added</td><td>&quot;add_to_release: into an open release…&quot;, &quot;a release scheduled while the agent adds to it…&quot;</td></tr><tr><td><code>mcpItems</code> in <code>release.blocked</code> (a file changed since) and in <code>release.publish</code></td><td>&quot;at its time: …&quot;</td></tr><tr><td>Lossless: <code>get_entry</code> then <code>update_entry</code> unchanged gives <code>{changed: false}</code>, the same bytes and no commit, on every page and article. That includes core's site-shaped fixture pages and an article with sections, components, raw HTML, synced copies and <code>value._lock</code></td><td><code>mcp-roundtrip.test.mjs</code>: &quot;get_entry, then update_entry with what it gave…&quot;</td></tr><tr><td>A one-word change changes that word only, also beside a synced piece</td><td>&quot;a one-word change to a draft…&quot;</td></tr><tr><td><code>423 synced</code> (changed, dropped, detached; a page and an article) and <code>423 locked</code> (a locked block changed or removed, a lock taken off or put on), through <code>update_entry</code> and <code>add_to_release</code>, nothing written or added</td><td>&quot;synced blocks: …&quot;, &quot;locks: …&quot;</td></tr><tr><td>What else names a draft follows the role: a Library item's pages, a release's entries, the plans; no revisions tool</td><td><code>mcp-roles.test.mjs</code>: &quot;what else names a draft follows the role too…&quot;</td></tr><tr><td><strong>Nothing an agent does publishes</strong>: the example blog (<code>examples/blog</code>, with a sitemap and an RSS feed filtered as its pages are) built with Astro, then every write tool (a new draft, two drafts changed, a live post's change and a draft into a release: three commits), then built again: the same files, byte for byte, none of the agent's words anywhere. A person's save of a live post then changes the page, the index and the feed, so the comparison does see a change</td><td><code>mcp-build.test.mjs</code></td></tr><tr><td>The token screen: two kinds, one or the other; <code>?new=mcp</code> and <code>?new=cli</code> (reload, Back); reading always, drafting when ticked; the secret once and never in the URL; the commands, the config and the address with copy and open (opened, it says what it is); it reaches <code>/mcp</code> and not <code>/env</code></td><td><code>e2e/tokens.e2e.mjs</code> (Playwright, Chromium)</td></tr><tr><td>The relay: one line per answer in order, JSON only; <code>mcp login</code> keeps the token (0600) apart from the CLI's; refusals as <code>-32000</code> and on stderr; a server at another <code>basePath</code> (<code>/cms</code>) for <code>mcp login</code>, the relay, <code>login</code> and <code>status</code></td><td><code>mcp-cli.test.mjs</code></td></tr></tbody></table></div>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-MCP.md" target="_blank" rel="noopener">docs/API-MCP.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api/"><span class="small muted">Previous</span>Markstage API (contract)</a>
+          <a class="next" href="../api-ai/"><span class="small muted">Next</span>AI suggestions</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

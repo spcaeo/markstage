@@ -1,7 +1,7 @@
 # Markstage API (contract)
 
 The editor (`packages/editor`) and the server (`packages/server`) both follow this file. Dev mode
-(`packages/astro`, localhost only) implements the same routes without sign-in. Changes go through the lead.
+(`packages/astro`, localhost only) implements the same routes without sign-in. A change to a route is made here first, then in both.
 
 ## Conventions
 
@@ -903,17 +903,17 @@ What each role may do, one row per action, and what "own" means: docs/API-PERMIS
 
 1. Collections with `hasStatus` filter in the site's content queries:
    `entry.data.draft !== true && (!entry.data.publishAt || new Date(entry.data.publishAt) <= buildTime)`.
-   For the pilot site: add `draft: z.boolean().default(false)` and `publishAt: z.coerce.date().optional()` to the
+   For example: add `draft: z.boolean().default(false)` and `publishAt: z.coerce.date().optional()` to the
    `blog` schema and one `isLive(post)` helper used by every `getCollection('blog', ...)` call (lists, sitemap,
    RSS, related posts, `getStaticPaths`).
 2. The build command must exit non-zero on failure; the deploy command must be atomic and exit non-zero on failure.
 3. `MARKSTAGE_BUILD_TIME` (ISO) is set for the build so scheduled posts appear at the right build.
 4. Entries with `protected: true` are built to a private folder (`protectedPages.dir`), never to the public output,
    and are left out of every derived output: sitemap, RSS, llms.txt, llms-full.txt, the per-page Markdown twins
-   (`/<page>.md`, and on the pilot site `/okf/<page>.md`), link-card JSON and site search (the rehearsal found all of
+   (`/<page>.md`, and any other copy a site makes), link-card JSON and site search (the rehearsal found all of
    these leaking for a protected page). The web server sends requests it cannot find in
    the public output to Markstage, or guards the private location with `auth_request /markstage/page-auth`
-   (tested files: `deploy/nginx/`; use `try_files $uri $uri/index.html ...`, not `$uri/`). For the pilot site: `protected: z.boolean().default(false)` in the blog and
+   (tested files: `deploy/nginx/`; use `try_files $uri $uri/index.html ...`, not `$uri/`). For example: `protected: z.boolean().default(false)` in the blog and
    pages schemas, and `isLive()` plus the sitemap and feed filters skip protected entries.
 5. Preview: the site's dev server runs with `MARKSTAGE_PREVIEW=1`. Then `isLive()` is true for every entry
    (drafts and future posts render), so a writer can preview a draft. The dev server must start with every entry

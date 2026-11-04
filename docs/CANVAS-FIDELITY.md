@@ -265,7 +265,7 @@ Run it after any layout change on the site. Markstage runs it on the example blo
 On the example blog (`examples/blog`, a two-column guide with a list, quotation, code block, table and raw HTML) the
 guard passes at both widths with every measure 0px off.
 
-### Round two: "not 100% the same" (the owner, 30 Oct)
+### Round two: everything around the text
 
 The guard above measured the text only, so it passed while the page around it still differed. Measured again on the
 same site, with the guard as it is now (everything around the text too, in light and dark), before and after:

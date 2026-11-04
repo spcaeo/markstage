@@ -4,7 +4,10 @@ What changed in each Markstage release, in plain words. The newest is first. Ver
 [semantic versioning](https://semver.org); while Markstage is 0.x, a minor version may change how things work.
 docs/RELEASES.md says how a release is made.
 
-## Unreleased
+## 0.3.0 (3 November 2026)
+
+The first public release: the source is on GitHub under the Elastic License 2.0 (source-available, free to
+self-host), with a website, docs and a sourced comparison at https://spcaeo.github.io/markstage/.
 
 ### Security
 

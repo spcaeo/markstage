@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TinaCMS alternative for Astro: Markstage</title>
+    <meta name="description" content="Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/alternatives/tinacms/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="TinaCMS alternative for Astro: Markstage" />
+    <meta property="og:description" content="Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/alternatives/tinacms/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TinaCMS alternative for Astro: Markstage" />
+    <meta name="twitter:description" content="Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta name="twitter:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Alternatives",
+          "item": "https://spcaeo.github.io/markstage/alternatives/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "TinaCMS",
+          "item": "https://spcaeo.github.io/markstage/alternatives/tinacms/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "A TinaCMS alternative for Astro sites",
+      "description": "Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026.",
+      "url": "https://spcaeo.github.io/markstage/alternatives/tinacms/",
+      "dateModified": "2026-11-03",
+      "about": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Markstage",
+          "url": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "Thing",
+          "name": "TinaCMS"
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is there a free TinaCMS alternative for Astro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Markstage is free to self-host, with no per-user fees, and edits Astro sites on their real design. TinaCMS itself is also free to self-host, but it then needs a database adapter, and its hosted plan is free for two users."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TinaCMS work with Astro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TinaCMS has an Astro guide and an @tinacms/astro integration with visual editing. Its docs say visual editing needs server output and an adapter, or every editable region wrapped in \u003cTinaIsland>."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can Markstage edit MDX like TinaCMS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS or Keystatic fits better."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a database to self-host?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TinaCMS's self-hosted backend uses a database adapter (its docs name MongoDB and Postgres) as a cache of your files. Markstage needs no database server: one SQLite file holds people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log; the content stays in git."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which one has staging?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Markstage has local, staging and production built in, each a git branch plus a server. TinaCMS has an editorial workflow on protected branches with pull requests and preview links, on its Team plan and up."
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/" aria-current="page">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc wide">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../alternatives/">Alternatives</a></li><li aria-current="page">TinaCMS</li></ol></nav>
+      <h1>A TinaCMS alternative for Astro sites</h1>
+      <p class="lead left">Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026.</p>
+      <p class="small muted">Facts about TinaCMS checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <div class="prose">
+<p>TinaCMS and Markstage both keep your content as files in git and both let people edit on the page. They differ in
+what you run, what it costs and what the editor covers beyond the page.</p>
+<h2 id="who-each-one-is-for">Who each one is for</h2>
+<p><strong>TinaCMS</strong> suits developers who want click-to-edit on their pages, MDX, and a hosted backend (TinaCloud) or a
+self-hosted one. It works with Astro, Next.js and other frameworks.</p>
+<p><strong>Markstage</strong> suits teams with an Astro site whose writers should work on the real design, and who want staging,
+roles, single sign-on, a forms inbox and releases included, on their own server, for free. Markstage is
+pre-release.</p>
+<h2 id="side-by-side">Side by side</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">TinaCMS</th></tr></thead><tbody><tr><td>Editing on the page</td><td>Text typed on the real page; other fields in a side panel</td><td>Click a region; its field opens in a sidebar form and the page updates live</td></tr><tr><td>Setting up a page for editing</td><td>Each component marks its fields with a helper (the marks appear in editor mode only)</td><td>Each page gets a schema field, a data loader, and an island or a server route</td></tr><tr><td>Astro output</td><td>The live site stays fully static</td><td>Visual editing wants <code>output: 'server'</code> and an adapter, or every region in <code>&lt;TinaIsland&gt;</code></td></tr><tr><td>Content</td><td>Markdown and JSON in git</td><td>Markdown, MDX, JSON, YAML in git</td></tr><tr><td>MDX</td><td>No</td><td>Yes</td></tr><tr><td>Self-hosting</td><td>Free; no database server (its working data, such as people, sessions, the inbox and drafts, in one SQLite file)</td><td>Free; needs a database adapter such as MongoDB or Postgres as a cache, and &quot;some features are not available&quot;</td></tr><tr><td>Hosted plan</td><td>None</td><td>TinaCloud: Free (2 users), Team $29/mo, Business $299/mo</td></tr><tr><td>Review before going live</td><td>Staging and production, promotion rules, included</td><td>Editorial workflow on protected branches and pull requests, on Team and up</td></tr><tr><td>Roles</td><td>Five built in, plus custom roles</td><td>3 roles; custom roles on Enterprise (beta)</td></tr><tr><td>Single sign-on</td><td>OpenID Connect, included</td><td>Enterprise</td></tr><tr><td>Forms inbox</td><td>Yes</td><td>Not listed</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>Apache 2.0</td></tr></tbody></table></div>
+<h2 id="where-tinacms-is-stronger">Where TinaCMS is stronger</h2>
+<ul><li><strong>MDX.</strong> TinaCMS edits MDX; Markstage edits Markdown and JSON only.</li><li><strong>A hosted option.</strong> TinaCloud runs the backend for you. Markstage needs a server you look after.</li><li><strong>Many frameworks.</strong> TinaCMS supports more than Astro. Markstage's only adapter today is Astro.</li><li><strong>A large community.</strong> TinaCMS has about 13.9k stars on GitHub and years of use.</li></ul>
+<h2 id="moving-from-tinacms-to-markstage">Moving from TinaCMS to Markstage</h2>
+<p>Your Markdown and JSON files stay where they are. List the same folders as collections in <code>markstage.config.mjs</code>,
+add the <code>@markstage/astro</code> integration, and mark the fields your components show so they can be edited on the page.
+MDX files are not edited by Markstage, so keep them in TinaCMS or convert them to Markdown first. When you are
+ready, remove the <code>tina()</code> integration and the island routes. Run the Markstage server with Docker Compose or
+systemd and nginx; see the deploy guide.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<h3 id="is-there-a-free-tinacms-alternative-for-astro">Is there a free TinaCMS alternative for Astro?</h3>
+<p>Yes. Markstage is free to self-host, with no per-user fees, and edits Astro sites on their real design. TinaCMS
+itself is also free to self-host, but it then needs a database adapter, and its hosted plan is free for two users.</p>
+<h3 id="does-tinacms-work-with-astro">Does TinaCMS work with Astro?</h3>
+<p>Yes. TinaCMS has an Astro guide and an <code>@tinacms/astro</code> integration with visual editing. Its docs say visual
+editing needs server output and an adapter, or every editable region wrapped in <code>&lt;TinaIsland&gt;</code>.</p>
+<h3 id="can-markstage-edit-mdx-like-tinacms">Can Markstage edit MDX like TinaCMS?</h3>
+<p>No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS or
+Keystatic fits better.</p>
+<h3 id="do-i-need-a-database-to-self-host">Do I need a database to self-host?</h3>
+<p>TinaCMS's self-hosted backend uses a database adapter (its docs name MongoDB and Postgres) as a cache of your
+files. Markstage needs no database server: one SQLite file holds people, sessions, the inbox,
+drafts in progress, trash, releases, the media index and the audit log; the content stays in git.</p>
+<h3 id="which-one-has-staging">Which one has staging?</h3>
+<p>Markstage has local, staging and production built in, each a git branch plus a server. TinaCMS has an editorial
+workflow on protected branches with pull requests and preview links, on its Team plan and up.</p>
+<h2 id="sources">Sources</h2>
+<p>Checked on 2026-11-03: <a href="https://tina.io/pricing" rel="noopener">TinaCMS pricing</a> ·
+<a href="https://tina.io/docs/frameworks/astro" rel="noopener">TinaCMS Astro guide</a> ·
+<a href="https://tina.io/docs/self-hosted/overview" rel="noopener">TinaCMS self-hosting</a> ·
+<a href="https://tina.io/docs/tinacloud/editorial-workflow" rel="noopener">TinaCMS editorial workflow</a> ·
+<a href="https://github.com/tinacms/tinacms" rel="noopener">TinaCMS on GitHub</a> ·
+<a href="https://docs.astro.build/en/guides/cms/tina-cms/" rel="noopener">Astro: TinaCMS guide</a>. Markstage facts: the
+<a href="../../compare/full/">full comparison</a>.</p>
+      </div>
+      <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a><a class="btn btn-secondary" href="../../compare/"><span>All comparisons</span></a><a class="btn btn-text" href="../../docs/"><span>Read the docs</span></a></p>
+      <section aria-labelledby="more-alt">
+        <h2 id="more-alt">More comparisons</h2>
+        <ul class="link-list"><li><a href="../../alternatives/builder-io/">A Builder.io alternative for Astro sites</a></li><li><a href="../../alternatives/cloudcannon/">A self-hosted CloudCannon alternative for Astro</a></li><li><a href="../../alternatives/contentful/">A Contentful alternative for Astro sites</a></li><li><a href="../../alternatives/decap-cms/">A Decap CMS alternative for Astro sites</a></li><li><a href="../../alternatives/emdash/">EmDash vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/front-matter-cms/">A Front Matter CMS alternative for Astro teams</a></li><li><a href="../../alternatives/keystatic/">A Keystatic alternative for Astro sites</a></li><li><a href="../../alternatives/outstatic/">An Outstatic alternative for Astro sites</a></li><li><a href="../../alternatives/pages-cms/">A Pages CMS alternative for Astro sites</a></li><li><a href="../../alternatives/payload/">A Payload alternative for Astro content sites</a></li><li><a href="../../alternatives/prismic/">A Prismic alternative for Astro sites</a></li><li><a href="../../alternatives/sanity/">A Sanity alternative for Astro sites</a></li><li><a href="../../alternatives/sitepins/">A Sitepins alternative for Astro sites</a></li><li><a href="../../alternatives/statamic/">A Statamic alternative for Astro sites</a></li><li><a href="../../alternatives/storyblok/">A Storyblok alternative for Astro sites</a></li><li><a href="../../alternatives/strapi/">A Strapi alternative for Astro content sites</a></li><li><a href="../../alternatives/studiocms/">StudioCMS vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/sveltia-cms/">A Sveltia CMS alternative for Astro sites</a></li><li><a href="../../alternatives/wordpress/">A WordPress alternative for Astro sites</a></li></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

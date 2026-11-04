@@ -1,5 +1,9 @@
 # markstage.config: every key
 
+> **Not on npm yet: install from a clone.** The `@markstage/*` packages are not published to npm. Clone this
+> repository next to your site and link them, as the README's [quick start](../README.md#quick-start) shows
+> (Option 2). Your site needs Astro 7.4 or newer.
+
 A site tells Markstage what it edits, and how to draw it, in one file at the project root:
 `markstage.config.mjs`, `.js` or `.ts` (the first found, in that order). Both sides read it with the same loader,
 `@markstage/core/site-config`:

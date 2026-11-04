@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Webhooks: Tell Other Systems What Changed</title>
+    <meta name="description" content="Tell another system when something happens on the site: an entry saved or published, a media file added, the site gone live. Each webhook lists its events." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-webhooks/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Webhooks: Tell Other Systems What Changed" />
+    <meta property="og:description" content="Tell another system when something happens on the site: an entry saved or published, a media file added, the site gone live. Each webhook lists its events." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-webhooks/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Webhooks: Tell Other Systems What Changed" />
+    <meta name="twitter:description" content="Tell another system when something happens on the site: an entry saved or published, a media file added, the site gone live. Each webhook lists its events." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Webhooks",
+          "item": "https://spcaeo.github.io/markstage/docs/api-webhooks/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage Webhooks: Tell Other Systems What Changed",
+      "description": "Tell another system when something happens on the site: an entry saved or published, a media file added, the site gone live. Each webhook lists its events.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-webhooks/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/" aria-current="page">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Webhooks</li></ol></nav>
+        <h1>Webhooks</h1>
+        <p class="lead left">Tell another system when something happens on the site: an entry saved or published, a media file added, the site gone live. Each webhook lists its events.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#events">Events</a></li><li><a href="#hooks">Hooks</a></li><li><a href="#deliveries">Deliveries</a></li><li><a href="#the-request">The request</a></li></ul></nav>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). A webhook tells another system
+when something happens on the site: an entry is saved or published, a media file is added, the site goes live. Each
+one is a named address that listens to the events it lists. Server code: <code>packages/server/src/webhooks/</code>.</p>
+<ul><li><strong>Signed.</strong> Each request is signed with the hook's own secret (HMAC-SHA256 of the time and the body), so the
+receiver knows it came from this server and was not replayed.</li><li><strong>Tried again.</strong> An address that does not answer 2xx is tried again after 1, 5, 30, 120 and 360 minutes; after the
+sixth try the delivery is given up and the owner and administrators get a &quot;A webhook could not deliver an event&quot;
+alert (kind <code>webhook.failed</code>, Settings → Alerts).</li><li><strong>Logged.</strong> Every delivery is kept for 30 days: the event, what was sent, each try's answer code, the first 500
+characters of the answer, how long it took.</li><li><strong>Secrets stay in.</strong> The secret is shown once, when it is made, and never again. A payload names what changed,
+never its text, a person's email or a secret. An answer kept in the log has the server's secrets and the hook's own
+secret replaced by <code>[hidden]</code>; an address is shown with its sign-in and query values hidden.</li><li><strong>Public addresses only.</strong> The address passes the same SSRF guard as the Library's import when it is saved and
+again at every send (public addresses only, checked after DNS, ports 80 and 443; docs/SECURITY.md &quot;Fetching from
+the web&quot;), must be https, and a redirect is never followed.</li><li><strong>Production only.</strong> Outside production a delivery is kept as <code>held</code> and never sent, unless the environment's
+<code>keep</code> lists <code>&quot;webhooks&quot;</code> (docs/API-ENV.md). (<code>&quot;webhook&quot;</code>, singular, is the alerts' webhook channel: a different
+thing.)</li><li>Owner and administrators.</li></ul>
+<h2 id="events">Events</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Event</th><th scope="col">When</th></tr></thead><tbody><tr><td><code>entry.created</code></td><td>A new entry was made (in the editor, by an agent, as a copy of another)</td></tr><tr><td><code>entry.saved</code></td><td>An entry was saved (also its source, in the source view)</td></tr><tr><td><code>entry.imported</code></td><td>An import created or updated an entry (docs/API-IMPORT.md)</td></tr><tr><td><code>entry.published</code> / <code>entry.unpublished</code></td><td>An entry was published or taken off the site</td></tr><tr><td><code>entry.scheduled</code></td><td>An entry was scheduled to publish later</td></tr><tr><td><code>entry.moved</code></td><td>An entry got a new id and address (<code>entry</code> is where it is now, <code>from</code> where it was)</td></tr><tr><td><code>entry.deleted</code> / <code>entry.restored</code></td><td>An entry went to the trash or came back</td></tr><tr><td><code>release.published</code></td><td>A release was published (docs/API-RELEASES.md)</td></tr><tr><td><code>media.added</code> / <code>media.deleted</code></td><td>A media file was uploaded, edited into a copy, added from stock or imported; or deleted</td></tr><tr><td><code>site.live</code></td><td>A job that deployed the site finished: the change is live</td></tr><tr><td><code>site.failed</code></td><td>A job failed at its build or deploy step</td></tr><tr><td><code>ping</code></td><td>A test from Settings (<code>POST webhooks/:wid/test</code>); never listed, always sent</td></tr></tbody></table></div>
+<p>Events come from the audit log, after the thing is done: a save that was refused is no event.</p>
+<h2 id="hooks">Hooks</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET webhooks</code></td><td></td><td><code>{items: [hook], events: [string]}</code></td></tr><tr><td><code>POST webhooks</code></td><td><code>{name, url, events, active?}</code></td><td><code>201 {webhook: hook, secret}</code>: the secret is shown here only</td></tr><tr><td><code>PATCH webhooks/:wid</code></td><td>any of <code>{name, url, events, active}</code></td><td><code>{webhook: hook}</code></td></tr><tr><td><code>DELETE webhooks/:wid</code></td><td></td><td><code>{ok: true}</code>; its pending deliveries are given up</td></tr><tr><td><code>POST webhooks/:wid/secret</code></td><td></td><td><code>{secret}</code>: a new one, shown once; the old one stops at once</td></tr><tr><td><code>POST webhooks/:wid/test</code></td><td></td><td><code>202 {delivery: {id}}</code>: a <code>ping</code>, sent now</td></tr></tbody></table></div>
+<p>A hook: <code>{id, name, url, host, events, active, createdAt, updatedAt, last: {status, answer, at} | null, failing}</code>.
+<code>url</code> has its query values hidden (<code>?token=[hidden]</code>); <code>failing</code> counts deliveries that were tried and not taken.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Rule</th><th scope="col"><code>422 invalid</code> with <code>field</code></th></tr></thead><tbody><tr><td><code>name</code></td><td>1 to 80 characters</td><td><code>name</code></td></tr><tr><td><code>url</code></td><td>https, a public address, on port 443, no sign-in in it, at most 2000 characters</td><td><code>url</code></td></tr><tr><td><code>events</code></td><td>a non-empty list of the events above</td><td><code>events</code></td></tr><tr><td><code>active</code></td><td>true or false (default true)</td><td><code>active</code></td></tr></tbody></table></div>
+<p>At most 20 hooks a site (<code>409 too-many</code>). Each change is audited (<code>webhook.create</code>, <code>webhook.update</code>,
+<code>webhook.delete</code>, <code>webhook.secret</code>, <code>webhook.test</code>, <code>webhook.retry</code>) with the address's host only.</p>
+<h2 id="deliveries">Deliveries</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET webhooks/:wid/deliveries?status=&amp;page=&amp;perPage=</code></td><td><code>{items: [delivery], total, page, perPage}</code>, newest first; <code>status</code> is <code>pending</code>, <code>delivered</code>, <code>gave-up</code> or <code>held</code>; <code>perPage</code> at most 200 (default 50)</td></tr><tr><td><code>POST webhooks/:wid/deliveries/:did/retry</code></td><td><code>202 {delivery: {id}}</code>: one more try now; a delivered one is <code>409 delivered</code></td></tr></tbody></table></div>
+<p>A delivery: <code>{id, event, status, attempts, nextAt, answer, error, answerText, lastAt, durationMs, deliveredAt,
+createdAt, payload}</code>. <code>answer</code> is the HTTP code of the last try, <code>answerText</code> the first 500 characters it said
+(scrubbed), <code>error</code> why it was not taken, <code>nextAt</code> when it is tried again (<code>null</code> once delivered or given up).</p>
+<h2 id="the-request">The request</h2>
+<pre><code>POST &lt;the hook's url&gt;
+Content-Type: application/json
+User-Agent: Markstage/1 (webhook)
+Markstage-Event: entry.published
+Markstage-Delivery: wd_…
+Markstage-Signature: t=1761728400,v1=5f2b…
+
+{&quot;id&quot;:&quot;wd_…&quot;,&quot;event&quot;:&quot;entry.published&quot;,&quot;at&quot;:&quot;2026-10-29T09:00:00.000Z&quot;,
+ &quot;site&quot;:{&quot;name&quot;:&quot;Example Co&quot;,&quot;url&quot;:&quot;https://example.com&quot;},
+ &quot;actor&quot;:{&quot;id&quot;:&quot;u_…&quot;,&quot;name&quot;:&quot;Alice&quot;},
+ &quot;entry&quot;:{&quot;collection&quot;:&quot;posts&quot;,&quot;id&quot;:&quot;moving-day&quot;,&quot;url&quot;:&quot;/blog/moving-day/&quot;},
+ &quot;commit&quot;:&quot;3f1c…&quot;}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">What</th></tr></thead><tbody><tr><td><code>id</code></td><td>The delivery's id, the same on each try: a receiver can skip one it has seen</td></tr><tr><td><code>event</code>, <code>at</code></td><td>The event and when it happened</td></tr><tr><td><code>site</code></td><td>The site's name and address</td></tr><tr><td><code>actor</code></td><td>Who did it (<code>id: null</code> for the scheduler), by name</td></tr><tr><td><code>entry</code></td><td><code>{collection, id, url}</code> for <code>entry.*</code> (<code>url</code>: the page's path, <code>null</code> when it has none)</td></tr><tr><td><code>from</code></td><td><code>{collection, id}</code>: where a moved entry was</td></tr><tr><td><code>release</code></td><td><code>{id}</code> for <code>release.published</code></td></tr><tr><td><code>job</code></td><td><code>{id, kind, step?}</code> for <code>site.live</code> and <code>site.failed</code> (<code>step</code>: where it failed)</td></tr><tr><td><code>media</code></td><td><code>{id, paths, count?}</code> for <code>media.*</code>: the file's id (<code>null</code> for a batch) and paths under the site repo; <code>count</code> for a batch delete</td></tr><tr><td><code>commit</code></td><td>The commit the change made, when there is one</td></tr></tbody></table></div>
+<p>Answer 2xx within 10 seconds to take it; anything else (or no answer, or a redirect) is tried again. The receiver's
+answer is read up to 64 KB.</p>
+<h3 id="checking-the-signature">Checking the signature</h3>
+<p><code>Markstage-Signature</code> is <code>t=&lt;unix seconds&gt;,v1=&lt;hex&gt;</code>, where hex is HMAC-SHA256, keyed with the hook's secret, of
+<code>&lt;t&gt;.&lt;the raw body&gt;</code>. Check it on the raw bytes, before parsing, with a constant-time compare, and refuse a <code>t</code> more
+than five minutes old:</p>
+<pre data-lang="js"><code class="language-js">import crypto from 'node:crypto';
+
+function fromMarkstage(secret, header, rawBody, now = Date.now()) {
+  const { t, v1 } = Object.fromEntries(header.split(',').map((p) =&gt; p.split('=')));
+  if (!t || !v1 || Math.abs(now / 1000 - Number(t)) &gt; 300) return false;
+  const want = crypto.createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
+  return v1.length === want.length &amp;&amp; crypto.timingSafeEqual(Buffer.from(v1), Buffer.from(want));
+}</code></pre>
+<p>After <code>POST webhooks/:wid/secret</code> the old secret no longer signs: update the receiver with the new one.</p>
+<p>Tests: <code>packages/server/test/webhooks.test.mjs</code>.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-WEBHOOKS.md" target="_blank" rel="noopener">docs/API-WEBHOOKS.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-sso/"><span class="small muted">Previous</span>Single sign-on (OpenID Connect)</a>
+          <a class="next" href="../api-import/"><span class="small muted">Next</span>Importing entries and media</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

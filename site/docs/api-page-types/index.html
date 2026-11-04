@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page Frames and Page Types in Markstage</title>
+    <meta name="description" content="Two settings a page keeps in its own file: the frame the site lays it out in (full width, reading or plain) and its page type, with the checks each type needs." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-page-types/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Page Frames and Page Types in Markstage" />
+    <meta property="og:description" content="Two settings a page keeps in its own file: the frame the site lays it out in (full width, reading or plain) and its page type, with the checks each type needs." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-page-types/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Page Frames and Page Types in Markstage" />
+    <meta name="twitter:description" content="Two settings a page keeps in its own file: the frame the site lays it out in (full width, reading or plain) and its page type, with the checks each type needs." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Page frames and page types",
+          "item": "https://spcaeo.github.io/markstage/docs/api-page-types/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Page Frames and Page Types in Markstage",
+      "description": "Two settings a page keeps in its own file: the frame the site lays it out in (full width, reading or plain) and its page type, with the checks each type needs.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-page-types/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/" aria-current="page">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Page frames and page types</li></ol></nav>
+        <h1>Page frames and page types</h1>
+        <p class="lead left">Two settings a page keeps in its own file: the frame the site lays it out in (full width, reading or plain) and its page type, with the checks each type needs.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#turning-it-on">Turning it on</a></li><li><a href="#the-save-check">The save check</a></li><li><a href="#new-entries">New entries</a></li><li><a href="#the-checks">The checks</a></li><li><a href="#the-sites-layout-markstage-astro-pages">The site's layout: @markstage/astro/pages</a></li><li><a href="#the-builds-check">The build's check</a></li></ul></nav>
+        <div class="prose">
+<p>Two settings a page keeps in its own file, so the site's build reads them like any other value.</p>
+<ul><li><strong>The frame</strong> is how the site lays the page out around its content: <strong>full width</strong> (money and landing pages:
+sections edge to edge, no reading column or sidebar), <strong>reading</strong> (articles: one reading width, the menu and a
+list of contents) or <strong>plain</strong> (legal and thank-you pages: the text alone). The site's layout picks its shape
+from it.</li><li><strong>The page type</strong> is what the page is for: a money page, a migration landing page, a pillar (hub), an article, a
+comparison, contact, about, a list, a plain page. A type brings a frame, a Library page template to start from,
+locks that hold on every page of the type (the booking button of a money page can't be removed), and checks that
+say what such a page still needs (a FAQ, Service structured data, a link to its hub).</li></ul>
+<p>What an editor sees:</p>
+<ul><li><strong>Post settings</strong> (an article) and <strong>the top of the sections list</strong> (a page): a Page box with the page type, the
+frame (&quot;As its type (Full width)&quot; until the page picks its own) and what the type still needs: a tick, a warning
+or a cross per check, each with what to do, and <strong>Check again</strong>.</li><li><strong>New</strong> (<code>#/new/&lt;collection&gt;?type=&lt;type&gt;</code>): a card per type; a type picks its template.</li><li><strong>Publish</strong>: one row for the type's checks; a failed <code>block</code> check stops the publish like the other publish
+rules (an editor may publish anyway, audited).</li><li>The padlocks: a block the type locks shows &quot;Locked by the site&quot;, like the site's own rules.</li></ul>
+<p>Code: <code>packages/core/src/page-types.mjs</code> (pure: config, an entry's type and frame, the save check, the lock rules,
+the checks), <code>packages/server/src/page-types.mjs</code> (the save check, the type's locks, <code>page-checks</code>, the preflight),
+<code>packages/astro/src/api-pages.mjs</code> (the same in <code>astro dev</code>, and the build's check), <code>packages/astro/src/pages.mjs</code>
+(<code>@markstage/astro/pages</code>, the site's helpers), and in the editor <code>src/page-types.ts</code> and
+<code>src/settings/page-box.ts</code>.</p>
+<h2 id="turning-it-on">Turning it on</h2>
+<p>In <code>markstage.config.mjs</code> (docs/CONFIG.md, keys <code>frames</code> and <code>pageTypes</code>):</p>
+<pre data-lang="js"><code class="language-js">export default defineConfig({
+  // the three frames (full, reading, plain), kept in each entry's `frame` key
+  frames: true,
+  collections: [
+    // a collection's frame is the default of its entries (without one: &quot;reading&quot;)
+    { id: 'pages', label: 'Pages', format: 'json', dir: 'src/content/pages', url: '{uri}', frame: 'full' },
+    { id: 'posts', label: 'Posts', format: 'md', dir: 'src/content/posts', url: '/blog/{id}/', frame: 'reading' },
+  ],
+  pageTypes: {
+    key: 'pageType', // the entry key that names its type (default)
+    types: [
+      {
+        id: 'money',
+        label: 'Money page',
+        description: 'Sells one service: a booking button, questions and answers, Service structured data.',
+        collections: ['pages'],
+        frame: 'full',
+        template: 'lib_money-page', // a shared Library template (markstage/library/template/lib_money-page.json)
+        locks: { pages: { booking: ['remove'] } },
+        checks: [
+          { id: 'booking', label: 'A booking button', section: 'booking', level: 'block' },
+          { id: 'faq', label: 'Questions and answers', section: 'faq' },
+          { id: 'service', label: 'Service structured data', jsonld: 'Service' },
+        ],
+      },
+      { id: 'migration', label: 'Migration landing page', collections: ['pages'], frame: 'full', template: 'lib_migration-page',
+        locks: { pages: { booking: ['remove'] } },
+        checks: [{ label: 'A booking button', section: 'booking', level: 'block' }, { label: 'Questions and answers', section: 'faq' }] },
+      { id: 'pillar', label: 'Pillar page', collections: ['pages'], frame: 'reading', checks: [{ label: 'A topic', field: 'cluster', level: 'block' }] },
+      { id: 'comparison', label: 'Comparison', collections: ['posts'], frame: 'reading', checks: [{ label: 'A comparison table', section: 'table' }] },
+      { id: 'article', label: 'Article', collections: ['posts'], frame: 'reading',
+        checks: [
+          { id: 'hub', label: 'Links to its hub', linksTo: { pageType: 'pillar', sameField: 'cluster' } },
+          { id: 'money', label: 'Links to a money page', linksTo: { pageType: ['money', 'migration'] } },
+        ] },
+      { id: 'contact', label: 'Contact', collections: ['pages'], frame: 'plain', checks: [{ label: 'A contact form', section: 'contact' }] },
+      { id: 'about', label: 'About and trust', collections: ['pages'], frame: 'full', checks: [{ label: 'Credentials', section: 'credentials' }] },
+      { id: 'list', label: 'List', collections: ['pages'], frame: 'reading' },
+      { id: 'plain', label: 'Plain page', collections: ['pages'], frame: 'plain' },
+    ],
+  },
+});</code></pre>
+<p>The example blog (<code>examples/blog</code>) runs a smaller one: a guide (full width, from the <code>lib_guide-post</code> template it
+ships, needs a topic), an article (reading, links to the guide of its topic) and a legal page (plain).</p>
+<h3 id="frames"><code>frames</code></h3>
+<p><code>true</code> gives the three frames above. <code>{key, list}</code> names other ones: <code>key</code> is the entry key that keeps the choice
+(default <code>'frame'</code>), <code>list</code> is <code>[{id, label, hint}]</code> (<code>id</code> lowercase letters, digits and hyphens; <code>hint</code> is the
+line under the choice). A collection's <code>frame</code> is its entries' default (it must be one of the list); a collection
+without one gets <code>reading</code> (or the first frame when there is no <code>reading</code>). A collection may name a frame only when
+<code>frames</code> is on.</p>
+<h3 id="pagetypes"><code>pageTypes</code></h3>
+<p><code>{key?, types}</code> (a bare list is <code>types</code>). <code>key</code> is the entry key that names the type (default <code>'pageType'</code>; it must
+differ from the frames' key). Each type:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>id</code></td><td><code>^[a-z][a-z0-9-]{0,39}$</code></td><td>required</td><td>Kept in the entry (<code>pageType: money</code>).</td></tr><tr><td><code>label</code></td><td>string</td><td>required</td><td>Its name in the editor.</td></tr><tr><td><code>description</code></td><td>string</td><td><code>''</code></td><td>Under its name in the Page box and on the New sheet.</td></tr><tr><td><code>collections</code></td><td>list of collection ids</td><td>every collection</td><td>Where it may be used.</td></tr><tr><td><code>frame</code></td><td>a frame id</td><td>none</td><td>The frame of its pages that pick none (needs <code>frames</code>).</td></tr><tr><td><code>template</code></td><td><code>lib_…</code></td><td>none</td><td>The shared Library page template a new page of the type starts from (docs/API-LIBRARY.md). A template not (yet) in the Library: the page starts blank.</td></tr><tr><td><code>locks</code></td><td><code>{pages: {&lt;section type&gt;: [...]}, articles: {&lt;box&gt;: [...]}}</code></td><td>none</td><td>Locks that hold on every page of the type, written like the site's <code>locks</code> (<code>'move'</code>, <code>'remove'</code>, <code>'edit'</code>).</td></tr><tr><td><code>checks</code></td><td>list</td><td><code>[]</code></td><td>What a page of the type needs (below).</td></tr></tbody></table></div>
+<p>Each check is <code>{id?, label, level?, hint?}</code> with exactly one of:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Kind</th><th scope="col">Passes when</th></tr></thead><tbody><tr><td><code>section: '&lt;type&gt;'</code></td><td>The page has a section of that type (a JSON page: an item whose <code>discriminant</code>, or <code>type</code>, is it), or an article has a box of that block name.</td></tr><tr><td><code>field: '&lt;key&gt;'</code></td><td>The entry's key (dotted: <code>seo.description</code>) is filled: not empty, not <code>false</code>, not an empty list.</td></tr><tr><td><code>jsonld: '&lt;schema.org type&gt;'</code></td><td>The entry's own data has an object with that <code>@type</code>, or its last built page has it in an <code>application/ld+json</code> script (the server reads <code>verify.public</code>; before the first build only the data counts).</td></tr><tr><td><code>linksTo: {pageType, sameField?}</code></td><td>The entry links (in its text, its HTML or a link field) to a page of that type (or one of a list); with <code>sameField</code>, one whose value of that key is the same as this entry's (the hub of its own cluster). <code>linksTo: 'money'</code> is short for <code>{pageType: 'money'}</code>.</td></tr><tr><td><code>links: 'pillar'|'lead'|'money'|'anchors'|'redirects'|'outside'</code></td><td>From the site's topics and link map (config <code>topics</code>, docs/API-LINKS.md): the page links in its text to its topic's main page (<code>pillar</code>), its group's lead (<code>lead</code>), its topic's service page (<code>money</code>); it has no vague link words and no words used for two pages (<code>anchors</code>); no link to a redirect, a hidden page or no page (<code>redirects</code>); every outside link has the rel its domain needs (<code>outside</code>). In <code>astro dev</code> it passes.</td></tr></tbody></table></div>
+<p><code>level</code> is <code>'warn'</code> (default: the Page box and the publish sheet show it) or <code>'block'</code> (it also stops a publish
+until fixed; an editor may publish anyway, and the audit log keeps it). <code>id</code> defaults to <code>&lt;kind&gt;-&lt;n&gt;</code> (its place
+in the list, from 1). <code>hint</code> replaces the words Markstage writes for what to do.</p>
+<p>A mistake in either key stops the config from loading, with the key and the reason.</p>
+<h2 id="the-save-check">The save check</h2>
+<p>Every save (the canvas, Source, a JSON page's changes, the API, bulk changes, imports, releases, MCP) is checked on
+the server and in <code>astro dev</code>:</p>
+<ul><li>A frame or page type the save <strong>sets or changes</strong> must be one of the site's (and the type one of its
+collection's): else <code>422 invalid-page</code>, <code>{fields: {&lt;key&gt;: message}}</code>, e.g. &quot;“wide” is not a frame of this site.
+Pick one of: Full width, Reading, Plain.&quot; A value the file already had is left alone, so an old page still saves.</li><li>An existing page's type changes for <strong>owners, administrators and editors</strong> only (<code>403</code>; dev mode is the owner).
+An author or contributor may set one on a new entry.</li><li>A save is held to the locks of its type <strong>before and after</strong> it: dropping the type and the locked booking section
+in one save is refused (<code>423 locked</code>, docs/API.md &quot;Locks&quot;).</li></ul>
+<h2 id="new-entries">New entries</h2>
+<p><code>POST collections/:c/entries</code> takes <code>pageType</code>: the entry's key is set to it, and without a <code>template</code> (or
+<code>templateId</code>) the type's template is used when the Library has it. <code>422 invalid-page</code> for a type the collection
+does not have. <code>astro dev</code> sets the key on a new post the same way (it has no Library).</p>
+<h2 id="the-checks">The checks</h2>
+<p><code>GET collections/:c/entries/:id/page-checks</code> → <code>{type: {id, label} | null, frame: {id, label, hint, from} | null,
+checks: [{id, label, level, ok, message?}]}</code>: the saved entry's type, its frame (<code>from</code>: <code>'page'</code>, <code>'type'</code> or
+<code>'collection'</code>) and the type's checks (<code>message</code>, when not ok, says what to do). The same in <code>astro dev</code> (without
+built pages: a JSON-LD check reads the data only). Anyone who can read the entry may ask.</p>
+<p>The preflight (<code>GET collections/:c/entries/:id/preflight</code>, docs/API.md) gives the same as <code>page</code>, and each failed
+check is a verdict <code>{rule: 'pageType', level, check, count: 1, message}</code> in <code>rules</code>: a <code>block</code> one sets <code>blocked</code>,
+so publish, schedule and a release are refused (<code>422</code>) like for the other publish rules.</p>
+<h2 id="the-sites-layout-markstage-astro-pages">The site's layout: <code>@markstage/astro/pages</code></h2>
+<pre data-lang="astro"><code class="language-astro">---
+import { frameOf, pageTypeOf } from '@markstage/astro/pages';
+const frame = await frameOf('posts', post.data);    // {id: 'reading', label, hint, from} or null
+const type = await pageTypeOf('posts', post.data);   // {id, label, description, collections, frame} or null
+---
+&lt;Layout frame={frame?.id ?? 'reading'}&gt; … &lt;/Layout&gt;</code></pre>
+<p>Also <code>frames()</code> and <code>pageTypes()</code> (the lists), and <code>pagesOf(config)</code> for a script or a test without the
+integration. The example blog's <code>src/layouts/Base.astro</code> sets <code>class=&quot;frame-&lt;id&gt;&quot;</code> on the body and its post page
+lists the contents of a reading post and leaves the date and byline off a plain one.</p>
+<h2 id="the-builds-check">The build's check</h2>
+<p><code>astro build</code> stops when an entry has a frame or page type the site does not have, naming each file:</p>
+<pre><code>markstage: an entry has a frame or page type the site does not have:
+  src/content/posts/odd.md: “wide” is not a frame of this site. Pick one of: Full width, Reading, Plain.</code></pre>
+<p><code>markstage({ checkPages: false })</code> lets it through.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-PAGE-TYPES.md" target="_blank" rel="noopener">docs/API-PAGE-TYPES.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-links/"><span class="small muted">Previous</span>Topics and internal links</a>
+          <a class="next" href="../api-authors/"><span class="small muted">Next</span>Authors</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

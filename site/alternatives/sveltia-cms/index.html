@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sveltia CMS alternative for Astro: Markstage</title>
+    <meta name="description" content="Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/alternatives/sveltia-cms/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Sveltia CMS alternative for Astro: Markstage" />
+    <meta property="og:description" content="Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/alternatives/sveltia-cms/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sveltia CMS alternative for Astro: Markstage" />
+    <meta name="twitter:description" content="Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta name="twitter:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Alternatives",
+          "item": "https://spcaeo.github.io/markstage/alternatives/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Sveltia CMS",
+          "item": "https://spcaeo.github.io/markstage/alternatives/sveltia-cms/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "A Sveltia CMS alternative for Astro sites",
+      "description": "Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026.",
+      "url": "https://spcaeo.github.io/markstage/alternatives/sveltia-cms/",
+      "dateModified": "2026-11-03",
+      "about": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Markstage",
+          "url": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "Thing",
+          "name": "Sveltia CMS"
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Sveltia CMS free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Its site says it is free, with no server and no database."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Sveltia CMS work with Astro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Its README says it works well with Astro and has a showcase of Astro sites. It is not in Astro's own list of CMS guides."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Sveltia CMS have visual editing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It has a live preview beside the form, with click-to-highlight. Editing happens in the form. Markstage edits on the page itself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can my writers use Markstage without a GitHub account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. People sign in to Markstage with an email and password (and two-step sign-in), or through your single sign-on provider. Each save is still a git commit in their name."
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/" aria-current="page">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc wide">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../alternatives/">Alternatives</a></li><li aria-current="page">Sveltia CMS</li></ol></nav>
+      <h1>A Sveltia CMS alternative for Astro sites</h1>
+      <p class="lead left">Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026.</p>
+      <p class="small muted">Facts about Sveltia CMS checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <div class="prose">
+<p>Sveltia CMS is a modern rewrite of Netlify/Decap CMS: a fast single-page app with no server and no database,
+strong translation support and a two-pane editor with live preview. Markstage takes a different path: writers
+edit on the page, and a server adds staging, roles and a forms inbox.</p>
+<h2 id="who-each-one-is-for">Who each one is for</h2>
+<p><strong>Sveltia CMS</strong> suits sites that want a free, light editor with nothing to host, first-class multilingual
+content, and a smooth move from Decap CMS.</p>
+<p><strong>Markstage</strong> suits teams whose writers should work on the real design, and who need sign-in without a git
+account, roles, staging and single sign-on. It needs a server. Markstage is pre-release.</p>
+<h2 id="side-by-side">Side by side</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Sveltia CMS</th></tr></thead><tbody><tr><td>Editing</td><td>On the real page</td><td>Two panes: form and live preview, with scroll sync and click-to-highlight</td></tr><tr><td>What you run</td><td>A Node server next to your static site</td><td>Nothing: a single-page app served from a CDN</td></tr><tr><td>Sign-in</td><td>Email and password, two-step, single sign-on</td><td>OAuth with your git host</td></tr><tr><td>Review before going live</td><td>Staging and production with rules</td><td>Editorial workflow (GitHub, GitLab, Gitea/Forgejo)</td></tr><tr><td>Translations</td><td>Per-language status: missing, outdated, done</td><td>First-class i18n, locales in one file, separate files or folders</td></tr><tr><td>Formats</td><td>Markdown and JSON</td><td>Markdown with front matter, YAML, JSON, TOML</td></tr><tr><td>Forms inbox, SEO checks</td><td>Yes</td><td>Not listed</td></tr><tr><td>Price</td><td>Free to self-host</td><td>Free</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>MIT</td></tr></tbody></table></div>
+<h2 id="where-sveltia-cms-is-stronger">Where Sveltia CMS is stronger</h2>
+<ul><li><strong>Nothing to host.</strong> No server, no database, no upgrades to install.</li><li><strong>Translations.</strong> Many ways to lay out locales, localized slugs, and per-locale required fields.</li><li><strong>Mobile.</strong> Its docs list mobile support.</li><li><strong>Formats.</strong> YAML and TOML as well as Markdown and JSON.</li></ul>
+<h2 id="moving-from-sveltia-cms-to-markstage">Moving from Sveltia CMS to Markstage</h2>
+<p>Sveltia reads Decap-style configuration, so your collections already name their folders. Add the same folders as
+collections in <code>markstage.config.mjs</code> and add the <code>@markstage/astro</code> integration. Markstage edits Markdown and
+JSON; keep TOML or YAML data files in Sveltia or convert them. Writers then sign in to Markstage with an email
+address instead of a git host account.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<h3 id="is-sveltia-cms-free">Is Sveltia CMS free?</h3>
+<p>Yes. Its site says it is free, with no server and no database.</p>
+<h3 id="does-sveltia-cms-work-with-astro">Does Sveltia CMS work with Astro?</h3>
+<p>Its README says it works well with Astro and has a showcase of Astro sites. It is not in Astro's own list of CMS
+guides.</p>
+<h3 id="does-sveltia-cms-have-visual-editing">Does Sveltia CMS have visual editing?</h3>
+<p>It has a live preview beside the form, with click-to-highlight. Editing happens in the form. Markstage edits on
+the page itself.</p>
+<h3 id="can-my-writers-use-markstage-without-a-github-account">Can my writers use Markstage without a GitHub account?</h3>
+<p>Yes. People sign in to Markstage with an email and password (and two-step sign-in), or through your single sign-on
+provider. Each save is still a git commit in their name.</p>
+<h2 id="sources">Sources</h2>
+<p>Checked on 2026-11-03: <a href="https://github.com/sveltia/sveltia-cms" rel="noopener">Sveltia CMS on GitHub</a> ·
+<a href="https://sveltiacms.app/en/features" rel="noopener">Sveltia features</a> ·
+<a href="https://sveltiacms.app/en/docs/workflows/editorial" rel="noopener">Sveltia editorial workflow</a> ·
+<a href="https://sveltiacms.app/en/docs/collections/entries" rel="noopener">Sveltia entry collections</a> ·
+<a href="https://sveltiacms.app/en/docs/start" rel="noopener">Sveltia getting started</a>. Markstage facts: the
+<a href="../../compare/full/">full comparison</a>.</p>
+      </div>
+      <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a><a class="btn btn-secondary" href="../../compare/"><span>All comparisons</span></a><a class="btn btn-text" href="../../docs/"><span>Read the docs</span></a></p>
+      <section aria-labelledby="more-alt">
+        <h2 id="more-alt">More comparisons</h2>
+        <ul class="link-list"><li><a href="../../alternatives/builder-io/">A Builder.io alternative for Astro sites</a></li><li><a href="../../alternatives/cloudcannon/">A self-hosted CloudCannon alternative for Astro</a></li><li><a href="../../alternatives/contentful/">A Contentful alternative for Astro sites</a></li><li><a href="../../alternatives/decap-cms/">A Decap CMS alternative for Astro sites</a></li><li><a href="../../alternatives/emdash/">EmDash vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/front-matter-cms/">A Front Matter CMS alternative for Astro teams</a></li><li><a href="../../alternatives/keystatic/">A Keystatic alternative for Astro sites</a></li><li><a href="../../alternatives/outstatic/">An Outstatic alternative for Astro sites</a></li><li><a href="../../alternatives/pages-cms/">A Pages CMS alternative for Astro sites</a></li><li><a href="../../alternatives/payload/">A Payload alternative for Astro content sites</a></li><li><a href="../../alternatives/prismic/">A Prismic alternative for Astro sites</a></li><li><a href="../../alternatives/sanity/">A Sanity alternative for Astro sites</a></li><li><a href="../../alternatives/sitepins/">A Sitepins alternative for Astro sites</a></li><li><a href="../../alternatives/statamic/">A Statamic alternative for Astro sites</a></li><li><a href="../../alternatives/storyblok/">A Storyblok alternative for Astro sites</a></li><li><a href="../../alternatives/strapi/">A Strapi alternative for Astro content sites</a></li><li><a href="../../alternatives/studiocms/">StudioCMS vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/tinacms/">A TinaCMS alternative for Astro sites</a></li><li><a href="../../alternatives/wordpress/">A WordPress alternative for Astro sites</a></li></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

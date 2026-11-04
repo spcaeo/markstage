@@ -50,8 +50,10 @@ source"; `npm run licence` checks every file for it, in both repos.
 
 Contributions made on the public repo come back by hand: apply the pull request's patch in the private repo
 (`gh pr diff <n> --repo spcaeo/markstage | git apply`), commit with the contributor as the author (keep their
-`Signed-off-by:`), and the next sync carries it out again. Close the public pull request with a link to the sync
-commit.
+`Signed-off-by:`) and a `Public-PR: #<n>` trailer, and the next sync carries it out again. The sync credits the
+author of every commit with that trailer as a `Co-authored-by:` of its public commit (and no other author, so no
+private address goes out), which GitHub shows on the contributor's profile. Close the public pull request with a
+link to the sync commit, and name the contributor in the CHANGELOG entry for the release that ships it.
 
 ## Releases: the order
 

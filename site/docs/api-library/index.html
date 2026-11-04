@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Library: Templates, Sections and Snippets</title>
+    <meta name="description" content="One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-library/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Library: Templates, Sections and Snippets" />
+    <meta property="og:description" content="One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-library/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Library: Templates, Sections and Snippets" />
+    <meta name="twitter:description" content="One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "The Library",
+          "item": "https://spcaeo.github.io/markstage/docs/api-library/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage Library: Templates, Sections and Snippets",
+      "description": "One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-library/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/" aria-current="page">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">The Library</li></ol></nav>
+        <h1>The Library</h1>
+        <p class="lead left">One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#synced-items">Synced items</a></li><li><a href="#packs">Packs</a></li><li><a href="#from-wordpress">From WordPress</a></li><li><a href="#from-a-web-page">From a web page</a></li><li><a href="#command-line">Command line</a></li><li><a href="#from-before-the-library">From before the Library</a></li><li><a href="#proof">Proof</a></li></ul></nav>
+        <div class="prose">
+<p>Paths are under <code>&lt;basePath&gt;/api/</code>, signed in, like docs/API.md.</p>
+<p>One store of parts to use again: page <strong>templates</strong> (a new entry starts from one), <strong>sections</strong> (a page section, or a
+piece of an article) and <strong>snippets</strong> (a piece of an article). Shared items are files in the site repo,
+<code>&lt;library.dir&gt;/&lt;kind&gt;/&lt;id&gt;.json</code> (server config <code>library: {dir}</code>, default <code>markstage/library</code>), with the item's picture
+beside it as <code>&lt;id&gt;.png</code>; every change is one commit by the person who made it, so items have a history, show in
+Environments plans as content and are promoted like it. A personal snippet (not shared) stays in the server's
+database and its picture in the data dir. Ids are opaque (<code>lib_…</code>; <code>sn_…</code> and <code>t_…</code> from before).</p>
+<p>Item: <code>{id, kind: 'template'|'section'|'snippet', synced, name, description, folder, tags, order, collection,
+sectionType, locks: {move?, remove?, edit?} | null, body, thumb: url | null, usedOn, shared, createdBy, createdByName,
+createdAt, updatedAt, version, syncVersion?, imported?}</code> (<code>syncVersion</code>: on a synced item, the version its uses' markers carry). <code>body</code> is <code>{frontmatter?, doc?, data?, _fill?}</code> for a template (<code>_fill</code>:
+the field paths the writer fills in, never written into the entry; a template never keeps <code>slug</code>, <code>id</code>, <code>order</code>, its
+collection's address field (<code>fields.url</code>, or a url that is just <code>{field}</code>), <code>seo.canonical</code>, dates or
+<code>author</code>/<code>authors</code>, the server takes them out), <code>{value}</code> for a page section (one item of a page's sections; its
+<code>discriminant</code> is the <code>sectionType</code>) or <code>{doc}</code> for a piece of an article. Links go through the unsafe-link rule
+(<code>422</code>); an item is at most 1 MB.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET library?kind=&amp;synced=1&amp;shared=0|1&amp;folder=&amp;tag=&amp;collection=&amp;q=&amp;sort=place|name|-name|updated|-updated&amp;page=&amp;perPage=</code></td><td></td><td><code>{items, total, page, perPage (50, at most 200), facets: {kinds: {template, section, snippet}, synced, folders: [{name, count}], tags: [{name, count}]}}</code>: the shared items and your own. <code>synced</code>: how many synced items the kind filter leaves (the other filters aside). <code>q</code> searches the name, description, folder and tags. <code>place</code> (default): folders A–Z (none last), then <code>order</code>, then the name</td></tr><tr><td><code>GET library/:id</code></td><td></td><td>the item with <code>history: [{sha, author, date, message}]</code> (the commits of its file), <code>usedOn</code> (how many entries use a synced item) and <code>uses</code> (those entries, as in <code>impact</code>); someone else's personal snippet is <code>404</code></td></tr><tr><td><code>GET library/:id/impact</code></td><td></td><td><code>{pages: [{collection, id, title, url, status, uses, state: 'synced'|'changed'}]}</code>: the entries a change of a synced item reaches (&quot;This changes N pages&quot;); <code>changed</code> is a copy changed in place, which a change leaves alone</td></tr><tr><td><code>POST library</code></td><td><code>{kind, name, body, description?, folder?, tags?, order?, synced?, shared? (default true), collection? (template), sectionType?, locks?}</code></td><td><code>201</code> item. Templates, sections and synced items: editors and up; a snippet: anyone (<code>shared: false</code> keeps it to yourself; only a snippet can be)</td></tr><tr><td><code>PATCH library/:id</code></td><td>any of the fields, and the <code>version</code> you opened</td><td>the item; <code>400</code> without a version, <code>409 {current}</code> when it changed, <code>400</code> for another kind. Sharing a personal snippet moves it into the repo with its id; only its maker takes it back. For a synced item whose body or locks change (or that stops being synced) the answer also has <code>{changed, skipped, job}</code>, as below</td></tr><tr><td><code>PUT library/:id</code></td><td><code>{body, version, locks?}</code></td><td>&quot;Edit everywhere&quot; of a synced item: <code>{changed (entries rewritten), skipped: [{collection, id, title, url}] (copies changed in place, left alone), job: {id} | null, item}</code></td></tr><tr><td><code>DELETE library/:id[?detach=1]</code></td><td></td><td><code>{ok, commit}</code>; a synced item still used is <code>409 in-use {pages}</code> unless <code>detach=1</code>, which turns every copy into plain content in the same commit</td></tr><tr><td><code>POST library/:id/reset</code></td><td><code>{collection, entry}</code></td><td><code>{commit, copies, job: {id} | null}</code>: a page's copies of a synced section changed there become the item again, in one commit <code>Library: reset the section “X” on “page”</code>, built and deployed when the page is live; <code>409</code> when the page already shows it; editors; audited as <code>library.reset</code></td></tr><tr><td><code>POST library/:id/duplicate</code></td><td><code>{name?, kind?, shared?, collection?}</code></td><td><code>201</code> the copy (<code>&quot;&lt;name&gt; (copy)&quot;</code>)</td></tr><tr><td><code>GET library/export?ids=&lt;id&gt;,&lt;id&gt;</code></td><td></td><td>the pack of these shared items, a <code>.json</code> download (<code>markstage-pack-&lt;date&gt;.json</code>), audited as <code>library.export</code></td></tr><tr><td><code>POST library/import[?dry=1]</code></td><td><code>multipart/form-data</code>: <code>file</code> (and <code>onClash: skip|copy</code>; <code>mediaMap</code> for WordPress)</td><td>a WordPress export or dump: see &quot;From WordPress&quot;; a pack: dry <code>{items: [{path, kind, name, exists?}], media, problems}</code>; otherwise <code>{created, skipped, media, problems, commit}</code>. Editors and up. <code>415</code> for a file it does not read. At most <code>library.importMaxBytes</code> (64 MB by default; <code>413</code>), streamed to <code>&lt;dataDir&gt;/tmp</code> first; <code>409 busy</code> while another import runs</td></tr><tr><td><code>POST library/import/url</code></td><td><code>{url}</code></td><td>the parts of a web page to choose from (&quot;From a web page&quot;, below)</td></tr><tr><td><code>POST library/import/url/parts</code></td><td><code>{url, parts, kind?, folder?, dry?}</code></td><td>the chosen parts as items in <code>Imported</code>, with their pictures, in one commit</td></tr><tr><td><code>GET library/:id/thumb</code></td><td></td><td>the PNG, or <code>404</code></td></tr><tr><td><code>PUT library/:id/thumb</code></td><td>a PNG (<code>Content-Type: image/png</code>, at most 200 KB)</td><td>the item; <code>415</code> not a PNG, <code>413</code> too big</td></tr><tr><td><code>DELETE library/:id/thumb</code></td><td></td><td>the item</td></tr></tbody></table></div>
+<p>Who changes what: a shared snippet its maker or an editor; everything else editors and up. Audited as
+<code>library.create|update|delete|duplicate|thumb</code> (and <code>library.move</code>, below).</p>
+<p>A page type (config <code>pageTypes</code>, docs/API-PAGE-TYPES.md) names a shared template by its id (<code>template:
+'lib_money-page'</code>): a site can ship its types' templates as files in <code>&lt;library.dir&gt;/template/</code>, and a new page of
+the type starts from it (<code>POST collections/:c/entries</code> with <code>pageType</code>, the New sheet's type cards).</p>
+<h2 id="synced-items">Synced items</h2>
+<p>A synced section or snippet (not a template) is used as an ordinary copy with a marker, so the site's build reads plain
+content and its HTML is the same as an inline copy's:</p>
+<ul><li><strong>pages</strong>: <code>_synced: {id, version}</code> on the section. The site's schema keeps only a section's <code>discriminant</code> and
+<code>value</code> (the pilot site's <code>src/content.config.ts</code> <code>flattenSection</code>), so the marker never reaches the HTML. The item's
+<code>locks</code> are written where the site keeps a section's lock, in the copy's value as <code>value._lock</code> (as on the pilot site's
+legal pages and as the editor's padlock writes it; a section with no value object gets <code>_lock</code> on itself), so
+deleting, moving or changing it is refused (423) like any locked section; a copy the item brings with its own locks
+is not a lock change of the person inserting it. The lock rules read a lock in either place.</li><li><strong>articles</strong>: frontmatter <code>synced: [{id, version}]</code>; the copy is the item's blocks as Markdown, found by exact text
+as whole blocks, so nothing is added to the body.</li></ul>
+<p><code>version</code> (the hash of the item's body the copy was made from) is written by the server on save. Rules on every save,
+whatever the route:</p>
+<ul><li>a synced copy changed without detaching it: <code>409 synced {id, name}</code> (&quot;“X” is synced from the Library: change it
+there (every page that uses it follows), or detach it here first&quot;); a copy already changed before the save (by hand
+in git) does not block other changes;</li><li>detaching is dropping the marker; a locked item is detached by editors and up only (<code>403</code>);</li><li>an article copy of an item locked against removal can't be deleted (<code>423</code>), whoever saves.</li></ul>
+<p>A copy changed outside Markstage (in Source by hand, or in git) is never overwritten: a change of the item skips it
+and names it (<code>skipped</code>, and <code>state: 'changed'</code> in <code>impact</code>), and the page's content check (preflight <code>synced</code>, a
+<code>synced</code> warning) says &quot;This copy of “X” was changed here, so it no longer follows the Library. Keep it as its own copy
+(detach it) or reset it to the Library version.&quot; Reset (<code>POST library/:id/reset</code>) is for page copies; an article's
+changed copy can no longer be found by its text, so it is detached or made like the item again by hand.</p>
+<p>Changing a synced item (<code>PUT</code>, or <code>PATCH</code> with a body or locks) writes the item and every copy that still matches it
+in one commit by the person who changed it (<code>Library: change the section “X” on N pages</code>), audited as
+<code>library.update</code> with the entries and the skipped ones. When a live entry changed, the site is built and deployed in
+one job (<code>library-sync</code>); if it fails, the pages and the item go back (unless changed since), like any publish.
+Making an item plain, or deleting it with <code>detach=1</code>, drops the markers in the same commit and builds nothing (no
+page changes).</p>
+<h2 id="packs">Packs</h2>
+<p>A pack carries shared items between sites (or keeps them): one JSON file,</p>
+<pre data-lang="json"><code class="language-json">{&quot;format&quot;: &quot;markstage-pack&quot;, &quot;version&quot;: 1,
+ &quot;items&quot;: [{&quot;path&quot;: &quot;section/&lt;id&gt;.json&quot;, &quot;text&quot;: &quot;&lt;the item's file, as it is&gt;&quot;},
+           {&quot;path&quot;: &quot;section/&lt;id&gt;.png&quot;, &quot;sha256&quot;: &quot;…&quot;, &quot;base64&quot;: &quot;…&quot;}],
+ &quot;media&quot;: [{&quot;path&quot;: &quot;2026/10/team.png&quot;, &quot;sha256&quot;: &quot;…&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;alt&quot;: &quot;…&quot;, &quot;base64&quot;: &quot;…&quot;}]}</code></pre>
+<p>with each item's picture and the media files its text names (a library file whose path inside the media folder
+appears in it). Items keep their file text as it is, so exporting, importing elsewhere and exporting again gives the
+same bytes (their folders too: a pack is the site's own content, not something found elsewhere). An import is a dry
+run first: what would come in, which ids are here already (<code>exists</code>), and every problem in words; nothing is
+written. Then every item, picture and media file goes in one commit <code>Library: import N items from &lt;file&gt;</code>, audited as
+<code>library.import</code>. An id already here is skipped (<code>onClash: skip</code>, the default) or copied under a new id (<code>copy</code>).
+Each item passes the same checks as one made here (kind, fields, the unsafe-link rule); a picture must be a PNG of at
+most 200 KB with its checksum, a media file an image or document this site takes (never SVG) with its checksum;
+whatever fails is left out and named in <code>problems</code>. A media file already at that path with other bytes is kept, and
+said. Media files get their library row (alt text from the pack).</p>
+<h2 id="from-wordpress">From WordPress</h2>
+<p>The reusable blocks (patterns, post type <code>wp_block</code>) of a WordPress site come in from its export (Tools › Export, an
+<code>.xml</code> file) or a database dump (<code>.sql</code> or <code>.sql.gz</code> from mysqldump, any table prefix), read only: <code>POST
+library/import</code> with the file (multipart <code>file</code>, and optionally <code>mediaMap</code>), or <code>markstage-server library import
+&lt;file&gt; [--media-map &lt;file&gt;]</code>. A dry run first: <code>{items: [{wpId, kind, name, images, exists?}], media (pictures to
+fetch), found (pictures already here), problems}</code>. Then each published block becomes a shared section in <code>Imported</code>
+named after its title, with <code>imported: {from: &quot;wordpress&quot;, source, wpId}</code>; its Gutenberg HTML is read into Markdown
+and the site's blocks like a web page's (block comments dropped, their inner HTML kept). One commit <code>Library: import
+N items from &lt;file&gt;</code>, audited as <code>library.import</code>. Drafts and other statuses are left out and named; a block imported
+before (same WordPress id) is skipped.</p>
+<p>Pictures: the media map (JSON <code>{urls: {old address or upload path: file}}</code>, the shape a migration writes; the file a
+repo path or a path in the media folder) or the old <code>/wp-content/uploads/&lt;path&gt;</code> already in the media folder makes the
+item point at the file that is here; any other picture is fetched through the guard (SECURITY.md &quot;Fetching from the
+web&quot;) and stored like an upload, at most 50 per import. One that cannot be fetched is named and left out.</p>
+<h2 id="from-a-web-page">From a web page</h2>
+<p>Parts of a page somewhere on the web become Library items. The server fetches the page itself (never the browser),
+through the guard in <a href="../security/#fetching-from-the-web">SECURITY.md</a>: public addresses only, its robots.txt
+respected, at most 5 MB of HTML in 10 s. Editors only.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>POST library/import/url</code></td><td><code>{url}</code></td><td><code>{url, title, parts: [{id, label, html, images}]}</code>: the page's parts to choose from (its <code>&lt;section&gt;</code>s and <code>&lt;article&gt;</code>s, a header or footer without a menu too, or else its content cut at each second-level heading); <code>url</code> is where it ended after redirects; <code>html</code> a clean copy to show (no script, style, frame, form, SVG or event attribute; links and pictures made absolute, http(s), mailto and tel only); <code>images</code> how many pictures the part shows. Nothing is written</td></tr><tr><td><code>POST library/import/url/parts</code></td><td><code>{url, parts: [&quot;p1&quot;, …], kind?: section|snippet, folder?, dry?}</code></td><td>dry: <code>{url, items: [{id, name, kind, images}], media, problems}</code>, nothing written; else <code>{created: [id], items: [{id, kind, name, folder}], media, problems, commit}</code></td></tr></tbody></table></div>
+<p>The page is read again for the import (<code>409</code> when the chosen parts are no longer there: read it again). Each part
+becomes a shared section (or snippet) named after its first heading, in the folder <code>Imported</code> unless said, with
+<code>imported: {from: &quot;url&quot;, source}</code> in its file. Its text goes through Markdown into the site's own blocks (headings,
+paragraphs, bold and italic, links, lists, quotes, code, tables, pictures); everything else is left behind. Its
+pictures (at most 20, within a minute in all) are fetched through the same guard and stored like uploads (sniffed,
+never SVG, HEIC read, re-encoded); the items point at the stored copies. A picture that fails (gone, too large, not
+an image) is named in <code>problems</code> and left out of its item. The items and the pictures go in one commit <code>Library:
+import N items from &lt;host&gt;</code>, audited as <code>library.import</code> (<code>from: &quot;url&quot;</code>, the address, the commit, the items, the
+files). A part with nothing left once cleaned is left out and named.</p>
+<p>Refused, in words: an address that is not public (<code>400 unsafe-url</code>), a page robots.txt asks robots not to fetch, or a
+robots.txt that cannot be read (<code>422 robots</code>), something other than a web page (<code>415</code>), a site that does not answer
+(<code>502</code>), too slowly (<code>504</code>) or with too much (<code>413</code>), an author or below (<code>403</code>).</p>
+<h2 id="command-line">Command line</h2>
+<p>On the server, as an account named by <code>--as</code>, with that account's rights:</p>
+<pre><code>markstage-server library export &lt;id,id,…&gt; [--out &lt;file&gt;] --as &lt;email&gt;
+markstage-server library import &lt;file&gt; [--dry] [--on-clash skip|copy] [--media-map &lt;file&gt;] --as &lt;email&gt;
+markstage-server media import &lt;folder | file.zip | addresses.txt&gt; [--dry] --as &lt;email&gt;</code></pre>
+<p><code>media import</code> brings many files into the media library in one commit (docs/API.md &quot;Importing media&quot;): a folder (its
+sub-folders too, hidden files left out), a zip, or a text file with one picture address per line.</p>
+<p><strong>From a template</strong>: <code>POST collections/:c/entries {title, id?, template: &lt;id&gt;}</code> starts the entry from the template's
+frontmatter and blocks (<code>templateId</code> still works); a template of another collection is <code>404</code>.</p>
+<h2 id="from-before-the-library">From before the Library</h2>
+<p>On its first start the server moves the shared snippets and the templates it kept in its
+database into files, in one commit <code>Move N Library items into the repo</code> (a snippet's <code>doc.attrs.folder</code> and <code>order</code>
+become its fields), audited as <code>library.move</code>; personal snippets get their fields the same way. The old routes still
+answer from the Library, with the folder and place back in <code>doc.attrs</code> as the editor read them:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET snippets</code></td><td></td><td><code>[{id, name, doc, createdBy, updatedAt, shared}]</code> own + shared</td></tr><tr><td><code>POST snippets</code></td><td><code>{name, doc, shared?}</code></td><td><code>201 Snippet</code></td></tr><tr><td><code>PATCH snippets/:sid</code></td><td><code>{name?, doc?, shared?}</code></td><td><code>Snippet</code> (own, or editor+)</td></tr><tr><td><code>DELETE snippets/:sid</code></td><td></td><td><code>{ok}</code></td></tr><tr><td><code>GET templates?collection=</code></td><td></td><td><code>[{id, collection, name, frontmatter, doc, data}]</code></td></tr><tr><td><code>POST templates</code> / <code>PATCH templates/:tid</code> / <code>DELETE templates/:tid</code></td><td><code>{collection, name, frontmatter?, doc?, data?}</code></td><td>editor+</td></tr></tbody></table></div>
+<p>A snippet's <code>doc</code> is an editor document fragment (<code>{type:'doc', content:[...]}</code>). Contributors' snippets go through
+the same raw-HTML rule when inserted and saved.</p>
+<h2 id="proof">Proof</h2>
+<p>packages/server/test/library-synced.test.mjs, on core's site-shaped page and article fixtures with the real converter: a page
+copy is the inline section plus the marker; impact and usedOn; a copy changed in place refused (409) and other
+changes on that page saved; edit everywhere rewrites the item and the page in one commit and skips a copy changed by
+hand, then builds and deploys; the hand-changed copy is a preflight warning in words and is reset in one commit (an
+author refused, nothing to reset 409); a failed publish puts the page and the item back; a locked item's copy gets
+<code>value._lock</code> (never <code>_lock</code> on the section) and can't be deleted (423); an article piece found by its Markdown, refused when changed in place, replaced where it
+stands, not deletable when locked and not detachable by an author; delete refused while in use, then with detach in
+one commit; a template is never synced.
+On a real site's build: a scratch clone of the pilot site, built once as it is, then with
+<code>_synced: {id, version}</code> and <code>_lock</code> added to a section of about-us.json and <code>synced: [{id, version}]</code> added to the
+frontmatter of a blog post, built again: <code>diff -r</code> of the two outputs is empty (231 pages, 4,920 files), so a synced
+copy's HTML is byte for byte an inline copy's and no marker reaches a page. Again with the lock where it
+is written now: the same clone (its origin removed, so nothing can be pushed from it), <code>_synced</code> on the cta section of
+about-us.json and <code>_lock: {remove, move}</code> inside its value, plus the post's frontmatter marker: <code>astro build</code>, then
+<code>diff -r</code> against the build without markers is empty (231 pages, 4,920 files).
+packages/server/test/library-packs.test.mjs: export from one site, a dry run and an import into another, byte for
+byte (items, picture, media file with its alt text), the pack exported again is the same text; clashes skipped or
+copied; a damaged picture and an unsafe link named and left out; a foreign file refused; editors only; the command
+line export and import.
+packages/server/test/library-url-import.test.mjs, against a small site on loopback reached through the test seam
+only: a page's parts to choose from, with no script, event attribute or javascript: link left in what is shown; a dry
+run writes nothing; the chosen parts become sections in <code>Imported</code> with their picture stored in Media and pointed at
+(a heading, a paragraph, an image node), the items and the picture in one commit, audited; a missing picture named;
+robots.txt, private addresses (169.254.169.254, 10.0.0.1, localhost, the server's own port), a JSON answer and a
+changed page refused; authors refused. test/library-fetch.test.mjs: the guard itself (see SECURITY.md).
+packages/server/test/library-wp.test.mjs: reusable blocks read from an export and from a dump (drafts and posts left
+out); a dry run, then sections in <code>Imported</code> (heading, paragraph, image, a button as a link) with the picture the
+media map names pointing at the file here and another fetched into Media, one commit; a second import skips them; a
+<code>.sql.gz</code> on the command line; authors refused. With <code>MARKSTAGE_WP_DUMP</code> (the real site's <code>wp_block</code> rows, copied
+into a scratch dir) and <code>MARKSTAGE_WP_SITE</code> (its repo, read only, for the media map and pictures), the real blocks
+import with nothing fetched. Run on 2026-10-28: 3 blocks, 8 pictures found through the map, 0 to fetch, 3 imported,
+0 problems (10 headings, 14 paragraphs, 1 numbered list, 8 images).</p>
+<p>packages/server/test/library.test.mjs: the move out of the database (once, one commit, folders and places kept, the
+old routes answering); add, change, delete with rights, versions and one commit each; sharing and taking back a
+personal snippet; the list's facets, filters, words, sorting and pages; pictures (PNG only, 200 KB, repo or data
+dir); a new entry from a template; a page template keeps no address, place or canonical (one kept by hand
+before also starts clean). test/env-rules.test.mjs: Library files are content in Environments plans.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-LIBRARY.md" target="_blank" rel="noopener">docs/API-LIBRARY.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-ai/"><span class="small muted">Previous</span>AI suggestions</a>
+          <a class="next" href="../api-releases/"><span class="small muted">Next</span>Releases and share links</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

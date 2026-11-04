@@ -15,6 +15,7 @@ import {
   parseLsTree,
   planChanges,
   privateTextProblems,
+  publicPrAuthors,
   publicSubjects,
   selectFiles,
   strayPaths,
@@ -170,6 +171,19 @@ describe('commit message', () => {
   test('short lists fit in the title', () => {
     const msg = commitMessage({ shortSha: 'abcd1234', fullSha: sha, subjects: ['Fix A', 'Fix B'], first: false });
     assert.equal(msg.split('\n')[0], 'Sync from private abcd1234: Fix A; Fix B');
+  });
+  test('contributors of re-applied public pull requests are credited, nobody else', () => {
+    const rec = (who, body) => `${who}\x1f${body}\x1e`;
+    const log = rec('Pat Doe <pat@example.com>', 'Fix the slug field\n\nPublic-PR: #12\nSigned-off-by: Pat Doe <pat@example.com>\n')
+      + rec('Maintainer <me@example.org>', 'Private work\n')
+      + rec('Pat Doe <pat@example.com>', 'Another fix\n\nPublic-PR: #14\n')
+      + rec('Kim Lee <kim@example.net>', 'Docs typo\n\nPublic-PR: #15\n');
+    const who = publicPrAuthors(log);
+    assert.deepEqual(who, ['Pat Doe <pat@example.com>', 'Kim Lee <kim@example.net>']);
+    const msg = commitMessage({ shortSha: 'abcd1234', fullSha: sha, subjects: ['Fix the slug field'], first: false, coAuthors: who });
+    assert.ok(msg.endsWith(`Private-Commit: ${sha}\nCo-authored-by: Pat Doe <pat@example.com>\nCo-authored-by: Kim Lee <kim@example.net>\n`));
+    assert.equal(lastSyncedCommit(msg), sha);
+    assert.deepEqual(publicPrAuthors(rec('Maintainer <me@example.org>', 'Mentions Public-PR: #3 in the text\n')), []);
   });
   test('subjects naming private words are hidden', () => {
     assert.deepEqual(publicSubjects(['Forms for Example Corp', 'Fix chart'], ['example corp']), ['Private change', 'Fix chart']);

@@ -189,10 +189,10 @@ author refused, nothing to reset 409); a failed publish puts the page and the it
 `value._lock` (never `_lock` on the section) and can't be deleted (423); an article piece found by its Markdown, refused when changed in place, replaced where it
 stands, not deletable when locked and not detachable by an author; delete refused while in use, then with detach in
 one commit; a template is never synced.
-The real site, built (2026-10-28): a scratch clone of the pilot site at 29a9413, built once as it is, then with
+On a real site's build: a scratch clone of the pilot site, built once as it is, then with
 `_synced: {id, version}` and `_lock` added to a section of about-us.json and `synced: [{id, version}]` added to the
 frontmatter of a blog post, built again: `diff -r` of the two outputs is empty (231 pages, 4,920 files), so a synced
-copy's HTML is byte for byte an inline copy's and no marker reaches a page. Again (2026-10-28) with the lock where it
+copy's HTML is byte for byte an inline copy's and no marker reaches a page. Again with the lock where it
 is written now: the same clone (its origin removed, so nothing can be pushed from it), `_synced` on the cta section of
 about-us.json and `_lock: {remove, move}` inside its value, plus the post's frontmatter marker: `astro build`, then
 `diff -r` against the build without markers is empty (231 pages, 4,920 files).

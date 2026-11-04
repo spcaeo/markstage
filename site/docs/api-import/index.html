@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Import Content and Media into Markstage</title>
+    <meta name="description" content="Bring entries and media files from another system as JSON: a dry-run plan first, nothing written or fetched, then the run of that plan as one job." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-import/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Import Content and Media into Markstage" />
+    <meta property="og:description" content="Bring entries and media files from another system as JSON: a dry-run plan first, nothing written or fetched, then the run of that plan as one job." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-import/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Import Content and Media into Markstage" />
+    <meta name="twitter:description" content="Bring entries and media files from another system as JSON: a dry-run plan first, nothing written or fetched, then the run of that plan as one job." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Importing entries and media",
+          "item": "https://spcaeo.github.io/markstage/docs/api-import/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Import Content and Media into Markstage",
+      "description": "Bring entries and media files from another system as JSON: a dry-run plan first, nothing written or fetched, then the run of that plan as one job.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-import/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/" aria-current="page">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Importing entries and media</li></ol></nav>
+        <h1>Importing entries and media</h1>
+        <p class="lead left">Bring entries and media files from another system as JSON: a dry-run plan first, nothing written or fetched, then the run of that plan as one job.</p>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). Entries and media files from
+another system, sent as JSON: first a plan (a dry run, nothing written or fetched), then the run of that plan, as a
+job. Server code: <code>packages/server/src/import/</code>.</p>
+<ul><li><strong>Idempotent on the source's ids.</strong> Each entry and media file carries the id it has in the source (<code>sourceId</code>).
+What an import made is remembered by <code>source</code> + <code>sourceId</code>: the same payload again changes nothing; a changed one
+updates what the first made; a new id makes a new entry.</li><li><strong>Never over a person's work.</strong> An entry changed in Markstage since it was imported (or deleted) is left alone and
+the plan says so, unless the payload says <code>overwrite: true</code>.</li><li><strong>The editor's own rules.</strong> Each entry is created or saved through the editor's create and save: rights, links,
+raw HTML, locks, synced Library copies, the page's address (no move by a save), the site's own <code>validate</code>. In a
+collection with drafts, an import makes drafts and keeps an entry's status when it updates it: publishing stays a
+person's step, and the publish rules' findings are listed in the plan so they are known before then.</li><li><strong>Media through the guard.</strong> Files are fetched by the server through the same SSRF guard as the Library's import
+(public addresses only, checked after DNS and on every redirect, ports 80 and 443, size and time limits;
+docs/SECURITY.md &quot;Fetching from the web&quot;), then go through the upload's pipeline (sniffed, never SVG, re-encoded),
+all in one commit.</li><li>Editors and up.</li></ul>
+<h2 id="the-payload">The payload</h2>
+<pre data-lang="json"><code class="language-json">{
+  &quot;source&quot;: &quot;wordpress&quot;,
+  &quot;overwrite&quot;: false,
+  &quot;mediaAs&quot;: &quot;url&quot;,
+  &quot;media&quot;: [{ &quot;sourceId&quot;: &quot;att-41&quot;, &quot;url&quot;: &quot;https://old.example.com/wp-content/uploads/truck.jpg&quot;, &quot;alt&quot;: &quot;Our truck&quot; }],
+  &quot;entries&quot;: [
+    { &quot;sourceId&quot;: &quot;post-12&quot;, &quot;collection&quot;: &quot;posts&quot;, &quot;title&quot;: &quot;Moving day&quot;, &quot;id&quot;: &quot;moving-day&quot;,
+      &quot;frontmatter&quot;: { &quot;author&quot;: &quot;alice&quot;, &quot;tags&quot;: [&quot;news&quot;], &quot;image&quot;: &quot;media:att-41&quot; },
+      &quot;body&quot;: &quot;# Moving day\n\nWe moved. ![Truck](media:att-41)\n&quot; },
+    { &quot;sourceId&quot;: &quot;page-3&quot;, &quot;collection&quot;: &quot;pages&quot;, &quot;title&quot;: &quot;About&quot;, &quot;data&quot;: { &quot;uri&quot;: &quot;/about-us/&quot;, &quot;sections&quot;: [] } }
+  ]
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">What</th></tr></thead><tbody><tr><td><code>source</code></td><td>Where it comes from: lowercase letters, digits and hyphens. Ids are remembered per source.</td></tr><tr><td><code>entries[]</code></td><td>At most 500. <code>sourceId</code> (text, at most 200, once per payload), <code>collection</code>, <code>title</code> (or the collection's title field in <code>frontmatter</code> / <code>data</code>), and <code>id</code> (optional: else made from the title, as a new entry's is). A Markdown collection takes <code>frontmatter</code> and <code>body</code> (Markdown, at most 1 MB); a JSON one <code>data</code>. <code>draft</code>, <code>publishAt</code> and <code>protected</code> are refused: an import brings drafts.</td></tr><tr><td><code>media[]</code></td><td>At most 200. <code>sourceId</code>, <code>url</code> (http or https), <code>alt</code>.</td></tr><tr><td><code>mediaAs</code></td><td>How an entry names a stored file: <code>url</code> (default: its address on the site from the media URL template, <code>/uploads/2026/10/truck.jpg</code>) or <code>relative</code> (a path from the entry's file, <code>../../assets/uploads/2026/10/truck.jpg</code>, as an Astro <code>image()</code> field takes it).</td></tr><tr><td><code>overwrite</code></td><td><code>true</code>: replace entries a person changed or deleted since they were imported.</td></tr></tbody></table></div>
+<p>In every text of an entry (the body, and every string in <code>frontmatter</code> or <code>data</code>), <code>media:&lt;sourceId&gt;</code> and each media
+file's own <code>url</code> become where that file is on the site. An entry naming <code>media:&lt;id&gt;</code> that the import does not bring
+in is a problem for that entry. The payload is a request body, so at most the server's <code>maxBodyBytes</code> (4 MB by
+default): split a larger import into several.</p>
+<h2 id="routes">Routes</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>POST import</code></td><td>the payload → <code>201 {run, entries, media, counts}</code>: the plan, kept for an hour</td></tr><tr><td><code>POST import/:rid/run</code></td><td><code>{}</code> → <code>202 {run, job}</code>. The person who made the plan, once, within the hour (<code>403</code>, <code>409</code>, <code>410 expired</code>)</td></tr><tr><td><code>GET import/:rid</code></td><td><code>{run, plan, result}</code> (<code>result</code> once the job is done)</td></tr><tr><td><code>GET import</code></td><td><code>{items: [run]}</code>, the newest 50</td></tr></tbody></table></div>
+<p><code>run</code>: <code>{id, source, status: planned|running|done|failed|expired, createdAt, expiresAt, by: {id, name}, job,
+finishedAt}</code>. The job (<code>GET jobs/:id</code>) logs each item; its steps are <code>media</code> and <code>entries</code>.</p>
+<h3 id="the-plan">The plan</h3>
+<p>Each entry: <code>{sourceId, collection, id, action, problem?, rules?}</code>.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col"><code>action</code></th><th scope="col">What the run would do</th></tr></thead><tbody><tr><td><code>create</code></td><td>make a new entry (a draft where there are drafts)</td></tr><tr><td><code>update</code></td><td>save the new text over what this import made before</td></tr><tr><td><code>unchanged</code></td><td>nothing: the payload and the entry are as before</td></tr><tr><td><code>skip</code></td><td>nothing: <code>problem</code> says why (no such collection, no title, a status key, the address taken, an unsafe link, raw HTML, a locked block, the site's <code>validate</code>, changed or deleted in Markstage since)</td></tr></tbody></table></div>
+<p><code>rules</code>: the publish rules' findings for the new text (<code>[{rule, level: block|warn, message}]</code>): what will stop or
+warn when a person publishes it.</p>
+<p>Each media file: <code>{sourceId, url, action: fetch|reuse|skip, path?, problem?}</code>. <code>reuse</code>: the file this source id
+brought in before is still in the media library at the same address; nothing is fetched. <code>path</code> for a fetch is where
+it would go; the run's result has where it went. Nothing is fetched for a plan.</p>
+<h3 id="the-run">The run</h3>
+<p>The run makes the plan again at its time, from the same payload, and does what it says: first the media (one commit:
+&quot;Import 3 media files from wordpress&quot;), then each entry (a commit each, by the person, audited as <code>entry.import</code>). A
+problem with one item is that item's (<code>result.entries[i].problem</code>); the rest go on. <code>result.counts</code>:
+<code>{create, update, unchanged, skip, problem}</code>. Audit: <code>import.plan</code> and <code>import.run</code> with the counts.</p>
+<p>Tests: <code>import.test.mjs</code>.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-IMPORT.md" target="_blank" rel="noopener">docs/API-IMPORT.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-webhooks/"><span class="small muted">Previous</span>Webhooks</a>
+          <a class="next" href="../api-inbox/"><span class="small muted">Next</span>Forms, messages and alerts</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

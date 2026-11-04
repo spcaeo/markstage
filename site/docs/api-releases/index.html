@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Releases: Go Live Together, Share Previews</title>
+    <meta name="description" content="Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-releases/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Releases: Go Live Together, Share Previews" />
+    <meta property="og:description" content="Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-releases/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Releases: Go Live Together, Share Previews" />
+    <meta name="twitter:description" content="Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Releases and share links",
+          "item": "https://spcaeo.github.io/markstage/docs/api-releases/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage Releases: Go Live Together, Share Previews",
+      "description": "Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-releases/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/" aria-current="page">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Releases and share links</li></ol></nav>
+        <h1>Releases and share links</h1>
+        <p class="lead left">Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#releases-and-environments">Releases and environments</a></li><li><a href="#releases">Releases</a></li><li><a href="#share-links">Share links</a></li><li><a href="#server-config">Server config</a></li><li><a href="#the-rules">The rules</a></li><li><a href="#alerts">Alerts</a></li><li><a href="#proof">Proof</a></li></ul></nav>
+        <div class="prose">
+<p>Paths are under <code>&lt;basePath&gt;/api/</code>, signed in, like docs/API.md. Ids are opaque (<code>rl_…</code> a release, <code>ri_…</code> an item,
+<code>sl_…</code> a share link).</p>
+<p>A <strong>release</strong> is a named set of changes that go live together: entries (a draft, or new words for a live page), shared
+Library items and pictures. They wait in the release, outside the site repo, until it is published. Then they go live
+in one commit, by hand or at a time you choose. Publishing asks the promotion rules first (docs/ENVIRONMENTS.md), with
+the action <code>publish-release</code>. A release's <strong>preview</strong> is the site built as if the release were published. A <strong>share
+link</strong> shows that preview, or one draft as it would go live, to people who have no account.</p>
+<h2 id="releases-and-environments">Releases and environments</h2>
+<p>A release belongs to the environment it is made on (docs/ENVIRONMENTS.md). Its items wait in that server's data
+dir, never in the repo, so a promotion or a sync does not carry them. Its share links are that server's too. A
+release published on staging is a commit on staging's branch: that commit is promoted to production like any other
+content, and the release itself stays on staging. To publish the same changes on production as one release, make the
+release on production.</p>
+<h2 id="releases">Releases</h2>
+<p>Release: <code>{id, name, description, status, version, publishAt, key, counts: {items, entries, library, media}, items,
+approvals: [{userId, name, role, sha, at}], checks, createdBy: {id, name}, createdAt, updatedAt, scheduledBy,
+publishedAt, publishedBy, buildTime, commit, revert, job, error, blocked, preview, decision, links}</code>.</p>
+<ul><li><p><strong><code>status</code></strong> is one of:</p>
+<ul><li><code>open</code>;</li><li><code>scheduled</code>;</li><li><code>publishing</code> (its job is running);</li><li><code>published</code>;</li><li><code>rolled-back</code>;</li><li><code>cancelled</code>.</li></ul>
+<p>A failed publish puts the release back to <code>open</code>. <code>error</code> then says why in plain words.</p></li><li><p><strong><code>version</code></strong> (<code>r&lt;n&gt;</code>) changes with every change to the release. Schedule, publish, approve, cancel and
+rename send the version they saw, or get <code>409</code>.</p></li><li><p><strong><code>key</code></strong> names exactly what the release would write: each file, its bytes, and its publish time. Approvals and
+checks count only for that key, so adding, changing or removing an item cancels them.</p></li><li><p><strong><code>blocked</code></strong> is set on a scheduled release whose time came and that the rules or a check stopped:
+<code>{words, rule, code, at}</code> (<code>rule</code> is <code>{id, name}</code> when a rule said no, else <code>null</code>). It stays <code>scheduled</code>; see
+&quot;Scheduled&quot; below. Schedule, unschedule and publish clear it.</p></li><li><p><strong><code>preview</code></strong> is <code>{status: none|building|ready|failed, fresh, builtAt, buildTime, job, error, key, head, content,
+stale, words}</code>. <code>fresh</code> means it was built from the site as it is now and the release as it is now. <code>head</code> is the
+site's commit it was built on. When it is not fresh, <code>stale</code> says why (<code>site</code>, <code>release</code> or <code>both</code>) and <code>words</code>
+says it for people, for example &quot;The site changed since this preview was built (another change went live). It is
+not what would go live now: build it again.&quot;</p></li><li><p><strong><code>decision</code></strong> is the rules' answer for you: <code>{effect: allow|needs|deny, rule, words, missing}</code>. It is checked now,
+or at <code>publishAt</code> when the release is scheduled.</p></li><li><p><strong><code>links</code></strong> is the number of share links still working.</p></li></ul>
+<p>Item: <code>{id, kind, title, collection, entryId, libraryId, path, url, bytes, isNew, changedSince, alsoIn: [{id, name}],
+addedBy, addedAt}</code>.</p>
+<ul><li><strong><code>kind</code></strong> is <code>entry</code>, <code>library</code> or <code>media</code>.</li><li>A picture also has <code>{type, width, height, alt}</code>. A Library item also has <code>libraryKind</code>.</li><li><strong><code>path</code></strong> is the repo file the item writes. <strong><code>url</code></strong> is the page address for an entry, or the picture's address.</li><li><strong><code>changedSince</code></strong> is true when that file changed on the site after the item was added. Such a release cannot be
+published until the item is added again.</li><li><strong><code>alsoIn</code></strong> lists other open releases that write the same file.</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET releases?status=</code></td><td></td><td><code>{releases}</code>, newest first, without their items (<code>counts</code> only)</td></tr><tr><td><code>POST releases</code></td><td><code>{name, description?}</code></td><td><code>201</code> the release. Editors and above</td></tr><tr><td><code>GET releases/:rid</code></td><td></td><td>the release with its items, preview, decision and links</td></tr><tr><td><code>PATCH releases/:rid</code></td><td><code>{version, name?, description?}</code></td><td>the release. Editors and above</td></tr><tr><td><code>POST releases/:rid/cancel</code></td><td><code>{version}</code></td><td>the release, <code>cancelled</code>. Its preview folder is removed and its links answer <code>410</code></td></tr><tr><td><code>POST releases/:rid/items</code></td><td><code>{kind: 'entry', collection, id, version, doc?|frontmatter?|source?|data?|changes?, releaseVersion?}</code></td><td><code>201 {item, release}</code>. See &quot;Items&quot; below</td></tr><tr><td><code>POST releases/:rid/items</code></td><td><code>{kind: 'library', libraryId?, version?, item: {kind, name, body, …}, releaseVersion?}</code></td><td><code>201 {item, release}</code></td></tr><tr><td><code>POST releases/:rid/media?filename=&amp;alt=&amp;releaseVersion=</code></td><td>the picture's bytes</td><td><code>201 {item, release}</code></td></tr><tr><td><code>GET releases/:rid/items/:iid</code></td><td></td><td><code>{path, text, current, version}</code>: the text the item writes, and the file's text on the site now (<code>null</code> for a new file)</td></tr><tr><td><code>GET releases/:rid/items/:iid/file</code></td><td></td><td>the bytes the item writes (for a picture, its image type)</td></tr><tr><td><code>DELETE releases/:rid/items/:iid?releaseVersion=</code></td><td></td><td><code>{release}</code>. Who added the item, or an editor and above</td></tr><tr><td><code>POST releases/:rid/preview</code></td><td></td><td><code>202 {job, preview}</code>: build the preview (nothing is done when a fresh one exists or is building)</td></tr><tr><td><code>POST releases/:rid/check</code></td><td><code>{at?, reason?}</code></td><td>the rules' answer for you, with its <code>trace</code> (the dry run)</td></tr><tr><td><code>POST releases/:rid/approve</code></td><td><code>{version}</code></td><td>the release. The approval is for this exact <code>key</code>. The release's maker cannot approve it (<code>422</code>), and only someone whose approval a <code>publish-release</code> rule would count may (<code>403</code> otherwise; a release says <code>canApprove</code>)</td></tr><tr><td><code>POST releases/:rid/schedule</code></td><td><code>{version, publishAt}</code></td><td>the release, <code>scheduled</code>. Its preview starts building, as of <code>publishAt</code></td></tr><tr><td><code>POST releases/:rid/unschedule</code></td><td><code>{version}</code></td><td>the release, <code>open</code></td></tr><tr><td><code>POST releases/:rid/publish</code></td><td><code>{version, reason?}</code></td><td><code>202 {job, release}</code></td></tr><tr><td><code>POST releases/:rid/rollback</code></td><td><code>{reason?}</code></td><td><code>202 {job, release}</code></td></tr></tbody></table></div>
+<h3 id="items">Items</h3>
+<p>What goes into a release is checked when it is added, the way a save, a Library change or an upload would be. Nothing
+is written to the repo then. The item's bytes are kept in <code>&lt;dataDir&gt;/releases/&lt;rid&gt;/&lt;iid&gt;</code> (mode 0600).</p>
+<ul><li><p><strong>Entry.</strong> The item is the entry's saved text, or the sent changes applied over it, with <code>draft</code> and <code>publishAt</code>
+cleared. So a draft goes live with the release, and a live page's new words wait in the release instead of going on
+the site.</p>
+<ul><li>It needs the right to edit and to publish that entry (<code>403</code>).</li><li>It goes through the same checks as a save: the unsafe-link rule, raw HTML, page code, locks (<code>423</code>), synced
+Library copies, the address (<code>422 moves</code>: use Move), and the site's <code>validate</code>.</li><li>Lock changes are stamped with who changed them and when, as a save does.</li><li><code>protected</code> is changed only through Protect (<code>422</code>).</li><li>A live page sent as it already is gives <code>422 nothing</code>.</li><li><code>version</code> is the entry's version. A stale one gives <code>409</code>.</li></ul></li><li><p><strong>Library item.</strong> The file the Library would write for the item, new or changed. Editors and above only.</p>
+<ul><li>A synced item is refused (<code>422 synced</code>). Changing it rewrites every page that uses it, so it goes live on its
+own, from the Library.</li><li>A personal snippet is refused: a release holds the site's shared items only.</li></ul></li><li><p><strong>Picture.</strong> Prepared exactly as an upload is: sniffed (never an SVG, <code>415</code>), an iPhone photo turned into a JPEG,
+then re-encoded.</p>
+<ul><li>Its name in the media folder (<code>&lt;media.dir&gt;/&lt;year&gt;/&lt;month&gt;/&lt;name&gt;.&lt;ext&gt;</code>) is reserved for it. An upload in the
+meantime takes the next free name.</li><li>It enters the media library, with its alt text, when the release goes live.</li></ul></li><li><p><strong>Added by an AI agent</strong> (docs/API-MCP.md, <code>add_to_release</code>). Entries only, as above, as the token's person. A
+scheduled release refuses it: <code>409 scheduled</code>, &quot;“Name” is scheduled: it goes live by itself at its time, so an AI
+agent cannot add to it. Add to a release that is not scheduled; a person schedules it.&quot; This is checked when the
+add starts and again after the entry's checks. The item keeps <code>meta {via: 'mcp', tokenId, tokenName}</code>.</p></li></ul>
+<p>Adding an item for a file the release already writes replaces that item. <code>releaseVersion</code> is optional on these
+routes, so several people can add items at once. When sent, it is checked.</p>
+<h3 id="publishing">Publishing</h3>
+<p><code>POST releases/:rid/publish</code> does these steps, in order:</p>
+<ol><li><strong>The promotion rules</strong> decide: <code>{action: 'publish-release', from: 'release', to: &lt;this environment&gt;, files: the
+items' paths}</code>. The answer must be <code>allow</code>. Approvals and checks count only for the release's current <code>key</code>. A
+refusal is <code>403 {error: 'rule', rule, words, missing}</code> and is audited as <code>release.publish</code> with <code>ok: false</code>.</li><li><strong>The publish rules</strong> run on each entry. A blocking finding gives <code>422 blocked {rules}</code>.</li><li><strong>Inside the repo lock</strong>, every file is compared with the site.
+<ul><li>A file that changed since its item was added gives <code>409 changed {items}</code>, naming each one: &quot;“Carol Draft” changed
+on the site since it was added. Add it again to take the latest, then publish.&quot;</li><li>A file that already matches the release is fine.</li><li>Then what each file held before is saved (for a put-back and a rollback), every file is written, and pictures are
+added to the media library.</li><li>Everything goes in <strong>one commit</strong>, <code>Release “&lt;name&gt;”</code>, by the person who published it.</li></ul></li><li><strong>A job</strong> (<code>release</code>) runs:
+<ul><li>the site's checks on every entry;</li><li>the build, built as of the release's time (below);</li><li>the build check (verify);</li><li>the deploy, and the after-deploy hooks.</li></ul>
+On success the release is <code>published</code>, editors get the <code>release.published</code> alert, and its preview folder is
+removed. On failure, every file the release wrote and nobody has changed since is put back in one more commit,
+<code>Put back the release “&lt;name&gt;”: the publish failed</code>. The live site is unchanged. The release is <code>open</code> again with
+<code>error</code>, and whoever published it hears why.</li></ol>
+<p><strong>Built as of.</strong> The build runs with <code>MARKSTAGE_BUILD_TIME</code> set to:</p>
+<ul><li><code>publishAt</code>, for a scheduled release, even when the scheduler runs late;</li><li>the preview's own build time, for a release published by hand while its preview is fresh;</li><li>now, otherwise.</li></ul>
+<p>So the published build is the preview's build, byte for byte.</p>
+<p><strong>Scheduled.</strong> <code>schedule</code> asks the rules as of <code>publishAt</code>. A freeze at that time, or hours a rule does not allow,
+refuses it now (<code>403</code>). A rule needing an approval or checks may still be scheduled; it needs them by its time. The
+scheduler (every <code>scheduler.intervalSeconds</code>) publishes each release that is due. It acts as the person who scheduled
+it, with that person's role as it is then, and asks the rules again. When it is refused (a freeze that began
+since, a right that person lost, a rule removed, a file changed, a publish rule), nothing is written and the release
+<strong>stays <code>scheduled</code></strong>, with <code>blocked</code> naming why and the rule. The person who scheduled it gets the <code>release.blocked</code>
+alert (&quot;The release “Name” was due at … and is blocked: … It stays scheduled and goes out as soon as nothing stops
+it; or unschedule it.&quot;), and it is audited as <code>release.blocked</code> with the rule's id. <code>release.blocked</code> and
+<code>release.publish</code> list the items an AI agent added as <code>detail.mcpItems: [{rel, title, token}]</code>. The next ticks try again; the
+same reason is not said twice, a new reason is. Once nothing stops it, the next tick publishes it, still built as of
+<code>publishAt</code>, and audits <code>release.unblocked</code>.</p>
+<p><strong>Rollback.</strong> <code>rollback</code> asks the rules with the action <code>rollback</code>; the starter rules allow owners and
+administrators. It puts back every file the release wrote that nobody has changed since. Files changed since are
+listed in the job log and left alone. Pictures the release added leave the media library. All of it is one commit,
+<code>Roll back the release “&lt;name&gt;”</code> with the reason, followed by a build and a deploy. On success the release is
+<code>rolled-back</code>. If the build or deploy fails, the release's files go back into the repo, so the repo matches the live
+site again.</p>
+<p><strong>A restart during a publish.</strong> The job is marked failed when the server starts again (jobs.mjs). The release says
+so in <code>error</code> and is <code>open</code>. Check the site, then publish it again.</p>
+<h3 id="the-preview">The preview</h3>
+<p>A preview is built in <code>&lt;dataDir&gt;/releases/builds/r_&lt;rid&gt;/</code>, like a branch preview: a detached worktree of the commit
+the site is at, the release's files written over it, <code>node_modules</code> linked, then the site's build command run with
+<code>MARKSTAGE_BUILD_TIME</code>. That time is <code>publishAt</code> when scheduled, else the time of the build. After the build, the
+site's checks run on each entry; their result is the release's <code>checks</code>, which the rules read. The repo and the live
+site are never touched.</p>
+<p>A preview goes stale when the site's commit or the release changes; <code>preview.stale</code> and <code>preview.words</code> say which,
+so the editor can show it. A stale preview is not what would go live. A new one is built when it is asked for:
+<code>POST …/preview</code>, a schedule, or a share link's next view. Folders nothing shows any more are removed by the
+scheduler's sweep: a release no longer open, or a draft whose links have all ended.</p>
+<h2 id="share-links">Share links</h2>
+<p>Link: <code>{id, release, collection, entryId, label, state: active|expired|revoked, createdBy, createdAt, expiresAt,
+revokedAt, revokedBy, views, lastViewAt}</code>.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>POST share-links</code></td><td><code>{release}</code> or <code>{collection, id}</code>, <code>days?</code> (default <code>share.days</code>, 7; at most <code>share.maxDays</code>, 30), <code>label?</code></td><td><code>201 {link, url}</code>. <code>url</code> (<code>&lt;share.origin&gt;/share/&lt;token&gt;</code>) is shown this once: only the token's hash is kept</td></tr><tr><td><code>GET share-links?release=</code> | <code>?collection=&amp;id=</code></td><td></td><td><code>{links, on}</code> (<code>on</code>: share links are set up on this server)</td></tr><tr><td><code>DELETE share-links/:lid</code></td><td></td><td><code>{link}</code>, <code>revoked</code>. Who made it, or an editor and above. Audited as <code>share.revoke</code></td></tr></tbody></table></div>
+<ul><li><strong>Who shares what:</strong>
+<ul><li>a release, while it is <code>open</code> or <code>scheduled</code>: editors and above;</li><li>a draft: anyone who can edit it. A live entry gives <code>422</code>: share its address on the site instead.</li></ul></li><li><strong>The token</strong> is 32 random bytes (base64url). Only its SHA-256 hash is stored.</li><li><strong>Set up:</strong> without <code>share.origin</code> in config.json, a link cannot be made (<code>409 not-set-up</code>, in words), and
+without <code>verify.public</code> there is no build to show.</li></ul>
+<h3 id="on-the-share-origin">On the share origin</h3>
+<p>Share links are served by their own listener (<code>share.port</code>, 18251) at their own origin (<code>share.origin</code>). That origin
+is never the CMS's, the preview's or the site's, because the site's own scripts run there.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Request</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET /share/&lt;token&gt;</code></td><td><code>303</code> to the link's page (a release's first entry, or the draft's address), with a cookie for that link alone. <code>404</code> no such link; <code>410</code> expired, turned off, or nothing to show any more (the release went live or was cancelled; the draft is live or gone)</td></tr><tr><td><code>GET &lt;site path&gt;</code> with the cookie</td><td>the file from that link's build; the build's <code>404.html</code> (<code>404</code>) for a missing page. <code>503</code> &quot;Preparing this preview&quot; while it is built; that page reloads itself (<code>Refresh: 3</code>)</td></tr><tr><td><code>GET &lt;site path&gt;</code> without the cookie, or with a forged one</td><td><code>403</code> &quot;Not available to you&quot;</td></tr><tr><td><code>GET /robots.txt</code></td><td><code>User-agent: * / Disallow: /</code>, whatever the build has</td></tr><tr><td>Any other method</td><td><code>405</code></td></tr><tr><td>Another <code>Host</code></td><td><code>421</code></td></tr><tr><td>More than 30 requests to <code>/share/…</code> in a minute from one address</td><td><code>429</code> &quot;Too many tries&quot;, <code>Retry-After: 60</code>; audited once as <code>share.limited</code>. Pages under a link's cookie are not counted</td></tr></tbody></table></div>
+<p><strong>The cookie:</strong></p>
+<ul><li><code>ms_share=&lt;link id&gt;.&lt;expiry&gt;.&lt;HMAC&gt;</code>, signed with a key kept in the database;</li><li><code>HttpOnly; SameSite=Lax; Path=/</code>, and <code>Secure</code> on https;</li><li>it lasts as long as the link.</li></ul>
+<p>The token is in the address only for the first request: after the <code>303</code> the address bar, history and any <code>Referer</code>
+show the page's own path. A browser holds one link's cookie at a time; opening another link replaces it.</p>
+<p><strong>Every answer</strong> has these headers:</p>
+<ul><li><code>X-Robots-Tag: noindex, nofollow, noarchive</code>;</li><li><code>Cache-Control: no-store</code>;</li><li><code>Referrer-Policy: no-referrer</code>;</li><li><code>X-Content-Type-Options: nosniff</code>;</li><li><code>Content-Security-Policy: frame-ancestors 'none'</code>;</li><li><code>Cross-Origin-Opener-Policy: same-origin</code>.</li></ul>
+<p>Only the files of that link's build are served. A path out of it (<code>..</code>, encoded or not, or a symlink) is <code>404</code>.
+Nothing else is served: no API, no editor, no other link.</p>
+<p><strong>Audit:</strong></p>
+<ul><li><code>share.create</code>;</li><li><code>share.open</code> (the token was used);</li><li><code>share.view</code>, once per page (every HTML answer, with its path), which also counts the link's <code>views</code>;</li><li><code>share.refused</code> (a <code>410</code>, with why);</li><li><code>share.revoke</code>;</li><li><code>share.limited</code> (an address went over 30 tries a minute; once per minute it stays over).</li></ul>
+<p>The viewer is recorded as &quot;share link&quot;, with the address and browser.</p>
+<p><strong>The token is never written down.</strong> The audit names a link by its id, never its address. The share listener's own
+error log writes <code>/share/[link]</code> in place of a token. The nginx example (<code>deploy/nginx/production.conf</code>) logs the
+share host and the http redirect with a format that writes <code>/share/[link]</code> in the request line and the referrer,
+and keeps only critical errors for that host (nginx puts the request line into its error entries and cannot rewrite
+them). The only trace of a token in the data folder is its SHA-256 hash.</p>
+<h2 id="server-config">Server config</h2>
+<pre data-lang="json"><code class="language-json">&quot;share&quot;: { &quot;origin&quot;: &quot;https://share.example.com&quot;, &quot;port&quot;: 18251, &quot;days&quot;: 7, &quot;maxDays&quot;: 30 }</code></pre>
+<ul><li><strong><code>origin</code></strong> is an origin only, and must be https unless it is a loopback address in development. It must differ
+from <code>publicOrigin</code>, <code>preview.origin</code> and the site hosts. It is off (<code>null</code>) by default.</li><li><strong><code>port</code></strong> must differ from the server's and the preview's.</li><li><strong><code>days</code></strong> is how long a new link lasts. It runs from 1 to <code>maxDays</code>, and <code>maxDays</code> from 1 to 365.</li></ul>
+<p>The nginx host is in <code>deploy/nginx/production.conf</code> (&quot;share links&quot;). It is GET and HEAD only, with no access log,
+because a link's first address holds its token.</p>
+<h2 id="the-rules">The rules</h2>
+<p>The rules gain the action <code>publish-release</code> and the place <code>release</code> (docs/API-ENV.md &quot;Rules&quot;). The starter rules add:</p>
+<ul><li><code>releases</code> &quot;Editors and above publish releases&quot;: <code>{who: {roles: [owner, administrator, editor]}, action:
+[publish-release], from: [release], effect: allow}</code>.</li><li>The freeze rule now covers releases too. It is <code>owner-freeze</code>, &quot;Nobody puts changes live on production during a
+freeze the owner set&quot;, with <code>action: [promote, publish-release]</code>.</li></ul>
+<p>A site whose rules file was saved before this change has neither. A release there is refused, in words (&quot;No rule lets
+… publish-release from release to production&quot;), until an owner or administrator adds a rule, in Settings →
+Promotion rules or <code>PUT env/rules</code>. The <code>starter</code> in <code>GET env/rules</code> shows the new rule to copy. <code>what</code> filters work
+on a release's paths like a plan's: for example, &quot;releases may only change content&quot;.</p>
+<h2 id="alerts">Alerts</h2>
+<ul><li><code>release.published</code>: a release went live or was rolled back. Owner, administrators and editors.</li><li><code>release.blocked</code>: a scheduled release's time came and something stops it; it stays scheduled. Sent to the
+person who scheduled it, once for each new reason.</li></ul>
+<p>A failed publish or preview build is <code>publish.failed</code>, sent to whoever started it.</p>
+<h2 id="proof">Proof</h2>
+<p>Server tests in <code>packages/server/test/releases.test.mjs</code> and <code>share.test.mjs</code> run against a real server, a real git
+repo, and the fixture site's real build and deploy commands (<code>test/release-site.mjs</code>: a page per live entry carrying
+the time it was built as, the Library, the pictures). These are the five proofs asked for:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Proof</th><th scope="col">Test</th></tr></thead><tbody><tr><td>A scheduled release publishes on time</td><td>&quot;a scheduled release goes live at its time, not before…&quot;. One second before its time, the tick does nothing and the live site does not have the page. A minute after, it publishes: one commit, and the live page built as of <code>publishAt</code>, not as of the late tick</td></tr><tr><td>The release preview is the published build, byte for byte</td><td>The same test keeps a copy of the preview's build, made when the release was scheduled. The site's commit is pinned: the preview's <code>head</code> is the commit then, and after the publish the release's commit sits directly on it (<code>HEAD^</code>). Every file under the site's <code>dist</code> (the pages, the picture, the Library list, the site's script) has the same SHA-256 as in that copy, with no file more or less</td></tr><tr><td>A preview goes stale when main moves</td><td>&quot;a preview goes stale, in words…&quot;. Another commit on the site: <code>fresh: false</code>, <code>stale: 'site'</code>, and the words above. A change to the release as well: <code>both</code>. Built again: fresh on the new commit. Then only the release changed: <code>release</code></td></tr><tr><td>A rule deny blocks a release</td><td>&quot;the rules: a deny stops a publish and a schedule…&quot;. <code>403 rule</code>, with the rule's name in words. Audited with <code>ok: false</code>. The repo is unchanged. A freeze at the scheduled time refuses the schedule</td></tr><tr><td>Checked again at its time, as who scheduled it</td><td>&quot;at its time, as who scheduled it…&quot;. Allowed when scheduled; then the owner sets a freeze from now. At its time: still <code>scheduled</code>, <code>blocked.rule</code> is <code>owner-freeze</code>, the repo unchanged, one <code>release.blocked</code> alert and audit. Two more ticks: no more alerts. The freeze lifted but the scheduler made an author: blocked again, &quot;No rule lets …&quot;, a second alert. The right back: the next tick publishes it, built as of <code>publishAt</code></td></tr><tr><td>A revoked link gives 410</td><td>&quot;a link turned off answers 410…&quot;: both at <code>/share/&lt;token&gt;</code> and on every page, with noindex. Audited as <code>share.refused</code> and <code>share.revoke</code></td></tr><tr><td>An expired link gives 410</td><td>&quot;an expired link answers 410…&quot; (the server clock moved two days; links last 1 to 30 days)</td></tr><tr><td><code>/share/</code> is rate limited</td><td>&quot;tries at /share/ are limited…&quot;: 30 wrong tokens answer <code>404</code>, the 31st <code>429</code> with <code>Retry-After: 60</code>, a real link too while it holds; <code>share.limited</code> audited once; a minute later the link opens</td></tr><tr><td>A token is nowhere but as its hash</td><td>&quot;a token is nowhere in the data folder…&quot;: one more link is made, opened, two pages seen and turned off; then every file under the data folder (the database with the audit and the job logs, its WAL, the preview builds) is read as bytes and holds none of the tokens made in the file; each token's SHA-256 is in <code>share_links</code>. &quot;an error while a link is opened…&quot;: the lookup made to fail with the address in its message; the listener's error log says <code>/share/[link]</code> and never the token</td></tr><tr><td>A link follows the site</td><td>&quot;the site moves under a link…&quot;: a link's page is built and seen; another commit goes live on the site; the next page answers &quot;Preparing this preview&quot; (the old build is not served), then the new page is there with the release on top</td></tr></tbody></table></div>
+<p>They also cover:</p>
+<ul><li>four kinds of change in one commit, with none of it in the repo before;</li><li>an upload taking another name than the one a release reserved;</li><li>a file changed on the site being named and stopping the publish;</li><li>an approval (never the author's own, cancelled by a change);</li><li>a failed build putting every file back in one commit;</li><li>a rollback taking a release off the site and out of the repo;</li><li>the checks on what goes in;</li><li>the share origin: no API, no writes, no path out of the build, no forged cookie, no other host;</li><li>a draft's link following its edits, then answering <code>410</code> once the draft is live;</li><li>the sweep removing a preview folder nothing shows.</li></ul>
+<p>What an AI agent adds (<code>packages/server/test/mcp-roles.test.mjs</code>): into an open release with <code>meta.via</code>; a scheduled
+release refused in words, also when it is scheduled during the add; <code>mcpItems</code> in <code>release.blocked</code> and
+<code>release.publish</code>.</p>
+<p>In a browser, <code>packages/server/e2e/share.e2e.mjs</code> (Playwright, Chromium) opens a link with no account. While the
+preview builds, it gets the &quot;Preparing&quot; page, which reloads itself. Then it sees the draft: the token has left the
+address bar, the site's own script has run, the cookie is not visible to scripts, and each view is audited. After the
+link is turned off, the next load answers <code>410</code> &quot;This link was turned off&quot;. The browser is closed in <code>after</code>.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-RELEASES.md" target="_blank" rel="noopener">docs/API-RELEASES.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-library/"><span class="small muted">Previous</span>The Library</a>
+          <a class="next" href="../api-env/"><span class="small muted">Next</span>Environments API</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

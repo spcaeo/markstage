@@ -1,0 +1,56 @@
+# Deploys the public site (site/: the home page, docs, compare, alternatives, FAQ and glossary) to GitHub Pages on
+# every push to main that changes it or its sources. It runs only in the public repo (spcaeo/markstage); in any
+# other copy the job is skipped. One-time setup there: Settings › Pages › Source: GitHub Actions.
+# The screenshots (site/media) and share images (site/og, .github/social-preview.png) are committed; this job
+# rebuilds the pages from docs/, site-content/ and the README, so the live site always matches them.
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'site-content/**'
+      - 'docs/**'
+      - 'README.md'
+      - 'package.json'
+      - 'scripts/site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'spcaeo/markstage'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      # the Markdown reader (remark) comes with @markstage/core's dependencies
+      - name: Install (exactly the lockfile)
+        run: npm ci
+      - name: Build the pages
+        run: npm run site:build
+      - name: Check the pages (titles, descriptions, links, JSON-LD)
+        run: npm run site:test
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -354,7 +354,7 @@ in `config.json` each one also goes out once, by any of:
 Settings → Alerts shows each channel with how its last send went and has **Send a test** per channel; Site health
 has **Send a test alert** through all of them. Each says what the channel answered. A channel that is down never stops the publish or backup that raised the alert; it is logged.
 
-**Real sending waits for the owner's SMTP details** (host, port, account, sender and recipients). Until they are set,
+**Mail goes out once the SMTP details are set** (host, port, account, sender and recipients). Until they are set,
 alerts show in the editor (and Slack, when its webhook is set). It is proven against a local SMTP sink:
 `packages/server/test/alerts.test.mjs` (a failed publish sends one mail over STARTTLS, signed in, with the entry, the
 error and the job link; a relay without STARTTLS gets nothing; a named site's subject and signature) and the browser

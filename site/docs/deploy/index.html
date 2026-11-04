@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deploy Markstage with Docker or systemd and nginx</title>
+    <meta name="description" content="Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/deploy/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Deploy Markstage with Docker or systemd and nginx" />
+    <meta property="og:description" content="Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/deploy/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Deploy Markstage with Docker or systemd and nginx" />
+    <meta name="twitter:description" content="Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Deploying Markstage",
+          "item": "https://spcaeo.github.io/markstage/docs/deploy/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Deploy Markstage with Docker or systemd and nginx",
+      "description": "Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.",
+      "url": "https://spcaeo.github.io/markstage/docs/deploy/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/" aria-current="page">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Deploying Markstage</li></ol></nav>
+        <h1>Deploying Markstage</h1>
+        <p class="lead left">Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#the-shape">The shape</a></li><li><a href="#ports">Ports</a></li><li><a href="#the-deploy-command-markstage-deploy">The deploy command: markstage-deploy</a></li><li><a href="#option-1-docker-compose-one-server-or-local">Option 1: Docker compose (one server, or local)</a></li><li><a href="#the-editor-in-production">The editor in production</a></li><li><a href="#option-2-no-docker-systemd-nginx">Option 2: no Docker (systemd + nginx)</a></li><li><a href="#what-the-site-must-do-site-contract">What the site must do (site contract)</a></li><li><a href="#optional-a-browser-publish-gate">Optional: a browser publish gate</a></li><li><a href="#operations">Operations</a></li><li><a href="#alerts">Alerts</a></li><li><a href="#single-sign-on">Single sign-on</a></li><li><a href="#forms">Forms</a></li><li><a href="#environments-staging-next-to-production">Environments (staging next to production)</a></li><li><a href="#updating-markstage">Updating Markstage</a></li><li><a href="#backups">Backups</a></li><li><a href="#what-was-proven">What was proven</a></li></ul></nav>
+        <div class="prose">
+<p>How to run the Markstage server next to a static site, with Docker or without it. All files referred to here are
+in <code>deploy/</code> and were tested locally (see <a href="#what-was-proven">What was proven</a>). Security detail is in
+<a href="../security/">SECURITY.md</a>; the API in <a href="../api/">API.md</a>.</p>
+<h2 id="the-shape">The shape</h2>
+<pre><code>writer ── https://cms.example.com/markstage/ ──► nginx ──► Markstage :18231 ──► git commit in the site repo
+                                                                  │            build (site's command)
+                                                                  │            markstage-deploy ─► /srv/site/releases/&lt;id&gt;
+visitor ─ https://www.example.com/ ──► nginx: /srv/site/current/public                         /srv/site/current ─┘
+                                            └─ not found there? auth_request to Markstage → /srv/site/current/private</code></pre>
+<ul><li><strong>Two host names.</strong> The editor and API live on their own host (<code>cms.example.com</code>). Authors may write raw HTML into
+pages, and that HTML must never run on the origin that holds the CMS session. On the site host, <code>/markstage/</code> is
+proxied too, but Markstage answers only the protected-page gate there (the unlock form); the API and editor are 404.</li><li><strong>Three folders, three owners.</strong> Data dir (secrets, SQLite: Markstage only, mode 0700), the site's git working copy
+(Markstage commits and builds there), and <code>/srv/site</code> (releases; nginx only reads it).</li><li><strong>Previews have a third host name</strong> (<code>preview.example.com</code>, Markstage <code>preview.origin</code>, listener 18245). A
+preview runs the author's draft and the site's scripts, so it must not share the CMS origin. Markstage runs the
+site's dev server on a private clone in the data dir; see <a href="../api-preview/">API-PREVIEW.md</a>.</li><li><strong>Publishing is a job:</strong> commit → build → deploy. Any step failing reverts the commit and leaves the live release
+untouched (the writer's text is kept as their autosave).</li></ul>
+<h2 id="ports">Ports</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Port</th><th scope="col">What</th><th scope="col">Bound to</th></tr></thead><tbody><tr><td>18231</td><td>Markstage server (editor + API)</td><td>127.0.0.1 (or the compose network)</td></tr><tr><td>18235</td><td>the site, in the compose setup</td><td>127.0.0.1</td></tr><tr><td>18245</td><td>previews (<code>preview.origin</code>)</td><td>127.0.0.1</td></tr><tr><td>18251</td><td>share links (<code>share.origin</code>): a release's or a draft's preview for people without an account</td><td>127.0.0.1</td></tr><tr><td>18247–18299 (odd)</td><td>the site's dev server for previews, started on demand</td><td>127.0.0.1 only, never proxied directly</td></tr></tbody></table></div>
+<p>Production listens on 443 via nginx; nothing else is public.</p>
+<h2 id="the-deploy-command-markstage-deploy">The deploy command: <code>markstage-deploy</code></h2>
+<p>Shipped with the server package. Point <code>commands.deploy</code> at it; it runs in the site repo after the build.</p>
+<pre data-lang="json"><code class="language-json">&quot;commands&quot;: {
+  &quot;build&quot;: [&quot;npx&quot;, &quot;astro&quot;, &quot;build&quot;],
+  &quot;deploy&quot;: [&quot;markstage-deploy&quot;, &quot;--to&quot;, &quot;/srv/site&quot;],
+  &quot;timeoutSeconds&quot;: 900
+}</code></pre>
+<ul><li>Copies <code>dist/</code> to <code>/srv/site/releases/&lt;id&gt;/public</code> and <code>dist-private/</code> (protected pages, from the site build) to
+<code>.../private</code>, writes <code>release.json</code> (git commit, time), then switches <code>/srv/site/current</code> with one <code>rename(2)</code>.
+Visitors see the old release or the new one, never a half-copied one.</li><li>Makes each release readable by the web server (dirs 0755, files 0644): Markstage runs with umask 077 for its
+data dir and builds inherit it, so without this nginx (another user) would answer 403. <code>/srv/site</code> itself must be
+searchable by the web server user. The private folder is readable by local users too; on a shared host, put
+<code>/srv/site</code> in a group with the web server and drop the world bits.</li><li>Refuses an empty or missing build (exit 1, nothing switched). Keeps the newest 5 releases (<code>--keep</code>).</li><li>After the switch it can run one command (argv after <code>--</code>, no shell), e.g. reload nginx when the build emits
+nginx files (maps are read only at reload): <code>&quot;deploy&quot;: [&quot;markstage-deploy&quot;, &quot;--to&quot;, &quot;/srv/site&quot;, &quot;--&quot;, &quot;sudo&quot;,
+&quot;-n&quot;, &quot;/usr/sbin/nginx&quot;, &quot;-s&quot;, &quot;reload&quot;]</code> with a sudoers rule for exactly that command. If it fails, <code>current</code> goes
+back to the release before and the deploy fails, so new pages never run with old server rules.</li><li><code>markstage-deploy rollback --to /srv/site</code> steps back one release (no rebuild). Options: <code>--from dist</code>,
+<code>--private dist-private</code>.</li><li>Markstage's <code>protectedPages.dir</code> is <code>/srv/site/current/private</code>.</li></ul>
+<h2 id="option-1-docker-compose-one-server-or-local">Option 1: Docker compose (one server, or local)</h2>
+<p><code>deploy/compose.yaml</code> runs two containers: <code>markstage</code> (this repo's image; Node 24 + git) and <code>site</code>
+(<code>nginx:1.29-alpine</code> with <code>deploy/nginx/site.conf</code>). They share the <code>site-releases</code> volume.</p>
+<ol><li><p>Make a data dir and a config. Paths are the container's:</p>
+<pre data-lang="json"><code class="language-json">{
+  &quot;contentRoot&quot;: &quot;/srv/content&quot;,
+  &quot;publicOrigin&quot;: &quot;http://127.0.0.1:18231&quot;,
+  &quot;trustProxy&quot;: true,
+  &quot;commands&quot;: { &quot;build&quot;: [&quot;npx&quot;, &quot;astro&quot;, &quot;build&quot;], &quot;deploy&quot;: [&quot;markstage-deploy&quot;, &quot;--to&quot;, &quot;/srv/site&quot;] },
+  &quot;validate&quot;: [&quot;node&quot;, &quot;scripts/validate-entry.mjs&quot;],
+  &quot;protectedPages&quot;: { &quot;dir&quot;: &quot;/srv/site/current/private&quot;, &quot;hosts&quot;: [&quot;127.0.0.1:18235&quot;] },
+  &quot;preview&quot;: { &quot;origin&quot;: &quot;http://127.0.0.1:18245&quot;, &quot;port&quot;: 18245 },
+  &quot;share&quot;: { &quot;origin&quot;: &quot;http://127.0.0.1:18251&quot;, &quot;port&quot;: 18251 }
+}</code></pre>
+<p><code>mkdir -m 700 /abs/data &amp;&amp; cp config.json /abs/data/ &amp;&amp; chmod 600 /abs/data/config.json</code></p>
+<p><code>deploy/config.example.json</code> is a fuller starting point for a public server (https origins, the forms' hosts,
+the import and sign-in limits, mail): every secret is named by its environment variable, never written in it.</p>
+<p>The collections (folders, page URLs, groups) come from the site's own <code>markstage.config.mjs</code> (or <code>.js</code> / <code>.ts</code>)
+at the repo root. It is the same file the editor uses in <code>astro dev</code>, so there is one source. Restart Markstage
+after changing it. A site without one may list <code>collections</code> in config.json instead, e.g.
+<code>[{ &quot;id&quot;: &quot;posts&quot;, &quot;dir&quot;: &quot;src/content/blog&quot;, &quot;format&quot;: &quot;md&quot;, &quot;hasStatus&quot;: true, &quot;url&quot;: &quot;/blog/{slug}/&quot; }]</code>.
+Never use both: the server refuses to start.</p></li><li><p>Build and start:</p>
+<pre data-lang="sh"><code class="language-sh">export SITE_REPO=/abs/path/to/site MARKSTAGE_DATA=/abs/data MARKSTAGE_UID=$(id -u) MARKSTAGE_GID=$(id -g)
+docker compose -f deploy/compose.yaml build
+# the site's build runs inside the container: install its dependencies there once (Linux binaries)
+docker compose -f deploy/compose.yaml run --rm -w /srv/content markstage npm ci
+docker compose -f deploy/compose.yaml up -d
+docker compose -f deploy/compose.yaml exec markstage markstage-server setup-code</code></pre></li><li><p>Open <code>http://127.0.0.1:18231/markstage/#/setup</code>, enter the code, create the owner, turn on 2FA. Then
+<strong>Publish site</strong> once to make the first release; the site appears on <code>http://127.0.0.1:18235/</code>.</p></li></ol>
+<p>Notes:</p>
+<ul><li><code>MARKSTAGE_UID/GID</code> must own the site repo and the data dir (default 1000, the image's <code>node</code> user). The
+<code>site-releases</code> volume is created owned by 1000; with another uid, <code>chown</code> it once.</li><li><code>NODE_ENV</code> is <code>production</code> by default in <code>deploy/compose.yaml</code> (set <code>NODE_ENV=development</code> on purpose for a
+local play copy). On every public server set <code>NODE_ENV=production</code> (the plain-Node and systemd ways below too), an
+https <code>publicOrigin</code>, and put the nginx from Option 2 in front (the compose ports stay on 127.0.0.1). Dev mode
+(<code>devNoAuth</code>, no sign-in) refuses to start in production and with any <code>publicOrigin</code> that is not a loopback
+address, so a dev config copied to a server cannot open the editor to the internet.</li><li>One server process is assumed: the sign-in, share-link and gate limiters count in process memory (see
+docs/SECURITY.md &quot;Known limits&quot;). Run one <code>markstage-server serve</code> per data dir; do not scale it to several
+processes behind one address.</li><li>The site's own redirects/headers: add them to <code>deploy/nginx/site.conf</code> (it is mounted read-only).</li><li>The editor itself: build it once with <code>markstage build-editor</code> and set <code>editorDir</code> (see
+<a href="#the-editor-in-production">The editor in production</a>); until then <code>/markstage/</code> shows a placeholder page.</li></ul>
+<h2 id="the-editor-in-production">The editor in production</h2>
+<p>In <code>astro dev</code> the editor is built on the fly. A Markstage server serves a built copy from <code>editorDir</code>:</p>
+<pre data-lang="sh"><code class="language-sh"># in the site's checkout, after npm install (it uses the site's own Vite, and its markstage.config)
+node node_modules/@markstage/astro/bin/markstage.mjs build-editor --out /srv/markstage-editor</code></pre>
+<p>(<code>npx markstage build-editor …</code> is the same where npm linked the package's <code>markstage</code> command.)</p>
+<ul><li>It writes <code>index.html</code>, <code>assets/</code> (the editor with the site's CSS, block packs, link and spelling modules, and its
+<code>pageData</code> run at build time) and <code>preview-agent.js</code>, plus <code>markstage-editor.json</code> (what was built, when). Set
+<code>&quot;editorDir&quot;: &quot;/srv/markstage-editor&quot;</code> in config.json. About 2 s; the server needs no restart, the next page load
+gets the new build.</li><li>Build again whenever the site's editor CSS, packs or <code>pageData</code> change (after pulling the site's code). The new
+build is written beside the old one and swapped in, so a running server never serves half a build. It refuses to
+replace a folder that is not an earlier build (no <code>markstage-editor.json</code>), so a wrong <code>--out</code> cannot wipe it.</li><li>Put the folder outside the content repo (Markstage commits there) and outside the data dir. The site config's
+<code>basePath</code> (default <code>/markstage</code>) must be the server's.</li><li>The block packs' Markdown side is code the server runs too: list each pack's <code>markdown</code> module in config.json
+<code>packs</code> (absolute paths), or articles with the site's own boxes cannot be saved.</li><li>Fonts and images the canvas draws with keep their site paths (<code>url(/fonts/x.woff2)</code>, <code>/img/x.webp</code>,
+<code>../../assets/x.webp</code>). The server answers those on the CMS host: files under the repo's <code>public/</code> for anyone (the
+live site serves them anyway), other images in the repo for signed-in people only. Only image and font types,
+never from <code>.git</code>, <code>node_modules</code> or a dot-folder, never through a link out of the repo; an SVG gets a sandbox CSP.</li><li><code>editor.canvas.shell</code> (the canvas drawn inside the entry's real page) works in <code>astro dev</code> only for now. The built
+editor cannot read the page from the CMS host, so it draws the canvas as before, a sheet with the site's CSS
+(docs/CANVAS-FIDELITY.md &quot;With the server&quot;).</li><li>Pages are edited on the real page, which is the preview: set up the preview host (<code>preview.origin</code>, below). The
+site's dev server runs there on a private clone, with the field bindings (<code>data-ms-*</code>). <code>node_modules</code> is copied
+into the clone; packages the site links from outside its folder (<code>file:../markstage/...</code>) are linked again by
+their absolute path. Its own Markstage addresses (<code>/markstage/*</code> other than the preview's) answer 404 there, and
+the integration adds neither its editor page nor its dev API when <code>MARKSTAGE_PREVIEW=1</code>.</li></ul>
+<h2 id="option-2-no-docker-systemd-nginx">Option 2: no Docker (systemd + nginx)</h2>
+<ol><li>Node 22.13+ and git. A user <code>markstage</code> that may write the site repo, the data dir and <code>/srv/site</code>, nothing else.</li><li><code>npm ci --omit=dev --workspace @markstage/server --workspace @markstage/core</code> in a checkout of this repo
+(sharp, optional, re-encodes uploads). The prebuilt sharp cannot read iPhone photos (HEIC needs libheif with an
+HEVC decoder, which it leaves out); such uploads get a plain <code>415</code> asking for a JPEG. To accept them, the simple
+way is libheif's converter: <code>apt install libheif-examples</code> (Debian/Ubuntu; <code>brew install libheif</code> on macOS) and
+<code>&quot;media&quot;: {&quot;heicCommand&quot;: [&quot;heif-dec&quot;, &quot;{in}&quot;, &quot;{out}&quot;]}</code> in <code>config.json</code> (older libheif: <code>heif-convert</code>; on
+macOS <code>[&quot;sips&quot;, &quot;-s&quot;, &quot;format&quot;, &quot;jpeg&quot;, &quot;{in}&quot;, &quot;--out&quot;, &quot;{out}&quot;]</code> also works). The server writes the photo to a
+private temporary folder, runs the command (argv, no shell, 60 s), and re-encodes its JPEG like any upload.
+Or install sharp built against a system libvips that has HEIC (<code>npm install sharp --build-from-source</code> with
+<code>libvips-dev libheif-dev libde265-dev</code> on Debian), then check: <code>node -e &quot;console.log(require('sharp').format.heif.input)&quot;</code>.</li><li><code>markstage-server init /srv/markstage-data</code>, edit <code>config.json</code> (<code>publicOrigin: &quot;https://cms.example.com&quot;</code>,
+<code>trustProxy: true</code>, <code>protectedPages.hosts: [&quot;www.example.com&quot;]</code>). Outside the image <code>markstage-deploy</code> is not
+on <code>PATH</code>: use <code>&quot;deploy&quot;: [&quot;node&quot;, &quot;/opt/markstage/packages/server/bin/markstage-deploy.mjs&quot;, &quot;--to&quot;, &quot;/srv/site&quot;]</code>.</li><li>A unit, e.g. <code>/etc/systemd/system/markstage.service</code>:
+<pre data-lang="ini"><code class="language-ini">[Unit]
+Description=Markstage
+After=network.target
+
+[Service]
+User=markstage
+Environment=NODE_ENV=production MARKSTAGE_DATA_DIR=/srv/markstage-data
+ExecStart=/usr/bin/node /opt/markstage/packages/server/bin/markstage-server.mjs serve
+Restart=on-failure
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/srv/markstage-data /srv/site /srv/content
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+(<code>ProtectSystem=strict</code> makes everything else read-only; add the npm cache dir to <code>ReadWritePaths</code> if the
+site's build needs one.)</li><li>nginx: <code>deploy/nginx/production.conf</code>. Set the two host names and certificates, then <code>nginx -t</code> and reload.</li><li><code>sudo -u markstage MARKSTAGE_DATA_DIR=/srv/markstage-data markstage-server setup-code</code>, sign in at
+<code>https://cms.example.com/markstage/#/setup</code>, turn on 2FA.</li></ol>
+<h3 id="nginx-in-short">nginx, in short</h3>
+<p><code>production.conf</code> has four parts:</p>
+<ul><li><strong>preview host:</strong> everything proxied to Markstage's preview listener (18245), with the websocket upgrade headers
+for HMR and a 120 s read timeout for the first, cold preview.</li><li><strong>share host:</strong> share links (docs/API-RELEASES.md), proxied to Markstage's share listener (18251), GET and HEAD
+only. A link's first address holds its token, so this host and the http redirect log with the <code>markstage_redacted</code>
+format (<code>/share/[link]</code> in the request line and the referrer), and this host keeps only critical errors. Set
+<code>&quot;share&quot;: {&quot;origin&quot;: &quot;https://share.example.com&quot;}</code>.</li><li><strong>cms host:</strong> everything proxied to Markstage with <code>Host</code> and <code>X-Forwarded-For</code>; <code>client_max_body_size 12m</code>
+for uploads.</li><li><strong>site host:</strong> files from <code>/srv/site/current/public</code> with <code>try_files $uri $uri/index.html @protected</code>. Not
+<code>$uri/</code>: a protected page's folder may still exist in the public build because of its public child pages, and
+<code>$uri/</code> would answer 403 there. <code>/_nginx/</code> (nginx files the build emits) answers 404.</li><li><strong>protected pages:</strong> <code>@protected</code> asks Markstage with <code>auth_request /markstage/page-auth</code> (<code>X-Original-URI</code>,
+cookie forwarded). On 204, nginx serves the file from <code>/srv/site/current/private</code> with <code>noindex</code> and
+<code>no-store</code>; on 401, <code>@gate</code> proxies to Markstage, which shows the password form or 404 (then the site's own
+404 page). <code>/markstage/page-auth</code> is <code>internal</code>.</li><li>If Markstage is down, protected pages answer 500 (fail closed); public pages are unaffected.</li></ul>
+<h2 id="what-the-site-must-do-site-contract">What the site must do (site contract)</h2>
+<p>From <a href="../api/#site-side-contract-static-sites">API.md</a>, checked by the rehearsal:</p>
+<ol><li><p>Build only live entries: <code>draft: true</code> and a future <code>publishAt</code> (compared with <code>MARKSTAGE_BUILD_TIME</code>) stay out.</p></li><li><p>Exit non-zero on failure (Astro does: an invalid entry fails the build, and Markstage reverts).</p></li><li><p>Emit <code>protected: true</code> pages to <code>dist-private/</code> instead of <code>dist/</code>, and leave them out of every derived output
+(sitemap, RSS, llms.txt, Markdown twins, search, link cards). Add <code>dist-private/</code> to <code>.gitignore</code>.</p></li><li><p>One broken entry fails every build (and the preview), including unrelated publishes. Give the server a
+<code>validate</code> command in <code>config.json</code>, e.g. <code>&quot;validate&quot;: [&quot;node&quot;, &quot;scripts/validate-entry.mjs&quot;]</code>: it reads the
+entry on stdin (<code>MARKSTAGE_COLLECTION</code>, <code>MARKSTAGE_FILE</code> in env), checks it against the site's schema and exits
+non-zero with <code>{&quot;issues&quot;: [...]}</code>. Every write runs it first and is refused with 422 when it fails
+(<a href="../api/#content-checks">API.md</a>). A build that still fails names the entry in the job error.</p></li><li><p>Sites with locales (<code>locales</code> in <code>markstage.config</code>) emit every locale copy of an entry from its one source
+file (<code>/x/</code> and <code>/en-us/x/</code>). Set <code>&quot;verify&quot;: {&quot;public&quot;: &quot;dist&quot;, &quot;private&quot;: &quot;dist-private&quot;}</code> in <code>config.json</code>,
+and every status job checks each copy in the build before deploying it. Add the site's hreflang check as
+<code>{&quot;id&quot;: &quot;hreflang&quot;, &quot;command&quot;: [&quot;node&quot;, &quot;migration/verify/hreflang_check.mjs&quot;], &quot;after&quot;: &quot;build&quot;}</code> in <code>checks</code>.</p></li><li><p>What stops a publish: <code>&quot;publishRules&quot;: {&quot;altText&quot;: &quot;block&quot;, &quot;links&quot;: &quot;block&quot;, &quot;duplicates&quot;: &quot;block&quot;,
+&quot;headings&quot;: &quot;warn&quot;}</code> in <code>config.json</code> (these are the defaults; <code>off</code> skips a rule). See
+<a href="../api/#before-publishing-the-publish-sheet">API.md</a>.</p></li><li><p>Moving an entry records redirects through <code>redirects: {command: [...]}</code> in <code>markstage.config</code>. That command gets
+<code>{&quot;redirects&quot;: [{&quot;from&quot;: &quot;/old/&quot;, &quot;to&quot;: &quot;/new/&quot;}, …]}</code> (every locale) on stdin and writes them where the site
+keeps them. The site's build turns them into redirect pages or server rules.</p></li><li><p>Design &amp; Code (<code>design</code> in <code>markstage.config</code>): the build puts the <code>inject.head</code> / <code>inject.foot</code> files and each
+live page's <code>codeInjection: {head, foot}</code> into that page's head and the end of its body, and allows them in the
+page's Content-Security-Policy: a <code>'sha256-…'</code> source in <code>script-src</code> for every inline <code>&lt;script&gt;</code> (and in
+<code>style-src</code> for every inline <code>&lt;style&gt;</code>), and the origin of every external <code>src</code>. The custom CSS file loads after
+every other stylesheet. <code>@markstage/core/csp</code> does the counting: <code>cspHashes(html)</code> returns
+<code>{script, style, scriptOrigins, styleOrigins, problems}</code> for the injected code (JSON-LD and other data blocks need
+nothing), and <code>withCspSources(policy, needs)</code> adds them to the page's policy (from <code>default-src</code> when it has no
+<code>script-src</code>; never next to a bare <code>'unsafe-inline'</code>, where a hash would switch it off). <code>problems</code> names what no
+hash allows (an <code>onclick=</code> attribute, a <code>style=</code> attribute, a <code>javascript:</code> link): show it to the owner and leave
+that code out. Proven in Chromium: the hashed script and style run, any other inline script is blocked. A post-build check in <code>checks</code> (<code>after: 'build'</code>) also runs after each design save, once
+for the site, with <code>MARKSTAGE_SCOPE=site</code>.</p></li></ol>
+<p>The publish sheet's link check reads the last build output (<code>verify.public</code>) to know which addresses exist besides
+the entries, so set <code>verify</code> even on a single-locale site.</p>
+<h2 id="optional-a-browser-publish-gate">Optional: a browser publish gate</h2>
+<p><code>deploy/recipes/publish-gate.mjs</code> checks the fresh build in Chromium (Playwright) before the deploy, at 390 and
+1440 px. These are errors and fail the job (the live site stays as it was):</p>
+<ul><li>a page that scrolls sideways</li><li>an image wider than the screen</li></ul>
+<p>Text under 12 px and tap targets under 24 px are logged as warnings. With <code>--baseline</code> set to the live release,
+an error the live site already has is reported but does not block. A publish is stopped only by what it makes worse.</p>
+<pre data-lang="json"><code class="language-json">&quot;deploy&quot;: [&quot;node&quot;, &quot;scripts/publish-gate.mjs&quot;, &quot;--baseline&quot;, &quot;/srv/site/current/public&quot;,
+           &quot;--&quot;, &quot;markstage-deploy&quot;, &quot;--to&quot;, &quot;/srv/site&quot;]</code></pre>
+<p>Copy the file into the site repo, add <code>playwright</code> as a dev dependency and run <code>npx playwright install chromium</code>.
+On the pilot site's 460 pages at both widths it adds about 15 s to a publish. Use <code>--pages /,/about/</code> to check fewer
+pages. The editor's device preview is the writer's check while writing; this gate is the server's last check.</p>
+<h2 id="operations">Operations</h2>
+<ul><li><strong>Back up:</strong> see <a href="#backups">Backups</a> below. Releases can be rebuilt from the repo.</li><li><strong>Update:</strong> see <a href="#updating-markstage">Updating Markstage</a> below. Migrations run at start.</li><li><strong>Logs:</strong> job logs are in the API (<code>/jobs/:id</code>, 1 MB cap per job); the audit log is at <code>/audit</code>. The process
+writes little to stdout.</li><li><strong>Locked out:</strong> an owner or administrator resets anyone below them from Users. The owner (there is exactly one) is
+reset only in a terminal: <code>markstage-server reset-password &lt;email&gt;</code> prints a setup code (72 h). So Users
+recommends a second administrator while only one person can manage users.</li><li><strong>Stock photos (optional):</strong> <code>&quot;stock&quot;: {&quot;provider&quot;: &quot;unsplash&quot;, &quot;keyFile&quot;: &quot;/srv/markstage-data/stock.key&quot;}</code> in
+<code>config.json</code> (or <code>pexels</code>), the key file <code>chmod 600</code>; or <code>MARKSTAGE_STOCK_KEY</code> in the environment. The server
+needs outbound https to the provider's API and image host only (<code>api.unsplash.com</code>, <code>images.unsplash.com</code>;
+<code>api.pexels.com</code>, <code>images.pexels.com</code>). Restart after changing it.</li><li><strong>Imports from the web:</strong> the Library's &quot;From a web page&quot; and the media import from addresses need outbound http
+and https (ports 80 and 443) to the public internet; nothing to set. The server refuses every private, loopback
+and link-local address itself (docs/SECURITY.md &quot;Fetching from the web&quot;); a firewall that allows only public
+egress is a second wall, not a replacement. Proxy variables (<code>HTTP_PROXY</code>) are not used. Without egress, those
+imports answer that the site could not be reached; packs, zips and folders still import.</li><li><strong>CDN cache (optional):</strong> <code>&quot;purge&quot;: {&quot;command&quot;: [&quot;node&quot;, &quot;/srv/markstage-data/purge-cdn.mjs&quot;]}</code> in <code>config.json</code>.
+After every deploy it gets <code>{&quot;urls&quot;: [&quot;https://…/blog/x/&quot;, …]}</code> (or <code>{&quot;all&quot;: true}</code>) on stdin and exits 0; the
+CDN token goes in <code>commands.env</code>, never in the site repo. A failure is a warning on the job, not a failed publish.</li><li><strong>IndexNow (optional):</strong> <code>&quot;indexNow&quot;: {&quot;keyFile&quot;: &quot;/srv/markstage-data/indexnow.key&quot;}</code> (or <code>key</code>), and the site
+serves the same key as <code>/&lt;key&gt;.txt</code> at its root. After each publish, unpublish, move or scheduled run the server
+tells <code>https://api.indexnow.org/indexnow</code> (Bing, Yandex and the others that share it; <code>endpoint</code> to change it) the
+changed addresses. Needs <code>siteUrl</code> in <code>markstage.config</code> and outbound https to that host.</li><li><strong>Speed for real visitors (optional):</strong> <code>&quot;crux&quot;: {&quot;keyFile&quot;: &quot;/srv/markstage-data/crux.key&quot;}</code> in <code>config.json</code>
+(or <code>MARKSTAGE_CRUX_KEY</code>): <strong>the site's own</strong> Google Cloud API key with the Chrome UX Report API enabled,
+restricted to that API. Site health then shows phone and desktop LCP, INP and CLS. Outbound https to
+<code>chromeuxreport.googleapis.com</code> only.</li><li><strong>Alerts (optional):</strong> see &quot;Alerts&quot; below: a failure also goes out by email, Slack and a webhook.</li><li><strong>Bad release:</strong> with <code>&quot;commands&quot;: {…, &quot;rollback&quot;: [&quot;markstage-deploy&quot;, &quot;rollback&quot;, &quot;--to&quot;, &quot;/srv/site&quot;]}</code> an owner or
+administrator rolls back from Site health (&quot;Roll back to the release before&quot;; a job, audited, editors told).
+Without it: <code>markstage-deploy rollback --to /srv/site</code> in a terminal. Then fix and publish again.</li></ul>
+<h2 id="alerts">Alerts</h2>
+<p>A failed publish, deploy or backup, and a scheduled entry held back by the publish rules or gone out late (the server
+was down at its time), are shown in the editor until seen (the bar under the header, and Publishing). With <code>notify</code>
+in <code>config.json</code> each one also goes out once, by any of:</p>
+<pre data-lang="json"><code class="language-json">&quot;notify&quot;: {
+  &quot;email&quot;: { &quot;host&quot;: &quot;smtp.example.com&quot;, &quot;port&quot;: 587, &quot;from&quot;: &quot;Markstage &lt;cms@example.com&gt;&quot;,
+             &quot;to&quot;: [&quot;ops@example.com&quot;], &quot;roles&quot;: [&quot;owner&quot;, &quot;administrator&quot;] },
+  &quot;slack&quot;: { &quot;webhookFile&quot;: &quot;/srv/markstage-secrets/slack-webhook.url&quot; },
+  &quot;webhook&quot;: { &quot;url&quot;: &quot;https://hooks.example.com/markstage&quot; }
+}</code></pre>
+<ul><li><strong>Email</strong> (SMTP): <code>security</code> is <code>&quot;starttls&quot;</code> (port 587, the default) or <code>&quot;tls&quot;</code> (port 465). Nothing is sent when the
+server does not offer STARTTLS: no password and no mail ever go out in plain text. <code>&quot;none&quot;</code> is only for a relay on
+the same machine in development. The account comes from the environment, <code>MARKSTAGE_SMTP_USER</code> and
+<code>MARKSTAGE_SMTP_PASSWORD</code>, or <code>user</code> plus <code>passwordFile</code> (a file outside the site repo, mode 0600); a <code>password</code>
+in <code>config.json</code> is refused. Mail goes to the <code>to</code> addresses and to every active user whose role is in <code>roles</code>
+(with no <code>to</code>, the owner and administrators). <code>caFile</code> trusts a relay with its own certificate authority.
+The mail says what happened (the entry and the error) with a link to the job in the editor. It is named for the
+site: the subject starts with the site's <code>siteName</code> (<code>Example Co: A publish … did not go live.</code>) and the mail is
+signed &quot;Sent by the Example Co editor (Markstage)&quot;; a site with no <code>siteName</code> gets <code>Markstage: …</code>.</li><li><strong>Slack:</strong> an incoming webhook, from <code>MARKSTAGE_SLACK_WEBHOOK</code> or <code>webhookFile</code> (the URL is a secret).</li><li><strong>Webhook:</strong> <code>{kind, level, text, url, at}</code> posted as JSON to <code>url</code> (https).</li><li><strong>Who and how:</strong> Settings → Alerts picks, per kind, the roles, people and extra addresses and the channels (the
+editor always shows it), and the sender name mail comes from (&quot;Example Co Site&quot;; the address stays <code>from</code>'s). Each
+person turns each kind on or off and picks mail now, a daily digest or the editor only (My alerts). Safety alerts
+(a failed backup, an invite, a role change, a sign-in from a new device) can't be turned off and always go by mail.
+<code>&quot;digestHour&quot;: 8</code> in <code>notify</code> sets when the digest goes (server time). The rules are kept in the data dir
+(<code>alert-rules.json</code>), never in the repo.</li></ul>
+<p>Settings → Alerts shows each channel with how its last send went and has <strong>Send a test</strong> per channel; Site health
+has <strong>Send a test alert</strong> through all of them. Each says what the channel answered. A channel that is down never stops the publish or backup that raised the alert; it is logged.</p>
+<p><strong>Mail goes out once the SMTP details are set</strong> (host, port, account, sender and recipients). Until they are set,
+alerts show in the editor (and Slack, when its webhook is set). It is proven against a local SMTP sink:
+<code>packages/server/test/alerts.test.mjs</code> (a failed publish sends one mail over STARTTLS, signed in, with the entry, the
+error and the job link; a relay without STARTTLS gets nothing; a named site's subject and signature) and the browser
+test &quot;alerts&quot;.</p>
+<h2 id="single-sign-on">Single sign-on</h2>
+<p>People can sign in with the company's OpenID Connect provider (Google Workspace, Microsoft Entra ID, Okta, Auth0,
+Keycloak) as well as, or instead of, a password: docs/API-SSO.md.</p>
+<ol><li>At the provider, register a web client with the redirect URI
+<code>https://cms.example.com/markstage/api/auth/sso/&lt;id&gt;/callback</code> (the public origin, then the provider's <code>id</code>).</li><li>Put its client secret in the service's environment as <code>MARKSTAGE_SSO_&lt;ID&gt;_SECRET</code> (<code>MARKSTAGE_SSO_GOOGLE_SECRET</code>),
+or in a file outside the site repo (mode 0600) named by <code>clientSecretFile</code>. Never in config.json.</li><li>In config.json:</li></ol>
+<pre data-lang="json"><code class="language-json">&quot;sso&quot;: {
+  &quot;providers&quot;: [
+    { &quot;id&quot;: &quot;google&quot;, &quot;label&quot;: &quot;Google&quot;, &quot;issuer&quot;: &quot;https://accounts.google.com&quot;, &quot;clientId&quot;: &quot;1234.apps.googleusercontent.com&quot;,
+      &quot;domains&quot;: [&quot;example.com&quot;] }
+  ]
+}</code></pre>
+<ol start="4"><li>Restart. A mistake stops the start and says which key. The sign-in screen then shows &quot;Sign in with Google&quot;.</li></ol>
+<p>People are found by the email they were invited with (verified by the provider), so invite them first, or let
+<code>autoCreate: {role: &quot;author&quot;}</code> give everyone at <code>domains</code> an account on their first sign-in. <code>&quot;passwordLogin&quot;: false</code>
+keeps passwords for the owner alone, for when the provider is down.</p>
+<h2 id="forms">Forms</h2>
+<p>A form on the site (a contact form) posts to Markstage on the site's own host: <code>POST /markstage/forms/&lt;id&gt;</code>. The
+form itself is described in the site's markstage.config <code>forms</code> (docs/CONFIG.md &quot;Forms&quot;); the server needs:</p>
+<ul><li><code>&quot;siteHosts&quot;: [&quot;www.example.com&quot;, &quot;example.com&quot;]</code> in config.json: the site's host names (as the <code>Host</code> header
+arrives; with the port in development, e.g. <code>&quot;127.0.0.1:18235&quot;</code>). A form is only taken from a page on one of them
+(its <code>Origin</code>), and on those hosts the rest of Markstage answers 404. <code>protectedPages.hosts</code> count too.</li><li><code>&quot;trustProxy&quot;: true</code> behind nginx, so the daily limit counts the visitor's address (the hop nginx appends), not
+nginx's. A posted address is never used.</li><li>nginx passing <code>/markstage/</code> on the site host to Markstage with the <code>Host</code> header (<code>deploy/nginx/site.conf</code> does,
+with a 64 KB body limit).</li><li><code>notify.email</code> (see &quot;Alerts&quot;) for the team mail and the thank-you mail to the visitor. Without it messages still
+land in the Inbox and the editor's notices. The thank-you mail's words can be changed (or turned off) in Settings →
+Forms; that is kept in the data dir (<code>forms-settings.json</code>).</li></ul>
+<p>Every message is stored in the data dir's database before anything is mailed, so a mail server that is down loses
+nothing: the message is in the Inbox marked &quot;alert not sent&quot;, the mail is tried again with backoff, and Site health
+counts them. Messages are kept forever unless a form sets <code>keepDays</code>; they are in every backup (<code>markstage.db</code>). The
+visitor's address and browser are kept 30 days (for the limit).</p>
+<p><strong>Odoo</strong> (optional). A form with <code>crm</code> (docs/CONFIG.md &quot;Forms&quot;) also sends each message to Odoo as a lead. The
+address and sign-in come from the server's environment, never from config.json or the repo:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Variable</th><th scope="col">What</th></tr></thead><tbody><tr><td><code>ODOO_ENABLE</code></td><td><code>true</code> to send; anything else sends nothing</td></tr><tr><td><code>ODOO_URL</code></td><td>the Odoo address, https (e.g. <code>https://odoo.example.com</code>)</td></tr><tr><td><code>ODOO_DB</code></td><td>the Odoo database name</td></tr><tr><td><code>ODOO_EMAIL</code></td><td>the Odoo user that creates the leads</td></tr><tr><td><code>ODOO_PASSWORD</code></td><td>its password or API key</td></tr></tbody></table></div>
+<p>(<code>crm.env</code> picks another prefix.) With systemd, put them in an <code>EnvironmentFile=</code> readable by root only (0600);
+with Docker Compose, in an <code>env_file:</code> kept out of the repo. Site health says whether each form can send, and how
+many messages did not go (&quot;not sent to Odoo&quot;); the Inbox has &quot;Send to Odoo again&quot;. Outside production (an
+environment's <code>production: false</code>) nothing is sent. Old WordPress messages are never sent again.</p>
+<p><strong>Leads for analytics</strong> (optional). A form with <code>leads</code> (docs/CONFIG.md &quot;Forms&quot;) also sends each real message to
+Skald as a lead. Its secret comes from the environment the same way: <code>SKALD_LEAD_SECRET</code> (the lead hook's secret
+from Skald's Settings → Leads &amp; integrations; <code>leads.env</code> picks another prefix). Without it nothing is sent and Site
+health says so.</p>
+<p><strong>The visitor's approximate place</strong> (optional). With a city database on the server, each message gets a place from
+the visitor's address (&quot;Toronto, Ontario, Canada&quot;), looked up here when it comes in: nothing is sent anywhere, and
+nothing the browser says is used. Any MaxMind DB City file works; the default is DB-IP's free &quot;IP to City Lite&quot;
+(no account or key; CC BY 4.0, so the Inbox shows its credit line), MaxMind's GeoLite2 City works the same. Put it
+in place as a deploy step, and again each month to keep it current:</p>
+<pre data-lang="sh"><code class="language-sh">markstage-server geoip update https://download.db-ip.com/free/dbip-city-lite-2026-10.mmdb.gz
+markstage-server geoip update /path/to/GeoLite2-City.mmdb</code></pre>
+<p>It is checked (a MaxMind DB with city records) before it replaces the one there, and lands in
+<code>&lt;dataDir&gt;/geoip/city.mmdb</code> (<code>&quot;geoip&quot;: {&quot;file&quot;: &quot;…&quot;}</code> in config.json for another place, outside the site repo). The
+running server picks it up within a minute. Without it, messages have no place. Site health shows which file is in
+use (<code>forms.geoip</code>).</p>
+<p><strong>Coming from WordPress.</strong> Point the site's form at <code>/markstage/forms/&lt;id&gt;</code> (the same field names keep working when
+<code>fields</code> names them), then bring the old messages over, read only and once or as often as you like (a second run
+adds only rows it has not seen):</p>
+<pre data-lang="sh"><code class="language-sh">markstage-server forms import-wordpress /path/to/01-database.sql.gz --form contact --dry-run
+markstage-server forms import-wordpress /path/to/01-database.sql.gz --form contact</code></pre>
+<p>It reads the <code>wp_contact</code> table (<code>--table</code> for another) from a mysqldump (<code>.sql</code> or <code>.sql.gz</code>), keeps the fields,
+the page and referrer, the UTM source and medium, the service asked about, and the city, state and country as the
+location; the old IP address is left behind. They arrive marked handled, under the form, with &quot;imported from
+WordPress&quot; in their history; nobody is mailed. Run it as the server's user (it writes the data dir's database; the
+server may keep running).</p>
+<h2 id="environments-staging-next-to-production">Environments (staging next to production)</h2>
+<p>The design: docs/ENVIRONMENTS.md; the routes and the config keys: docs/API-ENV.md. On one server:</p>
+<ol><li><strong>One remote for all.</strong> Both content repos are clones of the same remote (a private repo, or a bare repo on the
+server). Give each server a read-write deploy key of its own: production pushes <code>main</code> after each deploy, staging
+pushes <code>staging</code>. Git runs with <code>GIT_TERMINAL_PROMPT=0</code> and ssh in batch mode, so a missing key fails in words,
+never waits for a password.</li><li><strong>Two Markstage servers</strong>, each with its own data dir, port and service: production as today, staging with
+<code>&quot;environment&quot;: {&quot;name&quot;: &quot;staging&quot;, &quot;branch&quot;: &quot;staging&quot;, &quot;upstream&quot;: &quot;main&quot;, &quot;promoteTo&quot;: &quot;production&quot;,
+&quot;peers&quot;: {&quot;production&quot;: {&quot;branch&quot;: &quot;main&quot;, &quot;origin&quot;: &quot;https://cms.example.com&quot;}}}</code>, and production with
+<code>&quot;environment&quot;: {&quot;name&quot;: &quot;production&quot;, &quot;branch&quot;: &quot;main&quot;, &quot;peers&quot;: {&quot;staging&quot;: {&quot;branch&quot;: &quot;staging&quot;}}}</code>.
+Check each with <code>markstage-server check</code>, then <code>markstage-server env status</code>.</li><li><strong>Staging is quiet.</strong> Point staging's <code>notify.email</code> at a mail catcher on the box with <code>&quot;mail&quot;: &quot;sink&quot;</code>, or keep
+real mail with <code>&quot;mail&quot;: &quot;actor&quot;</code> (only the person who did something hears of it). Its forms answer &quot;Test form:
+not sent&quot;. Purge, IndexNow, Slack and the webhook stay off unless <code>environment.keep</code> lists them.</li><li><strong>The staging site behind sign-in.</strong> List <code>staging.example.com</code> in staging's <code>siteHosts</code>. Either proxy that host to
+Markstage (it serves <code>verify.public</code> to signed-in people), or let nginx serve the files and ask Markstage first:
+<code>auth_request /markstage/gate-auth;</code> with <code>error_page 401 = @gate;</code> and <code>location @gate { return 303
+https://staging-cms.example.com/markstage/gate?host=$host&amp;to=$request_uri; }</code>, and proxy <code>/markstage/gate-enter</code>
+to Markstage. Add <code>add_header X-Robots-Tag &quot;noindex, nofollow&quot; always;</code>.</li><li><strong>Branch previews (optional)</strong> need a wildcard DNS record and certificate for <code>*.staging.example.com</code>, proxied to
+the staging server, and <code>&quot;previews&quot;: {&quot;branches&quot;: true, &quot;host&quot;: &quot;{branch}.staging.example.com&quot;}</code>.</li><li><strong>Screenshots</strong> in a plan need Playwright on the server (<code>npm i -D playwright &amp;&amp; npx playwright install
+chromium</code> in the Markstage folder); without it the plan says so and everything else works.</li><li><strong>The AI summary (optional):</strong> <code>&quot;ai&quot;: {&quot;provider&quot;: &quot;anthropic&quot;, &quot;model&quot;: &quot;claude-sonnet-5-5&quot;, &quot;keyFile&quot;:
+&quot;/etc/markstage/ai.key&quot;}</code> (0600, owned by the service user, outside the repo). Only the facts and the list of
+changed files are sent, never a page's text. The AI suggestions in the editor (docs/API-AI.md) use the same key
+(this file, or <code>MARKSTAGE_AI_KEY</code> in the service's environment) and the same model.</li></ol>
+<h2 id="updating-markstage">Updating Markstage</h2>
+<p>Your account (and the menu) shows the version that runs, e.g. <code>0.2.0 (3f9c2a1b7d4e)</code>; <code>markstage-server version</code> says
+the same in a terminal. Releases are git tags <code>vX.Y.Z</code>.</p>
+<p><strong>A git checkout (option 2):</strong></p>
+<pre data-lang="sh"><code class="language-sh">markstage-server update --check        # the newer releases and what changed in each (commits, CHANGELOG.md)
+markstage-server update                # the newest; or --to v0.3.0
+sudo systemctl restart markstage
+markstage-server update --rollback     # back to the version before the last update</code></pre>
+<p><code>update</code> refuses a checkout with local changes. It copies the database to <code>&lt;data dir&gt;/updates/</code> first (a consistent
+copy while the server runs), switches the checkout, runs <code>npm ci --omit=dev</code> for the server and core, then
+<code>markstage-server check</code> (the config and the new code load, nothing written). If any step fails it switches back
+and reinstalls the old version: nothing changed. The running server is untouched until you restart it. The history
+is <code>&lt;data dir&gt;/updates/history.json</code>.</p>
+<p><code>--rollback</code> switches back to the commit before the last update. Migrations only ever add tables and columns, so the
+older version runs on the newer database. To also put the database back as it was before the update (losing what
+was written since), stop the server first and add <code>--with-data</code>; the current database is copied aside before.</p>
+<p><strong>Docker:</strong> pull the new image tag, <code>docker compose up -d</code>; to go back, set the previous tag. Back up first
+(<code>markstage-server backup</code>, below).</p>
+<h2 id="backups">Backups</h2>
+<p>What must survive a lost disk: the data dir (users, sessions, audit, autosaves, media records, protected-page hashes,
+<code>config.json</code>) and the site repo (content, uploads, history). Markstage backs up both on a schedule:</p>
+<pre data-lang="json"><code class="language-json">&quot;backup&quot;: { &quot;dir&quot;: &quot;/mnt/backup/markstage&quot;, &quot;everyHours&quot;: 24, &quot;keep&quot;: 7,
+            &quot;command&quot;: [&quot;rclone&quot;, &quot;copy&quot;, &quot;--&quot;] }</code></pre>
+<ul><li><code>dir</code> must be outside the site repo and the data dir, ideally another disk or a mounted share. Each backup is a
+folder <code>markstage-backup-YYYYMMDD-HHMMSS</code> (mode 0700) holding <code>markstage.db</code> (a consistent copy taken while the
+server runs), <code>site.bundle</code> (<code>git bundle --all</code>: every branch, the history and the committed uploads),
+<code>config.json</code>, and <code>manifest.json</code> (the commit and each file's size and sha256). The newest <code>keep</code> stay.</li><li><code>command</code> (optional, argv, no shell) runs after each backup with the folder as its last argument, to copy it off
+the machine (rclone, rsync, <code>aws s3 cp --recursive</code>). Its keys go in <code>commands.env</code> or its own config file, never
+in the site repo. If it fails, the backup job fails.</li><li>Every <code>everyHours</code> (default 24). A server that was down past the time backs up about 30 s after it starts. After
+a failure it tries again an hour later, and the administrators get a notice (and the notify hooks).</li><li>Site health shows the last backup, its size, &quot;late&quot; when it is more than two hours overdue, and <strong>Back up now</strong>.
+In a terminal: <code>markstage-server backup</code> (prints the log, exits 1 on failure).</li><li>The folder holds password hashes, sessions, any keys in <code>config.json</code>, and each person's two-step (TOTP) secret
+as a plain value (an authenticator app needs the secret itself, so it cannot be stored as a hash). Whoever reads a
+backup can make that person's codes. Keep <code>dir</code> and wherever <code>command</code> copies to as private as the server itself,
+and protect them like a password store.</li></ul>
+<h3 id="restore-drill-do-it-once-before-you-need-it">Restore drill (do it once, before you need it)</h3>
+<p>On a spare machine or folder, never over the running server:</p>
+<pre data-lang="sh"><code class="language-sh">B=/mnt/backup/markstage/markstage-backup-20261028-090000
+cd &quot;$B&quot; &amp;&amp; sha256sum markstage.db site.bundle config.json   # compare with manifest.json
+git clone &quot;$B/site.bundle&quot; /srv/site-restored                 # content, uploads, history
+git -C /srv/site-restored log -1 --format=%H                  # = manifest.json &quot;commit&quot;
+mkdir -m 700 /srv/markstage-data-restored
+cp &quot;$B/markstage.db&quot; &quot;$B/config.json&quot; /srv/markstage-data-restored/
+# point config.json at the restored repo (&quot;contentRoot&quot;: &quot;/srv/site-restored&quot;), then:
+MARKSTAGE_DATA_DIR=/srv/markstage-data-restored markstage-server serve</code></pre>
+<p>Sign in with an existing account: the users, roles, 2FA and media library are back. Sessions from before are still
+valid until they expire; to sign everyone out, delete them first: <code>sqlite3 markstage.db &quot;DELETE FROM sessions&quot;</code>. The
+proof that this works is <code>packages/server/test/backup.test.mjs</code>: the bundle clones to the manifest's commit, and a
+server started from the restored folder signs an existing account in and shows the same entries and users.</p>
+<h2 id="what-was-proven">What was proven</h2>
+<p>All local (2026-10-28), on a scratch clone of the pilot site (231 pages), never the real repos or servers.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Check</th><th scope="col">Result</th></tr></thead><tbody><tr><td>Writer journey (setup, invite, edit + publish, failed build, schedule, unpublish, protect, unlock)</td><td>10/10; publish 12.4 s (build 11.1 + deploy 0.8); failed build 2.1 s, live site byte-identical</td></tr><tr><td>Real nginx 1.29 with <code>site.conf</code> (auth_request) in front of Markstage, deploy via <code>markstage-deploy</code></td><td>14/14 checks; 30,561 requests during build + release switch, all 200</td></tr><tr><td>Protected page through nginx</td><td>no cookie → form; wrong password 401; right → 303 + cookie → nginx serves the private file (noindex, no-store); tampered cookie → form; <code>/markstage/page-auth</code> and the API 404 from outside</td></tr><tr><td><code>production.conf</code></td><td><code>nginx -t</code> passes (self-signed test certificate)</td></tr><tr><td>Server on Linux (node:24-slim, arm64, <code>--network none</code>)</td><td>starts, <code>setup-code</code>, API, editor placeholder, healthcheck</td></tr><tr><td><code>compose.yaml</code></td><td><code>docker compose config</code> valid; missing paths give a clear error</td></tr><tr><td><code>markstage-deploy</code></td><td>unit tests: switch, private folder, refusal of an empty build, pruning, rollback</td></tr><tr><td>Publish gate</td><td>blocks a new overflow, passes known ones with <code>--baseline</code>, 460 pages × 2 widths in 15.5 s</td></tr><tr><td>Preview with real <code>astro dev</code> (Astro 7.4) on the clone</td><td>11/11. Unsaved edit visible; cold start 3.6 s (15.5 s the very first time, copying <code>node_modules</code>), warm render 0.18 s, next autosave visible after 1.4 s, a draft renders, HMR websocket 101 through the proxy, content repo and live release untouched, dev server gone after shutdown</td></tr><tr><td><code>production.conf</code> with the preview host</td><td><code>nginx -t</code> passes</td></tr><tr><td>The built editor on a Markstage server, not <code>astro dev</code> (2026-10-29, scratch clone of the pilot site, Chromium)</td><td><code>build-editor</code> 1.5 s. Sign in 1.7 s; a page on its real design from the preview origin (cold 14.6 s, warm 0.3 s, 101 bound fields); heading edited in place, saved in 0.9 s (commit in the repo); published in 154 s (commit, <code>astro build</code>, <code>markstage-deploy</code>) and the release served the new heading; Inbox, Site settings, Media opened; an article drew its 3 images and the site's fonts through the CMS host (all 200); a media upload listed and drawn</td></tr><tr><td><code>production.conf</code> with the share host (2026-10-28)</td><td><code>nginx -t</code> passes (nginx 1.29, a throwaway self-signed certificate)</td></tr><tr><td><code>compose.yaml</code> with the share port 18251 (2026-10-28)</td><td><code>docker compose config</code> valid</td></tr><tr><td>The redacted log format (2026-10-28)</td><td>nginx 1.29 ran a copy of <code>production.conf</code> (odd local ports, a stub share listener, a throwaway certificate). <code>GET /share/&lt;token&gt;</code> on the share host, with that link as the referrer, and the same on the http redirect: the access log says <code>&quot;GET /share/[link] HTTP/2.0&quot; 303 … &quot;https://share.example.com/share/[link]&quot;</code> and <code>&quot;GET /share/[link] HTTP/1.1&quot; 301</code>; the token is in neither the access log nor the error log. A page path is logged as it is</td></tr></tbody></table></div>
+<p>Not run here, because each needs the network:</p>
+<ul><li><code>docker build</code>: it installs git from Debian and npm packages.</li><li>The nginx container: <code>nginx:1.29-alpine</code> is not in the local image cache.</li></ul>
+<p>The Dockerfile's steps were exercised piecewise as listed above. The first <code>docker build</code> on a machine with
+network access is the remaining check.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/DEPLOY.md" target="_blank" rel="noopener">docs/DEPLOY.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../config/"><span class="small muted">Previous</span>markstage.config: every key</a>
+          <a class="next" href="../environments/"><span class="small muted">Next</span>Environments: local, staging, production</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

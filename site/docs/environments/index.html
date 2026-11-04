@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Staging and Production Environments in Markstage</title>
+    <meta name="description" content="How Markstage moves content and code between local, staging and production: branches, promotions with checks and screenshots, rules and a shared git remote." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/environments/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Staging and Production Environments in Markstage" />
+    <meta property="og:description" content="How Markstage moves content and code between local, staging and production: branches, promotions with checks and screenshots, rules and a shared git remote." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/environments/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Staging and Production Environments in Markstage" />
+    <meta name="twitter:description" content="How Markstage moves content and code between local, staging and production: branches, promotions with checks and screenshots, rules and a shared git remote." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Environments: local, staging, production",
+          "item": "https://spcaeo.github.io/markstage/docs/environments/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Staging and Production Environments in Markstage",
+      "description": "How Markstage moves content and code between local, staging and production: branches, promotions with checks and screenshots, rules and a shared git remote.",
+      "url": "https://spcaeo.github.io/markstage/docs/environments/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/" aria-current="page">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Environments: local, staging, production</li></ol></nav>
+        <h1>Environments: local, staging, production</h1>
+        <p class="lead left">How Markstage moves content and code between local, staging and production: branches, promotions with checks and screenshots, rules and a shared git remote.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#why">Why</a></li><li><a href="#the-model">The model</a></li><li><a href="#what-people-do">What people do</a></li><li><a href="#conflicts">Conflicts</a></li><li><a href="#promotion-rules-a-permission-and-rule-engine">Promotion rules: a permission and rule engine</a></li><li><a href="#safety-on-non-production">Safety on non-production</a></li><li><a href="#configuration">Configuration</a></li><li><a href="#server-setup-example">Server setup (example)</a></li><li><a href="#how-it-is-tested">How it is tested</a></li></ul></nav>
+        <div class="prose">
+<p>Markstage runs a site in three places: a developer's laptop, a staging server and production. Changes go up by
+promotion and content comes down by sync, both as git merges. The routes, the command line and the tests that prove
+them are in <a href="../api-env/">API-ENV.md</a>, under &quot;Proof&quot;. The editor has the screens for it: the environment badge and
+ribbon, Environments, a plan's review with its conflicts and approvals, Settings → Promotion rules with a dry run,
+and Settings → Tokens.</p>
+<h2 id="why">Why</h2>
+<p>A site has two kinds of change, and they come from different people:</p>
+<ul><li><strong>Code and models</strong>: templates, sections, styles, schemas, config. These come from a developer, who often works
+on a laptop and is sometimes from outside the team.</li><li><strong>Content</strong>: pages, posts, media and menus. These come from editors, who work on the live site.</li></ul>
+<p>The developer has to try a change against real content before it goes live. The editors must never lose work while
+that happens.</p>
+<p>Some hosted content systems sell this as &quot;environments&quot;, usually on their top plans
+(<a href="https://github.com/spcaeo/markstage/blob/main/docs/COMPARISON.md" rel="noopener">COMPARISON.md</a> lists who charges what). There, an environment is often a copy of the content
+repository: only models are promoted, content made in an environment never reaches production, a resync overwrites
+the environment, and there is no deployed staging site unless you build one.</p>
+<p>Markstage keeps a site in git, so an environment is simply a <strong>branch plus a server</strong>, at no extra cost.</p>
+<h2 id="the-model">The model</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Environment</th><th scope="col">Where</th><th scope="col">Branch</th><th scope="col">Who uses it</th><th scope="col">Site</th></tr></thead><tbody><tr><td>Local</td><td>a developer's laptop (<code>npm run dev</code>, Markstage dev mode)</td><td>any feature branch</td><td>developers</td><td>localhost; mail and forms go to a local sink</td></tr><tr><td>Staging</td><td>the server, a second Markstage instance</td><td><code>staging</code></td><td>developers, the site owner, reviewers</td><td><code>staging.&lt;site&gt;</code>: password, <code>noindex</code>, <code>robots: Disallow: /</code>, a STAGING ribbon</td></tr><tr><td>Production</td><td>the server</td><td><code>main</code></td><td>editors, the public</td><td>the live site</td></tr></tbody></table></div>
+<ul><li><strong>Changes flow up by promotion:</strong> local → staging → production. A promotion is a git merge, so code, models and
+any chosen content move together.</li><li><strong>Content flows down by sync:</strong> production → staging → local. A sync is a merge, not an overwrite, so work on
+staging survives. Editors keep publishing on production the whole time.</li><li><strong>Each environment keeps its own state, which is never promoted:</strong> users and sessions, the form Inbox, the audit
+log, alerts, backups, and releases with their share links. Each server has its own data dir. A release belongs to
+the environment it was made on: its items wait in that server's data dir until it is published there, and only the
+commit it makes then travels on, like any other content (<a href="../api-releases/">API-RELEASES.md</a>).</li><li><strong>Media lives in the repo</strong> (<code>src/assets/uploads</code>), so it moves with the content that uses it.</li></ul>
+<h2 id="what-people-do">What people do</h2>
+<p><strong>Developer</strong></p>
+<ol><li><code>git clone</code>, <code>npm ci</code>, <code>npm run dev</code>. Markstage dev mode shows a LOCAL badge with the branch name.</li><li><code>markstage pull</code> merges the latest production content into the branch, so they work against real pages.</li><li>Work, then <code>git push origin my-change</code>. The staging server can build a <strong>branch preview</strong> at
+<code>&lt;branch&gt;.staging.&lt;site&gt;</code>.</li><li>Open a promotion to staging, either in the editor (Environments → Promote) or with
+<code>markstage promote my-change staging</code>. Rights to this are per person.</li></ol>
+<p><strong>Site owner or reviewer</strong></p>
+<ul><li>Open Environments → &quot;Staging → Production&quot;. The screen shows:
+<ul><li>what changes: files grouped as pages, templates and sections, styles, and config;</li><li>before and after screenshots of every page whose HTML changed, at 1440 and 390;</li><li>the check results: the site's publish gate, broken links, redirects for removed pages, and the schema and
+hreflang checks;</li><li>an AI summary in plain words (when an AI key is set), such as &quot;3 templates changed; 41 pages look different;
+1 page removed without a redirect (blocked)&quot;.</li></ul></li><li><strong>Promote</strong> runs: merge, then build, then the checks, then deploy. If anything fails, nothing changes on
+production. <strong>Roll back</strong> is one click (<code>markstage-deploy rollback</code>).</li></ul>
+<p><strong>Editor</strong>: nothing changes. They publish on production, and their work flows down to staging and local on the next
+sync.</p>
+<p><strong>Hotfix</strong>: a person who has the right can promote a branch straight to production, for the rare urgent fix. It runs
+the same checks and the same screenshots.</p>
+<h2 id="conflicts">Conflicts</h2>
+<p>These come up when an editor changed a file on production that the developer also changed.</p>
+<ul><li>The promotion stops before merging and names each conflict in plain words, for example: &quot;the About page: you
+changed the hero; Edna changed its text on 28 Oct.&quot;</li><li>For each conflict you can keep the production version, keep the incoming version, or open both side by side.
+Nothing is ever merged silently.</li><li>Content-only conflicts, where both sides edited a page, use the same three-way merge as the editor's own concurrent
+saves.</li></ul>
+<h2 id="promotion-rules-a-permission-and-rule-engine">Promotion rules: a permission and rule engine</h2>
+<p>Teams work in many different ways, so rights are not fixed toggles. They are <strong>rules</strong>, kept in
+<code>&lt;dataDir&gt;/promotion-rules.json</code> (0600, version-checked, audited). The owner and administrators edit them in
+Settings → Promotion rules.</p>
+<p>A rule has:</p>
+<ul><li><strong>who</strong>: a role, named people, or a group;</li><li><strong>action</strong>: <code>promote</code>, <code>sync</code>, <code>rollback</code> or <code>preview</code>;</li><li><strong>from → to</strong> environments, for example <code>branch → staging</code>, <code>staging → production</code>, or <code>branch → production</code>
+(a hotfix).</li><li><strong>what</strong> may change, as path or kind filters. For example, &quot;templates, sections and styles only&quot;, &quot;content only&quot;,
+or &quot;not <code>markstage.config.*</code> and not <code>deploy/</code>&quot;.</li><li><strong>when</strong>: a weekday and hour window, and a freeze, such as &quot;no production promotions Friday 15:00 to Monday 08:00&quot;
+or &quot;freeze until the launch&quot;.</li><li><strong>requires</strong>: approvals (N people from a role, never the author), checks that must pass, a minimum time on
+staging (for example 1 hour), and a filled-in reason (required for a hotfix).</li><li><strong>effect</strong>: <code>allow</code>, <code>allow-with-approval</code> or <code>deny</code>.</li></ul>
+<p>How rules are applied:</p>
+<ul><li><strong>Deny wins.</strong> With no rule, the default is deny.</li><li><strong>An explanation every time:</strong> each refusal names the rule that stopped it, in plain words. For example:
+&quot;Hotfixes to production need Olive's approval (rule 'hotfix needs owner').&quot;</li><li><strong>A dry run:</strong> &quot;What would happen if Sam promoted this?&quot; shows which rule applies.</li><li><strong>Approvals are recorded:</strong> an approval is tied to the exact SHA, so a new push cancels it.</li></ul>
+<p>Starter rules for a new site:</p>
+<ol><li>Developers promote any branch to staging.</li><li>Staging → production needs the owner or an administrator, plus all checks passing.</li><li>Hotfixes (branch → production) are denied unless a named person is listed. A listed person still needs a reason
+and all checks, and the owner gets an alert.</li><li>Nobody promotes to production during a freeze that the owner has set.</li></ol>
+<p>Every promotion, sync, rollback, approval and rule change is audited with its from and to SHAs. The alert kinds are
+<code>env.promoted</code>, <code>env.promote-failed</code>, <code>env.approval-needed</code> and <code>env.rules-changed</code>. The rules-changed alert is a
+safety kind, so it can't be turned off.</p>
+<h2 id="safety-on-non-production">Safety on non-production</h2>
+<ul><li>Mail goes to a sink or to the person who triggered it. Forms on staging say &quot;Test form: not sent&quot; and store into
+staging's own Inbox only.</li><li>Staging is behind sign-in or basic auth, with <code>X-Robots-Tag: noindex</code> on every response. The sitemap is not
+submitted. Canonical URLs still point at production, so a leaked page can't compete with the live one.</li><li>Webhooks, the CDN purge and analytics are off unless they are set per environment.</li></ul>
+<h2 id="configuration">Configuration</h2>
+<p>The server's <code>config.json</code> gains:</p>
+<pre data-lang="json"><code class="language-json">&quot;environment&quot;: { &quot;name&quot;: &quot;staging&quot;, &quot;branch&quot;: &quot;staging&quot;, &quot;upstream&quot;: &quot;main&quot;, &quot;ribbon&quot;: &quot;#b45309&quot;,
+                 &quot;promoteTo&quot;: &quot;production&quot;, &quot;previews&quot;: { &quot;branches&quot;: true, &quot;host&quot;: &quot;{branch}.staging.example.com&quot; } }</code></pre>
+<p>The site's <code>markstage.config</code> stays the same in every environment. Per-environment values come from the server
+config or the environment variables, never from the repo.</p>
+<h2 id="server-setup-example">Server setup (example)</h2>
+<ul><li>One server with two Markstage containers: <code>production</code> (<a href="http://www.example.com" rel="noopener">www.example.com</a>) and <code>staging</code> (staging.example.com).
+Each has its own data dir and port, and both pull from one central git remote.</li><li>The central remote can be a <strong>private repository</strong> on your git host. A developer from outside the team gets
+access to that repository only, and both servers pull from it with a read-only deploy key each.</li><li>Branch previews are optional. They need a wildcard DNS record and a certificate for <code>*.staging.example.com</code>.</li></ul>
+<h2 id="how-it-is-tested">How it is tested</h2>
+<p>End-to-end tests on two local servers (production and staging) sharing one bare remote
+(<a href="../api-env/">API-ENV.md</a>, &quot;Proof&quot;):</p>
+<ul><li>A promotion carries both a template change and a new page.</li><li>Sync down keeps a staging-only page.</li><li>A conflict is shown, then resolved each way.</li><li>A failed check leaves production unchanged, and a rollback works.</li><li>Staging sends no mail and returns <code>noindex</code> on every response.</li><li>A developer without <code>env.promote.production</code> is refused, and the refusal is audited.</li></ul>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/ENVIRONMENTS.md" target="_blank" rel="noopener">docs/ENVIRONMENTS.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../deploy/"><span class="small muted">Previous</span>Deploying Markstage</a>
+          <a class="next" href="../security/"><span class="small muted">Next</span>Markstage server: security</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

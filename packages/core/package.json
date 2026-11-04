@@ -1,6 +1,6 @@
 {
   "name": "@markstage/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Markstage core: Markdown <-> editor document with block packs, surgical saves, frontmatter.",
   "license": "Elastic-2.0",
   "type": "module",

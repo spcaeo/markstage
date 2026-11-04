@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Author Profiles in Markstage: Posts and Co-authors</title>
+    <meta name="description" content="Ghost-style author profiles kept as JSON files in the site content: one per person, linked from posts by slug, with co-authors and an author page each." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-authors/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Author Profiles in Markstage: Posts and Co-authors" />
+    <meta property="og:description" content="Ghost-style author profiles kept as JSON files in the site content: one per person, linked from posts by slug, with co-authors and an author page each." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-authors/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Author Profiles in Markstage: Posts and Co-authors" />
+    <meta name="twitter:description" content="Ghost-style author profiles kept as JSON files in the site content: one per person, linked from posts by slug, with co-authors and an author page each." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Authors",
+          "item": "https://spcaeo.github.io/markstage/docs/api-authors/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Author Profiles in Markstage: Posts and Co-authors",
+      "description": "Ghost-style author profiles kept as JSON files in the site content: one per person, linked from posts by slug, with co-authors and an author page each.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-authors/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/" aria-current="page">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Authors</li></ol></nav>
+        <h1>Authors</h1>
+        <p class="lead left">Ghost-style author profiles kept as JSON files in the site content: one per person, linked from posts by slug, with co-authors and an author page each.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#turning-it-on">Turning it on</a></li><li><a href="#the-checks">The checks</a></li><li><a href="#routes">Routes</a></li><li><a href="#the-authors-screen">The Authors screen</a></li><li><a href="#the-sites-pages-markstage-astro-authors">The site's pages: @markstage/astro/authors</a></li></ul></nav>
+        <div class="prose">
+<p>Ghost-style author management. The people a site's posts are by each have a profile, kept as one JSON file in the
+site's own content (<code>src/content/authors/&lt;slug&gt;.json</code> by default), so the site's build reads them like any other
+content and git keeps their history. A post names its author by slug, and may list co-authors.</p>
+<p>What an editor sees:</p>
+<ul><li><strong>Authors</strong> (More menu, <code>#/authors</code>): every author with their role, slug, post counts and author page; add,
+edit, archive, change a slug, delete.</li><li><strong>Post settings → Author</strong>: a searchable list of the site's authors instead of a text box, &quot;Add … as a new
+author&quot; when the name is not there, co-authors as chips, and a plain warning (never an error) when the post names
+an author the site does not have.</li></ul>
+<p>Code: <code>packages/core/src/authors.mjs</code> (pure: config, profiles, checks, Person JSON-LD), <code>packages/server/src/authors/</code>
+(the server's routes), <code>packages/astro/src/api-authors.mjs</code> (the same routes in <code>astro dev</code>),
+<code>packages/astro/src/authors.mjs</code> (<code>@markstage/astro/authors</code>, the site's helpers), and in the editor
+<code>src/admin/authors/</code> (the screen) and <code>src/settings/author-field.ts</code> (the field).</p>
+<h2 id="turning-it-on">Turning it on</h2>
+<p>In <code>markstage.config.mjs</code> (docs/CONFIG.md, key <code>authors</code>):</p>
+<pre data-lang="js"><code class="language-js">export default defineConfig({
+  authors: { coAuthors: 'coAuthors' },   // or `authors: true` for every default
+  collections: [
+    {
+      id: 'posts', format: 'md', dir: 'src/content/posts', hasStatus: true,
+      // a text or select setting of the author key becomes the author picker
+      settings: [{ type: 'text', key: 'author', label: 'Author' }],
+    },
+  ],
+});</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>dir</code></td><td><code>'src/content/authors'</code></td><td>The folder of <code>&lt;slug&gt;.json</code> files, inside the project. Never <code>.git</code>, never an md collection's folder.</td></tr><tr><td><code>url</code></td><td><code>'/author/{slug}/'</code></td><td>The author page, a site path with <code>{slug}</code>. It is the Person's <code>url</code>, the address the Authors screen shows (copy, open), and the redirect a new slug records. <code>null</code>: the site has no author pages.</td></tr><tr><td><code>coAuthors</code></td><td><code>null</code></td><td>The frontmatter key of the co-author list (slugs after the primary author). <code>null</code>: one author per post.</td></tr><tr><td><code>organization</code></td><td><code>null</code></td><td>The Organization <code>@id</code> a Person <code>worksFor</code> (an address such as <code>https://example.com/#organization</code>).</td></tr><tr><td><code>collections</code></td><td>every collection with a status</td><td>The collections whose author field names an author.</td></tr><tr><td><code>fields</code></td><td>below</td><td>The file's own keys for each profile field, over the defaults. <code>null</code> leaves a field out (not <code>name</code>): the editor does not offer it and nothing writes it.</td></tr></tbody></table></div>
+<p>The default keys follow a common shape (<code>designation</code>, <code>avatar</code>, a nested <code>seo</code>), so an existing folder of author
+files works as it is:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Profile field</th><th scope="col">File key</th><th scope="col">Notes</th></tr></thead><tbody><tr><td><code>slug</code></td><td><code>id</code></td><td>Also the file name. Lowercase letters, digits and hyphens, at most 100.</td></tr><tr><td><code>name</code></td><td><code>name</code></td><td>Required.</td></tr><tr><td><code>role</code></td><td><code>designation</code></td><td>Job title or what they write about: the Person's <code>jobTitle</code>.</td></tr><tr><td><code>bio</code></td><td><code>bio</code></td><td>Markdown.</td></tr><tr><td><code>photo</code></td><td><code>avatar</code></td><td>A path inside the media folder (from the media library), a site path, or an address.</td></tr><tr><td><code>email</code></td><td><code>email</code></td><td><strong>Private.</strong> Never in <code>@markstage/astro/authors</code>, never on a page; the server shows it only to editors and above and to the person themselves.</td></tr><tr><td><code>website</code></td><td><code>website</code></td><td>An https address; the first <code>sameAs</code>.</td></tr><tr><td><code>social</code></td><td><code>social</code></td><td>A list of profile addresses (LinkedIn, X, GitHub…): <code>sameAs</code>. At most 20.</td></tr><tr><td><code>seoTitle</code></td><td><code>seo.title</code></td><td>The author page's title in search results.</td></tr><tr><td><code>seoDescription</code></td><td><code>seo.description</code></td><td>The line under it.</td></tr><tr><td><code>archived</code></td><td><code>archived</code></td><td><code>true</code>: kept with their posts, gone from the pickers and the hub.</td></tr></tbody></table></div>
+<p>An entry names its author in its <code>author</code> field (the collection's <code>fields.author</code>). A value that is not a slug of
+the site (an old free-text name) keeps working: the post is not touched, the picker shows a warning, and the next
+save that changes the author picks a real one.</p>
+<h2 id="the-checks">The checks</h2>
+<ul><li><strong>On save.</strong> An entry save (editor, Source mode, a new entry, bulk changes, the dev API) may not <em>add</em> an author
+the site does not have, or one that is archived: <code>422 unknown-author</code>, with <code>fields: {author: &quot;…&quot;}</code> and
+<code>authors: [{slug, problem: &quot;unknown&quot;|&quot;archived&quot;, message}]</code>. An author the entry already named is left alone, so
+old posts still save.</li><li><strong>In the build.</strong> The integration's build step reads every entry of the author collections: one that names an
+author the site does not have fails the build, naming the file and the author:
+<pre><code>markstage: an entry names an author the site does not have (src/content/authors):
+  src/content/posts/old.md: “guest-writer” is not one of the site's authors. Pick an author, or add “guest-writer” as an author first.</code></pre>
+An archived author passes (their old posts still build). <code>markstage({checkAuthors: false})</code> turns the check off.</li></ul>
+<h2 id="routes">Routes</h2>
+<p>The same on the Markstage server (<code>/markstage/api/…</code>, signed in, each change one git commit by the person) and in
+<code>astro dev</code> (no sign-in, no git). Every answer that is not a <code>GET</code> takes the author's <code>version</code> (the file's hash):
+a stale one is <code>409 conflict</code>.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Does</th></tr></thead><tbody><tr><td><code>GET /authors</code></td><td><code>{items: [Author], can: {manage}}</code>, in name order, archived ones too (<code>archived: true</code>). <code>404 no-authors</code> when the site keeps none.</td></tr><tr><td><code>GET /authors/:slug</code></td><td><code>{author, posts: [{collection, id, title, status, url, date, role: &quot;author&quot;|&quot;co-author&quot;}], can: {edit, manage}}</code>; posts newest first.</td></tr><tr><td><code>POST /authors {name, slug?, role?, …}</code></td><td>Editors and above. <code>slug</code> defaults to one made from the name (&quot;Ana María&quot; → <code>ana-maria</code>); <code>409 slug-taken</code>. <code>201 {author}</code>. Commit <code>Add author &lt;slug&gt;</code>.</td></tr><tr><td><code>PUT /authors/:slug {version, …fields}</code></td><td>Change the profile: only the keys sent, and only the ones that differ, are written into the file (the rest stays byte for byte); an empty value takes the key out. Editors and above, and anyone for their own author (<code>authorSlug</code>), except <code>archived</code>. <code>{author}</code>. Commit <code>Update author &lt;slug&gt;</code>, or <code>Archive</code>/<code>Bring back author &lt;slug&gt;</code>.</td></tr><tr><td><code>POST /authors/:slug/rename {version, to, movePosts}</code></td><td>A new slug. With posts, <code>movePosts: true</code> is needed (<code>409 author-has-posts</code> with the posts otherwise): the file and every post that names them change in <strong>one commit</strong> (<code>Rename author a to b (N entries)</code>); live posts are published again; the old author page redirects to the new one (the site's redirects hook). <code>{author, moved, commit, job}</code>.</td></tr><tr><td><code>DELETE /authors/:slug?version=&amp;reassign=&lt;slug&gt;</code></td><td>Delete. With posts, <code>reassign</code> is needed (<code>409 author-has-posts</code> with the posts otherwise): the posts go to that author (not archived) and the file goes, in <strong>one commit</strong>; a co-author already credited is not listed twice. <code>{ok, moved, commit, job}</code>.</td></tr></tbody></table></div>
+<p><code>Author</code> is the profile (the fields above) plus <code>url</code> (the author page, a site path, or <code>null</code>), <code>version</code>, <code>posts</code>
+and <code>live</code> (how many entries name them, and how many of those are published). <code>email</code> is there only for editors
+and above and the person themselves. Errors: <code>422 invalid</code> with <code>fields: {&lt;field&gt;: words}</code> (a name missing, a
+website or profile link that is not an https address, a slug with other characters), and <code>422 posts-refused</code> when
+any post to be changed would fail its own save checks: then nothing is changed.</p>
+<p>Audit actions: <code>author.create</code>, <code>author.update</code>, <code>author.archive</code>, <code>author.rename</code>, <code>author.delete</code>. The ability is
+<code>authors.manage</code> (editors and above, docs/API-PERMISSIONS.md).</p>
+<p>A change to a profile is not published by itself (the site shows it after the next build): the screen's toast
+offers <strong>Publish now</strong> when the author has live posts.</p>
+<h2 id="the-authors-screen">The Authors screen</h2>
+<p>Every state is in the URL, so each can be linked to, reloaded and gone back from:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Hash</th><th scope="col">Shows</th></tr></thead><tbody><tr><td><code>#/authors?q=&amp;show=archived</code></td><td>The list: photo or initials, name and role, slug (copy), posts and live posts (right-aligned), author page (copy, open). <code>q</code> searches name, role and slug; <code>show=archived</code> lists the archived ones.</td></tr><tr><td><code>#/authors?action=new</code></td><td>The &quot;New author&quot; form (editors and above).</td></tr><tr><td><code>#/authors/&lt;slug&gt;</code></td><td>One author on the right: the profile, the slug and author page (copy, open), the private email for those who may see it, website and profile links (copy, open), and their posts (open in the editor; their pages copy and open). Edit, Archive or Bring back, Change slug, Delete.</td></tr><tr><td><code>#/authors/&lt;slug&gt;?action=edit&amp;library=1</code></td><td>The profile form; <code>library=1</code> while the photo's media library is open.</td></tr><tr><td><code>#/authors/&lt;slug&gt;?action=rename&amp;to=&lt;slug&gt;</code></td><td>Change the slug: the new author page shown as it is typed; the posts that move with it listed.</td></tr><tr><td><code>#/authors/&lt;slug&gt;?action=delete&amp;to=&lt;slug&gt;</code></td><td>Delete: with posts, they are listed and given to the author chosen in <code>to</code>.</td></tr></tbody></table></div>
+<p>An author signed in as themselves (Users → author) sees the list and may edit their own profile; another author's
+email and the add, archive, rename and delete actions are not there for them, and the server refuses them anyway.</p>
+<h2 id="the-sites-pages-markstage-astro-authors">The site's pages: <code>@markstage/astro/authors</code></h2>
+<pre data-lang="ts"><code class="language-ts">import { getAuthors, getAuthor, getEntriesByAuthor, personJsonLd } from '@markstage/astro/authors';</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Helper</th><th scope="col">Gives</th></tr></thead><tbody><tr><td><code>getAuthors({archived?})</code></td><td>Every author in name order (archived ones only with <code>archived: true</code>): the profile without the email, with <code>url</code>.</td></tr><tr><td><code>getAuthor(slug)</code></td><td>One author (archived too: old posts still credit them), or <code>null</code>.</td></tr><tr><td><code>getEntriesByAuthor(slug, {collection?, coAuthored?})</code></td><td>Their <strong>published</strong> entries, newest first: <code>{collection, id, title, url, date, role, data}</code>. Drafts, future-dated and protected entries are never in it (except in a preview build, <code>MARKSTAGE_PREVIEW=1</code>, which counts them all). <code>coAuthored: false</code>: only where they are the primary author.</td></tr><tr><td><code>personJsonLd(author, {url?, image?, organization?, context?})</code></td><td>schema.org <code>Person</code>: <code>@id</code> and <code>url</code> (the author page on <code>siteUrl</code>), <code>name</code>, <code>image</code>, <code>jobTitle</code> (the role), <code>description</code> (the search description), <code>sameAs</code> (website, then profile links), <code>worksFor: {&quot;@id&quot;: organization}</code> when configured. A photo kept as a media path needs <code>image</code>, the address the site serves it at (a built image); a site path or an address is used as it is. <code>context: false</code> leaves out <code>@context</code> for an <code>@graph</code>.</td></tr></tbody></table></div>
+<p>They read the files the config names, during the build and in <code>astro dev</code>; <code>authorsOf(cfg)</code> gives the same helpers
+for a normalized config (scripts, tests).</p>
+<h3 id="an-author-hub-and-author-pages">An author hub and author pages</h3>
+<p>The example blog has both (<code>examples/blog/src/pages/author/</code>).</p>
+<p><code>src/pages/author/index.astro</code>, the hub:</p>
+<pre data-lang="astro"><code class="language-astro">---
+import { getAuthors, getEntriesByAuthor } from '@markstage/astro/authors';
+const authors = await Promise.all((await getAuthors()).map(async (a) =&gt; ({ ...a, posts: (await getEntriesByAuthor(a.slug)).length })));
+---
+&lt;ul&gt;{authors.map((a) =&gt; &lt;li&gt;&lt;a href={a.url}&gt;{a.name}&lt;/a&gt; {a.role} · {a.posts} posts&lt;/li&gt;)}&lt;/ul&gt;</code></pre>
+<p><code>src/pages/author/[slug].astro</code>, one page per author (archived ones too, so old links keep working):</p>
+<pre data-lang="astro"><code class="language-astro">---
+import { getAuthors, getEntriesByAuthor, personJsonLd } from '@markstage/astro/authors';
+export async function getStaticPaths() {
+  return (await getAuthors({ archived: true })).map((author) =&gt; ({ params: { slug: author.slug }, props: { author } }));
+}
+const { author } = Astro.props;
+const posts = await getEntriesByAuthor(author.slug);
+const json = JSON.stringify(await personJsonLd(author)).replace(/&lt;/g, '\\u003c');
+---
+&lt;div&gt;&lt;script type=&quot;application/ld+json&quot; set:html={json} /&gt;&lt;/div&gt;
+&lt;h1&gt;{author.name}&lt;/h1&gt;
+&lt;ul&gt;{posts.map((p) =&gt; &lt;li&gt;&lt;a href={p.url}&gt;{p.title}&lt;/a&gt;&lt;/li&gt;)}&lt;/ul&gt;</code></pre>
+<p>A post's byline links each author: <code>getAuthor(post.data.author)</code>, then the <code>coAuthors</code> list. Add <code>author</code> (a string)
+and <code>coAuthors</code> (a list of strings) to the collection's schema in <code>content.config.ts</code>.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-AUTHORS.md" target="_blank" rel="noopener">docs/API-AUTHORS.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-page-types/"><span class="small muted">Previous</span>Page frames and page types</a>
+          <a class="next" href="../api-roles/"><span class="small muted">Next</span>Custom roles</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

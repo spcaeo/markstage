@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Single Sign-On for Markstage with OpenID Connect</title>
+    <meta name="description" content="Let people sign in to Markstage with Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak or any OpenID Connect provider, with passwords kept or limited." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-sso/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Single Sign-On for Markstage with OpenID Connect" />
+    <meta property="og:description" content="Let people sign in to Markstage with Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak or any OpenID Connect provider, with passwords kept or limited." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-sso/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Single Sign-On for Markstage with OpenID Connect" />
+    <meta name="twitter:description" content="Let people sign in to Markstage with Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak or any OpenID Connect provider, with passwords kept or limited." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Single sign-on (OpenID Connect)",
+          "item": "https://spcaeo.github.io/markstage/docs/api-sso/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Single Sign-On for Markstage with OpenID Connect",
+      "description": "Let people sign in to Markstage with Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak or any OpenID Connect provider, with passwords kept or limited.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-sso/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/" aria-current="page">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Single sign-on (OpenID Connect)</li></ol></nav>
+        <h1>Single sign-on (OpenID Connect)</h1>
+        <p class="lead left">Let people sign in to Markstage with Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak or any OpenID Connect provider, with passwords kept or limited.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#config-the-servers-config-json">Config (the server's config.json)</a></li><li><a href="#routes">Routes</a></li><li><a href="#what-is-checked">What is checked</a></li></ul></nav>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). A site whose people already
+sign in somewhere (Google Workspace, Microsoft Entra ID, Okta, Auth0, Keycloak, any OpenID Connect provider) lets
+them sign in to Markstage there: &quot;Sign in with &quot; on the sign-in screen. Server code:
+<code>packages/server/src/auth/sso.mjs</code> (the routes), <code>oidc.mjs</code> (the provider and the ID token), <code>sso-config.mjs</code> (the
+config).</p>
+<ul><li><strong>A person is found, not guessed.</strong> First by the provider's own id for them (<code>sub</code>, linked on their first sign-in
+there), else by their email when the provider says it is verified (an invited person), else made, when the
+provider's <code>autoCreate</code> allows their email's domain. Anyone else is turned away (<code>no-account</code>).</li><li><strong>The role is Markstage's.</strong> The provider says who someone is, never what they may do: an invited person keeps the
+role they were invited with, a person made by <code>autoCreate</code> gets its role (<code>contributor</code>, <code>author</code> or <code>editor</code>;
+administrators are made by a person), and the owner and administrators change it in Users as usual.</li><li><strong>Two-step sign-in is still the person's own.</strong> Someone with it on gives their code after the provider, as after a
+password.</li><li><strong>The password can stay, or be the owner's alone.</strong> With <code>passwordLogin: false</code> only the owner signs in with a
+password, for when the provider is down; everyone else is sent to the provider (<code>403</code> on <code>POST auth/login</code>).</li><li><strong>Nothing the provider sends is kept</strong> but the link (provider, <code>sub</code>, the email it gave last, when). Every step is
+audited: <code>auth.sso</code> (signed in), <code>auth.sso.fail</code> (and why), <code>auth.sso.link</code>, <code>auth.sso.unlink</code>, <code>user.create</code> with
+<code>via: &quot;sso:&lt;id&gt;&quot;</code>; a person made by <code>autoCreate</code> tells the administrators (kind <code>user.invited</code>).</li></ul>
+<h2 id="config-the-servers-config-json">Config (the server's config.json)</h2>
+<pre data-lang="json"><code class="language-json">{
+  &quot;sso&quot;: {
+    &quot;providers&quot;: [
+      { &quot;id&quot;: &quot;google&quot;, &quot;label&quot;: &quot;Google&quot;, &quot;issuer&quot;: &quot;https://accounts.google.com&quot;, &quot;clientId&quot;: &quot;1234.apps.googleusercontent.com&quot;,
+        &quot;domains&quot;: [&quot;example.com&quot;], &quot;autoCreate&quot;: { &quot;role&quot;: &quot;author&quot; } }
+    ],
+    &quot;passwordLogin&quot;: true
+  }
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td><code>providers</code></td><td></td><td>One to five providers.</td></tr><tr><td><code>providers[].id</code></td><td></td><td>A short lowercase name (<code>google</code>, <code>entra</code>). It is in the redirect URI and the secret's variable.</td></tr><tr><td><code>providers[].label</code></td><td>the id</td><td>The name on the button: &quot;Sign in with Google&quot;.</td></tr><tr><td><code>providers[].issuer</code></td><td></td><td>The provider's issuer URL, exactly as its discovery document names it (<code>&lt;issuer&gt;/.well-known/openid-configuration</code>). https (http only for a loopback provider outside production).</td></tr><tr><td><code>providers[].clientId</code></td><td></td><td>The client id the provider gave this site.</td></tr><tr><td><code>providers[].clientSecretFile</code></td><td></td><td>An absolute path outside the content repo holding the client secret, when it is not in the environment.</td></tr><tr><td><code>providers[].scopes</code></td><td><code>[&quot;openid&quot;, &quot;email&quot;, &quot;profile&quot;]</code></td><td>Must include <code>openid</code> and <code>email</code>.</td></tr><tr><td><code>providers[].domains</code></td><td>any</td><td>Only emails at these domains get in through this provider (checked on every sign-in, linked or not).</td></tr><tr><td><code>providers[].autoCreate</code></td><td>none</td><td><code>{role}</code>: a person at one of <code>domains</code> with no account gets one on their first sign-in. Needs <code>domains</code>.</td></tr><tr><td><code>passwordLogin</code></td><td><code>true</code></td><td><code>false</code>: passwords for the owner only.</td></tr></tbody></table></div>
+<p><strong>The client secret</strong> is <code>MARKSTAGE_SSO_&lt;ID&gt;_SECRET</code> in the server's environment (<code>&lt;ID&gt;</code> the id in capitals, <code>-</code> as
+<code>_</code>: <code>MARKSTAGE_SSO_GOOGLE_SECRET</code>), or the file named by <code>clientSecretFile</code>; never config.json (a <code>clientSecret</code> key
+is refused). It is read at each sign-in, so a new one is used without a restart, and it is scrubbed from every answer
+and log. The server does not start without it, nor with a key it does not know, an http issuer in production,
+<code>autoCreate</code> without <code>domains</code> or with <code>administrator</code>, or scopes without <code>openid</code> and <code>email</code>: each in words.</p>
+<p><strong>At the provider</strong>, register a web client with this redirect URI (the public origin and the editor's base path):</p>
+<pre><code>https://cms.example.com/markstage/api/auth/sso/&lt;id&gt;/callback</code></pre>
+<h2 id="routes">Routes</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET auth/sso</code> <em>(pre-auth)</em></td><td></td><td><code>{providers: [{id, label}], passwordLogin}</code>; <code>{providers: [], passwordLogin: true}</code> with no <code>sso</code></td></tr><tr><td><code>GET auth/sso/:id/start?next=&lt;hash&gt;</code> <em>(pre-auth)</em></td><td></td><td><code>302</code> to the provider. <code>next</code> is where the editor opens after (<code>#/…</code>, never sign-in, setup or accept-invite; anything else is <code>#/</code>)</td></tr><tr><td><code>GET auth/sso/:id/callback</code> <em>(pre-auth)</em></td><td></td><td><code>302</code> into the editor at <code>next</code>, signed in; or to <code>#/sign-in?step=code&amp;via=sso&amp;next=</code> for the two-step code; or to <code>#/sign-in?sso=&lt;why&gt;&amp;provider=&lt;id&gt;</code></td></tr><tr><td><code>POST auth/login/2fa</code> <em>(pre-auth)</em></td><td><code>{code}</code> or <code>{recoveryCode}</code>, no <code>challenge</code></td><td>After <code>via=sso</code>: the challenge is in its cookie. <code>{user, csrfToken}</code> + cookie</td></tr><tr><td><code>GET users/:uid/sso</code></td><td></td><td><code>[{provider, label, email, createdAt, lastAt}]</code> the providers this person is linked to (owner, administrator)</td></tr><tr><td><code>DELETE users/:uid/sso/:provider</code></td><td></td><td><code>{ok}</code>; their next sign-in there links again by their verified email (<code>404</code> when there is no link)</td></tr></tbody></table></div>
+<p><code>&lt;why&gt;</code>, the word the sign-in screen turns into a sentence:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col"><code>sso=</code></th><th scope="col">When</th></tr></thead><tbody><tr><td><code>expired</code></td><td>No state for this browser, used already, for another provider, or older than 10 minutes</td></tr><tr><td><code>denied</code></td><td>The provider sent <code>error</code> (the person cancelled, or the provider refused)</td></tr><tr><td><code>provider</code></td><td>The discovery document, the token exchange or the ID token did not pass (the audit's <code>auth.sso.fail</code> says which check)</td></tr><tr><td><code>domain</code></td><td>The email is not at one of the provider's <code>domains</code></td></tr><tr><td><code>email</code></td><td>No link yet, and no verified email to find the person by</td></tr><tr><td><code>no-account</code></td><td>No person with that email, and no <code>autoCreate</code> for it; or the person is linked to another account at this provider</td></tr><tr><td><code>disabled</code></td><td>The account is turned off</td></tr><tr><td><code>unknown</code></td><td>No such provider</td></tr></tbody></table></div>
+<h2 id="what-is-checked">What is checked</h2>
+<ul><li><strong>The state, bound to the browser.</strong> <code>start</code> makes a random state, nonce and PKCE verifier (S256), keeps them on
+the server (the state as a hash) for 10 minutes, and puts the state in an HttpOnly cookie
+(<code>__Host-markstage-sso</code>, <code>SameSite=Lax</code> so it comes back on the provider's redirect). The callback needs the
+state in the URL to equal the cookie and an unused row for this provider; it is used once. So a sign-in started in
+one browser cannot be finished in another (no signing someone in as the attacker), and a callback URL cannot be
+replayed.</li><li><strong>The provider.</strong> Its discovery document must name the configured issuer; it is kept an hour. Its keys are fetched
+again, at most once a minute, when a token names one not seen yet. Every call goes through the SSRF guard
+(docs/SECURITY.md): public addresses only, sizes and times capped. The token request sends the client secret in
+the body (<code>client_secret_post</code>) and the PKCE verifier, with no redirect followed.</li><li><strong>The ID token.</strong> Signed with RS256, PS256 or ES256 by a key the provider lists (never <code>none</code>, never HMAC), the key
+of the right type; <code>iss</code> the issuer; <code>aud</code> this client (and <code>azp</code> when there are several); <code>exp</code> not passed and
+<code>iat</code> not ahead (60 seconds' leeway); <code>nonce</code> this sign-in's; <code>sub</code> present. Anything else is <code>sso=provider</code>.</li><li><strong>The two-step challenge</strong> for a person with it on goes in an HttpOnly cookie (<code>__Host-markstage-sso-step</code>,
+5 minutes, cleared when used), never in the URL; it allows 5 codes like a password sign-in's.</li><li><strong>Sessions</strong> are the same as after a password: the browser's previous session revoked, a new token and CSRF
+token, the new-device alert.</li></ul>
+<p><strong>In the editor.</strong> The sign-in screen shows &quot;Sign in with &quot; for each provider and, back from one that did not
+work, why (<code>?sso=&lt;why&gt;</code>); with <code>passwordLogin: false</code> the password form is behind &quot;Owner: sign in with a password&quot;
+(<code>with=password</code>). When a session ends while an entry is open, &quot;Sign in again&quot; offers the providers too: the unsaved
+changes go to this browser's recovery copy first, the page goes to the provider and comes back to the same address,
+and the entry offers the changes back (Restore). Where no copy can be kept (a page in the pages editor, a browser
+without IndexedDB) it says so before leaving. Proof: <code>e2e/sso.e2e.mjs</code>.</p>
+<p>Proof: <code>packages/server/test/sso.test.mjs</code> against a provider on loopback (<code>test/fake-oidc.mjs</code>): the sign-in by
+email then by <code>sub</code> after the email changed, state from another browser and replay refused, an external <code>next</code>
+dropped, seven tampered tokens refused (stranger key, <code>none</code>, HS256, issuer, audience, nonce, expiry), unverified
+email, unknown person, disabled person, a domain not allowed, <code>autoCreate</code> making an author, two-step sign-in after
+the provider, links listed and undone, passwords for the owner only, and the config's refusals.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-SSO.md" target="_blank" rel="noopener">docs/API-SSO.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-permissions/"><span class="small muted">Previous</span>Permissions</a>
+          <a class="next" href="../api-webhooks/"><span class="small muted">Next</span>Webhooks</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

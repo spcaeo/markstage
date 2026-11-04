@@ -147,7 +147,7 @@ export function publicSubjects(subjects, privateWords) {
  * Private-Commit trailer the next sync starts from.
  * @param {{ shortSha: string, fullSha: string, subjects: string[], first: boolean }} input
  */
-export function commitMessage({ shortSha, fullSha, subjects, first }) {
+export function commitMessage({ shortSha, fullSha, subjects, first, coAuthors = [] }) {
   const items = first ? ['First public snapshot'] : subjects.length ? subjects : ['Updates'];
   const maxTitle = 100;
   let title = `Sync from private ${shortSha}: ${items.join('; ')}`;
@@ -159,7 +159,25 @@ export function commitMessage({ shortSha, fullSha, subjects, first }) {
   const shown = items.slice(0, 60);
   const rest = items.length > shown.length ? `\n- …and ${items.length - shown.length} more` : '';
   const body = items.length > 1 ? `\n\n${shown.map((s) => `- ${s}`).join('\n')}${rest}` : '';
-  return `${title}${body}\n\nPrivate-Commit: ${fullSha}\n`;
+  const credits = [...new Set(coAuthors)].map((who) => `\nCo-authored-by: ${who}`).join('');
+  return `${title}${body}\n\nPrivate-Commit: ${fullSha}${credits}\n`;
+}
+
+/**
+ * The people a sync credits: the authors of the commits that re-apply a public pull request, which carry a
+ * `Public-PR: #<n>` trailer (docs/PUBLISHING.md). Other commits' authors are never named, so no private address
+ * leaves the private repo.
+ * @param {string} log  `git log --format=%an <%ae>%x1f%B%x1e` of the commits in the sync
+ * @returns {string[]} "Name <email>", once each, in log order
+ */
+export function publicPrAuthors(log) {
+  const out = [];
+  for (const record of String(log ?? '').split('\x1e')) {
+    const [who, body = ''] = record.split('\x1f');
+    const name = who?.trim();
+    if (name && /^Public-PR:\s*#\d+\s*$/m.test(body) && /^[^<>\n]+ <[^<>\s]+@[^<>\s]+>$/.test(name) && !out.includes(name)) out.push(name);
+  }
+  return out;
 }
 
 /**

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Environments API: Promote and Sync</title>
+    <meta name="description" content="The server routes and command line behind environments: status, branches on the remote, plans that promote or sync content, and the checks that guard them." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-env/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Environments API: Promote and Sync" />
+    <meta property="og:description" content="The server routes and command line behind environments: status, branches on the remote, plans that promote or sync content, and the checks that guard them." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-env/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Environments API: Promote and Sync" />
+    <meta name="twitter:description" content="The server routes and command line behind environments: status, branches on the remote, plans that promote or sync content, and the checks that guard them." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Environments API",
+          "item": "https://spcaeo.github.io/markstage/docs/api-env/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage Environments API: Promote and Sync",
+      "description": "The server routes and command line behind environments: status, branches on the remote, plans that promote or sync content, and the checks that guard them.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-env/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/" aria-current="page">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Environments API</li></ol></nav>
+        <h1>Environments API</h1>
+        <p class="lead left">The server routes and command line behind environments: status, branches on the remote, plans that promote or sync content, and the checks that guard them.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#server-config">Server config</a></li><li><a href="#this-environment">This environment</a></li><li><a href="#plans">Plans</a></li><li><a href="#rollback">Rollback</a></li><li><a href="#rules">Rules</a></li><li><a href="#personal-tokens-the-laptop-cli-and-ai-agents">Personal tokens (the laptop CLI, and AI agents)</a></li><li><a href="#branch-previews-staging">Branch previews (staging)</a></li><li><a href="#the-site-gate-outside-production">The site gate (outside production)</a></li><li><a href="#command-line">Command line</a></li><li><a href="#proof">Proof</a></li></ul></nav>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). The design and the reasons are
+in docs/ENVIRONMENTS.md; this file is the server's routes and shapes. Server code: <code>packages/server/src/env/</code>.</p>
+<p>An environment is <strong>a branch plus a server</strong>. Each server knows which one it is (<code>environment</code> in its config.json,
+below), shares one git remote with the others, and keeps its own users, Inbox, audit log and backups. A promotion or a
+sync is a <strong>plan</strong> made and run on the <strong>target</strong> server: production runs &quot;staging → production&quot;, staging runs
+&quot;my-change → staging&quot; and &quot;production → staging&quot; (sync). Nothing reaches the target's branch until a plan runs.</p>
+<h2 id="server-config">Server config</h2>
+<pre data-lang="json"><code class="language-json">&quot;environment&quot;: {
+  &quot;name&quot;: &quot;staging&quot;, &quot;branch&quot;: &quot;staging&quot;, &quot;upstream&quot;: &quot;main&quot;, &quot;promoteTo&quot;: &quot;production&quot;,
+  &quot;ribbon&quot;: &quot;#b45309&quot;, &quot;remote&quot;: &quot;origin&quot;,
+  &quot;peers&quot;: { &quot;production&quot;: { &quot;branch&quot;: &quot;main&quot;, &quot;origin&quot;: &quot;https://cms.example.com&quot; } },
+  &quot;previews&quot;: { &quot;branches&quot;: true, &quot;host&quot;: &quot;{branch}.staging.example.com&quot; },
+  &quot;mail&quot;: &quot;actor&quot;, &quot;gate&quot;: true, &quot;keep&quot;: []
+},
+&quot;ai&quot;: { &quot;provider&quot;: &quot;anthropic&quot;, &quot;model&quot;: &quot;claude-sonnet-5-5&quot;, &quot;keyFile&quot;: &quot;/etc/markstage/ai.key&quot; }</code></pre>
+<ul><li>No <code>environment</code>: the server is production, on the branch it has checked out.</li><li><code>peers</code>: the other environments' branches (so a branch is named &quot;staging&quot;, not &quot;a branch&quot;) and their Markstage
+origins (for the handoff link). <code>promoteTo</code> must be a peer.</li><li>Outside production (<code>name</code> not <code>production</code>), by default:
+<ul><li>every answer says <code>X-Robots-Tag: noindex, nofollow</code> (the API, the editor, forms, the gate);</li><li><code>mail: &quot;actor&quot;</code> mails only the people an alert is about (who ran the job), never shared addresses or roles;
+<code>mail: &quot;sink&quot;</code> requires <code>notify.email.host</code> to be this machine (a mail catcher);</li><li>a site form stores the message in this environment's Inbox, mails nobody, sends no thank-you and answers
+<code>{&quot;message&quot;: &quot;Test form: not sent. …&quot;, &quot;test&quot;: true}</code>;</li><li>the CDN purge, IndexNow, Slack and the alerts' webhook are off, unless <code>keep</code> lists them (<code>purge</code>, <code>indexNow</code>,
+<code>slack</code>, <code>webhook</code>); so are the site's webhooks (docs/API-WEBHOOKS.md): their deliveries are kept as <code>held</code> and
+never sent, unless <code>keep</code> lists <code>webhooks</code>;</li><li><code>gate: true</code> puts the site's hosts behind sign-in (&quot;The site gate&quot; below).</li></ul></li><li><code>ai</code>: the AI wording of a plan's summary. The key is <code>MARKSTAGE_AI_KEY</code> or the <code>keyFile</code> (outside the repo), read
+when it is used; with no key the facts alone show, with no error. <code>key</code> in config.json is refused. The same block
+sets the AI suggestions (<code>perMinute</code>, <code>perDay</code>; the same key and model): docs/API-AI.md.</li></ul>
+<h2 id="this-environment">This environment</h2>
+<ul><li><code>GET env[?fetch=1]</code> (signed in; a token needs <code>env:read</code>). <code>fetch=1</code> fetches the remote first: only for owners,
+administrators and people an allowing rule names for promote or sync (<code>canFetch</code> says so; anyone else gets 403),
+and at most once per 30 s for the whole server (asked sooner, the last fetch stands). <code>remote.error</code> holds git's
+own words for owners and administrators only; everyone else is told the remote could not be reached.
+<pre><code>{name, production, configured, branch, upstream, promoteTo, ribbon, head, live,
+ upstreamHead, ahead, behind,                  // against the upstream: here only / to sync down
+ remote: {name, ok, lastFetchAt, error, head, ahead, behind},   // against this branch on the remote
+ peers: [{name, branch, origin}], previews: {on, host} | null, mail, gate,
+ handoff: {to, url} | null, canRollback, canFetch}</code></pre>
+<code>handoff.url</code> opens the target's Environments page with the plan filled in, in the fragment only (no secret):
+<code>&lt;peer origin&gt;/markstage/#/environments?plan=promote&amp;source=&lt;branch&gt;&amp;sha=&lt;sha&gt;</code>; the editor adds <code>&amp;reason=</code>.</li><li><code>GET env/branches</code> → <code>{branches: [{name, sha, at, author, subject, env, ahead, behind}], remote, lastFetch}</code>: the
+branches on the remote, newest first; <code>env</code> is the peer it belongs to, this one, or <code>branch</code>.</li></ul>
+<h2 id="plans">Plans</h2>
+<ul><li><code>POST env/plans {action, source?, to?, reason?}</code> → <code>202 {plan, job}</code>.
+<ul><li><code>action: &quot;promote&quot;</code> brings <code>source</code> (a branch on the remote) here; <code>&quot;sync&quot;</code> brings <code>source</code> (default: the
+upstream) here. <code>to</code>, when given, must be this environment.</li><li>A dry run of the rules (files not known yet) comes first: if no rule could ever allow it, <code>403 {error: &quot;rule&quot;,
+rule, words}</code>, audited <code>env.promote</code> / <code>env.sync</code> with <code>ok: false</code>.</li><li>The job (kind <code>env-plan</code>) fetches, compares (<code>git merge-base</code>, <code>git diff</code>), merges with no working copy
+(<code>git merge-tree</code>), and merges conflicted pages block by block (Markdown: frontmatter leaf by leaf, a save-time
+stamp such as <code>modified</code> takes the later; the body by block) or leaf by leaf (JSON). What both sides changed
+differently is a conflict. With none open, it makes the merge commit (on no branch), builds it in a throwaway work
+tree (the site's <code>node_modules</code> linked in), runs the checks, compares the build's pages with the live build
+(<code>verify.public</code>), takes screenshots, and writes the summary.</li></ul></li><li><code>GET env/plans[?status=]</code> → <code>{plans}</code> (newest first, at most 200; files as counts per group, conflicts without
+their texts).</li><li><code>GET env/plans/:pid</code> → the plan:
+<pre><code>{id, action, from: {env, branch, sha}, to: {env, branch, sha}, base, merged, author: {id, name},
+ createdAt, expiresAt, status, note, error, version, reason, job, runJob, runBy: {id, name} | null, finishedAt, newer,
+ files: {count, groups: {pages, templates, styles, config, media, other: [{path, status, kinds, group, from?}]},
+         autoMerged: [path]},
+ conflicts: [{id, path, entry: {collection, id, title, label} | null, kind, words, ours, theirs, merged, resolved,
+              take}],
+ checks: [{id, label, blocking, status: passed|failed|warned|skipped, words, entries?}] | null,
+ pages: {changed, added, removed, removedWithoutRedirect} | null,
+ shots: {status: done|not-available|failed, words, pages: [{path, kind, shots: [{width, before, after}]}]} | null,
+ summary: {status: facts|ai|dropped, text, words, facts, ai: {model, dropped?, why?} | null} | null,
+ decision: {effect: allow|needs|deny, rule: {id, name} | null, words, missing: [{kind, words}]},
+ approvals: [{userId, name, role, sha, note, at, current}], link}</code></pre>
+<ul><li><code>status</code>: <code>preparing</code>, <code>conflicts</code>, <code>ready</code>, <code>blocked</code> (a blocking check failed), <code>running</code>, <code>done</code>,
+<code>failed</code>, <code>cancelled</code>, <code>stale</code> (this environment's branch moved since: re-plan), <code>expired</code> (not run within 7
+days). <code>note</code> says why in words.</li><li><code>decision</code> is for the person asking (their role now, the approvals, the checks, the time).</li><li><code>kind</code> of a conflict: <code>text</code>, <code>blocks</code> (n places), <code>removed-here</code>, <code>removed-incoming</code>, <code>added-both</code>. <code>ours</code> is
+this environment's text, <code>theirs</code> the incoming one (each cut at 400 KB).</li><li><code>newer</code>: the source branch has moved on since the plan was made; the plan still promotes exactly <code>from.sha</code>.</li><li><code>checks</code>: <code>build</code>, each site check (<code>config.checks</code>) on every changed entry (after-build ones on the build),
+and <code>redirects</code> (a removed page must have a redirect stub in the new build).</li></ul></li><li><code>GET env/plans/:pid/shots/:file</code> → a PNG, by its name as <code>shots</code> gives it (<code>&lt;n&gt;-&lt;width&gt;-before|after.png</code>, such as <code>1-1440-after.png</code>). Shots need Playwright on the server
+(<code>playwright</code> or <code>@playwright/test</code>); without it <code>shots.status</code> is <code>not-available</code> and says so. At most 40 pages,
+at 1440 and 390 wide; the browser is closed when they are done.</li><li><code>POST env/plans/:pid/resolve {conflictId, take: ours|theirs|text, text?, version}</code> (the plan's author, an
+administrator or the owner). When none is open, the plan is checked again (<code>{plan, job}</code>); earlier approvals no
+longer match the new merge.</li><li><code>POST env/plans/:pid/approve {sha, note?}</code>: <code>sha</code> must be the plan's <code>merged</code> (409 with <code>current</code> if it changed);
+the author cannot approve (403). Whether an approval counts is the rules' business (the approver's role when the
+plan runs).</li><li><code>POST env/plans/:pid/run {reason?, version}</code> → <code>202 {plan, job}</code>.
+<ul><li>The rules are asked again now: <code>403 {error: &quot;rule&quot;, rule, words, missing}</code>, audited, when they refuse (a freeze
+that began after the plan, a missing approval or reason, a changed role). <code>409</code> with <code>current</code> when the plan is
+not <code>ready</code> (stale, expired, conflicts, blocked).</li><li>The job (kind <code>env-promote</code> or <code>env-sync</code>) asks the rules once more, fast-forwards this branch to the merge
+commit (refused if the branch moved), builds, runs the after-build checks, deploys, and pushes the branch to the
+remote. If a step fails before the site is live, the branch goes back (<code>git reset --keep</code>) and the live site is
+unchanged. A job started with a token stops at its next step when the token is revoked.</li><li>Audited <code>env.promote.start</code>, then <code>env.promote</code> / <code>env.sync</code> <code>{from, to, merged, release, branch, reason}</code>;
+alerts <code>env.promoted</code>, or <code>env.promote-failed</code> (to who ran it and the plan's author).</li></ul></li><li><code>POST env/plans/:pid/cancel {version?}</code> (author, administrator, owner).</li></ul>
+<h2 id="rollback">Rollback</h2>
+<ul><li><code>POST env/rollback {reason?}</code> → <code>202 {job, from, to}</code> (the rules' <code>rollback</code> action; <code>409</code> with no rollback
+command or no earlier release). The job puts the release before back live (<code>commands.rollback</code>), then commits on
+this branch the files of that release (a new commit: history is kept), so the branch equals the live site; it
+rebuilds the build folder and pushes. Audited <code>env.rollback {from, to, revert, reason}</code>; alert <code>site.rollback</code>.</li></ul>
+<h2 id="rules">Rules</h2>
+<p>Kept in <code>&lt;dataDir&gt;/promotion-rules.json</code> (0600); the starter rules apply until someone saves. The shape and how they
+are applied: docs/ENVIRONMENTS.md &quot;Promotion rules&quot; and the header of <code>src/env/rules.mjs</code>.</p>
+<ul><li><code>GET env/rules</code> → <code>{version, saved, groups, rules, starter, kinds, actions, envs, people}</code>.</li><li><code>PUT env/rules {version, groups, rules}</code> (owner, administrator; never with a token) → the view. <code>400</code> in plain
+words, <code>409 stale</code> with <code>current</code>. Audited <code>env.rules {added, removed, changed, groups}</code>; the <code>env.rules-changed</code>
+alert is a safety alert.</li><li><code>POST env/rules/check {action, from?, to?, userId?, files?: [path], at?, reason?, checks?, rules?}</code> → <code>{effect,
+rule, words, missing, trace: [{rule, matched, why}], user, files}</code>: what the rules (or the <code>rules</code> sent, unsaved)
+say. Another person's answer is for administrators.</li></ul>
+<h2 id="personal-tokens-the-laptop-cli-and-ai-agents">Personal tokens (the laptop CLI, and AI agents)</h2>
+<ul><li><code>GET me/tokens</code> → <code>{tokens: [{id, name, scopes, createdAt, expiresAt, lastUsedAt, revokedAt, status}], scopes,
+mcpScopes, groups, maxDays}</code>; <code>POST me/tokens {name, scopes, days: 1..90}</code> → <code>201 {token, secret}</code> (the secret
+once, <code>mst_…</code>); <code>DELETE me/tokens/:tid</code> revokes. A browser session only: a token cannot manage tokens.</li><li>Two kinds, never mixed in one token (<code>400</code> &quot;A token is for the command line (env:…) or for an AI agent (mcp:…),
+not both: make two.&quot;): the command line's, <code>scopes</code> <code>[env:read, env:promote]</code>, reaching <code>/env/*</code>; and an AI
+agent's, <code>mcpScopes</code> <code>[mcp:read, mcp:draft]</code> (<code>mcp:draft</code> brings <code>mcp:read</code>), reaching <code>/mcp</code> only (<code>403</code>
+elsewhere). <code>groups</code> says so: <code>{cli: {scopes, reaches: '/env'}, mcp: {scopes, reaches: '/mcp'}}</code>. The agent's
+kind is docs/API-MCP.md; the rest of this section is the command line's. In the editor, Settings → Tokens makes
+both kinds: &quot;New command line token&quot; (<code>#/settings/tokens?new=cli</code>) and &quot;New AI assistant token&quot; (<code>?new=mcp</code>).</li><li><code>Authorization: Bearer mst_…</code> reaches <code>/env/*</code> only, as its person, with no Origin or CSRF check (a browser never
+sends it on its own). <code>GET</code> needs <code>env:read</code>, a write <code>env:promote</code>. A revoked, expired or unknown token is <code>401</code>
+(audited <code>security.token</code>); 20 misses from one address in 10 minutes and it waits (<code>429</code>). Each use keeps
+<code>lastUsedAt</code> and the address. A disabled account's tokens stop working.</li></ul>
+<h2 id="branch-previews-staging">Branch previews (staging)</h2>
+<ul><li><code>GET env/previews</code> → <code>{on, host, previews: [{slug, branch, sha, status: building|ready|failed, url, createdAt,
+builtAt, job, error}]}</code>.</li><li><code>POST env/previews {branch}</code> → <code>202 {preview, job}</code> (rules: <code>preview</code> from <code>branch</code>). The branch is checked out in
+<code>&lt;dataDir&gt;/env/previews/&lt;slug&gt;</code> and built; it is served at <code>https://&lt;slug&gt;.&lt;previews host&gt;/</code> behind the gate.</li><li><code>DELETE env/previews/:slug</code> (who made it, administrator, owner).</li></ul>
+<h2 id="the-site-gate-outside-production">The site gate (outside production)</h2>
+<p>The site's hosts (<code>siteHosts</code>) and the preview hosts answer only people with an account on this server:</p>
+<ul><li>Without the cookie, a page answers <code>303</code> to <code>&lt;CMS&gt;/markstage/gate?host=&lt;host&gt;&amp;to=&lt;path&gt;</code>. Signed in there, a page
+posts a one-time ticket (1 minute) to <code>https://&lt;host&gt;/markstage/gate-enter</code>, which sets <code>ms_gate</code> (HttpOnly,
+SameSite=Lax, 12 hours at most, signed for that host only) and returns to the page. The cookie is bound to the CMS
+session it was opened from: signing out of the CMS, a revoked or timed-out session, or a disabled account ends it.</li><li>A file the build links to outside itself (a symlink, which a branch could add) is never served.</li><li><code>GET /markstage/gate-auth</code> on the host answers <code>204</code> or <code>401</code>, for nginx <code>auth_request</code> when nginx serves the
+build itself. Otherwise Markstage serves the build (<code>verify.public</code>, or the preview's) to a signed-in person.</li></ul>
+<h2 id="command-line">Command line</h2>
+<ul><li>On the server: <code>markstage-server env status</code>, <code>env sync [--run] --as &lt;email&gt;</code>, <code>env promote &lt;branch&gt; [--run]
+[--reason &quot;…&quot;] --as &lt;email&gt;</code>. The same rules, as that person; refused while the running server has a job going.</li><li>On a laptop (<code>@markstage/astro</code>, node and git only): <code>markstage pull [--from main]</code>, <code>markstage login &lt;url&gt;
+[--token-stdin]</code>, <code>markstage status</code>, <code>markstage promote &lt;branch&gt; &lt;env&gt; [--run] [--reason &quot;…&quot;]</code>. The token is kept
+in <code>~/.config/markstage/credentials</code> (0600) and never printed. The address is the editor's: a server with another
+<code>basePath</code> is named by its path (<code>https://example.com/cms/</code>), kept with the token. <code>markstage login</code> keeps a
+command line token only (an agent's token cannot reach <code>/env</code>); <code>markstage mcp login</code> and <code>markstage mcp</code> are the
+agent's (API-MCP.md).</li></ul>
+<h2 id="proof">Proof</h2>
+<p><code>packages/server/test/env-flow.test.mjs</code>, <code>env-safety.test.mjs</code>, <code>env-cli.test.mjs</code> and <code>env-rules.test.mjs</code>: two
+servers (production, staging) on one bare remote and a developer's clone, through the HTTP API and both command
+lines. They cover: a template change and a new page promoted to staging and on to production; a sync down that keeps
+a staging-only page; a conflict named in words and resolved each way (ours, theirs, a hand-merged text) and a page
+both sides edited in different places merged with no conflict; a failed check that blocks; a failed build that leaves
+production and its branch unchanged; a rollback after which the branch equals what is live and is pushed; a person
+the rules do not allow refused in words and audited; a freeze that begins between plan and run refusing the run; a
+stale and an expired plan that cannot run; staging mailing nobody, its forms saying &quot;Test form: not sent&quot;, noindex on
+every answer, the site gate and a branch preview; tokens (scopes, env routes only, 90 days, revoked mid-job, rate
+limit); and the AI summary with a stubbed model (dropped when it states a number the facts do not have).</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-ENV.md" target="_blank" rel="noopener">docs/API-ENV.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-releases/"><span class="small muted">Previous</span>Releases and share links</a>
+          <a class="next" href="../api-links/"><span class="small muted">Next</span>Topics and internal links</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

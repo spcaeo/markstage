@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage API Reference: Content, Media and Users</title>
+    <meta name="description" content="The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage API Reference: Content, Media and Users" />
+    <meta property="og:description" content="The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage API Reference: Content, Media and Users" />
+    <meta name="twitter:description" content="The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Markstage API (contract)",
+          "item": "https://spcaeo.github.io/markstage/docs/api/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage API Reference: Content, Media and Users",
+      "description": "The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes.",
+      "url": "https://spcaeo.github.io/markstage/docs/api/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/" aria-current="page">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Markstage API (contract)</li></ol></nav>
+        <h1>Markstage API (contract)</h1>
+        <p class="lead left">The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#conventions">Conventions</a></li><li><a href="#auth">Auth</a></li><li><a href="#users-owner-administrator">Users (owner, administrator)</a></li><li><a href="#collections-and-entries">Collections and entries</a></li><li><a href="#media">Media</a></li><li><a href="#design-code">Design &amp; Code</a></li><li><a href="#library-templates-sections-snippets">Library (templates, sections, snippets)</a></li><li><a href="#authors">Authors</a></li><li><a href="#topics-and-links">Topics and links</a></li><li><a href="#page-frames-and-types">Page frames and types</a></li><li><a href="#audit-log-owner-administrator">Audit log (owner, administrator)</a></li><li><a href="#notices">Notices</a></li><li><a href="#forms-and-the-inbox">Forms and the Inbox</a></li><li><a href="#releases-and-share-links">Releases and share links</a></li><li><a href="#environments">Environments</a></li><li><a href="#ai-agents-mcp">AI agents (MCP)</a></li><li><a href="#importing-entries-and-media">Importing entries and media</a></li><li><a href="#translation-status">Translation status</a></li><li><a href="#webhooks-owner-administrator">Webhooks (owner, administrator)</a></li><li><a href="#custom-roles-owner-administrator">Custom roles (owner, administrator)</a></li><li><a href="#integration-fields">Integration fields</a></li><li><a href="#ai-suggestions">AI suggestions</a></li><li><a href="#site-health-and-exports-owner-administrator">Site health and exports (owner, administrator)</a></li><li><a href="#admin-screens-editor">Admin screens (editor)</a></li><li><a href="#permissions">Permissions</a></li><li><a href="#site-side-contract-static-sites">Site-side contract (static sites)</a></li><li><a href="#preview-render">Preview render</a></li><li><a href="#compatibility-with-todays-dev-api">Compatibility with today's dev API</a></li><li><a href="#server-side-converter-interface-packages-core">Server-side converter interface (packages/core)</a></li></ul></nav>
+        <div class="prose">
+<p>The editor (<code>packages/editor</code>) and the server (<code>packages/server</code>) both follow this file. Dev mode
+(<code>packages/astro</code>, localhost only) implements the same routes without sign-in. A change to a route is made here first, then in both.</p>
+<h2 id="conventions">Conventions</h2>
+<ul><li><strong>Prefix</strong> <code>/markstage/api/</code>. All paths below are relative to it. Bodies and answers are JSON
+(<code>Content-Type: application/json</code>) unless a route says otherwise. Every answer has <code>Cache-Control: no-store</code>.</li><li><strong>Ids are opaque.</strong> <code>:c</code> is a collection id from the site config (<code>posts</code>, <code>pages</code>, ...). <code>:id</code> is an entry id,
+which is the file name without extension and matches <code>^[a-z0-9][a-z0-9-]{0,99}$</code>. Users, sessions, jobs, media,
+snippets, templates and trash items have random ids (<code>u_…</code>, <code>s_…</code>, <code>j_…</code>, <code>m_…</code>, <code>sn_…</code>, <code>t_…</code>, <code>tr_…</code>). No path,
+email or secret ever goes in a URL; secrets (setup codes) are typed by the person, never put in a link.</li><li><strong>Session</strong>: an httpOnly cookie <code>__Host-markstage</code> (Secure, SameSite=Strict, Path=/). The client never reads it.</li><li><strong>CSRF</strong>: every request that is not GET/HEAD needs the <code>Origin</code> header equal to the server's public origin, and
+(once signed in) <code>X-CSRF-Token: &lt;csrfToken&gt;</code> from <code>GET auth/me</code> or the login answer. The token changes at
+every sign-in. Routes marked <em>(pre-auth)</em> need the Origin check only.</li><li><strong>Optimistic concurrency</strong>: every entry answer carries <code>version</code> = sha1 of the file text (hex). Every write to an
+entry sends the <code>version</code> it started from. If the file changed since, the answer is
+<code>409 {error:'conflict', message, version:&lt;current&gt;}</code> and nothing is written.</li><li><strong>Errors</strong>: <code>{error, message}</code> with a stable code. <code>400 bad-request</code>, <code>401 unauthorized</code> (no or expired session),
+<code>403 forbidden</code> (signed in, not allowed), <code>404 not-found</code>, <code>409 conflict</code>, <code>413 too-large</code>,
+<code>415 unsupported-type</code>, <code>422 invalid</code> (with <code>fields: {name: message}</code>), <code>423 locked</code> (account lockout with
+<code>retryAfter</code> seconds, or a save that moves, deletes or changes a locked block, with <code>blocks</code>: see &quot;Locks&quot;), <code>429 rate-limited</code> (<code>Retry-After</code> header), <code>500 server</code>, <code>503 unavailable</code>.
+A <code>message</code> is plain words for the writer; <code>detail</code> (optional) is for logs.</li><li><strong>Times</strong> are ISO 8601 strings in UTC (<code>2026-10-28T14:05:00.000Z</code>).</li><li><strong>Lists</strong> take <code>page</code> (1-based) and <code>perPage</code> (default 50, max 200) and answer <code>{items, total, page, perPage}</code>.</li><li><strong>Roles</strong> (<code>owner</code>, <code>administrator</code>, <code>editor</code>, <code>author</code>, <code>contributor</code>) and what each may do: docs/API-PERMISSIONS.md.
+Entries come with a <code>can</code> object so the editor greys out what the user may not do; the server checks every
+action again.</li></ul>
+<h2 id="auth">Auth</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET release</code></td><td></td><td><code>{line}</code> for anyone (the footer's release line); <code>{version, build, builtAt, commit, line}</code> once signed in</td></tr><tr><td><code>GET auth/me</code></td><td></td><td><code>{user: User|null, csrfToken|null, setupRequired: bool, devMode: bool, server: {version, commit}|null}</code>; <code>server</code> (what Markstage runs: the server package's version and the install's commit, 12 hex, or null) only when signed in</td></tr><tr><td><code>POST auth/setup</code> <em>(pre-auth)</em></td><td><code>{setupCode, email, name, password}</code></td><td><code>201 {user, csrfToken}</code> + cookie. Only while no owner exists; the code comes from <code>markstage-server setup-code</code></td></tr><tr><td><code>POST auth/login</code> <em>(pre-auth)</em></td><td><code>{email, password}</code></td><td><code>{user, csrfToken}</code> + cookie, or <code>{twoFactorRequired: true, challenge}</code> when 2FA is on</td></tr><tr><td><code>POST auth/login/2fa</code> <em>(pre-auth)</em></td><td><code>{challenge, code}</code> or <code>{challenge, recoveryCode}</code></td><td><code>{user, csrfToken}</code> + cookie</td></tr><tr><td><code>POST auth/logout</code></td><td></td><td><code>{ok: true}</code>, session revoked server-side, cookie cleared</td></tr><tr><td><code>POST auth/accept-invite</code> <em>(pre-auth)</em></td><td><code>{email, setupCode, password, name?}</code></td><td><code>{user, csrfToken}</code> + cookie</td></tr><tr><td><code>POST auth/password</code></td><td><code>{currentPassword, newPassword}</code></td><td><code>{ok, csrfToken}</code>; all other sessions of the user are revoked, this one rotated</td></tr><tr><td><code>GET auth/sessions</code></td><td></td><td><code>[{id, current, createdAt, lastSeenAt, ip, userAgent}]</code> (own sessions)</td></tr><tr><td><code>DELETE auth/sessions/:sid</code></td><td></td><td><code>{ok}</code> revoke one of the own sessions</td></tr><tr><td><code>POST auth/2fa/setup</code></td><td><code>{password}</code></td><td><code>{secret, otpauthUri}</code> (pending until enabled; show as QR + text)</td></tr><tr><td><code>POST auth/2fa/enable</code></td><td><code>{code}</code></td><td><code>{recoveryCodes: [10 strings]}</code> shown once</td></tr><tr><td><code>POST auth/2fa/disable</code></td><td><code>{password, code}</code></td><td><code>{ok}</code></td></tr><tr><td><code>POST auth/2fa/recovery-codes</code></td><td><code>{password, code}</code></td><td><code>{recoveryCodes}</code> (old ones stop working)</td></tr></tbody></table></div>
+<ul><li>Login failures always answer <code>401 {error:'unauthorized', message:'Wrong email or password.'}</code> (same words for an
+unknown email). Too many tries: <code>429</code> (per IP) or <code>423</code> (per account, progressive). The 2FA <code>challenge</code> lives 5
+minutes and allows 5 codes. A TOTP code is accepted once (replay refused).</li><li><code>User</code> = <code>{id, email, name, role, authorSlug, twoFactor: bool, disabled: bool, createdAt, lastLoginAt}</code>.
+<code>authorSlug</code> links the user to the site's author entry (the value in an entry's author field).</li><li>Passwords: 12 to 256 characters, not the email, not a common password (<code>422</code> with <code>fields.password</code>).</li><li>Single sign-on: <code>GET auth/sso</code> (the providers), <code>GET auth/sso/:id/start</code> and <code>…/callback</code> sign a person in
+through the server's OpenID Connect providers (config.json <code>sso</code>); with <code>passwordLogin: false</code> only the owner signs
+in with a password (<code>403</code>): docs/API-SSO.md.</li></ul>
+<h2 id="users-owner-administrator">Users (owner, administrator)</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET users</code></td><td></td><td><code>[User]</code> (every signed-in user may call <code>GET users?brief=1</code> for <code>[{id, name, authorSlug}]</code>)</td></tr><tr><td><code>GET users/:uid</code></td><td></td><td><code>User</code></td></tr><tr><td><code>POST users</code></td><td><code>{email, name, role, authorSlug?}</code></td><td><code>201 {user, setupCode}</code> the invite; the code is valid 72 h, shown once</td></tr><tr><td><code>PATCH users/:uid</code></td><td><code>{name?, role?, customRole?, authorSlug?, disabled?}</code></td><td><code>User</code>. Disabling revokes the user's sessions. <code>customRole</code> (a custom role's id, or null) makes <code>role</code> its base; a <code>role</code> given alone takes a custom role away (docs/API-ROLES.md)</td></tr><tr><td><code>POST users/:uid/reset</code></td><td></td><td><code>{setupCode}</code>: password cleared, sessions revoked, user sets a new one via <code>accept-invite</code></td></tr><tr><td><code>POST users/:uid/2fa/reset</code></td><td></td><td><code>{ok}</code> turns off the user's 2FA (lost phone)</td></tr><tr><td><code>POST users/:uid/revoke-sessions</code></td><td></td><td><code>{ok, revoked: n}</code></td></tr><tr><td><code>GET users/:uid/sso</code>, <code>DELETE users/:uid/sso/:provider</code></td><td></td><td>the person's single sign-on links, and one undone (docs/API-SSO.md)</td></tr><tr><td><code>DELETE users/:uid</code></td><td></td><td><code>{ok}</code>; their entries keep their author</td></tr></tbody></table></div>
+<p>Only the owner can grant or take away <code>owner</code>/<code>administrator</code>, or touch the owner's account. There is always
+exactly one owner (<code>PATCH</code> that would leave none is <code>409</code>). Nobody can delete or disable themselves.</p>
+<h2 id="collections-and-entries">Collections and entries</h2>
+<p>Collections come from the site's <code>markstage.config</code> (<code>@markstage/core/site-config</code>; the same file the editor reads in
+dev): <code>url</code> and <code>group</code> there may be functions of <code>{id, data}</code>, where <code>data</code> is the frontmatter or JSON. An entry's
+own URL field (<code>fields.url</code>) wins over <code>url</code>. A url or group function that throws gives <code>url: null</code> / no group for
+that entry, logged on the server. A site without a markstage.config lists collections in the server's config.json,
+with <code>url</code> as a template (<code>/blog/{slug}/</code>).</p>
+<p><strong>Field schema.</strong> The site config may say <code>schema: { keystatic: './keystatic.config.ts', options }</code> (<code>options</code> as
+for core's <code>keystaticSchema</code>: <code>rich</code>, <code>multiline</code>, <code>url</code>, <code>collections</code>, <code>roles</code>). Each JSON collection gets the
+Keystatic collection with the same folder (else the same name). Its <code>changes</code> saves then parse with
+<code>{schema, policy: keystaticPolicy}</code>: inserted values take the schema's key order, empty values are left out as
+Keystatic leaves them out, and the file stays byte-identical to Keystatic's own Save (proven on the real site: 41
+of 41 pages after an insert). Without core's JSON engine such a save answers 503 instead of writing a
+non-Keystatic file. Keys the server owns (<code>draft</code>, <code>publishAt</code>, <code>protected</code>) are kept even though Keystatic's
+schema may not list them; a site that edits these files in Keystatic too should add them to its schema
+(<code>fields.ignored()</code>), or a Keystatic save drops them.</p>
+<p><code>GET collections/:c/schema</code> → <code>{entry: Field}</code> (core's schema descriptor: <code>{type: 'object', fields}</code>, with
+<code>array</code>, <code>conditional</code>, <code>text</code>, <code>select</code>, <code>image</code>, <code>relationship</code>… fields). <code>404 {error: 'no-schema'}</code> when the
+collection has none.</p>
+<p><code>GET collections</code> → <code>[{id, label, format: 'md'|'json', hasStatus: bool, counts: {all, draft, scheduled, published,
+trash}, can: {create}}]</code>.</p>
+<p><code>GET collections/:c/entries</code> → list. Query (all optional, all reflected in the editor's URL):
+<code>status=draft|scheduled|published</code>, <code>author=&lt;authorSlug&gt;</code>, <code>tag=&lt;tag&gt;</code>, <code>q=&lt;search in title, slug, excerpt&gt;</code>,
+<code>group=&lt;groupId&gt;</code> (the section or topic, docs/CONFIG.md <code>groups</code>), <code>since=&lt;ISO date&gt;</code> (changed at or after it),
+<code>attention=no-description|no-title|alt-text|links|not-translated</code> (the lists screen's &quot;Needs attention&quot;: only what
+the server already has, the search title and description from the fields, the publish rules' image and link
+findings, and the tracked locales' words; an unknown one is <code>400</code>),
+<code>sort=&lt;column&gt;</code> or <code>-&lt;column&gt;</code> (newest or Z first) for any column: <code>title</code>, <code>date</code>, <code>modified</code>, <code>publishAt</code>, <code>status</code>
+(draft, scheduled, published), <code>author</code>, <code>url</code>, <code>group</code>, <code>id</code>, <code>words</code> (default <code>-modified</code>; an unknown one is <code>400</code>). Text
+sorts ignore case and put numbers in order; ties are in id order both ways. <code>page</code>, <code>perPage</code>.
+Item = <code>{id, title, status, author, tags, date, modified, publishAt, url, version, excerpt, group?, groupId?, words?, parent?}</code>.
+<code>groupId</code>: the group the entry is in (its collection's <code>groups.field</code>, docs/CONFIG.md <code>groups</code>), only for a collection
+with groups; null when it names none. <code>locales: [{code, done}]</code> is there when the site tracks locales with their own
+title or description (&quot;Translation status&quot;): <code>done</code> is that locale having its words (or sharing the source's language,
+where none means &quot;the same&quot;); outdated words are not told here (that needs git history: the translations list).
+<code>words</code>: an article's (Markdown) length, the words of its text without the frontmatter, HTML tags or Markdown marks. <code>group</code> is
+there only when the site's markstage.config gives the collection a <code>group({id, data})</code> function and it returns a
+value (on the pilot site: the cluster title). The editor's search groups results by it. The answer also has <code>counts</code>
+(per status, for the filter chips, ignoring the <code>status</code> filter) and <code>facets: {authors: [{name, count}], tags: [{name,
+count}]}</code>: every author and tag in the collection, whatever the filters, for the lists screen's choices.</p>
+<p><code>GET collections/:c/entries/:id</code> → <code>Entry</code>:</p>
+<pre><code>{ id, collection, format, version, status, url, title,
+  frontmatter,            // md: the YAML frontmatter as an object
+  doc,                    // md: the editor document from core mdToDoc(text).doc
+  data,                   // json: the parsed JSON
+  autosave: {savedAt, baseVersion} | null,   // the caller's own private autosave, if newer than the file
+  can: {edit, publish, delete, rawHtml} }</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>POST collections/:c/entries</code></td><td><code>{id?, title, frontmatter?, doc?, source?, data?, templateId?}</code></td><td><code>201 Entry</code>. <code>id</code> defaults to a slug of the title; <code>409 {error: 'id-taken'}</code> if taken. The site's <code>newEntry</code> defaults apply (docs/CONFIG.md <code>newEntry</code>, through core's <code>newEntryFrontmatter</code>): the title and slug first, then the asked values (<code>frontmatter</code>; <code>data</code> for JSON), then the defaults, which never override those, so a new post has what the site's schema requires (a date, a canonical). New entries in a status collection start as <code>draft</code>. An article (Markdown) always gets an author and a date; a JSON entry only when its collection has them (the site names the field in <code>fields</code>, its schema has it, or the template or <code>data</code> holds it), so a page gets neither. The author is the one an editor gives in <code>frontmatter</code>, else the creator's author name, else the collection's <code>defaultAuthor</code> (site config), else <code>422 {error: 'no-author'}</code> (link the account to an author). Authors and contributors always get their own</td></tr><tr><td><code>POST collections/:c/entries/:id/duplicate</code></td><td><code>{id?, title?}</code></td><td><code>201 Entry</code> (a draft copy, author = caller for authors/contributors)</td></tr><tr><td><code>PUT collections/:c/entries/:id</code></td><td>md: <code>{version, doc?, frontmatter?, message?}</code>; json: <code>{version, changes? | data?, message?}</code></td><td><code>{ok, version, changedBlocks, commit}</code></td></tr><tr><td><code>PUT collections/:c/entries/:id/autosave</code></td><td><code>{baseVersion, doc?, frontmatter?, source?, data?}</code></td><td><code>{savedAt}</code> private to the caller, never the live file</td></tr><tr><td><code>GET collections/:c/entries/:id/autosave</code></td><td></td><td><code>{savedAt, baseVersion, doc?, frontmatter?, source?, data?}</code> or <code>404</code></td></tr><tr><td><code>DELETE collections/:c/entries/:id/autosave</code></td><td></td><td><code>{ok}</code></td></tr><tr><td><code>DELETE collections/:c/entries/:id?version=</code></td><td></td><td><code>{ok, trashId, job?}</code> file removed in a commit; a published entry also gets a rebuild job</td></tr><tr><td><code>GET collections/:c/entries/:id/links-in</code></td><td></td><td><code>{entries: [{collection, id, title, status}]}</code>: the entries that link here (found like a move finds the links it rewrites: link marks, hrefs in HTML, address fields, any locale, path or absolute URL), to warn before a delete or an unpublish</td></tr><tr><td><code>GET trash?collection=</code></td><td></td><td><code>[{trashId, collection, id, title, url, deletedAt, deletedBy}]</code>: <code>url</code> is the address it had</td></tr><tr><td><code>GET trash/:trashId/links-in</code></td><td></td><td><code>{url, entries: [{collection, id, title, status, url}]}</code>: the entries that still link to its old address, shown before &quot;Delete for good&quot; (editors and above, or the author of their own)</td></tr><tr><td><code>POST trash/:trashId/restore</code></td><td></td><td><code>201 Entry</code> restored as a draft (<code>409</code> if the id is taken again)</td></tr><tr><td><code>DELETE trash/:trashId</code></td><td></td><td><code>{ok}</code> purge (administrator+)</td></tr></tbody></table></div>
+<ul><li><strong>Save</strong> (<code>PUT</code>): md: the server runs <code>docToMd(doc, currentText)</code> (surgical), then applies <code>frontmatter</code> key
+changes (<code>{key: value}</code>; <code>null</code> removes a key) surgically; json: <code>changes</code> is a list of operations applied in
+order by the core JSON engine (<code>JsonEntry</code>: only the changed characters move, formatting kept): <code>{path, value}</code> or
+<code>{op:'set', path, value}</code>, <code>{op:'remove', path}</code>, <code>{op:'insert', path:'sections', index, value}</code>,
+<code>{op:'move', path:'sections', from, to}</code>, <code>{op:'duplicate', path:'sections', index}</code>. Paths are dotted
+(<code>sections.3.value.heading</code>); <code>__proto__</code>, <code>prototype</code> and <code>constructor</code> segments are refused. <code>data</code> (a whole
+object) is also accepted but rewrites the file. The file is written and
+committed with the signed-in user as git author. <code>changedBlocks</code> = blocks the save rewrote (0 = byte-identical,
+and then nothing is committed). <code>commit</code> = the new commit sha or <code>null</code>.</li><li><strong>The address changes only through Move.</strong> A save of any kind (<code>PUT</code>, source, publish, revision restore, find and
+replace, bulk actions, Categories and tags) that would change the entry's page address (its slug, or a field the
+address is made of, such as a page's <code>uri</code> or <code>parent</code>) is <code>422 {error: 'moves', message, from, to}</code>, and in a
+change across the site that entry is skipped with the same reason. Use the move routes below, which rewrite the
+links and record the redirects.</li><li><strong>Links</strong>: for every role, any <code>href</code>, <code>src</code> or <code>url</code> attr in the document (link marks, images, box attrs at any
+depth), in the frontmatter and in JSON entries must be http, https, mailto, tel or relative; anything else
+(<code>javascript:</code>, <code>data:</code>, <code>vbscript:</code>, <code>file:</code>, ...) is <code>422</code> with <code>urls: [...]</code>. Snippets and templates too.</li><li><strong>Collections without status</strong> (pages, settings): <code>PUT</code> saves and commits; the next build ships it. <code>publish</code> on
+them is the same &quot;Update&quot; as for posts: save (if a body is given) + checks + build + deploy, one job.</li><li><strong>Saving a published entry</strong> changes what the next build ships, so it needs the publish right on that entry; the
+editor's &quot;Update&quot; button uses <code>publish</code> (below) which saves and deploys in one job.</li><li><code>draft</code>, <code>publishAt</code> and <code>protected</code> are not set by <code>PUT</code> or a source save (<code>422</code>): they change only through the
+publish and protection routes. Non-editors cannot change the author field away from themselves (<code>403</code>).</li><li><strong>Locks</strong> (docs/OPERATIONS.md &quot;Locks&quot;; core's <code>@markstage/core/locks</code>): every save path (<code>PUT</code>, source, publish,
+revision restore, bulk, compat) compares the stored entry with the saved one. A locked block that was moved,
+deleted or changed is <code>423 {error: 'locked', message, blocks: [{what, path, type, label, by, message}]}</code>, for
+every role, and nothing is written. <code>what</code> is <code>move</code>, <code>remove</code>, <code>edit</code> or <code>layout</code>; <code>by</code> is <code>'the site'</code> (the
+site's rule, markstage.config <code>locks</code>) or <code>'an editor'</code> (a lock stored in the entry); <code>message</code> is the sentence to
+show (&quot;The FAQ box is locked by the site: it can't be deleted.&quot;). Other blocks may still be moved past a locked
+one; a move is a change in the order of the move-locked blocks among themselves. Where locks are stored:
+<ul><li>pages (JSON): <code>_lock: {move?, remove?, edit?}</code> on a section or list item, and <code>_lock: {layout?, edit?}</code> at the
+top of the entry (<code>layout</code>: nothing added, deleted or reordered; <code>edit</code>: read-only). The site's rules name
+sections by their <code>discriminant</code>.</li><li>articles (Markdown): frontmatter <code>locks: [{heading, move?, remove?, edit?}]</code> for the section under a heading
+(to the next heading of the same or a higher level), and <code>locks: [{box, move?, remove?, edit?}]</code> for every run
+of that box (by block name; a run of the same box counts as one). A box's own <code>lock</code> attribute
+(<code>data-lock=&quot;move remove&quot;</code>) is read too, where a block pack keeps it. The site's rules name boxes by block name.</li><li><code>true</code> locks that action; <code>false</code> lifts the site's rule for it on this entry only (&quot;Unlock on this page&quot;, e.g.
+<code>_lock: {move: false, remove: false}</code> on the home hero, or <code>locks: [{box: faq, remove: false}]</code>). A rule binds
+unless a marker on either side of the save lifts it. A page section lifted and deleted in the same save reads
+as a plain delete (its marker leaves with it): lift it first. An article's box lock outlives the box, so there
+it may be lifted in the same save.</li><li><code>by</code> and <code>at</code> on a marker say who set it and when. The server writes them on every marker a save adds or
+changes (the person's name, the time to the second), whatever the editor sent.</li></ul>
+A lock binds when both the stored and the saved entry have it, so an editor may take one off and change the block
+in the same save. Adding, taking off or changing a lock needs editor or above (<code>403</code> naming the block); each one
+is audited as <code>entry.lock</code> or <code>entry.unlock</code> <code>{commit, change, block, path, from, to, rule?}</code> (<code>rule: 'site'</code> when
+it lifts a site rule or puts it back; a change that both lifts and adds is <code>entry.lock</code> with <code>change: 'change'</code>). <code>_lock</code> and <code>locks</code> cannot be set
+by bulk actions. Without <code>@markstage/core</code> installed, a save of an entry with locks (or of a collection the site's
+rules cover) is <code>503 locks-unavailable</code>, never let through.</li><li><strong>The site's rules</strong> (Settings → Locks): <code>GET site/locks</code> (anyone signed in) →
+<code>{rules: {pages: {&lt;type&gt;: {move?, remove?, edit?}}, articles: {…}}, kinds: {pages: [{type, label}], articles:
+[{type, label}]}, version, source: 'config'|'file', file}</code>. <code>kinds</code> are the section types the site's pages use
+(<code>discriminant</code>) and the boxes its block packs define, so a rule can be added for any of them. These are the rules
+saves are checked against now: the editor reads them here, not from its build. <code>PUT site/locks {rules, version}</code>
+(owner, administrator; <code>rules</code> in either form, <code>{hero: ['move']}</code> or <code>{hero: {move: true}}</code>) → <code>{rules, version,
+source: 'file', commit}</code>; <code>409</code> on a stale <code>version</code>, <code>400</code> on a wrong shape (in words), <code>403</code> below
+administrator, <code>503</code> without core. The rules are written to <code>markstage.locks.json</code> at the site's root (list
+form, keys sorted), committed as &quot;Lock rules for every page&quot; with the person as author, and audited as
+<code>site.locks {commit, from, to, was}</code>. From then on the file wins over markstage.config <code>locks</code> (code is never
+rewritten from a screen); the same rules again commit nothing.</li></ul>
+<h3 id="the-light-index">The light index</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET index</code></td><td><code>{items: [{collection, id, title, url, status, modified, group?, held?}]}</code>: every entry of every collection, with only what the editor's shell needs (the palette, Home's Recent, the link field's targets). From the server's content index (docs/ARCHITECTURE.md), so it costs no file reads; answered with an <code>ETag</code> and <code>Cache-Control: private, no-cache</code>, and a repeat with <code>If-None-Match</code> is a <code>304</code>.</td></tr></tbody></table></div>
+<h3 id="move-rename-an-entry">Move (rename) an entry</h3>
+<p><code>POST collections/:c/entries/:id/move</code> <code>{version, newId, newSlug?}</code> → <code>200</code> (draft) or <code>202</code> (live, with a build and
+deploy job) <code>{id, version, url, oldUrl, linksUpdated: [{collection, id}], redirects: [{from, to}], repointed: [{from,
+to}], commit, job}</code>.</p>
+<ul><li>One commit: the file gets its new name. Its slug follows when it was the same as the old name, or is set to
+<code>newSlug</code>. Every entry that links to the old address then links to the new one, and the site's redirects hook
+records old → new.</li><li>Links are rewritten surgically, through core:
+<ul><li>frontmatter through <code>setFrontmatter</code> (only the changed keys);</li><li>the Markdown body through the doc (only the changed blocks);</li><li>JSON through the JSON engine (only the changed values).</li></ul></li><li>A link is a string value that is the old address in any locale (<code>/x/</code>, <code>/en-us/x/</code>), with or without the
+trailing slash, as a site path or an absolute <code>siteUrl</code> URL, keeping any <code>#hash</code> or <code>?query</code>. An <code>href</code> inside
+HTML strings counts too. Visible text (<code>text</code> values) is never changed.</li><li>Redirects: the site's redirects hook (below, &quot;Redirects&quot;) gets <code>{&quot;redirects&quot;: [{from, to}, …]}</code>: one pair per
+locale, as site paths. The files it changes go into the same commit. When the hook can list, no chain or loop is
+made: redirects that pointed at the old address now point at the new one (<code>repointed: [{from, to}]</code> in the
+answer), and a redirect away from the new address is removed (a page is there again). If the hook fails: <code>502
+{error: 'redirects-failed'}</code>, nothing is moved, and its own changes are undone. With no hook, no redirects are
+written.</li><li>Rights: as for a save, and a live entry (published, or any entry of a collection without status) needs the
+publish right. <code>409 {error: 'id-taken'}</code> if <code>newId</code> exists, <code>409 {error: 'address-taken', url, entry}</code> if the new
+address is another entry's (in any collection), <code>409</code> on a stale <code>version</code>, <code>422</code> for a bad name, and <code>validate</code>
+runs on the renamed entry.</li><li>If the job fails, every file of the move commit goes back to its text before the move (except a file someone
+changed since, which the log names). The live site keeps the old address.</li><li>The mover's autosave follows the entry to its new id.</li></ul>
+<h3 id="move-many-entries-at-once-the-pages-tree">Move many entries at once (the Pages tree)</h3>
+<p><code>POST site/move</code> <code>{moves: [{collection, id, version, newId?, newSlug?, parent?, set?: {field: value|null}}], dry?}</code> (1 to 200) →
+<code>200</code>, or <code>202</code> when a live entry changed (one build and deploy job) <code>{commit, moved: [{collection, id, from, version,
+url, oldUrl}], linksUpdated: [{collection, id}], redirects: [{from, to}], job}</code>.</p>
+<ul><li>Pages dragged in a tree: a new name (<code>newId</code>, <code>newSlug</code>, as for one move), and fields to set (<code>order</code>, the parent
+or group field the address is made of; never a status key, page code, the title, slug or url field). An entry whose
+address changes moves like one move does: every link to the old address follows and the redirects hook records
+old → new in every locale.</li><li>Pages whose address is a field of their own (<code>fields.url</code>, such as <code>uri</code>) move by <code>parent</code>: the id of the page to
+go under, or <code>&quot;&quot;</code> (or <code>&quot;/&quot;</code>) for the top level; <code>set</code> (such as <code>order</code>) rides along. The server works out the new
+address (the parent's address and the page's last segment; one sent by the browser is never taken), and every
+page of the same collection under the old address follows, keeping its place below it. Each page gets its own
+redirect in each locale (no prefix rule), and the answer's <code>moved</code> lists them all, a page before the pages under
+it. Refused: the home page <code>/</code> (&quot;The home page stays where it is.&quot;), a page under itself or under a page below
+it, a parent that is missing or moves in the same request, a page below listed on its own (&quot;It moves with “X”,
+the page it is under: leave it out.&quot;), and a collection whose addresses come from names (move those by name).</li><li>A page that entries of another collection live under is not moved, by <code>parent</code> or by a new name, until they are:
+&quot;5 posts live under /blog/; move them first.&quot; Its own collection's pages under it follow only with <code>parent</code>.</li><li><code>dry: true</code> makes every check and writes nothing: <code>200 {dry: true, moved: [{collection, id, from, url, oldUrl}],
+linksUpdated: [{collection, id}], links, redirects: [{from, to}]}</code>, the same lists the move itself would give
+(<code>links</code>: how many entries would have a link rewritten). A refusal is the same <code>422</code>. A key a move does not know
+(misspelt, or <code>dry</code> put on one move) is refused: &quot;“dry” is not part of a move.&quot;</li><li>An old address a page comes back to is not taken: the redirect from it goes, and a redirect to an address that
+moves is pointed at the new one, as for one move.</li><li>In such a collection the list (<code>GET collections/:c/entries</code>) gives each entry <code>parent</code>: the id of the page whose
+address is the longest one the entry's address starts with (never the home page), or <code>null</code> at the top level.</li><li>Every move is checked first (the version, the name, the fields, the rights as for a save, the publish right for a
+live entry whose address changes, the site's <code>validate</code>). If any one cannot be made, nothing is written:
+<code>422 {error: &quot;invalid&quot;, problems: [{collection, id, message}]}</code>. A name another entry has, or another move takes
+or leaves, is refused, and so is a new address that another move in the same request leaves (it would make a
+chain): move those one after the other. A new address another entry has (in any collection), or that two moves
+both go to, is refused too.</li><li>One commit (<code>Move N entries</code>), audited as <code>entries.move</code>. A failed build or deploy puts back every file of it that
+nobody changed since, like one move.</li></ul>
+<h3 id="raw-source-import-download">Raw source, import, download</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET collections/:c/entries/:id/source</code></td><td></td><td><code>{source, version, format}</code></td></tr><tr><td><code>PUT collections/:c/entries/:id/source</code></td><td><code>{source, version, message?}</code></td><td><code>{ok, version, changedBlocks, commit}</code> same rules as <code>PUT</code> (md must still parse; json must be valid JSON)</td></tr><tr><td><code>GET collections/:c/entries/:id/download</code></td><td></td><td>the raw file, <code>Content-Disposition: attachment</code></td></tr><tr><td><code>POST collections/:c/import</code></td><td><code>{filename, source}</code></td><td><code>201 Entry</code> a new draft; frontmatter validated (<code>422</code>), id from <code>frontmatter.slug</code> or the file name</td></tr></tbody></table></div>
+<h3 id="publish-schedule-unpublish-status-for-a-static-site">Publish, schedule, unpublish (status for a static site)</h3>
+<p>Status lives in the entry itself, so the site's build decides what is live (see &quot;Site-side contract&quot;):</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">status</th><th scope="col">md frontmatter / json top-level keys</th></tr></thead><tbody><tr><td><code>draft</code></td><td><code>draft: true</code></td></tr><tr><td><code>scheduled</code></td><td>no <code>draft</code>, <code>publishAt</code> in the future</td></tr><tr><td><code>published</code></td><td>no <code>draft</code>, no <code>publishAt</code> or <code>publishAt</code> in the past</td></tr></tbody></table></div>
+<p><strong>Held.</strong> When a scheduled entry falls due and the publish rules stop it (it was edited after it was scheduled), the
+scheduler holds it: <code>draft: true</code> is added and <code>publishAt</code> kept, in a commit by &quot;Markstage scheduler&quot;, so the site's
+build leaves it out; the server records why. The API still says <code>status: 'scheduled'</code>, with <code>held: {dueAt, reasons}</code>
+on the entry and in lists. Every scheduler run checks held entries again: once nothing stops one, that run clears
+<code>draft</code> and <code>publishAt</code> and puts it live (<code>schedule.released</code>); a failed deploy holds it again. Publish (with or
+without <code>anyway</code>), unpublish or a new schedule ends the hold.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>POST collections/:c/entries/:id/publish</code></td><td><code>{version, doc?, frontmatter?, source?, data?, changes?, anyway?}</code></td><td><code>202 {job, version}</code> save (if a body is given) + clear <code>draft</code>/<code>publishAt</code> + commit, then checks, build, deploy. A blocking publish rule is <code>422 blocked {rules}</code>; <code>anyway: true</code> (editor and above, else <code>403</code>) publishes past the publish rules (not the site's own checks), audited as <code>entry.publish.anyway</code> with the rules passed over</td></tr><tr><td><code>POST collections/:c/entries/:id/schedule</code></td><td><code>{version, publishAt}</code></td><td><code>{ok, version, status:'scheduled', commit}</code>; the scheduler builds and deploys at <code>publishAt</code> (no job now)</td></tr><tr><td><code>POST collections/:c/entries/:id/unpublish</code></td><td><code>{version}</code></td><td><code>202 {job, version}</code> sets <code>draft: true</code> + commit, then build, deploy</td></tr><tr><td><code>POST site/publish</code></td><td><code>{}</code></td><td><code>202 {job}</code> rebuild and deploy the whole site (editor+)</td></tr><tr><td><code>GET jobs?limit=</code></td><td></td><td><code>[Job]</code> newest first</td></tr><tr><td><code>GET jobs/:jid?since=&lt;offset&gt;</code></td><td></td><td><code>Job</code> with <code>log</code> from byte <code>since</code> (poll every 1-2 s while <code>queued</code>/<code>running</code>)</td></tr></tbody></table></div>
+<p><code>Job</code> = <code>{id, kind: 'publish'|'unpublish'|'delete'|'schedule'|'site'|'protect'|'unprotect'|'move', status: 'queued'|'running'|'succeeded'|'failed',
+collection, entryId, userId, createdAt, startedAt, finishedAt, steps: [{name: 'commit'|'checks'|'build'|'verify'|'check: &lt;label&gt;'|'deploy'|'purge'|'indexnow'|'revert',
+status, startedAt, finishedAt, exitCode}], log, logOffset, error}</code>.</p>
+<p><strong>After the deploy</strong> (optional, operator config): <code>purge</code> runs the CDN purge command with the changed addresses on
+stdin (<code>{&quot;urls&quot;: [...]}</code>, or <code>{&quot;all&quot;: true}</code> for a whole-site rebuild or a design change), and <code>indexnow</code> sends one
+IndexNow POST with them (<code>{host, key, keyLocation, urlList}</code>; needs the site's <code>siteUrl</code>, skipped for whole-site
+changes). The changed addresses are the entry's page in every locale; a move adds the old address and the pages
+whose links it rewrote; a scheduled run, every due entry. Both steps are <strong>soft</strong>: the site is live already, so a
+failure marks the step <code>warned</code> and the job still succeeds (the log says why; the IndexNow key never goes in it).</p>
+<p><strong>Failure rule</strong> (also in SECURITY.md): jobs run one at a time. If the checks, the build or the deploy fail, the
+deploy step has not completed, so the live site keeps the previous deploy (the site's deploy command must be
+atomic, e.g. upload then switch). The server then makes a <strong>revert commit</strong> that puts the file back to its text
+before the job, and stores the attempted text as the user's <strong>autosave</strong> for that entry, so nothing they wrote is
+lost and the repo again matches what is live. The job ends <code>failed</code> with the log.</p>
+<p>When a failed build or deploy names entry files in its output (e.g. Astro's <code>Location: …/src/content/blog/x.md</code>),
+<code>error</code> says which: <code>The build step failed on posts/x (src/content/blog/x.md). The live site was not changed.</code>
+(up to three entries; otherwise just the step).</p>
+<h3 id="password-protected-pages">Password-protected pages</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>PUT collections/:c/entries/:id/protection</code></td><td><code>{version, password}</code> (4-200 chars)</td><td><code>{ok, version, protected: true, job}</code> (<code>202</code> + rebuild job when the entry is live)</td></tr><tr><td><code>DELETE collections/:c/entries/:id/protection?version=</code></td><td></td><td><code>{ok, version, protected: false, job}</code></td></tr></tbody></table></div>
+<p>Needs the publish right on the entry. The entry gets <code>protected: true</code> (frontmatter or top-level JSON key); the
+password is stored as a scrypt hash in the server's data dir, never in the repo. A new password ends every visitor
+cookie for the old one. The visitor side runs on the site's own host names (<code>protectedPages.hosts</code>), which reach
+only these routes (never the CMS API or editor):</p>
+<ul><li><code>GET &lt;page path&gt;</code>: the page from the private build output (<code>protectedPages.dir</code>) with a valid page cookie, else a
+password form. Both carry <code>X-Robots-Tag: noindex, nofollow</code> and <code>Cache-Control: private, no-store</code>.</li><li><code>POST /markstage/unlock</code> (form fields <code>path</code>, <code>password</code>; Origin must be the site): <code>303</code> back to the page with an
+HttpOnly, Secure, SameSite=Lax cookie scoped to that page's path and signed (HMAC) with a key kept in the data
+dir, valid 12 h. Wrong password: <code>401</code> and the form again; rate limit per address, progressive lockout per
+(page, address), and the page for everyone only after <code>login.accountMaxFailures</code> misses in an hour. A page
+password is 8 to 200 characters.</li><li><code>GET /markstage/page-auth</code> with <code>X-Original-URI</code>: <code>204</code> (valid cookie) or <code>401</code>, for nginx <code>auth_request</code>.</li></ul>
+<h3 id="revisions-git">Revisions (git)</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET collections/:c/entries/:id/revisions</code></td><td><code>[{sha, author: {name, email}, date, message}]</code> newest first (<code>git log --follow</code>)</td></tr><tr><td><code>GET collections/:c/entries/:id/revisions/:sha</code></td><td><code>{sha, source, doc?, data?}</code> the file at that commit</td></tr><tr><td><code>GET collections/:c/entries/:id/compare?from=&lt;ref&gt;&amp;to=&lt;ref&gt;&amp;docs=1</code></td><td><code>{from: Side, to: Side, diff}</code>. A ref is a revision sha, <code>current</code> (default <code>to</code>), <code>live</code> or <code>autosave:&lt;id&gt;</code>. <code>Side</code> = <code>{sha, source, version?, savedAt?, deployed?}</code>; with <code>docs=1</code> also <code>doc</code> and <code>frontmatter</code> (md) or <code>data</code> (json), null when it no longer parses. <code>diff</code> is git's unified diff, or null when a side is not a commit (an autosave) or has no text</td></tr><tr><td><code>POST collections/:c/entries/:id/revisions/:sha/restore</code> <code>{version}</code></td><td><code>{ok, version, commit}</code> writes the old text as a new commit; a published entry needs the publish right</td></tr><tr><td><code>GET collections/:c/entries/:id/autosaves</code></td><td>the caller's own autosave history, newest first: <code>[{id, startedAt, savedAt, baseVersion}]</code></td></tr><tr><td><code>GET collections/:c/entries/:id/autosaves/:aid</code></td><td><code>{id, startedAt, savedAt, baseVersion, source, doc?, data?}</code> the whole text that autosave stands for</td></tr><tr><td><code>POST collections/:c/entries/:id/autosaves/:aid/restore</code> <code>{version}</code></td><td><code>{ok, version, commit}</code> as a revision restore (status and protection kept)</td></tr></tbody></table></div>
+<p><code>:sha</code> is 7 to 40 hex characters and must be a commit that touched this file.</p>
+<ul><li><strong><code>live</code></strong> is the entry at the commit the last successful deploy was built from (recorded by the server after each
+deploy). <code>source: null</code> when the entry was not on the site then (a draft, a future post, not there yet), with
+<code>deployed: false</code> when this server has never deployed.</li><li><strong>Autosave history.</strong> Every autosave (<code>PUT …/autosave</code>) is also kept as a snapshot, one per person, entry and
+5 minutes (a later autosave in the same 5 minutes updates it), the newest 40 per person and entry. Only their
+author can list, read, compare or restore them (anyone else: 404). A move carries them to the new id.</li><li><strong>One block or one field back.</strong> The editor restores a single block (or a settings field, or a JSON field) by
+saving the current document with that one part taken from the old version (<code>PUT …/entries/:id</code> with <code>version</code>
+and <code>doc</code>/<code>frontmatter</code>/<code>changes</code>); the server needs nothing more.</li></ul>
+<h3 id="before-publishing-the-publish-sheet">Before publishing (the publish sheet)</h3>
+<p><code>GET collections/:c/entries/:id/preflight</code> runs on the saved text and answers:</p>
+<pre><code>{ version, status,
+  validate: {ok, issues, unavailable?} | null,          // the site's validate command (null: none set)
+  checks: {ok, results: CheckResult[]},                  // the pre-build checks, as POST …/checks
+  afterBuild: [{id, label, blocking}], verify: boolean,  // what runs on the fresh build during the publish
+  altText: [{src, where}],                               // images with no alt (alt=&quot;&quot; marks decoration and passes)
+  links: [{href, where, problem: 'not-live'|'unknown', sure?, target?: {collection, id, title, status}}],
+  duplicates: {title: [{collection, id, title}], description: [...]},  // other live pages with the same words
+  headings: [{where, message}],                          // a second H1, a skipped level (Markdown entries)
+  synced: [{id, name, path?, canReset, message}],        // copies of synced Library items changed here (a 'synced' warn rule too)
+  page: {type, frame, checks} | null,                    // the page type's checks (docs/API-PAGE-TYPES.md; a 'pageType' rule per failed one)
+  publishRules: {altText, links, duplicates, headings},  // each 'block' | 'warn' | 'off' (operator config)
+  rules: [{rule, level: 'block'|'warn', count, message}], blocked: boolean,
+  addresses: [{locale, path, url}],                      // the page in every locale (url: null without siteUrl)
+  alsoLive: {deployed, entries: [{collection, id, title, by, at, deleted}], media, files} }</code></pre>
+<p><code>alsoLive</code> is what else the build puts live: the published (or deleted) entries saved since the last deploy, newest
+first with who saved them last, plus counts of changed images and other files (net: a file added and removed again
+since the deploy is not counted). Before the first deploy from this
+server it lists the saves made through Markstage. <code>GET collections/:c/entries/:id/addresses</code> answers
+<code>{title, status, addresses}</code> alone, without running any check (the job screen's live card).</p>
+<p><code>altText</code> covers Markdown images, <code>&lt;img&gt;</code> in raw HTML and <code>{src, alt}</code> objects in the fields (covers, JSON images;
+<code>decorative: true</code> passes). <code>links</code> are links inside the site (relative, or under <code>siteUrl</code>) from link marks, raw
+HTML and <code>href</code>/<code>url</code>/<code>link</code>/<code>to</code>/canonical fields: <code>not-live</code> points at a draft, scheduled or protected entry,
+<code>unknown</code> at no entry and no file in the last build (<code>verify.public</code>). Media paths are skipped. The phone check is
+the editor's (the preview agent, below).</p>
+<p><strong>Publish rules</strong> (docs/SEO.md section 3). Config <code>publishRules</code> sets each rule to <code>block</code>, <code>warn</code> or <code>off</code>; the
+defaults are below. A blocking finding makes <code>blocked: true</code>, and <code>POST …/publish</code> and <code>POST …/schedule</code> refuse the
+text with <code>422 blocked</code> (<code>{rules: [...]}</code>, the same verdicts), so nothing goes live around the sheet. A publish that
+sends the fixed text in its body is judged on that text.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Rule</th><th scope="col">Finds</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>altText</code></td><td>an image without a description; decorative images pass (figure class <code>editor.images.decorativeClass</code>, <code>alt=&quot;&quot;</code> in HTML, <code>decorative: true</code>). A cover (an <code>image</code> setting) with no alt written passes when its <code>altFallback</code> key (e.g. the title) is filled, as the site draws it</td><td>block</td></tr><tr><td><code>links</code></td><td>a link to a draft, scheduled or protected entry; a link to no page (only a warning when the server has no build output in <code>verify.public</code> to look in: <code>sure: false</code>)</td><td>block</td></tr><tr><td><code>duplicates</code></td><td>the same search title or description (the settings' <code>seo</code> field, else the title and excerpt) as another published entry, case and spaces ignored</td><td>block</td></tr><tr><td><code>headings</code></td><td>a second H1 in the body, or a level skipped (H2 then H4)</td><td>warn</td></tr></tbody></table></div>
+<h3 id="content-checks">Content checks</h3>
+<p><code>GET checks</code> → <code>[{id, label, blocking, after}]</code> from the site config.
+<code>POST collections/:c/entries/:id/checks</code> <code>{doc?, frontmatter?, source?, data?}</code> (optional unsaved state) →
+<code>{ok: bool, results: [{id, label, blocking, ok, issues: [{severity: 'error'|'warning', message, line?}], output}]}</code>.
+<code>ok</code> is false when a blocking check failed. <code>publish</code> runs the same checks and stops on a blocking failure.
+A check command gets the entry text on stdin and <code>MARKSTAGE_COLLECTION</code>, <code>MARKSTAGE_ENTRY</code>, <code>MARKSTAGE_FILE</code>
+(repo-relative path) in its environment; exit 0 = pass. If it prints JSON <code>{issues: [...]}</code> on stdout, those are
+shown; otherwise the output is.</p>
+<p><strong>Site validation (<code>validate</code>, blocking on every write).</strong> The operator config may name one command the site uses to
+say whether it can build an entry (its content schema: required fields, types, enums). It gets the same stdin and
+environment as a check. The server runs it inside the repo lock on <strong>create, save (doc, frontmatter, data,
+changes), source save, import, duplicate, publish, schedule, unpublish, revision restore and trash restore</strong>, after the server's own guards
+and before anything is written or committed:</p>
+<ul><li>exit 0: the write goes ahead.</li><li>non-zero: <code>422 {error: 'invalid-entry', message, issues: [{severity, message, line?}]}</code>. <code>issues</code> are the
+command's JSON issues, or one issue with its plain output. <code>message</code> starts with the first error. Nothing is
+written, no job is queued; the editor shows the issues and keeps the writer's text (autosave).</li><li>did not finish (timeout, default 30 s) or could not start: <code>503 {error: 'validate-unavailable'}</code>, nothing written.</li></ul>
+<p>So one invalid entry (e.g. a draft missing a required field) can no longer break every later build and the preview.
+Autosaves are not validated (they are private and never built).</p>
+<p><strong>Checks of the fresh build (<code>after: 'build'</code>).</strong> A check with <code>after: 'build'</code> (e.g. <code>{id: 'hreflang', command:
+[&quot;node&quot;, &quot;migration/verify/hreflang_check.mjs&quot;], after: 'build'}</code>) does not run before the commit like the others.
+It runs in every status job (publish, unpublish, protect, delete, move and scheduled publishes) after the build and
+before the deploy. Each changed entry that still exists gets the usual stdin and environment, plus:</p>
+<ul><li><code>MARKSTAGE_URLS</code>: the entry's address in every locale, space-separated (<code>/x/ /en-us/x/</code>);</li><li><code>MARKSTAGE_DIST</code>: the build's public folder (<code>verify.public</code>).
+A blocking one that fails fails the job. Its step is <code>check: &lt;label&gt;</code> and the job error names the entry. The
+change is reverted, and the live site is not touched.</li></ul>
+<p>A structured-data check is one of these too: <code>{id: 'schema', label: 'Structured data', command: [&quot;node&quot;,
+&quot;migration/verify/schema_check.mjs&quot;], after: 'build'}</code> reads each of the entry's built pages (<code>MARKSTAGE_URLS</code> under
+<code>MARKSTAGE_DIST</code>) and prints <code>{issues: [{severity, message}]}</code>: the article node's headline and dates against what
+the page shows, an image that is in the build, the required properties of each type, every <code>@id</code> resolving, no
+self-made ratings. Run on its own (<code>node migration/verify/schema_check.mjs dist</code>) it checks every built page.</p>
+<p><strong>Every locale copy where its status says (<code>verify</code>).</strong> With <code>verify: {public: 'dist', private: 'dist-private'}</code> in
+the operator config, the same status jobs check the fresh build before the deploy, in a <code>verify</code> step. A site emits
+all locale copies from one source, so the check covers every locale's path (core's <code>localePath</code>, <code>/x/</code> and
+<code>/en-us/x/</code>):</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">The entry is</th><th scope="col">The build must have</th></tr></thead><tbody><tr><td>published</td><td>a page in <code>public</code> for every locale, and none in <code>private</code></td></tr><tr><td>protected</td><td>a page in <code>private</code> for every locale (when <code>private</code> is set), and none in <code>public</code> (a redirect stub is fine)</td></tr><tr><td>draft, scheduled, unpublished or deleted</td><td>no page in either (a redirect stub is fine)</td></tr><tr><td>moved: the old address</td><td>no page (a <code>&lt;meta http-equiv=&quot;refresh&quot;&gt;</code> redirect stub is fine)</td></tr></tbody></table></div>
+<p>The log has one line per entry, <code>ok posts/x: public at /blog/x/, /en-us/blog/x/</code> or <code>FAIL posts/x: /en-us/blog/x/ is
+missing from the build</code>. A failure fails the job before the deploy, and the change is reverted.</p>
+<h3 id="find-and-replace-bulk-actions-editor-and-above">Find and replace, bulk actions (editor and above)</h3>
+<p>Both change many entries in <strong>one commit</strong>. Each change is checked like a save of that entry by this user (rights,
+status keys, own author, raw HTML, safe links, the site's <code>validate</code>); one that fails is left out with the reason,
+and so is one that changed since the preview (its <code>version</code>). When a live entry changed (or was unpublished or
+trashed), one job builds, verifies every locale and deploys; if it fails, the entries nobody touched since are put
+back (and trashed ones taken out of the trash) in a revert commit. A JSON entry's <code>modified</code> follows the change, as
+an editor save does.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Does</th></tr></thead><tbody><tr><td><code>GET /site/find?q=&amp;with=&amp;case=1&amp;whole=1&amp;keep=1&amp;collection=</code></td><td>Every entry containing <code>q</code> (plain text, never a pattern; at most 200 characters): <code>{total, more, entries: [{collection, id, title, status, url, version, count, kinds: {&lt;kind&gt;: n}, samples: [{line, where: &quot;fields&quot;|&quot;text&quot;, kind, field, before, match, after, read?, to?}]}]}</code>, up to 50 samples and 500 entries. <code>kind</code> is where the match sits: <code>text</code> (plain words, in a field's value or the body), <code>link</code> (a link address, an <code>href</code>, a written-out URL, a front matter value that is an address), <code>image</code> (an image file name: <code>![](…)</code>, <code>src</code>, a value ending in an image extension), <code>html</code> (inside a tag or comment), <code>code</code> (fenced or inline), <code>key</code> (a field's name); <code>field</code> names where it is (&quot;Title&quot;, &quot;Body under heading “Pricing”&quot;, &quot;Hero › Heading&quot; in JSON) and <code>before</code>/<code>after</code> are about eight words within its paragraph or field, as written. A <code>text</code> match also has <code>read</code>, its context as a reader sees it: a list of words (<code>&quot;…&quot;</code>), the match (<code>{match}</code>) and links (<code>{link: &lt;address&gt;, label: [words or {match}]}</code>), with emphasis, code marks, tags, entities and escapes gone and an image as its alt text; it is left out when the match runs into a link's markup. The other groups are shown as written only. Case-blind unless <code>case=1</code>; <code>whole=1</code> matches whole words in any script. <code>keep=1</code> (only without <code>case</code>) keeps the case of each match: the new text is written in capitals where the match was all capitals, small where it was all small, with a capital first where it was so, and as typed where its case is mixed. With <code>with</code> (empty is fine: remove the text), each sample has <code>to</code>, its new text, and each entry also says <code>problem</code> (null, or why it would be left out when only plain text is replaced) and `problems: {: reason</td><td>null}` for each other group it has, as if that group were ticked too. In a JSON entry the text is matched and written as JSON writes it (quotes and backslashes escaped)</td></tr><tr><td><code>POST /site/replace {q, with, case, whole, keep, entries: [{collection, id, version, kinds?}]}</code></td><td>Replace in those entries, only in the places of the groups in <code>kinds</code> (default <code>[&quot;text&quot;]</code>: an address, file name, tag, code or field name changes only when its group is named on purpose; an unknown group is a <code>400</code>): <code>{commit, changed: [{collection, id, title, status, count, kinds}], skipped: [{collection, id, title, reason}], job}</code>. The new text is literal (<code>$&amp;</code> stays <code>$&amp;</code>). Audited as <code>site.replace</code>, with <code>keepCase</code> and the groups beyond plain text per entry. Screen: <code>#/replace?find=&amp;with=&amp;case=1&amp;words=1&amp;keep=0&amp;collection=&amp;flip=</code> (Keep the case is on unless <code>keep=0</code>)</td></tr><tr><td><code>POST /site/undo {commit}</code></td><td>The Undo on the toast after a find and replace or an image replaced everywhere: each entry of that commit goes back to its text before it, in one new commit <code>Undo: &lt;subject&gt;</code>, and a live one is rebuilt and deployed (a failed deploy puts the texts back): <code>{commit, undone: [{collection, id, title}], skipped: [{collection, id, title, reason}], job}</code>. An entry changed or deleted since is left as it is and named in <code>skipped</code>. Only commits audited as <code>site.replace</code>, <code>media.replace</code>, <code>media.delete.many</code>, or <code>entries.bulk</code> for a field change (<code>set</code>, <code>add</code>, <code>remove</code>, <code>rename</code>; never an unpublish or the trash) (<code>404</code> otherwise). The entries come from the commit itself, so a change to hundreds of entries undoes in full, once each (<code>409 already-undone</code>); editors and above, and for a delete of many media files also the person who deleted them. For that delete the answer has <code>restored: [{id, filename}]</code>: each file comes back from the commit before with its library row (alt text, uploader, credit), except one whose place has a file again (named in <code>skipped</code> with <code>collection: &quot;media&quot;</code>); no build. Audited as <code>site.undo</code></td></tr><tr><td><code>GET /site/bulk/fields?collection=</code></td><td>The top-level fields the entries use, most used first: <code>{fields: [{name, list, kind: &quot;list&quot;|&quot;text&quot;|&quot;number&quot;|&quot;boolean&quot;, entries, values: [{value, entries}]}]}</code> (up to 100 values each). Never the status keys, page code, title, slug or url field</td></tr><tr><td><code>POST /site/bulk/plan {action, field?, value?, entries: [{collection, id}]}</code></td><td>The summary, nothing written: per entry <code>{collection, id, title, status, version, from, to, problem?}</code></td></tr><tr><td><code>POST /site/bulk {action, field?, value?, from?, entries: [{collection, id, version}]}</code></td><td>Apply: <code>{commit, changed, skipped, job}</code> (rows as in the plan; a <code>trash</code> row also has its <code>trashId</code>, so a list's Undo can <code>POST /trash/:tid/restore</code> each one). At most 200 entries (1000 for <code>rename</code>). Audited as <code>entries.bulk</code>. A change to a field (<code>set</code>, <code>add</code>, <code>remove</code>, <code>rename</code>) has Undo: <code>POST /site/undo</code></td></tr><tr><td><code>GET /site/taxonomy?field=&amp;collection=</code></td><td>Categories, tags, authors: every value the field has across the entries (all of them, not the top 100), most used first: <code>{field, list, values: [{value, entries, live, collections}]}</code>. Collections where the field is one bulk changes leave alone have none</td></tr><tr><td><code>POST /site/taxonomy/plan {field, from: [value, …], to, collection?}</code></td><td>The bulk plan of a <code>rename</code> for every entry that has one of <code>from</code> (<code>to: null</code> takes them out). Apply it with <code>POST /site/bulk {action: &quot;rename&quot;, field, from, value: to, entries}</code> and the versions the plan gave. Screen: <code>#/taxonomy?field=&amp;q=&amp;item=&amp;action=rename|delete&amp;to=&amp;out=1</code></td></tr></tbody></table></div>
+<p>Bulk actions: <code>set</code> (a field to text, a number, yes/no, a list of those, or <code>null</code> to clear it), <code>add</code> and <code>remove</code>
+(a value in a list field such as tags; a field that is not a list is left out), <code>rename</code> (<code>from</code>: 1 to 20 values;
+each becomes <code>value</code> wherever it is, in a list or as the field's value, a list keeping each value once, so renaming
+to a value already used merges them; <code>value: null</code> takes them out: a rename, a merge, a delete with reassignment or
+without, commit <code>&lt;field&gt;: &lt;from&gt; becomes &lt;value&gt; in N entries</code>), <code>unpublish</code> (drafts are left out),
+<code>trash</code> (each text kept in the trash, restorable). A <code>400</code> names a bad action, field or value; authors and
+contributors get <code>403</code>.</p>
+<h3 id="redirects-editor-and-above">Redirects (editor and above)</h3>
+<p>The site's old → new addresses. Moves add them on their own; these routes list them with what is wrong, add, change,
+remove and test them. The site keeps them in its own format (a JSON map, <code>_redirects</code>, a framework config) and the
+server only talks to its hook. Each change is one commit (audited as <code>redirects.add</code> or <code>redirects.remove</code>), then one
+job builds, checks that the old address is not a page in the build, and deploys; if the job fails, the hook's files
+go back (those nobody changed since) in a revert commit.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Does</th></tr></thead><tbody><tr><td><code>GET /site/redirects</code></td><td><code>{on, canList, message, more, siteUrl, redirects: [{from, to, status, flags: [{kind, text, trail?, fix?}]}]}</code>. <code>on: false</code>: the site has no hook. <code>canList: false</code>: the hook only adds (moves still record); <code>message</code> says what it needs. At most 20,000 rows (<code>more</code>)</td></tr><tr><td><code>POST /site/redirects {from, to, was?}</code></td><td>Add one, or change the one from <code>from</code> (its new address). <code>was</code>: the old address being renamed (removed in the same commit). <code>{commit, job, redirect}</code> with the new row's flags (a chain is allowed and flagged). <code>422</code> with <code>fields</code>: not a path, the same address, a loop (<code>That makes a loop: /a/ → /b/ → /a/.</code>), or a page at <code>from</code> (a live entry or a page in the last build), since the redirect would never run</td></tr><tr><td><code>POST /site/redirects/remove {from: [...]}</code></td><td>Remove these (1 to 500): <code>{commit, job, removed}</code></td></tr><tr><td><code>POST /site/redirects/test {from}</code></td><td><code>{from, build: {kind: &quot;page&quot;|&quot;redirect&quot;|null, to} | null, live: {hops: [{url, status, location, via: &quot;http&quot;|&quot;page&quot;}], verdict: &quot;ok&quot;|&quot;page&quot;|&quot;error&quot;|&quot;loop&quot;|&quot;away&quot;|&quot;long&quot;, status} | {error}}</code>. What the last build has at <code>from</code>, then the live site (<code>siteUrl</code>) asked hop by hop, up to 10, following HTTP redirects and meta-refresh pages. A hop to another site is named and never asked. 30 tests a minute per person (<code>429</code>)</td></tr></tbody></table></div>
+<p>Flags: <code>loop</code> (following them comes back, or one points at itself), <code>chain</code> (A → B → C; <code>fix</code> is C), <code>shadowed</code> (a
+page is at the old address, so it never runs), <code>missing</code> (the end is on this site but not a page in the last build),
+<code>duplicate</code> (the same address twice, say <code>/a</code> and <code>/a/</code>), <code>bad</code> (not an address). Addresses compare by path: no query
+or fragment, one trailing slash, and a full URL on <code>siteUrl</code>'s origin is its path. <code>from</code> is a path only (one leading
+<code>/</code>, no <code>?</code>, <code>#</code>, spaces, backslashes or <code>.</code>/<code>..</code> parts); <code>to</code> is a path or a full <code>http(s)</code> URL without a user name.</p>
+<p><strong>The redirects hook.</strong> The site config's <code>redirects: { command: [&quot;node&quot;, &quot;scripts/redirects.mjs&quot;], timeoutSeconds? }</code>
+(argv, no shell; 60 s by default) runs in the site repo with the build's environment and gets one JSON line on stdin:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Input</th><th scope="col">The hook</th></tr></thead><tbody><tr><td><code>{&quot;redirects&quot;: [{from, to}, …]}</code></td><td>adds these, or changes the new address of a <code>from</code> already there; exits 0</td></tr><tr><td><code>{&quot;action&quot;: &quot;list&quot;}</code></td><td>prints <code>{&quot;redirects&quot;: [{from, to, status?}]}</code> on stdout (the last line, or all of it) and changes nothing; exits 0</td></tr><tr><td><code>{&quot;action&quot;: &quot;remove&quot;, &quot;from&quot;: [...]}</code></td><td>removes the redirects from these addresses; exits 0</td></tr></tbody></table></div>
+<p>A hook written before <code>list</code> and <code>remove</code> (only the first form) keeps working for moves. The files a hook changes
+are found with git and must be inside the repo. A non-zero exit undoes them and answers <code>502 redirects-failed</code> with
+the end of its output. A hook that writes files when asked to list has them undone and counts as unable to list.</p>
+<h3 id="presence-and-the-soft-lock">Presence and the soft lock</h3>
+<p>Who has an entry open, and who is editing it, so two people see each other before a save runs into a <code>409</code>. Each
+editor tab sends a heartbeat about every 20 s with its own random <code>tab</code> id (6 to 40 of <code>A-Za-z0-9_-</code>); a tab not
+heard from for 60 s is gone. The first tab in <code>editing</code> mode holds the entry's lock. Another tab asking to edit is
+answered <code>mode: &quot;viewing&quot;</code> with who holds it, until the lock is free or it takes over (<code>take: true</code>); the old holder
+hears <code>takenOver: {by, at}</code> once, on its next heartbeat. Someone who may not edit the entry is always a viewer
+(<code>canEdit: false</code>). The lock is advice for the editor: saves still go through the version check, so no save is
+refused because of it. It lives in memory; after a restart every open tab claims again on its next heartbeat.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Does</th></tr></thead><tbody><tr><td><code>POST /collections/:c/entries/:id/presence {tab, mode: &quot;viewing&quot;|&quot;editing&quot;, take?}</code></td><td>Heartbeat: <code>{mode, canEdit, lock: {userId, name, since, you, sameUser} | null, people: [{userId, name, mode, since}], takenOver}</code>. <code>people</code> is everyone else (one row per person, editing first); <code>sameUser</code> is you in another tab. A take-over is audited (<code>entry.takeover</code>)</td></tr><tr><td><code>DELETE /collections/:c/entries/:id/presence?tab=</code></td><td>This tab closed the entry (frees its lock)</td></tr><tr><td><code>GET /presence</code></td><td>Every entry open now: <code>{entries: [{collection, id, editing: {userId, name, since, you} | null, open}]}</code> (<code>open</code> = people), for lists and the publish sheet (&quot;Edna is editing this now&quot;)</td></tr></tbody></table></div>
+<h2 id="media">Media</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET media?q=&amp;unused=1&amp;page=</code></td><td></td><td>list of <code>Media</code> (a yes flag in a query is <code>1</code>, <code>true</code> or <code>yes</code>, here and in <code>users?brief=</code>, <code>compare?docs=</code>)</td></tr><tr><td><code>POST media?filename=&lt;name&gt;[&amp;from=&lt;mid&gt;][&amp;alt=]</code></td><td>the raw file bytes (<code>Content-Type: application/octet-stream</code>)</td><td><code>201 Media</code>. With <code>from</code>, an edit of that image (crop, rotate, annotate in the editor): a new file named <code>&lt;original&gt;-edited.&lt;ext&gt;</code>, the original kept as it is, the original's alt text and credit carried over, audited as <code>media.edit</code>; <code>404</code> when the original is gone</td></tr><tr><td><code>GET media/:mid</code></td><td></td><td><code>Media</code> with <code>usedBy: [{collection, id, title}]</code> and <code>derivatives: [{id, filename}]</code> (its edits). An entry uses a file when its text names the file's path under the media folder as a whole path piece (<code>/uploads/2026/01/photo.jpg</code>, <code>photo.jpg</code>); kept per entry version in the <code>media_uses</code> table, so <code>usedBy</code> and <code>unused=1</code> are lookups, not a scan of every text</td></tr><tr><td><code>GET media/:mid/file</code></td><td></td><td>the image bytes (for the library grid)</td></tr><tr><td><code>PATCH media/:mid</code></td><td><code>{alt}</code></td><td><code>Media</code></td></tr><tr><td><code>DELETE media/:mid</code></td><td></td><td><code>{ok}</code>; <code>409 {usedBy}</code> if any entry still uses it</td></tr><tr><td><code>POST media/delete</code></td><td><code>{ids: [mid, …]}</code> (1 to 200)</td><td><code>{commit, deleted: [{id, filename}], skipped: [{id, filename, reason, usedBy?}]}</code>: every file nothing uses that this person may delete (editors any, authors their own) goes in one commit <code>Delete N unused media files</code>; a file still used (with its <code>usedBy</code>), not theirs, or already gone is left and named. <code>commit</code> is <code>null</code> when nothing went. Audited as <code>media.delete.many</code> <code>{commit, count, skipped}</code>. Undo: <code>POST /site/undo</code> brings the files and their library rows back. The library's &quot;Not used&quot; view: tick files (<code>sel=&lt;mid,…&gt;</code> in the URL), Delete N files</td></tr><tr><td><code>GET media/:mid/replace?with=&lt;mid&gt;</code></td><td></td><td><code>{entries: [{collection, id, title, status, count, url}]}</code>: what a replace would change (editors and above)</td></tr><tr><td><code>POST media/:mid/replace</code></td><td><code>{with}</code></td><td><code>{commit, entries, job}</code>: every entry naming the file gets the other one, in one commit (whole paths only, never part of a longer file name); the old file stays. When a live entry changed, <code>job</code> builds and deploys it, and a failed deploy puts the texts back. Audited as <code>media.replace</code>. Server only: the dev API has no such route, so the library hides &quot;Replace everywhere&quot; in dev mode. Undo: <code>POST /site/undo</code></td></tr></tbody></table></div>
+<p><code>Media</code> = <code>{id, filename, path, url, type, width, height, bytes, alt, uploadedBy, uploadedAt, derivedFrom, credit}</code>
+(<code>derivedFrom</code>: the media id it was edited from; <code>credit</code>: a stock photo's <code>{provider, label, id, author, authorUrl,
+sourceUrl}</code>). <code>path</code> is the
+repo-relative file (<code>src/assets/uploads/2026/10/name.webp</code>), <code>url</code> is what to put in content (from the site config).
+Uploads: JPEG, PNG, GIF, WebP and AVIF images, and PDF documents, by content sniffing (the extension and
+<code>Content-Type</code> are ignored). SVG, HTML and everything else is <code>415</code>, with what can be uploaded. An iPhone photo
+(HEIC) becomes a JPEG when the server's image library can read HEIC (sharp built with libheif and an HEVC decoder;
+the prebuilt sharp cannot) or through <code>media.heicCommand</code> (e.g. libheif's <code>heif-dec {in} {out}</code>, docs/DEPLOY.md),
+else <code>415</code> with how to send a JPEG instead. A PDF is stored as it is (never
+re-encoded), served by <code>GET media/:mid/file</code> as an attachment, and has no width, height or alt text;
+<code>media.documents: false</code> refuses PDFs. Default limit 10 MB: <code>413</code> says the file's size and the limit. Raster images are decoded and re-encoded
+(metadata stripped, longest side capped at 2560 px). The file is committed. Alt text is required before use in
+content (the editor enforces it; the library stores a default alt).</p>
+<h3 id="importing-media">Importing media</h3>
+<p>Many files at once, each through the upload pipeline above (sniffed, never SVG, HEIC read, re-encoded, under
+<code>YYYY/MM/</code>), all of them in one commit by the person importing, audited as <code>media.import</code> (each file, and the commit
+with its files). Each is a dry run first. Authors and up (<code>media.import</code>).</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Body</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>POST media/import/urls</code></td><td><code>{urls: [...], dry?}</code> (1 to 50 picture addresses)</td><td>dry: <code>{items: [{url, problem?}]}</code> (each address checked, nothing fetched: not public, not http(s), a repeat); else <code>{job: {id}, items}</code>: a <code>media-import</code> job fetches each good address through the guard (docs/SECURITY.md &quot;Fetching from the web&quot;; at most the upload size, 15 s each) and commits <code>Import N media files from the web</code>. The job's log names each file or why it was left out</td></tr><tr><td><code>POST media/import/zip?filename=&amp;dry=1</code></td><td>the .zip bytes (at most <code>media.importMaxBytes</code>, 64 MB by default, 500 files; streamed to <code>&lt;dataDir&gt;/tmp</code> and read in place, never whole in memory; <code>409 busy</code> while another media or Library import runs)</td><td>dry: <code>{items: [{name, bytes, problem?}]}</code> (folders, hidden files and <code>__MACOSX</code> left out; encrypted, unusual packing or a file over the upload size named); else <code>{job: {id}, items}</code>: commits <code>Import N media files from &lt;name&gt;</code></td></tr></tbody></table></div>
+<p>A file that is not an image or document the site takes is left out and named in the log; the job fails only when
+nothing could be imported. On the server, <code>markstage-server media import &lt;folder | file.zip | addresses.txt&gt; [--dry]
+--as &lt;email&gt;</code> does the same without a job (a folder's sub-folders too; a .txt file is one address per line).</p>
+<h3 id="indexing-existing-files">Indexing existing files</h3>
+<p>A site that had its pictures before Markstage has them under the media folder (config <code>media.dir</code>) with no row in
+the library, so Images &amp; files shows none. <code>POST media/index</code> <code>{dry?}</code> (owner and administrators, <code>media.index</code>)
+walks that folder (sub-folders too, hidden files left out) and registers every file the library does not list yet,
+in place: nothing is copied, moved or committed. A row gets what the file tells: the type from its bytes (never the
+name), its size, an image's width and height from the header, the file's modified time as <code>uploadedAt</code>; no uploader,
+no alt text. A file already listed, one of a kind the site does not take (SVG, text, unknown bytes) or a link that
+leaves the repo is left out and named. Answer: <code>{found, added: [{path, type, bytes, width, height, used}], known,
+skipped: [{path, reason}], dry}</code> (<code>used</code>: how many entries name the file, found as for an upload). Safe to run again.
+Audited as <code>media.index</code> when it adds. On the server, <code>markstage-server media index [--dry]</code> does the same. The empty
+Images &amp; files screen offers it to an owner or administrator (&quot;Find the site's existing files&quot;).</p>
+<h3 id="stock-photos">Stock photos</h3>
+<p>When the server config has <code>stock</code> (Unsplash or Pexels, with the site's own key), the media library can search it.
+The key stays on the server: the browser never talks to the provider.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET stock</code></td><td><code>{enabled: false}</code> or <code>{enabled: true, provider, label}</code></td></tr><tr><td><code>GET stock/search?q=&amp;page=</code></td><td><code>{provider, label, page, perPage, total, items: [{id, width, height, alt, author, authorUrl, sourceUrl, thumb}]}</code>; <code>thumb</code> is an API path (below). <code>422</code> empty or long <code>q</code>; <code>404</code> not set up; <code>502</code> the provider failed or refused the key; <code>429</code> its hourly limit</td></tr><tr><td><code>GET stock/thumb/:token</code></td><td>a thumbnail from a recent search, fetched by the server (the editor's CSP shows images from itself only)</td></tr><tr><td><code>POST stock/import</code> <code>{id, alt?}</code></td><td><code>201 Media</code>: the server asks the provider for that photo by id, downloads it from the provider's image host only (never a URL from the browser), and stores it like an upload with its <code>credit</code> (alt: the provider's description unless given). Unsplash's download count is sent, as their guidelines ask. Audited as <code>media.stock</code></td></tr></tbody></table></div>
+<p>Roles: anyone who may upload. Config: <code>stock: {provider: 'unsplash'|'pexels', keyFile}</code> (or <code>MARKSTAGE_STOCK_KEY</code>, or
+<code>key</code> in config.json, which is in the data dir, outside the repo). <code>apiBase</code> and <code>imageHosts</code> exist for a mirror or a
+test double; plain http only on loopback in development.</p>
+<h2 id="design-code">Design &amp; Code</h2>
+<p>The site's stylesheets, design tokens, scripts and injected code (ARCHITECTURE.md &quot;Design &amp; Code&quot;), declared in
+<code>markstage.config</code>:</p>
+<pre data-lang="js"><code class="language-js">design: { tokens: 'src/styles/tokens.css', customCss: 'src/styles/custom.css',
+          files: [{ path: 'src/styles/global.css', label: 'Site styles', scope: 'site' }],
+          scripts: [{ path: 'src/scripts/menu.js', label: 'Menu' }],
+          inject: { head: 'src/inject/head.html', foot: 'src/inject/foot.html' } }</code></pre>
+<p>Paths are checked at start (inside the repo, not <code>.git</code>, no symlink, a known kind; <code>customCss</code> and <code>inject</code> may not
+exist yet). Components (<code>.astro</code>, <code>.tsx</code>, <code>.jsx</code>, <code>.ts</code>, <code>.vue</code>, <code>.svelte</code>) are listed read-only. Everyone signed in
+may read; writing needs owner or administrator (<code>design.write</code>, <code>code.inject</code>), checked on the server and audited.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Method + path</th><th scope="col">Answer</th></tr></thead><tbody><tr><td><code>GET design</code></td><td><code>{enabled, canEdit, order: [fid], files: [{id, path, label, kind, lang, scope, editable, exists}]}</code>. <code>kind</code>: <code>tokens</code>, <code>file</code>, <code>custom</code>, <code>script</code>, <code>inject-head</code>, <code>inject-foot</code>; <code>lang</code>: <code>css</code>, <code>js</code>, <code>html</code>, <code>astro</code>, …; <code>order</code> = the stylesheets in load order (the last wins a tie; custom CSS is last)</td></tr><tr><td><code>GET design/files/:fid</code></td><td><code>{id, path, label, kind, lang, source, version, exists, editable}</code>; <code>version</code> = sha1 of the text, <code>null</code> while the file does not exist</td></tr><tr><td><code>PUT design/files/:fid</code> <code>{version, source, message?}</code></td><td><code>202 {ok, version, commit, job}</code> (<code>200</code> with <code>job: null</code> when nothing changed). <code>409 {version}</code> stale; <code>422 {issues: [{line, message}]}</code> refused before writing; <code>403</code> below administrator or a read-only file</td></tr><tr><td><code>GET</code> / <code>PUT</code> / <code>DELETE design/files/:fid/draft</code> <code>{baseVersion, source}</code></td><td><code>{draft: {baseVersion, text, savedAt} | null}</code>: the person's own unsaved text (private; half-typed CSS is fine)</td></tr><tr><td><code>GET design/files/:fid/revisions</code>, <code>…/revisions/:sha</code></td><td>as an entry's revisions</td></tr><tr><td><code>GET design/files/:fid/compare?from=&lt;ref&gt;&amp;to=&lt;ref&gt;</code></td><td><code>{from, to, diff}</code>; a ref is a sha, <code>current</code> (default <code>to</code>), <code>live</code> (the last deployed commit) or <code>draft</code></td></tr><tr><td><code>POST design/files/:fid/revisions/:sha/restore</code> <code>{version}</code></td><td>as <code>PUT</code>, audited <code>design.restore</code></td></tr><tr><td><code>GET design/tokens</code></td><td><code>{id, path, version, editable, issues, tokens: [{name, value, type, selector, context, group, line}]}</code>. <code>type</code>: <code>color</code>, <code>font</code>, <code>size</code>, <code>space</code>, <code>other</code> (from the value and the name); <code>selector</code> the rule (<code>:root</code>), <code>context</code> the at-rules around it (<code>@media (prefers-color-scheme: dark)</code>) or <code>''</code>; <code>group</code> the comment heading above it</td></tr><tr><td><code>PUT design/tokens</code> <code>{version, values: [{name, selector, context?, value}]}</code></td><td>as <code>PUT design/files</code>: only those values change, every other byte of the file is kept. <code>422 {errors}</code> for an unknown token or a value with <code>;</code>, <code>{</code>, <code>}</code>, <code>\</code>, <code>&lt;/</code>, a comment, unbalanced brackets or quotes, or a <code>url()</code> that is not a site path or https</td></tr><tr><td><code>PUT collections/:c/entries/:id/code-injection</code> <code>{version, head, foot}</code></td><td><code>{ok, version, commit, job}</code> (<code>202</code> with a build when the page is live). Sets <code>codeInjection: {head, foot}</code> in the frontmatter (or JSON); empty both = removed. At most 64 KB each. Audited <code>code.inject</code></td></tr></tbody></table></div>
+<ul><li><strong>Every code save is a job</strong> (<code>kind: 'design'</code>, or <code>code-injection</code> for a page): checks before writing (a
+stylesheet must not break the ones after it: unclosed blocks, comments or strings, <code>&lt;/style</code>; size: 1 MB CSS,
+256 KB scripts, 64 KB injected code), commit, build, the site's post-build checks (<code>checks</code> with <code>after: 'build'</code>,
+run once for the site with <code>MARKSTAGE_SCOPE=site</code> and <code>MARKSTAGE_FILE=&lt;path&gt;</code>), deploy. If a step fails, the live
+site keeps its previous deploy, the file is reverted in a new commit, and the attempted text becomes the person's
+draft.</li><li><strong>A page's code injection</strong> changes only for owner/administrator, on every path: a doc, frontmatter or source save,
+a new entry, a restore and the preview state are refused (<code>403</code>) when they change it; saves that leave it as it is
+pass, so editors keep editing those pages. An editor's duplicate leaves it out. A change by another route is
+audited <code>code.inject</code> too.</li><li><strong>Live preview of CSS.</strong> <code>PUT preview/:c/:id/state</code> also takes <code>css: {fid: text}</code> (owner/administrator, stylesheets
+only, size-checked), alone or with the unsaved entry. The preview clone shows those files with that text, so the
+site's dev server swaps the styles in the frame (Vite CSS HMR). An autosave keeps them; <code>DELETE …/state</code> drops them.
+Injected code never runs in the CMS: only on the preview origin and the built site.</li></ul>
+<h2 id="library-templates-sections-snippets">Library (templates, sections, snippets)</h2>
+<p>Page templates, sections and snippets to use again, shared ones as files in the site repo; the routes from before
+(<code>snippets</code>, <code>templates</code>) still answer: docs/API-LIBRARY.md.</p>
+<h2 id="authors">Authors</h2>
+<p><code>GET/POST authors</code>, <code>GET/PUT/DELETE authors/:slug</code> and <code>POST authors/:slug/rename</code>: the site's authors as JSON files
+in its content (config <code>authors</code>), each change one commit; an entry save may not add an author the site does not
+have (<code>422 unknown-author</code>); an author with posts is deleted or renamed only with their posts given to another or
+moved with the new slug, in the same commit: docs/API-AUTHORS.md.</p>
+<h2 id="topics-and-links">Topics and links</h2>
+<p><code>GET/POST topics</code>, <code>GET/PUT/DELETE topics/:id</code>, <code>POST topics/place</code>, and <code>GET links/pages|health|suggest|inbox|skips</code>, <code>POST links/accept|skip|fix</code>, <code>DELETE links/skips/:id</code>: the site's topics as files (config <code>topics</code>), the link map of every page's text, Health with one-click fixes, and link suggestions both ways, where Accept links the words on the other page as a normal save (one commit, Undo); the preflight has <code>topicLinks</code> and a page type may check links (<code>links: 'pillar'</code>): docs/API-LINKS.md.</p>
+<h2 id="page-frames-and-types">Page frames and types</h2>
+<p>A page's frame (full width, reading, plain) and its page type (config <code>frames</code>, <code>pageTypes</code>): a save that sets one
+the site does not have is <code>422 invalid-page</code>; an existing page's type changes for editors and above (<code>403</code>); a save
+is held to the locks of its type before and after it; <code>POST collections/:c/entries</code> takes <code>pageType</code> (the type's
+template, the key set); <code>GET collections/:c/entries/:id/page-checks</code> answers the type, the frame and the type's
+checks, which the preflight also gives (<code>page</code>, and a <code>pageType</code> rule per failed check): docs/API-PAGE-TYPES.md.</p>
+<h2 id="audit-log-owner-administrator">Audit log (owner, administrator)</h2>
+<p><code>GET audit?user=&lt;uid&gt;&amp;action=&lt;prefix&gt;&amp;from=&amp;to=&amp;before=&lt;auditId&gt;&amp;limit=</code> →
+<code>{items: [{id, at, userId, userName, ip, userAgent, action, target, ok, detail}], next}</code>.
+Actions: <code>auth.login</code>, <code>auth.login.fail</code>, <code>auth.logout</code>, <code>auth.lockout</code>, <code>auth.2fa.*</code>, <code>auth.password</code>, <code>auth.sso</code>, <code>auth.sso.fail|link|unlink</code>,
+<code>auth.setup</code>, <code>user.create|update|reset|delete|revoke</code>, <code>entry.create|save|source|delete|restore|import|duplicate</code>,
+<code>entry.publish|schedule|unpublish</code>, <code>entry.lock|unlock</code>, <code>site.locks</code>, <code>revision.restore</code>, <code>media.upload|update|delete|import</code>, <code>library.*</code>, <code>author.create|update|archive|rename|delete</code>,
+<code>job.succeeded|failed</code>, <code>site.publish</code>, <code>site.rollback</code>, <code>schedule.held|released|late|giveup</code>, <code>entry.publish.anyway</code>, <code>inbox.change|note|delete|export|import</code>, <code>forms.retention</code>, <code>forms.reply</code>, <code>site.alerts</code>, <code>me.alerts</code>, <code>security.origin|csrf|host</code> (refused requests). Append-only; there is no
+API to edit or delete it.</p>
+<h3 id="backups-owner-administrator">Backups (owner, administrator)</h3>
+<p><code>POST /site/backup</code> backs up now: <code>202 {job}</code> (a job of kind <code>backup</code>, steps <code>backup</code> and <code>ship</code>; audited as
+<code>site.backup</code>); <code>409 not-set-up</code> when the config has no <code>backup</code>. <code>GET /site/health</code> has <code>backup</code>: <code>{on: false}</code>, or
+<code>{on: true, everyHours, keep, ships, due, late, last: {at, ok, name, bytes, commit, shipped, failedAt?, error?} |
+null}</code>. A failed backup is told to the administrators (notice <code>backup.failed</code>, a safety alert, &quot;The backup did not finish. …&quot;). Setup
+and the restore drill: docs/DEPLOY.md, Backups.</p>
+<h3 id="roll-back-a-release">Roll back a release</h3>
+<p><code>POST site/rollback</code> (owner, administrator) → <code>202 {job}</code>: a job of kind <code>rollback</code> that runs the site's
+<code>commands.rollback</code> (e.g. <code>markstage-deploy rollback --to /srv/site</code>). The release before goes back live; the
+content in the repo is untouched, so the changes saved since go live again with the next publish (the publish
+sheet's <code>alsoLive</code> lists them: <code>deploy.head</code> steps back to the commit live before). Audited (<code>site.rollback</code>); editors
+get a notice. <code>400</code> when the server has no rollback command. <code>GET site/health</code> says <code>deploy.canRollBack</code>.</p>
+<h2 id="notices">Notices</h2>
+<p>Something a person must hear about even when they were not watching, kept until they mark it seen.
+<code>GET notices</code> → <code>{items: [{id, at, kind, level: 'error'|'warn'|'info', text, link}]}</code> (mine, not seen, newest first);
+<code>POST notices/:id/seen</code>; <code>POST notices/seen</code> (all of mine). <code>link</code> is a hash in the editor.</p>
+<p>Who gets each kind, and how, is up to the site's rules and each person (&quot;Alerts&quot; below); the table says who by default.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">kind</th><th scope="col">When</th><th scope="col">To (by default)</th></tr></thead><tbody><tr><td><code>publish.failed</code></td><td>a publish (or another job) failed, or was cut by a server restart</td><td>owner, administrators, and who started it</td></tr><tr><td><code>deploy.failed</code></td><td>a job failed at its <code>deploy</code> step (the build went fine, the host refused it)</td><td>owner, administrators, and who started it</td></tr><tr><td><code>backup.failed</code></td><td>a backup failed (safety)</td><td>owner, administrators</td></tr><tr><td><code>schedule.held</code></td><td>a due entry the publish rules stop (edited after it was scheduled): it is held (still scheduled, see &quot;Held&quot;), in a commit by &quot;Markstage scheduler&quot;, and the rest of the run goes live</td><td>every editor and above</td></tr><tr><td><code>schedule.released</code></td><td>a held entry nothing stops any more: the next scheduler run puts it live</td><td>every editor and above</td></tr><tr><td><code>schedule.late</code></td><td>a due entry went live late because the server was not running at its time (missed times run at the next start)</td><td>every editor and above</td></tr><tr><td><code>form.message</code></td><td>a visitor sent one of the site's forms (&quot;Forms and the Inbox&quot;); the link (<code>#/inbox?open=&lt;id&gt;</code>) opens it in the Inbox</td><td>every editor and above</td></tr><tr><td><code>form.assigned</code></td><td>someone gave a form message to this person (not when they took it themselves)</td><td>the person</td></tr><tr><td><code>site.rollback</code></td><td>someone rolled the site back to the release before</td><td>every editor and above</td></tr><tr><td><code>health.broken</code></td><td>the health hook finds an address broken that was not at the last good check (never on the first check or a failed one)</td><td>owner, administrators</td></tr><tr><td><code>lock.changed</code></td><td>a lock set or lifted on a page (&quot;Unlock on this page&quot; included), or the rules for every page changed</td><td>owner, administrators</td></tr><tr><td><code>user.invited</code></td><td>someone was invited (safety)</td><td>owner, administrators</td></tr><tr><td><code>user.role</code></td><td>someone's role changed, their account was turned off or on, or the owner changed (safety)</td><td>owner, administrators, and the person</td></tr><tr><td><code>signin.new-device</code></td><td>a sign-in from a browser the person never used before; their first one is not news (safety)</td><td>the person</td></tr></tbody></table></div>
+<p>Config <code>notify</code> (docs/DEPLOY.md &quot;Alerts&quot;) also sends each notice once: by email (SMTP over STARTTLS or TLS, to the
+listed addresses and the users of the listed roles; the subject is <code>&lt;siteName&gt;: </code> and the notice's first sentence, <code>Markstage: </code> when the site sets no <code>siteName</code>; the
+body its text and the editor link, signed &quot;Sent by the  editor (Markstage)&quot;), to a Slack incoming webhook (<code>{text}</code> with an &quot;Open in Markstage&quot; link) and to a webhook (<code>{kind,
+level, text, url, at}</code>). A channel that is down never stops the work.</p>
+<h3 id="alerts-who-hears-about-what">Alerts: who hears about what</h3>
+<p>The site's alert rules (Settings → Alerts), each person's choices (My alerts), the sender name and Send a test:
+docs/API-INBOX.md &quot;Alerts&quot;.</p>
+<h2 id="forms-and-the-inbox">Forms and the Inbox</h2>
+<p>The site's forms (<code>POST &lt;basePath&gt;/forms/&lt;id&gt;</code> on the site's own host), the Inbox of messages and alerts, and the
+thank-you mail: docs/API-INBOX.md &quot;Forms and the Inbox&quot;.</p>
+<h2 id="releases-and-share-links">Releases and share links</h2>
+<p>A named set of changes (entries, shared Library items, pictures) published together in one commit, now or at a time,
+through the promotion rules; its preview built as if published; share links that show a release's or a draft's
+preview to people without an account: docs/API-RELEASES.md.</p>
+<h2 id="environments">Environments</h2>
+<p>This environment against the shared remote, promotion and sync plans, rollbacks, the promotion rules, personal
+tokens for the laptop CLI, branch previews and the staging site gate: docs/API-ENV.md.</p>
+<h2 id="ai-agents-mcp">AI agents (MCP)</h2>
+<p><code>POST mcp</code>: the Model Context Protocol server, for an AI agent holding an <code>mcp:</code> token. It reads the site as that
+person, changes drafts, and puts changes to live pages into a release that is not scheduled: docs/API-MCP.md.</p>
+<h2 id="importing-entries-and-media">Importing entries and media</h2>
+<p><code>POST import</code> (a plan: nothing written) then <code>POST import/:rid/run</code> (a job): entries and media from another
+system's JSON, idempotent on the source's ids, through the editor's own create and save: docs/API-IMPORT.md.</p>
+<h2 id="translation-status">Translation status</h2>
+<p><code>GET translations</code> (filters: locale, status, collection, q) and <code>GET collections/:c/entries/:id/translations</code>:
+whether each entry's words for each locale are missing, outdated or done, read from git: docs/API-TRANSLATIONS.md.</p>
+<h2 id="webhooks-owner-administrator">Webhooks (owner, administrator)</h2>
+<p><code>GET/POST webhooks</code>, <code>PATCH/DELETE webhooks/:wid</code>, its secret, test and deliveries: signed POSTs to another system
+when an entry, a media file or the site changes, tried again with backoff and logged: docs/API-WEBHOOKS.md.</p>
+<h2 id="custom-roles-owner-administrator">Custom roles (owner, administrator)</h2>
+<p><code>GET/POST roles</code>, <code>PUT/DELETE roles/:rid</code>, <code>POST roles/check</code>: named roles built on a base role, with rules in the
+promotion rules' shape (actions, collections, own, kinds and paths, hours and freezes, a translator's fields); a
+<code>User</code> names its <code>customRole</code>: docs/API-ROLES.md.</p>
+<h2 id="integration-fields">Integration fields</h2>
+<p><code>GET integrations</code>, <code>GET integrations/:name/options?q=&amp;value=</code>, <code>POST integrations/:name/refresh</code>: a Post settings
+select whose options come from a JSON address the server fetches on a schedule (markstage.config <code>integrations</code>);
+a save keeps a bound setting to the list: docs/API-INTEGRATIONS.md.</p>
+<h2 id="ai-suggestions">AI suggestions</h2>
+<p><code>GET ai</code>, <code>POST ai/suggest</code>: words from a model for a person to read, change and save through the routes above
+(alt text, a search title and description, a plan's summary, a draft for another locale). A suggestion never
+commits. The key is <code>MARKSTAGE_AI_KEY</code> in the server's environment or <code>ai.keyFile</code> outside the repo; with none,
+<code>GET ai</code> says why it is off: docs/API-AI.md.</p>
+<h2 id="site-health-and-exports-owner-administrator">Site health and exports (owner, administrator)</h2>
+<p><code>GET site/health</code> reads every entry once and answers:</p>
+<pre><code>{ pages: [{collection, id, title, path, url, words, searchTitle, description,   // lengths of the search title/description
+           altText, links: [{href, problem, sure?, target?}], headings, speed}], // the publish sheet's findings, live pages only
+  counts: {live, drafts, altText, links, headings, longTitles, noDescription},
+  duplicates: [{what: 'title'|'description', text, entries: [{collection, id, title}]}],   // used by 2+ live pages
+  deploy: {commit, at, job, failedSince: [{id, kind, entry, at, error}]},   // the last good deploy, failures after it
+  build: {known}, disk: {free, total, media: {files, bytes}},
+  speed: {on, why: 'off'|'no-site-url'|null, site}, backup: null,          // backups: not built yet (OPERATIONS.md)
+  addresses: {on: false} | {on: true, running, at, stale, counts: {pages, redirects, chains, broken} | null,
+              error: {at, message} | null},                                // the site's health hook, below
+  forms: {alertFailed, geoip: {on, type, builtAt, attribution, problem}} }  // docs/API-INBOX.md</code></pre>
+<p><strong>Addresses</strong> come from the site's health hook: <code>health: {command: [argv], timeoutSeconds?}</code> in markstage.config (or
+config.json for a site without one; argv, no shell; default 120 s). It runs in the site repo with <code>MARKSTAGE_DIST</code>
+set to the build output (<code>verify.public</code>) and prints what the host serves for every address the build knows:
+<code>{&quot;pages&quot;: [{path, status: 200|301|…, redirectsTo?}], &quot;chains&quot;: [[path, …]], &quot;broken&quot;: [{path, linkedFrom: [path,
+…]}]}</code> (rows that are not that shape are dropped). The server runs it after each deploy once the job queue is idle
+(never during a build), when Site health is first opened, and on &quot;Check again&quot;; the last good answer is kept, and a
+failed run says why (<code>error</code>) without losing it. <code>stale</code>: the last answer is from before the live deploy.
+<code>GET site/health/addresses?show=broken|chains|redirects|pages&amp;q=&amp;page=</code> → <code>{…status, show, items, total, page,
+perPage: 100}</code>: broken <code>{path, linkedFrom: [{path, entry: {collection, id, title, status}|null}]}</code>, chains <code>{hops,
+from, to}</code>, redirects and pages <code>{path, status, redirectsTo?, entry?}</code>. <code>POST site/health/addresses</code> runs it now and
+answers the status (audited as <code>site.health.addresses</code>). Owner and administrators, like the rest of Site health.</p>
+<p><strong>Speed</strong> is Google's Chrome UX Report field data (p75 of the last 28 days): <code>{fetchedAt, phone, desktop}</code>, each
+<code>{lcp, inp, cls}</code> with <code>{p75, rating: 'good'|'needs-work'|'poor'}</code> (Google's thresholds), or <code>{none: true}</code> when the
+site or page has too few visitors, or <code>{error}</code> in plain words. <code>POST site/health/speed {path?}</code> asks again for the
+whole site (no path) or one page; an answer is kept and reused for an hour. It needs config <code>crux</code> with the site's
+<strong>own</strong> key (<code>key</code>, <code>keyFile</code> or <code>MARKSTAGE_CRUX_KEY</code>; never a key from anywhere else), sent in the
+<code>X-Goog-API-Key</code> header, never in a URL or a log, and <code>siteUrl</code>.</p>
+<p><strong>Exports:</strong> <code>GET site/export/pages|links|images|headings?entry=&lt;collection&gt;/&lt;id&gt;</code> → a UTF-8 CSV (with a byte-order
+mark, <code>Content-Disposition: attachment</code>), site-wide or one entry. Pages: address, search title and description with
+their lengths, words, images, images without alt, links, links to fix, H1s, heading problems. Links: page, link,
+text, inside the site, rel, problem, where. Images: page, image, alt text, where. Headings: page, level, heading,
+where. A cell starting with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code> gets a leading <code>'</code> so a spreadsheet never runs it as a formula.</p>
+<h2 id="admin-screens-editor">Admin screens (editor)</h2>
+<p>The server's screens in the editor (<code>packages/editor/src/admin/**</code>, registered with the shell's <code>registerScreen</code>). Every
+state is in the URL, so any view can be linked, reloaded and gone back from. Ids are opaque; setup codes, recovery
+codes, the 2FA secret and the sign-in challenge are never in a URL.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Hash</th><th scope="col">Screen</th></tr></thead><tbody><tr><td><code>#/sign-in?next=&lt;hash&gt;&amp;step=code&amp;with=recovery|password&amp;via=sso&amp;sso=&lt;why&gt;&amp;provider=&lt;id&gt;</code></td><td>Sign in with a password or a provider, then the 2FA code or a recovery code (public); <code>sso</code> says why a provider's sign-in did not work; <code>with=password</code> is the owner's password when the site signs in with its providers only</td></tr><tr><td><code>#/setup</code></td><td>The first owner, with the setup code (public)</td></tr><tr><td><code>#/accept-invite</code></td><td>An invited or reset user sets a password (public)</td></tr><tr><td><code>#/account?tab=password|2fa|sessions&amp;step=scan</code></td><td>Own account: password, 2FA with a QR drawn on the page, sessions</td></tr><tr><td><code>#/users?q=&amp;role=&amp;status=&amp;user=&lt;uid&gt;&amp;action=invite&amp;as=&lt;role&gt;</code></td><td>Users (owner, administrator): invite (<code>as</code> presets the role), role, author, reset, 2FA reset, sign out, disable, delete, single sign-on links (unlink). While only one person can manage users, a card recommends inviting a second administrator</td></tr><tr><td><code>#/audit?action=&lt;prefix&gt;&amp;user=&lt;uid&gt;&amp;from=&amp;to=&amp;before=&lt;id&gt;&amp;item=&lt;id&gt;</code></td><td>Audit log (owner, administrator)</td></tr><tr><td><code>#/settings/roles?role=&lt;id&gt;|new&amp;rule=&lt;id&gt;&amp;as=&lt;uid&gt;&amp;do=&lt;action&gt;&amp;in=&lt;collection&gt;&amp;entry=&lt;id&gt;</code></td><td>Custom roles (owner, administrator; one on administrator: the owner): each role's rules as sentences, a role made or changed with the promotion rules' form (kept for the tab until Save), and &quot;What may they do?&quot;, POST roles/check with each rule's part (docs/API-ROLES.md)</td></tr><tr><td><code>#/media?q=&amp;show=unused|no-alt|stock&amp;page=&amp;item=&lt;mid&gt;&amp;replace=&lt;mid&gt;&amp;sel=&lt;mid,…&gt;</code></td><td>Media library: upload (button or drop), alt text, usage, delete unused (on Not used, tick several and delete them in one go, with Undo); &quot;Edit image&quot; (crop, rotate) saves a new file and keeps the original; <code>show=stock</code> searches the stock provider and adds a photo with its credit; &quot;Replace everywhere&quot; uploads the new image, then <code>replace=</code> shows the plan (each entry: title, uses, address) before the swap, and the toast after it has Undo</td></tr><tr><td><code>#/revisions/&lt;c&gt;/&lt;id&gt;?sha=&lt;ref&gt;&amp;with=&lt;ref&gt;&amp;view=text&amp;all=1</code></td><td>History: what is live, your autosaves and the saved revisions. Side by side (default): both versions drawn by the canvas's own blocks in the site's article classes, block by block, changed words marked, the settings field by field (pages: every field); &quot;Restore this block&quot; (or field) puts one change back. <code>view=text</code>: the changed sentences. Restore a whole revision or autosave</td></tr><tr><td><code>#/publish/&lt;c&gt;/&lt;id&gt;?when=later&amp;job=&lt;jid&gt;</code></td><td>Publish sheet: the address in every locale, what changes against live, the checks (site rules and checks, alt text, links, the page on a phone at 390 px through the preview agent, the post-build checks to come), now or later; the job then runs in place (<code>job=</code>), ending with the live address (copy, open)</td></tr><tr><td><code>#/replace?find=&amp;with=&amp;case=1&amp;words=1&amp;collection=&amp;flip=&lt;kind:c/id,…&gt;&amp;long=1</code></td><td>Find and replace (editor and above): every entry with the text, in groups by where it sits: &quot;In the text&quot; (ticked), then inside a link address, in an image file name, inside HTML, in code, in a field name (each unticked, with a note on what ticking changes). Each place shows its field and about eight words either side (old struck through, new beside it); titles copyable, addresses with copy/open; Select all / none per group. <code>flip</code> keeps the ticks changed from those defaults; a new text over 300 characters stays out of the address (<code>long=1</code>: a reload asks for it again). One replace, with Undo on the toast after it; &quot;Change these entries…&quot; hands them to <code>#/bulk</code></td></tr><tr><td><code>#/bulk?items=&lt;c/id,…&gt;&amp;action=set|add|remove|unpublish|trash&amp;field=&amp;value=</code></td><td>Change many entries (editor and above): what to do, the field (with the values in use to pick from), then a summary of each entry, now and after, before Apply. Lists open it with their selection in <code>items</code></td></tr><tr><td><code>#/new/&lt;collection&gt;?template=&lt;id&gt;&amp;type=&lt;page type&gt;</code></td><td>The New sheet: the title, the settings the site asks for, the page type (a card each; a type picks its template, docs/API-PAGE-TYPES.md) and what it starts from (Blank or a Library template)</td></tr><tr><td><code>#/authors?q=&amp;show=archived&amp;action=new</code>, <code>#/authors/&lt;slug&gt;?action=edit|rename|delete&amp;to=&lt;slug&gt;&amp;library=1</code></td><td>Authors (everyone signed in sees them; editors and above change them, anyone their own profile): each author's photo, name and role, slug (copy), posts and live posts, author page (copy, open); one opens on the right with their profile, links and posts; New author, Edit (photo from the media library), Archive / Bring back, Change slug (the posts move with it), Delete (the posts go to another author first). docs/API-AUTHORS.md</td></tr><tr><td><code>#/topic-map?action=new</code>, <code>#/topic-map/&lt;id&gt;?q=&amp;page=&lt;ref&gt;&amp;action=edit|delete</code>, <code>#/links?view=inbox|health|pages|page|skipped&amp;topic=&lt;id&gt;&amp;kind=&lt;kind&gt;&amp;ref=&lt;c/id&gt;&amp;q=&amp;s=&lt;suggestion&gt;&amp;f=&lt;finding&gt;</code></td><td>Topic map (everyone signed in sees it; editors and above change it): each topic as a board to drag pages between its main page, its groups and their leads; Links: the Link inbox (Accept, Skip, Undo), Health with one-click fixes, every page's links in, out and outside, one page's suggestions both ways, the skipped ones. docs/API-LINKS.md</td></tr><tr><td><code>#/taxonomy?field=&amp;q=&amp;item=&lt;value&gt;&amp;action=rename|delete&amp;to=&lt;value&gt;&amp;out=1</code></td><td>Categories and tags (editor and above): every value of a field (the fields entries share: lists such as tags, text such as a category or the author) with its entries and live entries, copyable; a value opens on the right to rename it (a used name merges the two) or delete it (taken out, or its entries given another); the summary of each entry first, then one change with Undo</td></tr><tr><td><code>#/redirects?q=&amp;show=problems&amp;item=&lt;old address&gt;&amp;action=add|edit|test&amp;path=&lt;address&gt;</code></td><td>Redirects (editor and above): old and new addresses (copy, open on the site), problems flagged (Loop, Chain, Never runs, Not a page, Twice); a row opens in the drawer (<code>item</code>) to change, remove, test, or point a chain at its end; Add a redirect; Test an address (what the build has, then the live answers hop by hop)</td></tr><tr><td><code>#/trash?collection=&amp;q=&amp;item=&lt;trashId&gt;</code></td><td>Trash: deleted entries, newest first, each with its title and old address (copy, open); a search box past 10; Restore (back as a draft, then the entry opens); administrators &quot;Delete for good…&quot; (<code>item=</code>): the drawer lists the pages that still link to it before the button</td></tr><tr><td><code>#/jobs?status=</code> and <code>#/jobs/&lt;jid&gt;</code></td><td>Jobs, and one job's steps and live log; on the list, your notices (For you) until marked seen</td></tr><tr><td><code>#/health?show=alt|links|headings|all|broken|chains|redirects&amp;q=&amp;page=</code></td><td>Site health (owner, administrator): the live pages that need a look (or all), the same words on two pages, the last deploy and failures since, disk, speed for real visitors (Ask Google again, per page too), and the four CSV downloads. With a health hook: an Addresses line (pages, redirects, broken, chains, when, Check again) and the lists: broken addresses with the pages that link to them (each opens its entry), redirect chains hop by hop, every redirect</td></tr></tbody></table></div>
+<p>End-to-end tests: <code>packages/server/e2e/admin.e2e.mjs</code> builds the editor with these screens, serves it from a server on
+127.0.0.1:18231 with test users it makes, and drives every screen in Chromium. <code>npm test -w packages/server</code> runs
+the unit tests, then these (<code>e2e/run.mjs</code>); Playwright comes from the root devDependencies or <code>MARKSTAGE_PLAYWRIGHT</code>.
+Without Playwright, a loud <code>SKIPPED: e2e</code> line says why (<code>MARKSTAGE_E2E_REQUIRED=1</code> makes a skip fail). The ports
+come from <code>MARKSTAGE_E2E_PORT_BASE</code> (default 18231): the server there, the others at fixed offsets (+4, +6, +8, +10,
+and +16 to +68 for the preview's dev servers), so two runs at once take two bases. A port in use fails the run and
+names the port; it never skips.</p>
+<h2 id="permissions">Permissions</h2>
+<p>What each role may do, one row per action, and what &quot;own&quot; means: docs/API-PERMISSIONS.md.</p>
+<h2 id="site-side-contract-static-sites">Site-side contract (static sites)</h2>
+<ol><li>Collections with <code>hasStatus</code> filter in the site's content queries:
+<code>entry.data.draft !== true &amp;&amp; (!entry.data.publishAt || new Date(entry.data.publishAt) &lt;= buildTime)</code>.
+For example: add <code>draft: z.boolean().default(false)</code> and <code>publishAt: z.coerce.date().optional()</code> to the
+<code>blog</code> schema and one <code>isLive(post)</code> helper used by every <code>getCollection('blog', ...)</code> call (lists, sitemap,
+RSS, related posts, <code>getStaticPaths</code>).</li><li>The build command must exit non-zero on failure; the deploy command must be atomic and exit non-zero on failure.</li><li><code>MARKSTAGE_BUILD_TIME</code> (ISO) is set for the build so scheduled posts appear at the right build.</li><li>Entries with <code>protected: true</code> are built to a private folder (<code>protectedPages.dir</code>), never to the public output,
+and are left out of every derived output: sitemap, RSS, llms.txt, llms-full.txt, the per-page Markdown twins
+(<code>/&lt;page&gt;.md</code>, and any other copy a site makes), link-card JSON and site search (the rehearsal found all of
+these leaking for a protected page). The web server sends requests it cannot find in
+the public output to Markstage, or guards the private location with <code>auth_request /markstage/page-auth</code>
+(tested files: <code>deploy/nginx/</code>; use <code>try_files $uri $uri/index.html ...</code>, not <code>$uri/</code>). For example: <code>protected: z.boolean().default(false)</code> in the blog and
+pages schemas, and <code>isLive()</code> plus the sitemap and feed filters skip protected entries.</li><li>Preview: the site's dev server runs with <code>MARKSTAGE_PREVIEW=1</code>. Then <code>isLive()</code> is true for every entry
+(drafts and future posts render), so a writer can preview a draft. The dev server must start with every entry
+valid against the site schema: one invalid entry stops it (the preview page shows the site's message).</li><li>Link cards: when the site config has <code>editor.linkCards</code> (core: a site path such as <code>/link-cards.json</code>, or
+<code>{url, fields}</code>), the editor fetches that path from its own origin. The server answers exactly that path on the
+CMS origin (<code>GET</code>/<code>HEAD</code> only, <code>.json</code>, at most 5 MB) with the file from the last build in <code>verify.public</code>, and
+<code>404</code> before there is one (the editor then shows what it knows of the page). Nothing else outside the base path
+is served. Keep protected entries out of that file (point 4).</li></ol>
+<h2 id="preview-render">Preview render</h2>
+<p>The preview on its own origin (<code>preview.origin</code>), one URL per entry, with the editor's unsaved state, the site's own dev server in dev mode, and the agent script it runs: docs/API-PREVIEW.md.</p>
+<h2 id="compatibility-with-todays-dev-api">Compatibility with today's dev API</h2>
+<p>The production server also answers the old routes (session + CSRF rules apply to the POST), mapped to the
+configured <code>compat.collection</code> (on the pilot site: <code>posts</code>):</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Old</th><th scope="col">New</th></tr></thead><tbody><tr><td><code>GET /studio-api/articles</code> → <code>[{slug, title, url, cluster}]</code></td><td><code>GET collections/posts/entries</code></td></tr><tr><td><code>GET /studio-api/article?slug=x</code> → <code>{slug, url, title, doc, version}</code></td><td><code>GET collections/posts/entries/x</code></td></tr><tr><td><code>POST /studio-api/article?slug=x</code> <code>{doc, version}</code> → <code>{ok, version, changedBlocks}</code> / 409</td><td><code>PUT collections/posts/entries/x</code></td></tr></tbody></table></div>
+<h2 id="server-side-converter-interface-packages-core">Server-side converter interface (packages/core)</h2>
+<p>The server calls core through one adapter (<code>packages/server/src/content/converter.mjs</code>), stubbed in tests:
+<code>@markstage/core</code>: <code>createConverter({packs}) → {mdToDoc, docToMd (surgical), changedBlocks, rawHtmlOf}</code> and
+<code>readFrontmatter(text) → object</code>; <code>@markstage/core/json</code>: <code>JsonEntry</code> (set/remove/insert/move/duplicate).
+Block packs the converter needs are listed in the server config (<code>packs</code>: absolute paths to modules whose default
+export is a pack or a list of packs). Still wanted from core: <code>setFrontmatter(text, {key: value|null}) → text</code>
+(surgical YAML for the settings drawer); until then the server writes changed top-level keys as single-line JSON
+values (valid YAML) and leaves every other line untouched. Without core installed, Markdown routes answer <code>503</code>.
+<code>@markstage/core/locks</code> (also from <code>@markstage/core</code>): <code>checkLocks(before, after, rules) → violations</code>,
+<code>lockChanges(before, after, rules) → [{change: 'lock'|'unlock'|'change', path, type, label, from, to}]</code>,
+<code>lockReport(…) → {violations, changes}</code> and <code>lockOf(v)</code> (a stored or configured lock to <code>{move?, remove?, edit?}</code>); a
+side is a page <code>{data}</code> or an article <code>{doc, frontmatter}</code>, <code>rules</code> the site's <code>locks</code> (see &quot;Locks&quot; above). The
+editor can run the same function before a save, to show what the server would refuse.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API.md" target="_blank" rel="noopener">docs/API.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../security/"><span class="small muted">Previous</span>Markstage server: security</a>
+          <a class="next" href="../api-mcp/"><span class="small muted">Next</span>The MCP server: AI agents</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

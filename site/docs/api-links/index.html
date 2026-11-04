@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Internal Links in Markstage: Topics and Link Suggestions</title>
+    <meta name="description" content="Markstage keeps a map of every link in the site and suggests fixes both ways, so old pages link to new ones and new pages link to the right older ones." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-links/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Internal Links in Markstage: Topics and Link Suggestions" />
+    <meta property="og:description" content="Markstage keeps a map of every link in the site and suggests fixes both ways, so old pages link to new ones and new pages link to the right older ones." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-links/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Internal Links in Markstage: Topics and Link Suggestions" />
+    <meta name="twitter:description" content="Markstage keeps a map of every link in the site and suggests fixes both ways, so old pages link to new ones and new pages link to the right older ones." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Topics and internal links",
+          "item": "https://spcaeo.github.io/markstage/docs/api-links/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Internal Links in Markstage: Topics and Link Suggestions",
+      "description": "Markstage keeps a map of every link in the site and suggests fixes both ways, so old pages link to new ones and new pages link to the right older ones.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-links/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/" aria-current="page">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Topics and internal links</li></ol></nav>
+        <h1>Topics and internal links</h1>
+        <p class="lead left">Markstage keeps a map of every link in the site and suggests fixes both ways, so old pages link to new ones and new pages link to the right older ones.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#turning-it-on">Turning it on</a></li><li><a href="#the-topic-files">The topic files</a></li><li><a href="#the-link-map">The link map</a></li><li><a href="#suggestions">Suggestions</a></li><li><a href="#accept-skip-and-undo">Accept, Skip and Undo</a></li><li><a href="#health">Health</a></li><li><a href="#the-journey-view">The Journey view</a></li><li><a href="#the-flow-view">The Flow view</a></li><li><a href="#page-type-checks-links">Page type checks: links</a></li><li><a href="#routes">Routes</a></li><li><a href="#the-screens-addresses">The screens' addresses</a></li><li><a href="#the-sites-pages-markstage-astro-topics">The site's pages: @markstage/astro/topics</a></li></ul></nav>
+        <div class="prose">
+<p>When a site publishes page D today, D can link to pages A, B and C from last month. But A, B and C never learn that
+D exists, so D gets no links from them, and fixing that by hand means rereading every old page. Markstage keeps a
+map of every link in the site's text and finds the fixes both ways:</p>
+<ul><li><strong>Writing D:</strong> the pages D should link to (its topic's main page, its group's lead, its service page, two or
+three pages next to it), each with the words to link and the sentence of D they fit in.</li><li><strong>Publishing D:</strong> sentences on older pages that already talk about D's subject, with the words to link. <strong>Accept</strong>
+adds the link on that page as a normal save (one commit, Undo); <strong>Skip</strong> hides the suggestion for everyone.</li><li><strong>On the site:</strong> a &quot;More on this topic&quot; block fed from the topics, so old pages list new ones on the next build
+without being edited.</li><li><strong>Health:</strong> what is weak or wrong in the site's links, worst first, with one-click fixes.</li></ul>
+<p>What an editor sees:</p>
+<ul><li><strong>Page settings → Topic and links</strong> (under the Page box): the page's topic, group and role, put in straight away;
+how many pages link here; &quot;Pages to link to&quot; (with <strong>Link these words</strong> on the canvas) and &quot;Pages that should link
+here&quot; (with <strong>Accept</strong> and <strong>Skip</strong>).</li><li><strong>More → Topic map</strong> (<code>#/topic-map</code>): each topic as a <strong>Journey</strong> (which page links to which, with the link words;
+below) and as a board (<strong>Arrange</strong>). On the board, drag pages between the main page, the pages without a group,
+each group's lead and pages, and &quot;Not in a topic&quot;, or use a card's <strong>Move to…</strong> list.</li><li><strong>More → Links</strong> (<code>#/links</code>): the <strong>Link inbox</strong> (every open suggestion, grouped by the page the link goes to),
+<strong>Health</strong>, <strong>Pages</strong> (links in, out and outside per page) and <strong>Skipped</strong>.</li><li><strong>The publish sheet</strong>: a Links row (how many pages could link here, what this page should link to), and the page
+type's link checks (below).</li></ul>
+<p>Code: <code>packages/core/src/topics.mjs</code> (the topic files and config), <code>packages/core/src/link-map.mjs</code> (the map and the
+Health findings), <code>packages/core/src/link-suggest.mjs</code> (the suggestions and the edits that apply them),
+<code>packages/server/src/links/</code> (the routes), <code>packages/astro/src/topics.mjs</code> (<code>@markstage/astro/topics</code>, the site's
+helpers), and in the editor <code>src/settings/topic-box.ts</code>, <code>src/suggestion-card.ts</code>, <code>src/admin/topics/</code> and
+<code>src/admin/links/</code>.</p>
+<h2 id="turning-it-on">Turning it on</h2>
+<p>In <code>markstage.config.mjs</code> (docs/CONFIG.md, key <code>topics</code>):</p>
+<pre data-lang="js"><code class="language-js">export default defineConfig({
+  topics: {
+    money: ['service'],                 // page types (or site paths such as '/services/') that sell something
+    follow: ['docs.example.com'],       // outside sites a link may pass credit to; any other gets rel=&quot;nofollow&quot;
+    sponsored: ['partner.example.com'], // paid or partner sites: their links need rel=&quot;sponsored&quot;
+  },
+  // or `topics: true` for every default
+});</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>dir</code></td><td><code>'markstage/topics'</code></td><td>The folder of <code>&lt;id&gt;.json</code> topic files, inside the project. Never a collection's folder.</td></tr><tr><td><code>collections</code></td><td>every collection with an address</td><td>The collections whose pages are in the map and may be put in topics.</td></tr><tr><td><code>money</code></td><td><code>[]</code></td><td>The service (&quot;money&quot;) pages: page type ids, or site paths starting with <code>/</code>. A topic may also name its own (<code>money</code> in its file).</td></tr><tr><td><code>follow</code></td><td><code>[]</code></td><td>Outside domains a body link may pass credit to (a plain link). Subdomains count.</td></tr><tr><td><code>sponsored</code></td><td><code>[]</code></td><td>Paid or partner domains: their links must say <code>rel=&quot;sponsored&quot;</code>.</td></tr><tr><td><code>generic</code></td><td><code>[]</code></td><td>More vague link words, over the built-in ones (&quot;click here&quot;, &quot;read more&quot;, &quot;here&quot;, &quot;this&quot;, &quot;link&quot;, &quot;source&quot;, …).</td></tr><tr><td><code>keywords</code></td><td><code>'keywords'</code></td><td>The frontmatter key (or JSON field) of a page's own words for itself. They are matched first.</td></tr><tr><td><code>robots</code></td><td><code>'robots'</code></td><td>The key that may say <code>noindex</code> (a link to such a page is a finding). <code>noindex: true</code> works too.</td></tr><tr><td><code>enough</code></td><td><code>3</code></td><td>How many pages should link to a live page. The inbox suggests links to live pages with fewer. Health calls a page with none &quot;no links in&quot; and one with one &quot;weak&quot;.</td></tr><tr><td><code>related</code></td><td>none</td><td><code>{command: [argv], timeoutSeconds?}</code>: the site's own finder of the words that name a page (an embeddings index, an AI model). See below.</td></tr></tbody></table></div>
+<h2 id="the-topic-files">The topic files</h2>
+<p>One JSON file per topic, <code>markstage/topics/&lt;id&gt;.json</code>, in the site's own repo, so git keeps their history and the
+site's build reads them. The Topic map and the Page box write them; they can be written by hand too.</p>
+<pre data-lang="json"><code class="language-json">{
+  &quot;title&quot;: &quot;Editing&quot;,
+  &quot;description&quot;: &quot;How to edit pages&quot;,
+  &quot;pillar&quot;: &quot;posts/hello-markstage&quot;,
+  &quot;money&quot;: &quot;pages/services&quot;,
+  &quot;anchors&quot;: [&quot;the editing guide&quot;],
+  &quot;keywords&quot;: [&quot;editing&quot;],
+  &quot;members&quot;: [&quot;posts/old-notes&quot;],
+  &quot;groups&quot;: [
+    { &quot;id&quot;: &quot;ways-to-write&quot;, &quot;name&quot;: &quot;Ways to write&quot;, &quot;lead&quot;: &quot;posts/writing-with-source-mode&quot;, &quot;members&quot;: [&quot;posts/keyboard-shortcuts&quot;] }
+  ]
+}</code></pre>
+<ul><li>A page is named <code>&lt;collection&gt;/&lt;id&gt;</code>. A page is in <strong>one topic at most</strong>, in one place: the topic's main page
+(<code>pillar</code>), a group's <code>lead</code>, a group's <code>members</code>, or the topic's own <code>members</code> (no group).</li><li><code>anchors</code>: words for links to the main page. <code>keywords</code>: words that name the topic; sentences with them are
+suggested for a link to the main page.</li><li><code>money</code>: this topic's service page, over the site's <code>money</code> rule.</li></ul>
+<h2 id="the-link-map">The link map</h2>
+<p>On every save the server reads the changed entry again (only that one: each entry is kept by its version) and
+builds the map from <strong>the body text only</strong>: Markdown text, and the rich-text and Markdown fields of JSON pages. Menus,
+cards, footers and the site's layout are not counted. For each page it keeps the links out (address, words, rel,
+the sentence and block they are in), the links in from <strong>live</strong> pages, the words used for each target, and every
+outside link with its rel. Redirects come from the site's redirects hook (docs/CONFIG.md <code>redirects</code>), asked at most
+once a minute.</p>
+<h2 id="suggestions">Suggestions</h2>
+<p>Words are matched as <strong>phrases</strong> first, longest first: the page's own <code>keywords</code>, its topic's <code>anchors</code> and
+<code>keywords</code> (for the main page), its group's name (for a lead), its title made short (&quot;How to set up a CRM in 2026&quot;
+→ &quot;set up a CRM&quot;), and its address. A phrase is never suggested when the same words already link to another page
+(that would make one set of words name two pages), never on vague words, never inside an existing link, and never
+on a page that already links there.</p>
+<ul><li><strong>Pages to link to</strong> (outgoing): the topic's main page, the group's lead, the service page, then two or three pages
+of the same group or topic. Each says why (&quot;its topic’s main page&quot;) and shows the sentence the words fit in; when
+the page has no such sentence yet, it asks for one to be written with those words.</li><li><strong>Pages that should link here</strong> (incoming): sentences on other pages that talk about this one, best first (pages of
+the same topic and group first).</li></ul>
+<h3 id="the-sites-own-finder-related">The site's own finder: <code>related</code></h3>
+<p>A site can add words that name a page from its own tools. With <code>topics.related: {command: [&quot;node&quot;,
+&quot;scripts/related.mjs&quot;]}</code>, when someone looks at a page's suggestions the server runs the command (no shell, in the
+project, with the same small environment as the build) and writes JSON on its stdin:</p>
+<pre data-lang="json"><code class="language-json">{ &quot;page&quot;: { &quot;ref&quot;: &quot;posts/keyboard-shortcuts&quot;, &quot;title&quot;: &quot;…&quot;, &quot;url&quot;: &quot;/posts/keyboard-shortcuts/&quot;, &quot;keywords&quot;: [], &quot;text&quot;: &quot;the page's text, up to 4000 characters&quot; },
+  &quot;pages&quot;: [{ &quot;ref&quot;: &quot;posts/hello-markstage&quot;, &quot;title&quot;: &quot;…&quot;, &quot;url&quot;: &quot;/posts/hello-markstage/&quot; }] }</code></pre>
+<p>It answers <code>{&quot;phrases&quot;: [&quot;…&quot;, &quot;…&quot;]}</code> on stdout (at most 20, each up to 80 characters). Those words count as the
+page's own keywords. The answer is kept until the page changes; a command that fails or takes longer than
+<code>timeoutSeconds</code> (default 20) counts as no words, and the phrase match still runs. The command may call an
+embeddings index or the AI provider the site already uses (docs/API-AI.md); its keys stay in its own environment.</p>
+<h2 id="accept-skip-and-undo">Accept, Skip and Undo</h2>
+<p><strong>Accept</strong> changes the <em>other</em> page as a normal save would: the person's rights on it, its lock, the site's save
+checks, and for a live page the publish rules (a rule that already failed before the link is not counted against
+it, only a new one). It is one commit (<code>Link “words” on Page A to Page B</code>), the page is published again when it is
+live, and the toast's <strong>Undo</strong> takes it back (<code>POST /site/undo</code>; whoever accepted it may undo it). A page that changed
+since the suggestion was made answers <code>409 suggestion-gone</code>: the list is read again.</p>
+<p><strong>Link these words</strong> (a page's own outgoing suggestion) links the words on the open canvas instead; ⌘S saves it.</p>
+<p><strong>Skip</strong> is remembered for everyone (the <code>link_skips</code> table): the suggestion leaves the inbox and the page's lists.
+<strong>Links → Skipped</strong> lists them, with <strong>Bring back</strong>.</p>
+<h2 id="health">Health</h2>
+<p>Each finding names the page, says what is wrong in plain words, shows the sentence when there is one, and offers a
+fix button or <strong>Open at the sentence</strong> (the editor at that block, with the words found).</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Kind</th><th scope="col">Level</th><th scope="col">What it is</th><th scope="col">Fix</th></tr></thead><tbody><tr><td><code>no-links-in</code></td><td>Fix first</td><td>A live page no other page links to in its text (not a page hidden from search engines).</td><td>Pages that could link here</td></tr><tr><td><code>weak</code></td><td>Worth fixing</td><td>Only one page links to it (not a hidden page either).</td><td>Pages that could link here</td></tr><tr><td><code>no-pillar-link</code></td><td>Fix first</td><td>A page of a topic that does not link to the topic's main page.</td><td>Suggested links</td></tr><tr><td><code>no-lead-link</code></td><td>When there is time</td><td>A group's page that does not link to its group's lead.</td><td>Suggested links</td></tr><tr><td><code>not-in-topic</code></td><td>When there is time</td><td>A live page in no topic.</td><td>Put it in a topic</td></tr><tr><td><code>anchor-clash</code></td><td>Worth fixing</td><td>The same words link to two or more pages.</td><td>Open at the sentence</td></tr><tr><td><code>generic-anchor</code></td><td>Worth fixing</td><td>Vague link words (&quot;click here&quot;, &quot;read more&quot;, a bare &quot;Source&quot;).</td><td>Open at the sentence</td></tr><tr><td><code>to-redirect</code></td><td>Worth fixing</td><td>A link to an address that redirects.</td><td><strong>Point it to</strong> the final address (one click)</td></tr><tr><td><code>to-noindex</code></td><td>Worth fixing</td><td>A link to a page hidden from search engines.</td><td>Open at the sentence</td></tr><tr><td><code>to-missing</code></td><td>Fix first</td><td>A link to a site address that is no page.</td><td>Open at the sentence</td></tr><tr><td><code>outside-follow</code></td><td>When there is time</td><td>An outside link that passes credit to a site not on <code>follow</code>.</td><td><strong>Mark it nofollow</strong> (one click)</td></tr><tr><td><code>outside-sponsored</code></td><td>Fix first</td><td>A link to a <code>sponsored</code> site without <code>rel=&quot;sponsored&quot;</code>.</td><td><strong>Mark it sponsored</strong> (one click)</td></tr><tr><td><code>missing-page</code></td><td>Worth fixing</td><td>A topic names a page that is gone.</td><td><strong>Take it out of the topic</strong> (one click)</td></tr><tr><td><code>money-path-wide</code></td><td>When there is time</td><td>A service-page address in <code>topics.money</code> also covers the pages under it (<code>/data-migration/</code> and its articles at <code>/data-migration/x/</code>), so each counts as a service page, and a topic's &quot;service page&quot; could turn out to be one of its articles. One finding per address.</td><td>List exact addresses, or name each topic's <code>money</code></td></tr></tbody></table></div>
+<p>A one-click fix is a normal save of that page (or of the topic file), one commit, with Undo on the toast (taking a
+gone page out of a topic has no Undo: put it back on the board). A rel in a Markdown page is written as
+<code>&lt;a href=&quot;…&quot; rel=&quot;nofollow&quot;&gt;words&lt;/a&gt;</code>, which the site's Markdown keeps.</p>
+<h2 id="the-journey-view">The Journey view</h2>
+<p>A topic opens as a journey (<code>#/topic-map/&lt;id&gt;</code>), left to right the way a reader travels: <strong>articles and guides</strong>
+(in their groups), <strong>group lead pages</strong>, the <strong>main page</strong>, and the <strong>service page</strong> (the topic's <code>money</code>; else the
+main page when it is a service page itself; else, marked as a guess, the service page its pages link to most). Each
+page is a card: its title, its address (copy and open), published or draft and when it last changed (its own
+<code>modified</code> field, else its date), and its links in and out (right-aligned numbers). A card is marked when no page
+links to it, when one page does, when it does not link up to the main page or its group lead, and when a link on it
+goes to no page.</p>
+<ul><li><strong>Lines</strong> are links that move a reader on (an article up to its group lead or the main page, a lead to the main
+page, the main page to the service page). The links into one page meet in one upright line, so they read as a comb.
+Each line has a <strong>chip</strong> with the link words (and &quot;+2&quot; when there are more): click it for the side panel with each
+link, the heading above it, its sentence with the words marked, and <strong>Open at the sentence</strong>.</li><li><strong>Dashed lines</strong> are links the topic expects that are missing: up to the group lead and the main page (Health's
+<code>no-lead-link</code>, <code>no-pillar-link</code>), and from each group lead and the main page on to the service page. The panel
+offers the suggestion that adds one (<strong>Accept</strong>, <strong>Skip</strong>), or says to write a sentence when none fits.</li><li><strong>Amber</strong> lines and chips go through a redirect (or to a page hidden from search engines); a chip with a mark has
+words to change (<code>generic-anchor</code>, <code>anchor-clash</code>). A link to no page is a red tag on its card.</li><li><strong>Links back</strong> (the main page down to its leads, a lead down to its articles) are light dotted lines; a link back
+from further away (the service page to an article) is a note on the card. A link straight past a column (an
+article to the service page) is a chip inside the card, never a line across other cards. Links between two
+articles and from other topics show when a card is picked, and in its <strong>+</strong> list.</li><li>Above the map: the topic's gaps in plain sentences, worst first, and a row to show <strong>one group at a time</strong>. A long
+group shows its first four pages and &quot;+N more&quot;.</li><li>Numbers that are not there are not made up: Markstage keeps no visit counts, so there are none, and form
+messages (those whose visit began on the page) only show when the site has form messages at all.</li></ul>
+<h2 id="the-flow-view">The Flow view</h2>
+<p>The same topic as a river (<code>#/topic-map/&lt;id&gt;?view=flow</code>), read top down. The <strong>service page</strong> is the goal bar on
+top; the <strong>main page</strong> sits under it; the <strong>group leads</strong> fork off the main page in a row, and each group's
+<strong>articles</strong> are stacked under its lead, slightly indented. Each page is a card (240 × 120) with a short <strong>code</strong>:
+each group a letter and a colour (A, B, C… never M or S), its lead number 1 and its articles 2 on in the topic's
+order; <strong>M</strong> is the main page, <strong>S</strong> the service page. A card shows the code, a short title and one quiet line
+(&quot;8 in · 11 out&quot;, or for a lead its group's name), <strong>→ S</strong> when it links straight to the service page, <strong>New</strong> (first
+out in the last 90 days) or <strong>Stale</strong> (no change for a year) from its own dates, and a <strong>red dot</strong> when it has a
+missing link. A group with no lead page has a dashed &quot;No lead page yet&quot; card in its place.</p>
+<ul><li><strong>Lines</strong> are the river: the main page up to the goal, the main page down to each lead, each lead down to its
+articles, each branch in its group's colour. A line's width is the number of links it carries, plus one (at most
+8); a link the river expects that is not there is a thin dotted line. Rows hold as many groups as fit the screen
+at 93% (five at 1512px wide); the rows below the first are fed by a channel down the left.</li><li><strong>Calm by default</strong>: no line across the map until a card is pointed at (or focused); then that page's links to
+the other cards show, thin and grey, and those cards lift.</li><li><strong>Folding</strong>: a topic with more than 40 pages opens with its groups folded but the three with the most articles. A
+folded group shows its lead only, with &quot;Group · N pages ▸&quot; to open it (▾ folds it again); its chip has ▸ too.</li><li><strong>A page picked</strong> (a click, or Enter) shows the step round it, in three columns: <strong>Comes from</strong> (pages that link to
+it), the page, <strong>Goes to</strong> (pages it links to), each in code order, with one grey trunk in and one out. Under the
+page: <strong>To fix</strong> (its missing links, each with <strong>Accept</strong>, which adds the link at the sentence the suggestion found,
+Undo on the toast; <strong>Skip</strong>; or <strong>Open the page</strong> when no sentence fits), then <strong>Both ways ⇄</strong> (pages that link to
+it and that it links to, shown once). Pointing at a card lights its one line in its colour, with the link words
+and the heading above each. A click on any card walks on; the <strong>trail</strong> above the map keeps the pages walked
+through, each a way back, and <strong>← All pages</strong> goes back to the river. The side panel gives the picked page's
+details only: its code and title, where it sits, its dates and age, its address (copy and open), its numbers, the
+ways to open it, and its shortest way to the service page.</li><li><strong>View</strong> (a popover; everything off at first): <strong>Show side links</strong> (pages of one level linking to each other, as
+faint dashed curves), <strong>Show deep links</strong> (the main or service page straight down to an article, as arcs), the
+pages of an age (the rest fade), and <strong>the site as it was on</strong> a day (a slider: pages published later are left
+out; links are drawn as they are today).</li><li><strong>Zoom</strong> (the buttons in the bar under the map, never over a card): the map fits its width, a small one up to 125%, a tall one at 100% scrolling down, never under 93% (so
+a card's smallest words, 13px, are 12px or more on screen); − and + step through 93, 100, 110, 125 and 150%.</li><li><strong>The layout</strong>: every box on an 8px grid, 16px between cards, 64px between levels, 48px round the map; nothing
+closer than 8px to anything else, every column left-aligned, no line under a card, no control over a card, no word cut short or ended
+with &quot;…&quot;, no sideways scroll at 1280, 1512 or 1920px. The unit tests run this check on the layouts
+(<code>packages/editor/test/flow.test.ts</code>), and the browser test runs it on the page (<code>packages/server/e2e/flow-check.mjs</code>).</li></ul>
+<p>The URL keeps every state, and Back and Forward step through them: <code>group</code> (one group's branch only), <code>open</code> (the
+groups open: their ids with commas, <code>none</code> or <code>all</code>; none: the ones open at first), <code>page</code> (the page picked), <code>trail</code>
+(the pages walked through to it, with commas), <code>zoom</code> (in %), <code>options=1</code> (the View popover open), <code>side=1</code>,
+<code>deep=1</code>, <code>age=new|stale</code> and <code>asof=YYYY-MM-DD</code>. Keys: Tab goes through the cards, Enter picks one, Esc goes back to
+the river, + and − zoom, 0 fits.</p>
+<h2 id="page-type-checks-links">Page type checks: <code>links</code></h2>
+<p>A page type (docs/API-PAGE-TYPES.md) can ask for links. Each is a check like any other, shown in the Page box and the
+publish sheet, and <code>level: 'block'</code> stops a publish:</p>
+<pre data-lang="js"><code class="language-js">{ id: 'article', label: 'Article', collections: ['posts'], checks: [
+  { id: 'up', label: 'Links up to its topic’s main page', links: 'pillar', level: 'block' },
+  { id: 'sell', label: 'Links to the service page', links: 'money' },
+] }</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col"><code>links:</code></th><th scope="col">Passes when</th></tr></thead><tbody><tr><td><code>pillar</code></td><td>The page is in a topic and links to its main page (or is the main page).</td></tr><tr><td><code>lead</code></td><td>A group's page links to its group's lead.</td></tr><tr><td><code>money</code></td><td>The page links to its topic's service page (or none is set).</td></tr><tr><td><code>anchors</code></td><td>No vague link words, and no words it uses for two pages.</td></tr><tr><td><code>redirects</code></td><td>No link to a redirect, a hidden page or no page.</td></tr><tr><td><code>outside</code></td><td>Every outside link has the rel its domain needs.</td></tr></tbody></table></div>
+<p>In <code>astro dev</code> (no link map) a <code>links</code> check counts as passed.</p>
+<p><code>astro dev</code> has no link map of its own. To see the Links screens and the topic map there, run a Markstage server
+in dev mode on the same machine (<code>MARKSTAGE_DEV_NO_AUTH=1</code>, 127.0.0.1 only) and start <code>astro dev</code> with
+<code>MARKSTAGE_DEV_SERVER=http://127.0.0.1:&lt;its port&gt;</code>: the dev API then hands <code>links/*</code>, <code>topics/*</code> and <code>site/undo</code> to
+that server (<code>packages/astro/src/api-forward.mjs</code>). Only a loopback address is accepted.</p>
+<h2 id="routes">Routes</h2>
+<p>On the Markstage server (<code>/markstage/api/…</code>, signed in). Everyone signed in may look; editors and above change topics
+(<code>topics.manage</code>, docs/API-PERMISSIONS.md). Accept and the fixes need the right to change the page they change. A
+site without <code>topics</code> answers <code>404 no-topics</code>.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Route</th><th scope="col">Does</th></tr></thead><tbody><tr><td><code>GET /topics</code></td><td><code>{items: [Topic], pages: [PageRow], can: {manage}}</code>. With <code>?pages=0</code>, <code>pages</code> is <code>[]</code> (a picker on an open entry needs the topics alone).</td></tr><tr><td><code>GET /topics/:id</code></td><td><code>{topic, pages, can}</code>.</td></tr><tr><td><code>POST /topics {id?, title, description?, pillar?, money?, anchors?, keywords?, members?, groups?}</code></td><td><code>201 {topic}</code>. <code>id</code> defaults to a slug of the title. A page already in another topic: <code>422</code>, naming it. Commit <code>Add topic &lt;title&gt;</code>.</td></tr><tr><td><code>PUT /topics/:id {version, …}</code></td><td>Change only the keys sent. <code>409</code> when the file changed since <code>version</code>.</td></tr><tr><td><code>DELETE /topics/:id?version=</code></td><td><code>{ok, commit}</code>. Its pages are in no topic afterwards; their links stay.</td></tr><tr><td><code>POST /topics/place {ref, topic, group?, role?, index?}</code></td><td>The Page box and the board: the page leaves every other place and goes to this one (<code>role</code>: <code>member</code>, <code>lead</code>, <code>pillar</code>; <code>index</code>: its place in the list). <code>topic: null</code> takes it out. <code>{changed, topic, from, page}</code>. Commit <code>Put “Title” in topic &lt;title&gt;</code>.</td></tr><tr><td><code>GET /links/pages?topic=&amp;q=</code></td><td><code>{items: [PageRow], topics: [{id, title}]}</code>.</td></tr><tr><td><code>GET /links/health?topic=&amp;kind=&amp;ref=</code></td><td><code>{items: [Finding], counts: {&lt;kind&gt;: n}, kinds: {&lt;kind&gt;: words}, total, topics}</code>, worst first.</td></tr><tr><td><code>GET /links/suggest?ref=&amp;dir=in|out</code></td><td><code>{page: PageRow, in: [Suggestion], out: [Suggestion]}</code>. Asks the <code>related</code> hook first.</td></tr><tr><td><code>GET /links/inbox?topic=&amp;page=&amp;perPage=</code></td><td><code>{items: [Suggestion], counts: {total, in, out, topics}, skipped}</code>; with <code>perPage</code> (1–500) one page of the items and <code>page</code>, <code>perPage</code> in the answer. The inbox is worked out once per link map and skip list (a skip, an unskip or an accept makes it again).</td></tr><tr><td><code>GET /links/map?topic=</code></td><td>One topic as a journey: <code>{topic: {id, title, pillar, money, moneyGuessed, groups}, pages: [JourneyPage], edges: [Edge], missing: [Missing], numbers: {visits, leads}}</code>. <code>400</code> without a topic, <code>404</code> for an unknown one.</td></tr><tr><td><code>POST /links/accept {id, from, to, dir}</code></td><td><code>{ok, commit, job, from, to, anchor}</code>. <code>409 suggestion-gone</code>; <code>422 needs-words</code> for a suggestion with no sentence yet. Audited as <code>links.accept</code>.</td></tr><tr><td><code>POST /links/skip {id, from, to, anchor}</code></td><td><code>{ok}</code>.</td></tr><tr><td><code>GET /links/skips</code></td><td><code>{items: [{id, from, to, anchor, at, by}]}</code>.</td></tr><tr><td><code>DELETE /links/skips/:id</code></td><td><code>{ok}</code>: suggested again.</td></tr><tr><td><code>POST /links/fix {id}</code></td><td>A finding's one-click fix. <code>{ok, commit, job}</code>. Audited as <code>links.fix</code>.</td></tr></tbody></table></div>
+<p><code>PageRow</code> = <code>{ref, collection, id, title, url, status, live, topic, group, role, money, in, out, external, updated,
+published, modified, edit}</code> (<code>updated</code>: the page's <code>modified</code> field, else its date; <code>published</code> and <code>modified</code>: its
+date field and its <code>modified</code> field as the entry gives them, each null when it gives none, never guessed). <code>JourneyPage</code> = <code>PageRow</code> + <code>{place: 'member' | 'lead'
+| 'pillar' | 'money' | 'outside', problems: [kind], leads?}</code> (<code>outside</code>: a page of another topic that links with
+this one; <code>problems</code>: <code>no-links-in</code>, <code>weak</code>, <code>no-pillar-link</code>, <code>no-lead-link</code>; <code>leads</code>: form messages whose visit
+began on the page, only when <code>numbers.leads</code>). <code>Edge</code> = <code>{id, pair, from, to, anchor, sentence, at, section, status,
+href, address, open, warn: [{kind, message}]}</code>: one link in a page's text that starts or ends on the topic's pages
+(<code>to: null</code>: no page of the site; <code>pair</code>: the same for every link from one page to another; <code>warn</code>: Health's
+<code>generic-anchor</code>, <code>anchor-clash</code>, <code>to-redirect</code>, <code>to-noindex</code>, <code>to-missing</code> for it). <code>Missing</code> = <code>{id, kind:
+'no-lead-link' | 'no-pillar-link' | 'no-money-link', from, to, message, suggestion: Suggestion | null, open}</code> (the
+<code>id</code> is Health's finding id where Health has one; <code>suggestion</code> is null when it was skipped). <code>numbers.visits</code> is
+always false: Markstage keeps no visit counts.
+<code>Suggestion</code> = <code>{id, dir, from, to, fromTitle, fromUrl, toTitle, toUrl, reason, anchor, how: 'link'|'add', sentence,
+at, section, path, start, end, open}</code> (<code>open</code>: the editor at that sentence). <code>Finding</code> = <code>{id, kind, level, ref,
+page, message, sentence?, anchor?, href?, fix?, open?}</code>.</p>
+<p><code>GET /collections/:c/entries/:id/preflight</code> (the publish sheet) has <code>topicLinks: {ref, topic, in, incoming,
+outgoing, review}</code> (<code>review</code>: <code>#/links?view=page&amp;ref=…</code>).</p>
+<h2 id="the-screens-addresses">The screens' addresses</h2>
+<p>Every state is in the URL, so each can be linked to, reloaded and gone back from:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Hash</th><th scope="col">Shows</th></tr></thead><tbody><tr><td><code>#/topic-map?action=new</code></td><td>Every topic (pages, live pages, pages that need links, its main page) and the pages in no topic; the New topic form.</td></tr><tr><td><code>#/topic-map/&lt;id&gt;?group=&lt;g&gt;&amp;page=&lt;ref&gt;&amp;details=1&amp;link=&lt;id&gt;&amp;more=&lt;g&gt;,&lt;g&gt;</code></td><td>One topic as a journey. <code>group</code>: one group only (<code>-</code>: the pages in no group); <code>page</code>: the picked page; <code>details</code>: its links in the side panel; <code>link</code>: a connection (its <code>pair</code>) or a missing link (its <code>id</code>) in the side panel; <code>more</code>: groups shown whole.</td></tr><tr><td><code>#/topic-map/&lt;id&gt;?view=arrange&amp;q=&amp;page=&lt;ref&gt;</code></td><td>One topic as a board. <code>q</code>: the search in the pages in no topic; <code>page</code>: the picked page.</td></tr><tr><td><code>#/topic-map/&lt;id&gt;?action=edit|delete</code></td><td>Edit its name, words, service page and groups; delete it.</td></tr><tr><td><code>#/links?view=inbox&amp;topic=&lt;id&gt;&amp;s=&lt;suggestion&gt;</code></td><td>The Link inbox (<code>s</code>: the open suggestion).</td></tr><tr><td><code>#/links?view=health&amp;topic=&lt;id&gt;&amp;kind=&lt;kind&gt;&amp;f=&lt;finding&gt;</code></td><td>Health (<code>f</code>: the open finding).</td></tr><tr><td><code>#/links?view=pages&amp;topic=&lt;id&gt;&amp;q=</code></td><td>Every page with its links in, out and outside (numbers right-aligned).</td></tr><tr><td><code>#/links?view=page&amp;ref=&lt;collection/id&gt;</code></td><td>One page: the pages that should link to it, the pages it should link to, what to fix on it.</td></tr><tr><td><code>#/links?view=skipped</code></td><td>Skipped suggestions, to bring back.</td></tr></tbody></table></div>
+<p>Every page address shown has copy and open buttons (open uses the site's own address); link words and outside
+addresses can be copied.</p>
+<h2 id="the-sites-pages-markstage-astro-topics">The site's pages: <code>@markstage/astro/topics</code></h2>
+<pre data-lang="ts"><code class="language-ts">import { moreOnTopic, placeOf, topics } from '@markstage/astro/topics';</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Helper</th><th scope="col">Gives</th></tr></thead><tbody><tr><td><code>topics()</code></td><td>Every topic, normalized (<code>[]</code> when the site keeps none).</td></tr><tr><td><code>placeOf(collection, id)</code></td><td><code>{topic, group, role}</code> or <code>null</code>.</td></tr><tr><td><code>moreOnTopic(collection, id, {limit?})</code></td><td>The pages for &quot;More on this topic&quot;: the page's own group (lead first), then the topic's main page, then the pages without a group, then the other groups. Never the page itself. <code>[{collection, id, role, group, topic}]</code>.</td></tr></tbody></table></div>
+<p>They read the topic files during the build and in <code>astro dev</code>; <code>topicsOf(cfg)</code> gives the same helpers for a
+normalized config. Leave out drafts yourself (<code>getEntry</code>, then <code>!entry.data.draft</code>).</p>
+<p>The example blog has the block (<code>examples/blog/src/components/MoreOnTopic.astro</code>):</p>
+<pre data-lang="astro"><code class="language-astro">---
+import { getEntry } from 'astro:content';
+import { moreOnTopic } from '@markstage/astro/topics';
+const { id } = Astro.props;
+const more = await moreOnTopic('posts', id, { limit: 8 });
+const posts = (await Promise.all(more.map((m) =&gt; getEntry('posts', m.id)))).filter((p) =&gt; p &amp;&amp; !p.data.draft).slice(0, 4);
+---
+{posts.length &gt; 0 &amp;&amp; (
+  &lt;aside class=&quot;more-topic&quot;&gt;&lt;h2&gt;More on this topic&lt;/h2&gt;
+    &lt;ul&gt;{posts.map((p) =&gt; &lt;li&gt;&lt;a href={`/posts/${p.id}/`}&gt;{p.data.title}&lt;/a&gt;&lt;/li&gt;)}&lt;/ul&gt;
+  &lt;/aside&gt;
+)}</code></pre>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-LINKS.md" target="_blank" rel="noopener">docs/API-LINKS.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-env/"><span class="small muted">Previous</span>Environments API</a>
+          <a class="next" href="../api-page-types/"><span class="small muted">Next</span>Page frames and page types</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>markstage.config Reference: Set Up a Site</title>
+    <meta name="description" content="Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/config/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="markstage.config Reference: Set Up a Site" />
+    <meta property="og:description" content="Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/config/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="markstage.config Reference: Set Up a Site" />
+    <meta name="twitter:description" content="Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "markstage.config: every key",
+          "item": "https://spcaeo.github.io/markstage/docs/config/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "markstage.config Reference: Set Up a Site",
+      "description": "Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas.",
+      "url": "https://spcaeo.github.io/markstage/docs/config/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/" aria-current="page">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">markstage.config: every key</li></ol></nav>
+        <h1>markstage.config: every key</h1>
+        <p class="lead left">Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#top-level">Top level</a></li><li><a href="#forms">Forms</a></li><li><a href="#collections">Collections</a></li><li><a href="#post-settings">Post settings</a></li><li><a href="#locales-and-hreflang">Locales and hreflang</a></li><li><a href="#editor">Editor</a></li><li><a href="#worked-example-the-example-blog">Worked example: the example blog</a></li><li><a href="#worked-example-a-two-locale-business-site">Worked example: a two-locale business site</a></li></ul></nav>
+        <div class="prose">
+<blockquote><p><strong>Not on npm yet: install from a clone.</strong> The <code>@markstage/*</code> packages are not published to npm. Clone this
+repository next to your site and link them, as the README's <a href="https://github.com/spcaeo/markstage/blob/main/README.md#quick-start" rel="noopener">quick start</a> shows
+(Option 2). Your site needs Astro 7.4 or newer.</p></blockquote>
+<p>A site tells Markstage what it edits, and how to draw it, in one file at the project root:
+<code>markstage.config.mjs</code>, <code>.js</code> or <code>.ts</code> (the first found, in that order). Both sides read it with the same loader,
+<code>@markstage/core/site-config</code>:</p>
+<ul><li><code>astro dev</code>, through the <code>@markstage/astro</code> integration;</li><li>the Markstage server.</li></ul>
+<p>Restart either one after changing the file. Mistakes stop the start with <code>markstage.config: &lt;what is wrong&gt;</code>.</p>
+<p>The server's own settings (sign-in, git, publish commands, preview origin) are in its <code>config.json</code>, not here. See
+docs/DEPLOY.md; the preview's keys (<code>preview.origin</code>, <code>preview.warm</code>: the site's dev server started with Markstage
+and kept warm, <code>preview.idleMinutes</code>, …) are in docs/API-PREVIEW.md.</p>
+<pre data-lang="js"><code class="language-js">import { defineConfig } from '@markstage/astro'; // or '@markstage/core/site-config'; it only adds editor hints
+
+export default defineConfig({
+  siteName: 'My blog',
+  collections: [{ id: 'posts', format: 'md', dir: 'src/content/blog', url: '/blog/{id}/' }],
+});</code></pre>
+<p>Paths to modules and CSS that start with <code>.</code> are relative to the project root. Anything else is a package name or
+a site path.</p>
+<h2 id="top-level">Top level</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>siteName</code></td><td>string</td><td><code>'Site'</code></td><td>The name in the editor's title and header. Alert mail is named for it too (subject <code>&lt;siteName&gt;: …</code>, signed &quot;the  editor (Markstage)&quot;); a site that sets none gets mail from &quot;Markstage&quot;, never &quot;Site&quot;.</td></tr><tr><td><code>siteUrl</code></td><td>URL</td><td>astro.config <code>site</code> in dev, else none</td><td>The live address. It is used for the hreflang links and addresses shown in Post settings, and for copied full URLs. Set it here so the server, which has no astro.config, has it too.</td></tr><tr><td><code>collections</code></td><td>list</td><td><code>[]</code></td><td>What the editor edits. See <a href="#collections">Collections</a>.</td></tr><tr><td><code>compat</code></td><td><code>{collection}</code></td><td>none</td><td>The collection that the older <code>/studio-api/</code> routes serve (docs/API.md, &quot;Compatibility&quot;).</td></tr><tr><td><code>media</code></td><td><code>{dir}</code></td><td><code>src/assets/uploads</code></td><td>Where uploads go, relative to the project. Frontmatter image paths are relative to it. A folder under <code>public/</code> (the example blog's <code>public/uploads</code>) is served from the site root, so its files are used as they are.</td></tr><tr><td><code>authors</code></td><td><code>true</code> or <code>{dir, url, coAuthors, organization, collections, fields}</code></td><td>none</td><td>The site's authors as JSON files in its content (<code>src/content/authors/&lt;slug&gt;.json</code>), each with an author page (<code>/author/{slug}/</code>): the Authors screen, the author picker in Post settings, the save and build checks and <code>@markstage/astro/authors</code> (docs/API-AUTHORS.md). <code>coAuthors</code> names the frontmatter list of co-authors; <code>fields</code> maps the profile to the file's own keys (<code>null</code> leaves one out).</td></tr><tr><td><code>frames</code></td><td><code>true</code> or <code>{key, list: [{id, label, hint}]}</code></td><td>none</td><td>How the site lays a page out around its content, kept in each entry (<code>frame</code>): <code>true</code> gives <strong>full width</strong> (money and landing pages), <strong>reading</strong> (articles: the menu and a list of contents) and <strong>plain</strong> (legal and thank-you pages). A collection's <code>frame</code> is its entries' default. The Page box in Post settings and above a page's sections, the save and build checks, and <code>@markstage/astro/pages</code> for the site's layout (docs/API-PAGE-TYPES.md).</td></tr><tr><td><code>pageTypes</code></td><td><code>{key?, types: [{id, label, description?, collections?, frame?, template?, locks?, checks?}]}</code></td><td>none</td><td>What a page is for (a money page, an article, a pillar…), kept in each entry (<code>pageType</code>): each type brings a frame, a shared Library page template to start from, locks that hold on its pages and checks that say what such a page still needs (<code>section</code>, <code>field</code>, <code>jsonld</code>, <code>linksTo</code>; <code>level: 'warn'</code> or <code>'block'</code>, which stops a publish). docs/API-PAGE-TYPES.md has the shape and a full example.</td></tr><tr><td><code>topics</code></td><td><code>true</code> or <code>{dir, collections, money, follow, sponsored, generic, keywords, robots, enough, related}</code></td><td>none</td><td>The site's subjects as JSON files (<code>markstage/topics/&lt;id&gt;.json</code>), each with a main page, groups with a lead page, and pages: the Topic map, the topic part of Page settings, the link map of every page's text, link suggestions both ways (Accept links the words on the other page), Health, the page type check <code>links</code>, and <code>@markstage/astro/topics</code> for a &quot;More on this topic&quot; block (docs/API-LINKS.md). <code>money</code> names the service pages (page types or <code>/paths/</code>); <code>follow</code> and <code>sponsored</code> list outside domains; <code>related</code> is the site's own finder of the words that name a page (a command).</td></tr><tr><td><code>locales</code></td><td>list</td><td>none</td><td>Copies of every page per region or language. See <a href="#locales-and-hreflang">Locales</a>.</td></tr><tr><td><code>themes</code></td><td><code>{dark: {attr, value}}</code></td><td>none</td><td>The site's dark colours and how its page turns them on: a <code>data-</code> attribute on <code>&lt;html&gt;</code> (<code>{attr: 'data-theme', value: 'dark'}</code>) or a class (<code>{attr: 'class', value: 'dark'}</code>). The screen check shows the page in the editor's own colours (the editor dark, the page dark), and its Light / Dark switch picks the other one for a look (<code>?theme=dark</code> or <code>?theme=light</code>, only when it differs from the editor's); without <code>themes</code> that switch is greyed (&quot;This site has no dark mode&quot;). The editor's own Light / Dark / System theme needs no config.</td></tr><tr><td><code>editButton</code></td><td><code>{cms, corner?}</code></td><td>none</td><td>An &quot;Edit this page&quot; link on the built site for people signed in to Markstage (docs/API-EDIT.md). <code>cms</code> is the Markstage server's address (its <code>publicOrigin</code>, e.g. <code>'https://cms.example.com'</code>); <code>corner</code> is <code>'bottom-right'</code> (default), <code>'bottom-left'</code>, <code>'top-right'</code> or <code>'top-left'</code>. The build adds one inline script to every page (on the pilot site: the same bytes on each); a visitor's browser runs one regular expression and nothing else, and the page never names the CMS. Signing in to Markstage sets the cookie the script looks for; it reaches the site when both share a host name or a parent domain. Needs https. Without it the build is byte for byte the same as without Markstage.</td></tr><tr><td><code>locks</code></td><td><code>{pages: {&lt;section type&gt;: [...]}, articles: {&lt;box&gt;: [...]}}</code></td><td>none</td><td>Blocks that always stay (docs/OPERATIONS.md &quot;Locks&quot;): each names what can't be done, <code>'move'</code>, <code>'remove'</code> or <code>'edit'</code>. <code>pages</code> names page sections by their type (<code>hero</code>), <code>articles</code> an article's boxes by their block name (<code>faq</code>; a run of them drawn as one box counts as one). They carry a closed padlock with that reason (Settings → Locks lists them; an editor lifts one on a single page with &quot;Unlock on this page&quot;), their grip shows the menu with those actions greyed and &quot;Locked by the site: can't be moved or deleted.&quot;, a drag does not start, Alt+↑/↓ leaves them where they are, and the Outline marks them. Other blocks still move past them. The server checks every save against them too (<code>423</code>, docs/API.md &quot;Locks&quot;). Owners and administrators can change them in Settings → Locks: they are then kept in <code>markstage.locks.json</code> beside this file, which wins over this key (move the rules there, or remove the file to come back to these). One entry can lift a rule for itself (&quot;Unlock on this page&quot;, docs/API.md &quot;Locks&quot;).</td></tr><tr><td><code>health</code></td><td><code>{command: [argv], timeoutSeconds?}</code></td><td>none</td><td>The site's health hook (server only): a command, run in the repo with no shell, that prints every address the host serves with its status. Site health lists broken pages, redirect chains and redirects from it (docs/API.md &quot;Site health&quot;). <code>timeoutSeconds</code> defaults to 120. The server's config.json may name one for a site without markstage.config; this one wins.</td></tr><tr><td><code>integrations</code></td><td><code>{&lt;name&gt;: {url, value, text, …}}</code></td><td>none</td><td>Lists of options fetched by the server from a JSON address on a schedule, for a <code>select</code> setting with <code>integration: '&lt;name&gt;'</code> to pick from (server only; docs/API-INTEGRATIONS.md). Each takes <code>url</code> (https), <code>value</code> and <code>text</code> (the keys, or dotted paths, of each item stored and shown), and may take <code>label</code>, <code>list</code> (where the list is in the answer), <code>detail</code>, <code>every</code> (minutes, 5 to 1440, default 60), <code>maxKB</code> (1 to 5120, default 1024) and `auth: {header?, scheme?, env</td><td>keyFile}<code>: the sign-in comes from a </code>MARKSTAGE_INTEGRATION_*` variable or a file outside the repo, never from this file.</td></tr><tr><td><code>forms</code></td><td><code>{&lt;id&gt;: {label, fields, …}}</code></td><td>none</td><td>The site's forms, which post to Markstage on the site's own host (server only). See <a href="#forms">Forms</a>. The server's config.json may name them for a site without markstage.config; these win.</td></tr><tr><td><code>xDefault</code></td><td>locale code</td><td>the default locale</td><td>The copy that <code>hreflang=&quot;x-default&quot;</code> points at.</td></tr><tr><td><code>hreflang</code></td><td><code>{robots, canonical}</code></td><td>none</td><td>The frontmatter keys that decide whether a page emits hreflang.</td></tr><tr><td><code>localeOverridesKey</code></td><td>frontmatter key</td><td><code>'locales'</code></td><td>Where a locale's own title, description or slug are kept.</td></tr><tr><td><code>editor</code></td><td>object</td><td></td><td>How the editor draws entries. See <a href="#editor">Editor</a>.</td></tr></tbody></table></div>
+<h2 id="forms">Forms</h2>
+<p>A form on the site posts to <code>/markstage/forms/&lt;id&gt;</code> on the site's own host (the server's config.json <code>siteHosts</code>
+lists those host names; docs/DEPLOY.md &quot;Forms&quot;). What it keeps, checks and mails is set here. Messages go to the
+Inbox in the data dir (never the repo); docs/API-INBOX.md &quot;Forms and the Inbox&quot; has the answers and the limits.</p>
+<pre data-lang="js"><code class="language-js">forms: {
+  contact: {
+    label: 'Contact',
+    fields: {
+      name: { label: 'Name', required: true, max: 100 },
+      email: { label: 'Email', type: 'email', required: true },
+      number: { label: 'Phone', type: 'tel', required: true },
+      comment: { label: 'Message', type: 'textarea', required: true, min: 14 },
+      service_type: { label: 'Service type', max: 100 },
+    },
+    meta: { page: 'pageUrl', referrer: 'referrerURL', landing: 'landingURL', utmSource: 'u_source', utmMedium: 'u_medium' },
+    service: 'service_type',
+    honeypot: 'hp_website',
+    started: 'started',
+    thanks: '/thank-you/',
+    reply: { subject: 'Thank you for reaching out', text: 'Hi {name},\n\nThanks for contacting {siteName}. …' },
+    team: { subject: 'Inquiry from {name} from {siteName} website' },
+  },
+},</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>label</code></td><td>string</td><td>the id</td><td>The form's name in the Inbox and its mail.</td></tr><tr><td><code>fields</code></td><td><code>{&lt;posted name&gt;: {label, type, required, min, max, options}}</code></td><td>required</td><td>What is kept, in this order; anything else posted is dropped. <code>type</code>: <code>text</code> (default; <code>email</code> for a field named <code>email</code>), <code>email</code>, <code>tel</code> (7 to 15 digits), <code>textarea</code> (keeps line breaks; <code>max</code> 5000), <code>url</code> (http or https). <code>max</code> defaults to 200 for one line. <code>options</code>: the only values allowed.</td></tr><tr><td><code>name</code>, <code>email</code></td><td>field name</td><td><code>name</code>, <code>email</code> when there</td><td>The sender's name and address: the Inbox lists them, the limit counts the address, the thank-you mail goes to it.</td></tr><tr><td><code>service</code></td><td>field name</td><td><code>service</code> or <code>service_type</code> when there</td><td>What the visitor asked about: the Inbox filters by it.</td></tr><tr><td><code>meta</code></td><td><code>{page, referrer, landing, referringDomain, utmSource, utmMedium, utmCampaign}</code> → posted name</td><td>none</td><td>Where the visitor came from, kept beside the fields and shown in the team mail and the Inbox.</td></tr><tr><td><code>honeypot</code></td><td>posted name</td><td>none</td><td>A field people never see: filled in, the message is kept as spam.</td></tr><tr><td><code>started</code>, <code>minSeconds</code></td><td>posted name, seconds</td><td>none, 3</td><td>The time (ms) the page's script set when the form appeared: sent sooner than <code>minSeconds</code>, the message is kept as spam.</td></tr><tr><td><code>perDay</code>, <code>limitMessage</code></td><td>number, text</td><td>3, &quot;You've already submitted a request today. Please try again tomorrow.&quot;</td><td>At most this many a day from one address or for one email address.</td></tr><tr><td><code>perHour</code></td><td>number</td><td>300</td><td>Real messages (never spam) an hour from everyone: past it, a message is stored as <code>held</code> and let through once the hour is under it again, the visitor answered as usual, the administrators told (docs/API-INBOX.md &quot;A flood&quot;). Raise it for a campaign day. 10 to 100000.</td></tr><tr><td><code>message</code>, <code>thanks</code></td><td>text, site path</td><td>&quot;Thank you. Your message was sent.&quot;, none</td><td>The answer to the page's script; a page with no script goes on to <code>thanks</code>.</td></tr><tr><td><code>reply</code></td><td><code>{subject, text}</code></td><td>none</td><td>The thank-you mail to the visitor, through the server's <code>notify.email</code>. <code>{name}</code> (left out when it looks like a link or an address) and <code>{siteName}</code>. Settings → Forms can change it or turn it off (kept in the data dir, docs/API.md).</td></tr><tr><td><code>team</code></td><td><code>{subject}</code></td><td><code>{siteName}: a message from {name} ({form})</code></td><td>The team mail's subject (<code>{name}</code>, <code>{form}</code>, <code>{siteName}</code>); it goes to the alert recipients with every field and <code>Reply-To</code> the visitor.</td></tr><tr><td><code>keepDays</code></td><td>days</td><td>none: kept forever</td><td>Opt-in: messages older than this are deleted. Spam goes after 30 days, and the visitor's address and browser are cleared after 30 days whatever this says.</td></tr><tr><td><code>crm</code></td><td><code>{kind: 'odoo', source, env?, phone?, description?}</code></td><td>none</td><td>Opt-in: each message also goes to Odoo as a lead (docs/API-INBOX.md &quot;Odoo&quot;). <code>source</code>: the Odoo lead source's name (&quot;Example Website&quot;). <code>env</code>: the prefix of the environment variables with the address and sign-in (default <code>ODOO</code>: <code>ODOO_URL</code>, <code>ODOO_DB</code>, <code>ODOO_EMAIL</code>, <code>ODOO_PASSWORD</code>, <code>ODOO_ENABLE</code>); they are never written here. <code>phone</code>, <code>description</code>: the fields for those (defaults: <code>phone</code> or <code>number</code>, the first long text). The country, region, city and <code>mobile_country_code</code> come from the visitor's address (the city file), never from a field.</td></tr><tr><td><code>leads</code></td><td><code>{kind: 'skald', url, action?, env?, vid?, test?}</code></td><td>none</td><td>Opt-in: each real message (never spam) also goes to Skald as a lead (docs/API-INBOX.md &quot;Leads for analytics&quot;). <code>url</code>: Skald's lead hook for the site. <code>action</code>: a short word (default <code>contact</code>). <code>env</code>: the prefix of the secret's variable (default <code>SKALD_LEAD</code>: <code>SKALD_LEAD_SECRET</code>); it is never written here. <code>vid</code>: the posted value with Skald's visitor id (<code>skald('id')</code>), <code>test</code>: the posted value that marks a team's test lead with <code>1</code>; both are names of posted values that are not fields.</td></tr></tbody></table></div>
+<h2 id="collections">Collections</h2>
+<p>Each collection is a folder of entries. One file is one entry, and the entry's id is the file name without its
+extension.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>id</code></td><td><code>^[a-z][a-z0-9-]{0,39}$</code></td><td>required</td><td>Used in the editor's URLs (<code>#/e/posts/&lt;id&gt;</code>) and the API's (<code>collections/posts/…</code>).</td></tr><tr><td><code>label</code></td><td>string</td><td>the id</td><td>The name shown in the editor (e.g. Articles).</td></tr><tr><td><code>format</code></td><td><code>'md'</code> or <code>'json'</code></td><td>required</td><td><code>md</code> is Markdown with YAML frontmatter, edited on the canvas. <code>json</code> is a data file, edited with forms.</td></tr><tr><td><code>dir</code></td><td>path</td><td>required</td><td>The folder, relative to the project and inside it.</td></tr><tr><td><code>hasStatus</code></td><td>boolean</td><td><code>false</code></td><td>Entries can be drafts (<code>draft: true</code>) or scheduled (<code>publishAt</code> in the future). New entries start as drafts. Without it, every entry is live.</td></tr><tr><td><code>fields</code></td><td>object</td><td>below</td><td>Which frontmatter keys hold the entry's basics.</td></tr><tr><td><code>url</code></td><td>template or function</td><td>none</td><td>The entry's page address. Without it, the entry has no page: no preview and no screen check.</td></tr><tr><td><code>group</code></td><td>function</td><td>none</td><td>The section the search lists the entry under.</td></tr><tr><td><code>groups</code></td><td><code>{field, collection, order, label?}</code></td><td>none</td><td>The entries sorted into another collection's entries, each group keeping its own order (topic clusters): <code>field</code> is the setting that names the group (a key of <code>settings</code>, <code>'cluster'</code>), <code>collection</code> the groups' collection (<code>'clusters'</code>), <code>order</code> the key in a group's entry that lists entry ids shown first, in that order (the rest follow, newest first), <code>label</code> what the editor calls them (default &quot;Groups&quot;). The editor's Groups screen (<code>#/groups/&lt;collection&gt;?g=&lt;group&gt;</code>) lists a group's entries in that order, saves <code>order</code> when one is dragged, and moves an entry to another group through <code>site/move</code> (its address, redirects and links follow). The lists give each entry <code>groupId</code>.</td></tr><tr><td><code>gallery</code></td><td><code>{field?, variant?}</code> or <code>false</code></td><td><code>{field: 'sections'}</code> for a JSON collection</td><td>The section gallery (<code>#/gallery/&lt;collection&gt;</code>, linked from the Library): every section type and variation in <code>field</code> (the list of page sections), each drawn alone by the site's own components through the preview, at 1440 and 390 px, light and dark. <code>variant</code> is the key inside a section's value that names its variation (<code>'variant'</code>); without it, one sample per type. <code>false</code> leaves the collection out. Needs the server's preview (<code>preview.origin</code>).</td></tr><tr><td><code>settings</code></td><td>list</td><td>from <code>fields</code></td><td>The Post settings drawer (<code>md</code> only). See <a href="#post-settings">Post settings</a>. A <code>json</code> collection takes one <code>seo</code> setting only (<code>{type: 'seo', title, description}</code>, keys in the entry's JSON), with no drawer: its search title and description for the duplicate check, Health and the suggestions, instead of the entry's title and excerpt.</td></tr><tr><td><code>frame</code></td><td>a frame id</td><td><code>reading</code> (with <code>frames</code>)</td><td>The frame of the collection's entries that pick none and whose type gives none (docs/API-PAGE-TYPES.md). Needs <code>frames</code>.</td></tr><tr><td><code>defaultAuthor</code></td><td>author slug</td><td>none</td><td>The author written into a new entry when its maker has no author of their own (the server), and into every new entry in astro dev.</td></tr><tr><td><code>newEntry</code></td><td>function or <code>{ask, defaults}</code></td><td>none</td><td>Making a new entry (<code>md</code> only; the header's <strong>New</strong>, <code>#/new/&lt;collection&gt;</code>). <code>ask</code>: the <code>settings</code> keys the New sheet asks for besides the title, the ones the site's schema needs and nothing can guess (<code>['cluster']</code>). <code>defaults({title, id, collection, values, user, now})</code>: the frontmatter the file starts with (dates, an SEO title, a canonical address); <code>values</code> are the asked ones, <code>user</code> is the maker on the server (null in dev). The title, the slug (<code>fields.slug</code>, = the id) and the asked values always win; then the author and <code>draft: true</code>. A bare function is <code>defaults</code> with nothing to ask. Core's <code>newEntryFrontmatter()</code> does the merge for both the server and astro dev.</td></tr></tbody></table></div>
+<p><strong><code>fields</code></strong> maps each role to a frontmatter key. Dotted keys reach into objects, e.g. <code>seo.title</code>. A role set to
+null is not read.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Role</th><th scope="col">Default</th><th scope="col">Used for</th></tr></thead><tbody><tr><td><code>title</code></td><td><code>title</code></td><td>The title edited above the canvas, and the lists and search.</td></tr><tr><td><code>author</code></td><td><code>author</code></td><td>Lists, filters and the server's ownership rules.</td></tr><tr><td><code>tags</code></td><td><code>tags</code></td><td>Lists and filters.</td></tr><tr><td><code>date</code></td><td><code>date</code></td><td>Lists and sorting. The server sets it on a new status entry.</td></tr><tr><td><code>modified</code></td><td><code>modified</code></td><td>Lists.</td></tr><tr><td><code>excerpt</code></td><td><code>excerpt</code></td><td>Lists.</td></tr><tr><td><code>slug</code></td><td>none</td><td>The default slug field, and new entries' file names.</td></tr><tr><td><code>url</code></td><td>none</td><td>A frontmatter key that holds the page address itself. It wins over <code>url</code> below.</td></tr></tbody></table></div>
+<p><strong><code>url</code></strong> has two forms:</p>
+<ul><li>A template: <code>{id}</code> is the file name, and <code>{key}</code> or <code>{a.b}</code> is a frontmatter or JSON value. Examples:
+<code>'/blog/{id}/'</code>, <code>'/posts/{slug}/'</code>, <code>'{uri}'</code> (the whole address is stored in the entry).</li><li>A function <code>({id, data}) =&gt; string | null</code>. Use it when the address depends on other files; for example,
+the pilot site looks up the post's topic.</li></ul>
+<p><strong><code>group</code></strong> is a function <code>({id, data}) =&gt; string | null</code>. The search groups results under its value, for example
+&quot;Salesforce alternatives&quot;.</p>
+<h3 id="menus">Menus</h3>
+<p>A JSON collection with the id <code>navigation</code> holds the site's menus: one entry, or one per language when the
+languages' menus differ (a language picker then shows). The editor has a <strong>Site menus</strong> screen (<code>#/menus/&lt;entry&gt;</code>;
+under Content in the drawer, and in an entry's ⋯ menu). Every list in the entry whose items all have a <code>label</code> is a menu, named
+after where it is: <code>primary</code> is &quot;Primary&quot;, <code>footer.company</code> is &quot;Footer: Company&quot;, a list inside a column titled
+&quot;Company&quot; is &quot;Footer: Company&quot; too. Items nest with <code>children</code>; a menu whose items have <code>children</code> is a tree, as
+deep as it is now (the site's header decides how deep it can show).</p>
+<p>A site that names its pages its own way sets <code>linkKeys</code> on the collection: <code>{ id: 'navigation', …, linkKeys: { page:
+'pages' } }</code> reads <code>&quot;page&quot;: &quot;about-us&quot;</code> as a link to that page, and writes a picked page that way (in the old key's
+place). An entry of a collection no key names (a post, when only pages have one) is then written as its address.
+An item moved into a list takes that list's shape: <code>&quot;children&quot;: []</code> where every other item has one (an item whose
+last child moved out keeps its <code>[]</code>), none where none has. Keys that start with <code>_</code> (<code>_lock</code>) always stay last.</p>
+<p>An item links to an entry, <code>&quot;entry&quot;: &quot;pages/about-us&quot;</code> (<code>&lt;collection&gt;/&lt;id&gt;</code>): the site turns it into the entry's
+address when it builds, so moving the page never breaks the menu. Anything else is an address, <code>&quot;href&quot;: &quot;/blog/&quot;</code>
+or <code>&quot;https://…&quot;</code>. With neither it is a heading that opens its list. The screen picks a page or post from a search
+(stored as <code>entry</code>) or takes a typed address (<code>href</code>); a typed address that is one of the site's pages offers to
+link to the page instead, and an <code>entry</code> whose page is gone shows &quot;Missing page&quot;.</p>
+<pre data-lang="json"><code class="language-json">{ &quot;primary&quot;: [{ &quot;label&quot;: &quot;About us&quot;, &quot;entry&quot;: &quot;pages/about-us&quot; },
+              { &quot;label&quot;: &quot;Services&quot;, &quot;children&quot;: [{ &quot;label&quot;: &quot;Migration&quot;, &quot;entry&quot;: &quot;pages/data-migration&quot; }] },
+              { &quot;label&quot;: &quot;Blog&quot;, &quot;href&quot;: &quot;/blog/&quot; }],
+  &quot;footer&quot;: { &quot;company&quot;: [{ &quot;label&quot;: &quot;Contact&quot;, &quot;entry&quot;: &quot;pages/contact-us&quot; }] } }</code></pre>
+<p>The screen reorders (drag, keyboard, the grip's menu), nests, renames, changes links, adds a page, post or any
+address, duplicates and deletes, with undo. Every change saves that one list, so the file changes only where the
+menu did; every other key of an item (<code>cssClasses</code> …) stays. An item with <code>&quot;_lock&quot;: { &quot;move&quot;: true, &quot;remove&quot;: true,
+&quot;by&quot;: &quot;the site&quot; }</code> can't be moved or deleted (docs/OPERATIONS.md &quot;Locks&quot;); the site ignores keys that start with <code>_</code>.
+The site reads the entry itself (e.g. <code>getEntry('navigation', 'en')</code> in Astro).</p>
+<h2 id="post-settings">Post settings</h2>
+<p><code>settings</code> lists the fields of the drawer behind the gear (<code>?s=1</code>). When a writer saves, only the keys they changed
+are rewritten in the file; every other line stays byte for byte. Without <code>settings</code>, the drawer shows slug, excerpt,
+tags, author and date, for whichever of those <code>fields</code> names.</p>
+<p>Every field takes <code>label</code>, and may take <code>hint</code> (a line under it). A <code>key</code> is a frontmatter key; dotted keys are
+written as nested YAML.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col"><code>type</code></th><th scope="col">Needs</th><th scope="col">Also takes</th><th scope="col">Draws</th></tr></thead><tbody><tr><td><code>text</code></td><td><code>key</code></td><td><code>max</code>, <code>placeholder</code></td><td>A one-line input.</td></tr><tr><td><code>textarea</code></td><td><code>key</code></td><td><code>max</code>, <code>placeholder</code></td><td>A text box that grows as you type.</td></tr><tr><td><code>slug</code></td><td><code>key</code></td><td></td><td>The slug, with the address it gives and a warning that the page moves.</td></tr><tr><td><code>date</code></td><td><code>key</code></td><td></td><td>Date and time (UTC).</td></tr><tr><td><code>tags</code></td><td><code>key</code></td><td></td><td>Tag chips, with suggestions from the collection.</td></tr><tr><td><code>select</code></td><td><code>key</code></td><td><code>from</code> (a collection id), <code>options</code> (<code>[value, label]</code> pairs) or <code>integration</code> (a name in <code>integrations</code>)</td><td>A choice. With <code>from</code>, the choices are that collection's entries; with <code>integration</code>, that list's options as last fetched, searched as you type, and a save is checked against them (an old value that left the list is kept until it is changed).</td></tr><tr><td><code>image</code></td><td><code>key</code></td><td><code>alt</code> (key), <code>clears</code> (keys), <code>focal</code> (key), <code>altFallback</code> (key)</td><td>A picker: the picture, Replace (upload, drop or paste), Choose from library, Crop, Remove, the alt text, and the file's path under &quot;Details&quot;. <code>clears</code> lists keys that are removed when the image changes, e.g. a stored width and height. <code>focal</code> is where the image's focal point is kept, as a CSS position (<code>&quot;50% 30%&quot;</code>) the site uses for <code>object-position</code> when it crops the image; without it no focal point is offered. <code>altFallback</code> names the key the site uses as alt text while <code>alt</code> is empty (e.g. <code>&quot;title&quot;</code>): the editor then says &quot;Uses the title as alt text&quot; instead of warning, and the alt checks (canvas badge, preflight) count the image as having alt text. Only set it when the site really renders that fallback. A block pack's head can show the image on the canvas with <code>ctx.image()</code>, edited there (upload, replace, crop, alt text, focal point, remove).</td></tr><tr><td><code>author</code></td><td><code>key</code></td><td><code>coAuthors</code> (key)</td><td>One of the site's authors (config <code>authors</code>), picked from a searchable list, with &quot;Add … as a new author&quot; and co-authors as chips; an author the site does not have is a warning. With <code>authors</code> on, a <code>text</code> or <code>select</code> setting of the author key becomes this field.</td></tr><tr><td><code>switch</code></td><td><code>key</code></td><td><code>default</code> (<code>true</code> or <code>false</code>; <code>false</code> when left out)</td><td>A checkbox: on or off. The file holds the key only when it is not the default (<code>toc: false</code> for a switch that is on by default); turned back to the default, the key is removed.</td></tr><tr><td><code>seo</code></td><td><code>title</code>, <code>description</code> (keys)</td><td><code>titleMax</code> (60), <code>descriptionMax</code> (160), <code>keyphrase</code> (key)</td><td>Meta title and description, with counters and a search-result preview. Empty values show the title and excerpt as they will be used. <code>keyphrase</code> is where the focus keyphrase is kept (a string, or a list whose first item is the one checked, e.g. Rank Math's <code>seo.focusKeywords</code>): the SEO check (the header's SEO button) then edits it and checks where it appears; without it the keyphrase section is hidden.</td></tr><tr><td><code>social</code></td><td><code>title</code>, <code>description</code>, <code>image</code> (keys)</td><td></td><td>The social card, with a preview. Empty values fall back to the meta title and description (then the title and excerpt), and to the cover image.</td></tr></tbody></table></div>
+<h2 id="locales-and-hreflang">Locales and hreflang</h2>
+<p>A site with <code>locales</code> serves a copy of every page per region or language, each under its own path prefix. One
+source file serves every copy, and a locale may rewrite its text when the site is built (<code>spelling</code>).</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>code</code></td><td>language tag</td><td>required</td><td><code>en-CA</code>, <code>en-US</code>, <code>fr</code>… This is the <code>hreflang</code> value, and the editor's <code>?region=</code>.</td></tr><tr><td><code>prefix</code></td><td><code>''</code> or <code>/path</code></td><td><code>''</code></td><td>Where the copies live: <code>''</code> is the root, <code>/en-us</code> puts them under <code>/en-us/…</code>.</td></tr><tr><td><code>default</code></td><td>boolean</td><td>the root locale</td><td>The copy the editor shows first. Only one locale may be the default.</td></tr><tr><td><code>label</code></td><td>string</td><td>the code</td><td>The name on the Region switch and in Post settings.</td></tr><tr><td><code>variety</code></td><td>string</td><td>none</td><td>The spelling it uses, in words: <code>'US'</code>, <code>'Canadian'</code>. It is shown as &quot;Editing the source text (US spelling)&quot;.</td></tr><tr><td><code>spelling</code></td><td>module path</td><td>none</td><td>A module whose default export is <code>(text) =&gt; text</code>: what the build does to this locale's prose. The editor runs it on the entry's text to list and highlight what changes.</td></tr><tr><td><code>overrides</code></td><td>list of <code>title</code>, <code>description</code>, <code>slug</code></td><td><code>[]</code></td><td>Fields this locale may set on its own. They are stored under <code>&lt;localeOverridesKey&gt;.&lt;code&gt;.&lt;field&gt;</code>. Leave the list empty unless the site's pages read them.</td></tr></tbody></table></div>
+<p>Validation: codes and prefixes must be unique, there may be only one default, and <code>xDefault</code> must be one of the
+codes.</p>
+<p>Each page emits one hreflang link per locale and then <code>x-default</code>, the same set on every copy. The helpers in
+<code>@markstage/core</code> compute that set: <code>localePath</code>, <code>alternates</code>, <code>localeOfPath</code> and <code>emitsHreflang</code>.</p>
+<p><code>hreflang: {robots, canonical}</code> names the frontmatter keys the site reads for two cases where a page emits no
+hreflang:</p>
+<ul><li>its robots value contains <code>noindex</code>;</li><li>its canonical is another address.</li></ul>
+<p>Post settings then says so instead of listing links. Set these keys only if the site's pages follow that rule.</p>
+<p>In the editor:</p>
+<ul><li>the screen check has a Region switch (<code>?region=&lt;code&gt;</code>). It frames that locale's copy, through the preview route
+with <code>?locale=</code>.</li><li>For a locale with <code>spelling</code>, the editor counts what the spelling changes, lists it in the checks column and
+highlights it in the page.</li><li>The translation status of every entry in every locale with its own title or description (missing, outdated or
+done) is read from git: docs/API-TRANSLATIONS.md.</li><li>Post settings has a &quot;Languages and regions&quot; section: each copy's address (copy and open) and the hreflang set.</li></ul>
+<h2 id="editor">Editor</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">What it does</th></tr></thead><tbody><tr><td><code>lang</code></td><td>language tag</td><td><code>'en'</code></td><td>The editor page's <code>lang</code> (spell-check language in the canvas).</td></tr><tr><td><code>css</code></td><td>list of paths</td><td><code>[]</code></td><td>The site's stylesheets. The canvas draws an entry with them, so it looks like the page.</td></tr><tr><td><code>canvas.articleClass</code></td><td>classes</td><td><code>'ms-article'</code></td><td>Classes on the canvas's article element, as on the site's post page.</td></tr><tr><td><code>canvas.bodyClass</code></td><td>classes</td><td><code>'ms-body'</code></td><td>Classes on the element that holds the body text.</td></tr><tr><td><code>canvas.shell</code></td><td>boolean</td><td><code>false</code></td><td>Draw the canvas inside the entry's real page (dev, same origin): the page's header, rail, grid and breakpoints around the text, measured on the canvas's width, and &quot;What readers see&quot; for the text as the build prints it (docs/CANVAS-FIDELITY.md). Off: the canvas is a sheet of paper with the site's CSS.</td></tr><tr><td><code>packs</code></td><td>list</td><td><code>[]</code></td><td>Block packs: a site's own boxes. Each pack has <code>markdown</code> (how they are written; the server needs it too), <code>editor</code> (how they are edited) and <code>css</code>.</td></tr><tr><td><code>pageData</code></td><td>module path</td><td>none</td><td>Its default export returns data the packs need from the site (labels, icons), in the page as <code>#ms-page-data</code>.</td></tr><tr><td><code>links</code></td><td>module path or object</td><td>none</td><td><code>{special: [{href, label}], popup: {selector, note}}</code>. <code>special</code> links come first in the link search. Links matching <code>popup.selector</code> get a badge saying the site opens a popup. A module path keeps this next to the site code it mirrors.</td></tr><tr><td><code>linkCards</code></td><td>site path or <code>{url, fields}</code></td><td>none</td><td>The site's own hover-card data for its links: a JSON object keyed by page path (<code>'/link-cards.json'</code>). Resting the pointer on a link on the canvas shows that card (picture, group, title, description, date) with the address and Edit / Open / Copy / Remove. <code>fields</code> maps the data's key names (<code>{title: 't', description: 'e', image: 'i', tag: 'g', date: 'd'}</code>); the defaults are those names spelled out. Without it the card shows what the editor knows of the page (title, excerpt, group, and &quot;Draft: not live yet&quot; for a draft); a link to another site shows its domain.</td></tr><tr><td><code>images.widths</code></td><td>list</td><td><code>[{id: 'normal', label: 'Normal'}]</code></td><td>The widths an image may take: <code>{id, label, class}</code>. The first is the default and writes no class; each other one writes its <code>class</code> on the image's <code>&lt;figure&gt;</code>, which the site's CSS must style (e.g. <code>figure.wide</code>). With one width the editor shows no width choice.</td></tr><tr><td><code>images.captions</code></td><td>boolean</td><td><code>true</code></td><td>Images get a caption line under them. A caption is written as <code>&lt;figcaption&gt;</code> in the image's <code>&lt;figure&gt;</code>.</td></tr><tr><td><code>images.decorativeClass</code></td><td>class</td><td><code>'decorative'</code></td><td>The <code>&lt;figure&gt;</code> class that marks an image as decorative (no alt text on purpose), so the editor stops asking for alt text.</td></tr><tr><td><code>goLive</code></td><td>sentence</td><td>&quot;It goes live when the change is committed and the site is built and deployed, or published from the Markstage server.&quot;</td><td>In dev mode a save says &quot;Saved on this computer, not live yet.&quot; and then this sentence: how a change reaches the live site, in the site's own terms (e.g. &quot;It goes live when the site is published.&quot;). At most 300 characters.</td></tr><tr><td><code>favicon</code></td><td>site path</td><td>none</td><td>The editor tab's icon.</td></tr><tr><td><code>preload</code></td><td>site paths</td><td><code>[]</code></td><td>Fonts to preload (woff2), so the canvas does not flash.</td></tr><tr><td><code>aliases</code></td><td>site paths</td><td><code>[]</code></td><td>Older addresses of the editor (<code>/studio</code>) that open it in <code>astro dev</code>.</td></tr></tbody></table></div>
+<h3 id="how-images-are-written">How images are written</h3>
+<p>A plain image stays plain Markdown: <code>![alt](../../assets/uploads/2026/10/chart.webp)</code>. An image with a caption, a width
+other than the first, or the decorative mark is written as a figure around the same Markdown image, so the site still
+processes the image as usual (Astro optimises it):</p>
+<pre data-lang="md"><code class="language-md">&lt;figure class=&quot;wide&quot;&gt;
+
+![A dashboard with three boards](../../assets/uploads/2026/10/chart.webp)
+
+&lt;figcaption&gt;The board view, after the import&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+<p>The caption is plain text (<code>&amp;</code>, <code>&lt;</code> and <code>&gt;</code> escaped). A figure written any other way is kept as HTML, unchanged.
+Uploads go to <code>media.dir/&lt;year&gt;/&lt;month&gt;/</code> and the content refers to them relative to the entry's file.</p>
+<h2 id="worked-example-the-example-blog">Worked example: the example blog</h2>
+<p><code>examples/blog/markstage.config.mjs</code> uses no block packs, has one collection, and keeps the defaults everywhere
+else.</p>
+<pre data-lang="js"><code class="language-js">export default defineConfig({
+  siteName: 'Example blog',
+  collections: [
+    {
+      id: 'posts',
+      label: 'Posts',
+      format: 'md',
+      dir: 'src/content/posts',
+      hasStatus: true, // drafts and scheduling
+      fields: { excerpt: 'description' }, // the blog calls its excerpt `description`
+      url: '/posts/{id}/',
+      frame: 'reading', // a post with no frame of its own or of its type
+    },
+  ],
+  // full width, reading or plain (src/layouts/Base.astro draws each), and what a post is for
+  frames: true,
+  pageTypes: {
+    types: [
+      { id: 'guide', label: 'Guide', collections: ['posts'], frame: 'full', template: 'lib_guide-post', checks: [{ id: 'topic', label: 'A topic', field: 'topic', level: 'block' }] },
+      { id: 'article', label: 'Article', collections: ['posts'], frame: 'reading', checks: [{ id: 'guide', label: 'Links to its guide', linksTo: { pageType: 'guide', sameField: 'topic' } }] },
+      { id: 'legal', label: 'Legal page', collections: ['posts'], frame: 'plain' },
+    ],
+  },
+  // authors as files (src/content/authors/), pages at /author/&lt;slug&gt;/ (src/pages/author/), co-authors allowed
+  authors: { coAuthors: 'coAuthors' },
+  compat: { collection: 'posts' },
+  editor: {
+    css: ['./src/styles/blog.css'],
+    canvas: { articleClass: 'post', bodyClass: 'post__body' }, // as in src/layouts/Post.astro
+  },
+});</code></pre>
+<p>The Post settings drawer comes from <code>fields</code>: excerpt (<code>description</code>), tags, author and publish date. The author is
+picked from the blog's authors (docs/API-AUTHORS.md), whose hub and pages are in <code>src/pages/author/</code>. Post settings
+starts with the Page box: the post's type, its frame and what its type still needs; the guide template ships in
+<code>markstage/library/template/lib_guide-post.json</code> (docs/API-PAGE-TYPES.md). There are no locales, so the Region
+switch and &quot;Languages and regions&quot; do not appear.</p>
+<h2 id="worked-example-a-two-locale-business-site">Worked example: a two-locale business site</h2>
+<p><code>markstage.config.mjs</code> of a business site with a Canadian and a US copy (abridged):</p>
+<pre data-lang="js"><code class="language-js">import { SITE } from './src/lib/seo/site.mjs';
+
+export default {
+  siteName: 'Example Co',
+  siteUrl: SITE, // https://www.example.com
+  // Canadian English at the root (x-default), a US copy under /en-us/. The files are written in US spelling and
+  // the root respells prose at build, with the same function the editor imports.
+  locales: [
+    { code: 'en-CA', prefix: '', default: true, label: 'Canada', variety: 'Canadian', spelling: './markstage/spelling-en-ca.ts' },
+    { code: 'en-US', prefix: '/en-us', label: 'United States', variety: 'US' },
+  ],
+  xDefault: 'en-CA',
+  hreflang: { robots: 'seo.robots', canonical: 'seo.canonical' }, // Seo.astro's rule
+  collections: [
+    {
+      id: 'posts',
+      label: 'Articles',
+      format: 'md',
+      dir: 'src/content/blog',
+      fields: { slug: 'slug' },
+      settings: [
+        { type: 'slug', key: 'slug', label: 'URL slug' },
+        { type: 'image', key: 'cover.src', alt: 'cover.alt', label: 'Cover image', clears: ['cover.width', 'cover.height'] },
+        { type: 'select', key: 'cluster', label: 'Topic', from: 'clusters' },
+        { type: 'select', key: 'author', label: 'Author', from: 'authors' },
+        { type: 'seo', label: 'Search engines', title: 'seo.title', description: 'seo.description' },
+        { type: 'social', label: 'Social card', title: 'seo.ogTitle', description: 'seo.ogDescription', image: 'seo.ogImage' },
+        // … excerpt, categories, tags, date, canonical
+      ],
+      // the address and the search group come from the post's topic cluster (src/content/clusters/*.json)
+      url: ({ id, data }) =&gt; `${clusters().get(data.cluster)?.path ?? '/blog/'}${data.slug ?? id}/`,
+      group: ({ data }) =&gt; clusters().get(data.cluster)?.title ?? data.cluster,
+    },
+    { id: 'pages', label: 'Pages', format: 'json', dir: 'src/content/pages', url: '{uri}' },
+    { id: 'authors', label: 'Authors', format: 'json', dir: 'src/content/authors', fields: { title: 'name' } },
+    { id: 'clusters', label: 'Topics', format: 'json', dir: 'src/content/clusters' },
+  ],
+  compat: { collection: 'posts' },
+  editor: {
+    lang: 'en-CA',
+    css: ['./src/styles/tokens.css', './src/styles/base.css', './src/styles/prose.css', './src/styles/article.css', './src/styles/article-parts.css'],
+    canvas: { articleClass: 'post post--rich', bodyClass: 'prose post__body' },
+    packs: [{ markdown: './markstage/blocks/markdown.mjs', editor: './markstage/blocks/editor.ts', css: './markstage/blocks/canvas.css' }],
+    pageData: './markstage/page-data.ts',
+    links: './markstage/links.ts', // the booking link, and the selector of the site's booking popup
+    favicon: '/favicon-32x32.png',
+    preload: ['/fonts/geist-latin-wght.woff2', '/fonts/geist-mono-latin-wght.woff2'],
+    aliases: ['/studio'],
+  },
+};</code></pre>
+<p>The site's own round-trip check (a script in its repo) keeps parts of this config honest against
+the site's own code:</p>
+<ul><li>section 7: <code>links.ts</code> popup selector equals the site's booking-popup rule;</li><li>section 8: the locales equal <code>src/lib/seo/i18n.mjs</code>, and every built article page emits exactly the hreflang set
+the editor shows.</li></ul>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/CONFIG.md" target="_blank" rel="noopener">docs/CONFIG.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../writing/"><span class="small muted">Previous</span>Writing with Markstage</a>
+          <a class="next" href="../deploy/"><span class="small muted">Next</span>Deploying Markstage</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

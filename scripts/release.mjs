@@ -59,7 +59,13 @@ execFileSync('npm', ['install', '--package-lock-only', '--ignore-scripts', '--no
 files.push('package-lock.json');
 writeSecurityTable(next);
 files.push('SECURITY.md');
+// the public site states the version (JSON-LD softwareVersion): rebuild it so the tagged commit's site/ is current
+// and the site test (site/ equals a fresh build) passes on the tag
+if (fs.existsSync(path.join(root, 'scripts/site/build-site.mjs'))) {
+  execFileSync(process.execPath, [path.join(root, 'scripts/site/build-site.mjs')], { cwd: root, stdio: 'inherit' });
+  files.push('site');
+}
 run(['add', '--', ...files]);
-run(['commit', '-q', '-m', `Release v${next}\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`]);
+run(['commit', '-q', '-m', `Release v${next}\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`]);
 run(['tag', '-a', `v${next}`, '-m', `Markstage v${next}`]);
 console.log(`Release v${next} (was ${current}): committed and tagged. Now: git push origin main v${next}`);

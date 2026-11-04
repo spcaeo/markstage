@@ -28,6 +28,7 @@ import {
   parseLsTree,
   planChanges,
   privateTextProblems,
+  publicPrAuthors,
   publicSubjects,
   selectFiles,
   strayPaths,
@@ -219,7 +220,9 @@ function main() {
   const subjects = lastKnown
     ? git(['log', '--no-merges', '--format=%s', `${last}..${fullSha}`], { cwd: root }).split('\n').filter(Boolean).reverse()
     : [];
-  const message = commitMessage({ shortSha, fullSha, subjects: publicSubjects(subjects, config.privateSubjectWords), first: !hasHead });
+  // the contributors of public pull requests re-applied here (a `Public-PR: #<n>` trailer) are credited as co-authors
+  const coAuthors = lastKnown ? publicPrAuthors(git(['log', '--no-merges', '--format=%an <%ae>%x1f%B%x1e', `${last}..${fullSha}`], { cwd: root })) : [];
+  const message = commitMessage({ shortSha, fullSha, subjects: publicSubjects(subjects, config.privateSubjectWords), first: !hasHead, coAuthors });
   // commitAuthor is both the author and the committer: git records both, and the committer would otherwise be this
   // machine's identity (often a personal email)
   const who = config.commitAuthor?.match(/^(.+?)\s*<([^>]+)>$/);

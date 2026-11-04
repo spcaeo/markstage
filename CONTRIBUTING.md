@@ -6,19 +6,27 @@ Please read them before you open a pull request.
 
 ## Set up
 
+Markstage is not on npm yet: you work from a clone. Running every test needs **Node 24** (the editor's tests are
+TypeScript that Node runs directly) and **git** with a name and email set (the tests make commits in throwaway
+repos). Markstage itself runs on Node 22.13 or newer.
+
 ```sh
 git clone https://github.com/spcaeo/markstage && cd markstage
 npm ci                                    # installs exactly what package-lock.json says
+npx playwright install chromium           # once: the browser some editor tests and the server's browser tests use
 npm test                                  # every package's tests must pass
 ```
+
+`npm test` builds the editor's preview agent (`npm run build:agent -w packages/editor`) the first time the server's
+browser tests need it. If Chromium is missing, those tests stop at once and print the command above. On Linux, use
+`npx playwright install --with-deps chromium` to get its system libraries too. The browser tests take their ports
+from 18231 up; when those are busy, set `MARKSTAGE_E2E_PORT_BASE` to another free base.
 
 `npm ci` also turns on a pre-commit secret scan (`scripts/hooks/pre-commit`): a commit that adds a key, token or
 password is stopped, with the line shown masked. A test that needs a key-shaped value builds it at run time from
 pieces. `MARKSTAGE_SKIP_HOOKS=1 npm ci` leaves it off.
 
-Node 22.13 or newer (Markstage keeps its data in `node:sqlite`). The server's browser tests need Playwright's
-Chromium once (`npx playwright install chromium`) and the editor's preview agent built first
-(`npm run build:agent -w packages/editor`).
+Markstage keeps its own data in `node:sqlite`, which is why it needs Node 22.13 or newer.
 
 `examples/blog` is a small Astro site to try the editor on. docs/ARCHITECTURE.md explains the parts; docs/API.md
 and docs/CONFIG.md describe the server routes and the site config.
@@ -53,7 +61,7 @@ Fewer packages mean fewer ways in. What each package uses at run time today:
 | `@markstage/server` | `@markstage/core`; `sharp` (optional, for picture uploads). Everything else is Node's own (`node:http`, `node:crypto`, `node:sqlite`, `node:child_process`). |
 | `@markstage/core` | `yaml`, `unified`, `remark-parse`, `remark-gfm`, `decode-named-character-reference` |
 | `@markstage/editor` | `@markstage/core`, TipTap 3 (pinned to one exact version), CodeMirror 6 and `@lezer/highlight`. It runs in the browser, built by `build-editor`. |
-| `@markstage/astro` | `@markstage/core`, `@markstage/editor`, `yaml`; Astro 5 or newer is the site's own (a peer dependency); uses the site's `sharp` when it has one. |
+| `@markstage/astro` | `@markstage/core`, `@markstage/editor`, `yaml`; Astro 7.4 or newer (`^7.4.4`) is the site's own (a peer dependency); uses the site's `sharp` when it has one. |
 
 The repo's own tools (`playwright`, `typescript`) are dev dependencies, pinned to exact versions.
 
@@ -77,6 +85,10 @@ The rules:
 3. Add or update tests; `npm test`, `npm run test:scripts`, `npm run typecheck`, `npm run generic` and
    `npm run lines` must pass (CI runs them all, plus `npm audit` and gitleaks).
 4. Update the docs the change touches.
+5. **How a pull request lands.** This public repository is made from a private one. A pull request that is accepted
+   is re-applied there with you as the commit's author, then synced back here, where the public commit names you as
+   a co-author (`Co-authored-by:`, so GitHub credits you). The pull request is closed with a link to that commit, and
+   the CHANGELOG entry for the release that ships it names you.
 
 ## Contributor licence agreement
 

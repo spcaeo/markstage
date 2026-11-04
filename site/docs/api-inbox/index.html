@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Forms Inbox, Messages and Alerts</title>
+    <meta name="description" content="The site forms post to Markstage on your own host: spam checks, limits, team mail and thank-you mail, the Inbox for messages and who hears about which alerts." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/api-inbox/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Forms Inbox, Messages and Alerts" />
+    <meta property="og:description" content="The site forms post to Markstage on your own host: spam checks, limits, team mail and thank-you mail, the Inbox for messages and who hears about which alerts." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/api-inbox/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Forms Inbox, Messages and Alerts" />
+    <meta name="twitter:description" content="The site forms post to Markstage on your own host: spam checks, limits, team mail and thank-you mail, the Inbox for messages and who hears about which alerts." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Forms, messages and alerts",
+          "item": "https://spcaeo.github.io/markstage/docs/api-inbox/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markstage Forms Inbox, Messages and Alerts",
+      "description": "The site forms post to Markstage on your own host: spam checks, limits, team mail and thank-you mail, the Inbox for messages and who hears about which alerts.",
+      "url": "https://spcaeo.github.io/markstage/docs/api-inbox/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/" aria-current="page">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Forms, messages and alerts</li></ol></nav>
+        <h1>Forms, messages and alerts</h1>
+        <p class="lead left">The site forms post to Markstage on your own host: spam checks, limits, team mail and thank-you mail, the Inbox for messages and who hears about which alerts.</p>
+        <div class="prose">
+<p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). Split out of it to keep each
+file readable: who hears about what (the alert rules and each person's choices), the site's forms, and the Inbox.</p>
+<h2 id="alerts-who-hears-about-what">Alerts: who hears about what</h2>
+<p>The site's rules (Settings → Alerts) say per kind whether it is on, which roles and people it reaches (besides the
+people it is about, such as who started the job), extra addresses, and the channels it leaves by (<code>email</code>, <code>slack</code>,
+<code>webhook</code>); the editor always shows it. Each person then chooses per kind that can reach them (My alerts): on or off,
+and <code>now</code> (mail at once), <code>digest</code> (one mail a day at <code>notify.digestHour</code>, server time) or <code>editor</code> (only in the
+editor). A person's default is <code>now</code> when their role is in <code>notify.email.roles</code> (who got alert mail before there were
+rules), else <code>editor</code>. <strong>Safety</strong> kinds (<code>backup.failed</code>, <code>user.invited</code>, <code>user.role</code>, <code>env.rules-changed</code>, <code>signin.new-device</code>) are always
+on and always go by mail; a person chooses only <code>now</code> or <code>digest</code>. A rule's extra addresses default to
+<code>notify.email.to</code>, except for a personal kind (a sign-in, a message given to you). Mail comes from the rules' sender
+name (else the name in <code>notify.email.from</code>) at <code>notify.email.from</code>'s address; the subject keeps the site's name.</p>
+<ul><li><code>GET site/alerts</code> (editor and above) → <code>{version, digestHour, channels: {email: {on, from, senderName, host, status,
+detail, lastAt}, slack: {on, host, status, detail, lastAt}, webhook: {…}}, kinds: [{kind, label, group, safety, on,
+roles, users: [{id, name}], extra, channels}], people: [{id, name, role}]}</code>. A channel not set up is <code>{on: false}</code>;
+<code>status</code> is how its last send went (<code>ok</code>, <code>error</code> or null), <code>detail</code> its answer.</li><li><code>PUT site/alerts {version, senderName?, kinds: [{kind, on?, roles?, userIds?, extra?, channels?}]}</code> (owner,
+administrator): only the kinds and keys sent change. <code>409 stale</code> with <code>current</code> when <code>version</code> is stale; <code>400</code> in
+plain words for an unknown kind or role, a person who is not a user, more than 20 addresses or one that is not an
+address, a sender name with <code>&lt; &gt; @ &quot; , ; :</code>, or a safety kind turned off or out of mail. Kept in
+<code>&lt;dataDir&gt;/alert-rules.json</code> (0600; addresses never go in the repo). Audited <code>site.alerts</code> <code>{changed: [{kind,
+from, to}], senderName?: {from, to}}</code> → the view plus <code>changed: [kinds, 'senderName']</code>.</li><li><code>GET me/alerts</code> (anyone signed in) → <code>{version, digestHour, kinds: [{kind, label, group, on, delivery, locked}]}</code>,
+the kinds that can reach this person (by role, by name, or about them); <code>PUT me/alerts {version?, kinds: [{kind, on,
+delivery}]}</code> → the view plus <code>changed</code> (<code>409 stale</code>; <code>400</code> for a safety kind off or <code>editor</code>; off keeps the
+delivery). Audited <code>me.alerts</code> <code>{changes: [{kind, from, to}]}</code> (<code>to</code> is a delivery or <code>off</code>).</li></ul>
+<p><code>POST site/notify/test {channel?}</code> (owner, administrator) sends a test alert through that channel (or every one):
+<code>{channels: [{channel: &quot;email&quot;|&quot;slack&quot;|&quot;webhook&quot;, ok, detail}]}</code> (<code>detail</code>: &quot;sent to …&quot;, &quot;answered 200&quot;, or what went
+wrong in plain words). <code>400</code> for an unknown channel; <code>409 not-set-up</code> without <code>notify</code> or that channel. Audited
+(<code>notify.test</code>). <code>GET site/health</code> says which are set up: <code>alerts: {email, slack, webhook}</code>.</p>
+<h2 id="forms-and-the-inbox">Forms and the Inbox</h2>
+<p>The site's forms post to Markstage on the site's own host names (config.json <code>siteHosts</code>), never on the CMS host;
+there the rest of Markstage answers <code>404</code>. Each form is described in the site's markstage.config <code>forms</code> (or
+config.json <code>forms</code>; docs/CONFIG.md): its fields, the visitor context kept beside them, the spam checks, the daily
+limit and the mail. Messages are kept in the data dir, never in the content repo.</p>
+<p><code>POST &lt;basePath&gt;/forms/&lt;id&gt;</code> (site host; form-encoded or JSON, at most 64 KB):</p>
+<ul><li><strong>Origin</strong> must be <code>https://</code> one of <code>siteHosts</code> (<code>403</code> otherwise, audited <code>security.origin</code>).</li><li><strong>Limits:</strong> at most <code>perDay</code> (3) messages a day from one address or for one email address, any case (<code>429</code>
+<code>{status: 429, error: limitMessage}</code>). The address is the connection's, or the hop a trusted proxy appended
+(<code>trustProxy</code>); a posted <code>ip</code> is ignored. Spam counts against a cap of 20 a day from one address and 60 a day
+from one network (an IPv4 /24, an IPv6 /64).</li><li><strong>A flood:</strong> past <code>perHour</code> (300) real messages (spam never counts) in an hour, the form is not turned off: a
+message is stored with status <code>held</code>, the visitor is answered as usual, nobody is mailed and nothing goes to the
+CRM yet, and the administrators get a <code>form.held</code> alert (once an hour per form, audited <code>forms.held</code>). Every
+minute, held messages go out oldest first while the hour is under the cap again (status <code>new</code>, the team mail, the
+thank-you, the CRM and the lead as for any message, &quot;let through&quot; in the history). Nobody can set <code>held</code> by hand;
+a person may still mark a held message handled or spam.</li><li><strong>Spam:</strong> a filled-in <code>honeypot</code> field, or a <code>started</code> time (ms) less than <code>minSeconds</code> (3) ago: kept with status
+<code>spam</code> and answered like a real message (<code>200</code>), so a bot learns nothing; nobody is told or mailed.</li><li><strong>Fields:</strong> only the form's own fields are kept (anything else posted is dropped). Text loses control characters,
+one-line fields lose line breaks; <code>required</code>, <code>min</code>, <code>max</code>, <code>type</code> (<code>email</code>, <code>tel</code>: 7 to 15 digits, <code>url</code>: http(s))
+and <code>options</code> are checked: <code>400 {status: 400, error, fields: {key: message}}</code>.</li><li><strong>Then:</strong> the message is stored, and only then <code>200 {status: 200, message}</code> (a page with no script,
+<code>Sec-Fetch-Mode: navigate</code>, gets <code>303</code> to <code>thanks</code>): the answer never waits on mail. Editors and above get a <code>form.message</code> notice, and the alert channels carry it: the email is the team mail (every
+field and where the visitor came from, <code>Reply-To</code> the visitor, subject <code>team.subject</code>). With <code>reply</code> (or one set
+in Settings → Forms, below), the visitor gets the thank-you mail through <code>notify.email</code>, from the alerts' sender
+name (greeted by name unless the name looks like a link or an address). A team mail that fails is kept on the
+message (<code>alert: 'failed'</code>, the reason, its history) and tried again after 5, 15, 60, 240 and 720 minutes, then
+daily, 12 tries in all; Site health counts them (<code>forms: {alertFailed}</code>).</li><li><strong>Place:</strong> with a city database on the server (docs/DEPLOY.md &quot;Forms&quot;), <code>meta.location</code> is the approximate place
+of the visitor's address (&quot;Toronto, Ontario, Canada&quot;), looked up when the message comes in; never what was posted.
+Its parts (city, region, country code) are kept beside it for a CRM's own fields (not in the API).</li><li><strong>CRM:</strong> a form with <code>crm</code> (docs/CONFIG.md) also sends each message to Odoo as a lead, after the answer (below,
+&quot;Odoo&quot;). Spam never goes, and nor does anything outside production.</li><li><strong>Retention</strong> (hourly): messages are kept forever unless the form sets <code>keepDays</code>; spam goes after 30 days, and
+the visitor's address and browser are cleared after 30 days (<code>forms.retention</code> in the audit with the counts).</li></ul>
+<p>The Inbox: every message from the site's forms and the viewer's own alerts in one list (editor and above; owner and
+administrator also delete, export and see addresses). A message is <code>new</code>, <code>handled</code>, <code>spam</code> or <code>held</code> (by the server, during a flood), can be given to a
+person, and gets notes for the team; an alert is <code>new</code> until seen (<code>handled</code>).</p>
+<ul><li><code>GET inbox?q=&amp;kind=message|alert&amp;status=new|handled|spam|held&amp;form=&amp;service=&amp;assignee=&lt;user id&gt;|none&amp;alert=failed&amp;crm=failed&amp;from=&amp;to=&amp;page=</code>
+→ <code>{items, total, page, pages, perPage: 50, facets: {forms: [{id, label, count}], services: [{value, count}],
+status: {new, handled, spam, held}, alertFailed, crmFailed}, credits}</code>, newest first. <code>credits</code>: the line the city database asks
+to show with its places (DB-IP's: &quot;IP Geolocation by DB-IP (<a href="https://db-ip.com" rel="noopener">https://db-ip.com</a>), CC BY 4.0&quot;), or null. A message item: <code>{id, kind: 'message', at, status, form, formLabel, from:
+{name, email}, service, summary, assignee: {id, name} | null, imported: {from: 'wordpress', id} | null, alert: null | 'pending' |
+'sent' | 'none' | 'failed', crm: null | {state: 'pending' | 'sent' | 'failed', name: 'Odoo', leadId, error}}</code> (<code>error</code>: why, when failed); an alert:
+<code>{id, kind: 'alert', at, status, alertKind, level, link, summary, assignee: null}</code>. Spam is left out unless asked
+for; <code>form</code>, <code>service</code>, <code>assignee</code>, <code>alert</code>, <code>crm</code>, <code>status=spam</code> and <code>status=held</code> list messages only. <code>q</code> finds text in the name, email, fields
+and context, and in an alert's words (<code>%</code> and <code>_</code> are literal). <code>from</code> and <code>to</code> are days (<code>2026-10-28</code>, UTC). <code>400</code>
+in words for anything else. The <code>form.message</code> alerts are the messages themselves, so they are not listed twice.</li><li><code>GET inbox/:id</code> → the item plus <code>fields: [{key, label, type, value}]</code> (in the form's order; a field the form no
+longer has under its own name), <code>meta: {page, referrer, landing, referringDomain, utmSource, utmMedium,
+utmCampaign, location}</code> (owner and administrator also get <code>ip</code> and <code>userAgent</code>), <code>spam</code>, <code>alertTries</code>, <code>alertError</code>,
+<code>alertNextAt</code>, <code>crmTries</code>, <code>crmError</code>, <code>crmNextAt</code>, <code>crmAt</code>, <code>notes: [{id, at, by: {id, name}, text}]</code>, <code>history: [{at, by: {id, name} | null, change}]</code> and <code>version</code> (<code>r&lt;n&gt;</code>; an alert: <code>seen</code> or
+<code>unseen</code>). <code>404</code> for another person's alert.</li><li><code>PATCH inbox/:id {status?, assigneeId?, version}</code>: <code>409 stale</code> with <code>current</code> when someone changed it meanwhile.
+<code>assigneeId</code> is an active editor, administrator or owner (or <code>null</code>); they get a <code>form.assigned</code> alert. Each change
+goes in the history (&quot;marked it handled&quot;, &quot;gave it to Sam&quot;) and is audited <code>inbox.change</code> <code>{form, status?: {from,
+to}, assignee?: {from, to}}</code>, never the message text. On an alert only <code>status</code> (seen or not); giving it or spam
+is <code>400</code>.</li><li><code>POST inbox/:id/notes {text}</code> (at most 5000 characters) → <code>201 {id, at, by, text}</code>; audited <code>inbox.note</code>.</li><li><code>POST inbox/:id/crm</code> (&quot;Send to Odoo again&quot;; editor and above): one try now → the message, or <code>502 crm-failed</code>
+<code>{message: &quot;Not sent: …&quot;, item}</code>. <code>409 sent</code> when it is in Odoo already, <code>409 not-for-crm</code> for a message its form
+did not send (or that came from WordPress: old leads are never sent again). Audited <code>inbox.crm</code> <code>{form, lead}</code>
+with <code>ok</code>.</li><li><code>DELETE inbox/:id</code> (owner, administrator; with its notes and history): audited <code>inbox.delete</code> <code>{form, at, status}</code>.</li><li><code>GET inbox.csv?…the same filters</code> (owner, administrator): every matching message (<code>inbox.csv</code>), columns
+<code>reference, form, at, status, assigned to</code>, one per field, the context values, <code>notes</code>, <code>imported from</code>,
+<code>imported id</code>; a cell starting with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code> is made text. Audited <code>inbox.export</code> with the count.</li></ul>
+<p>The thank-you mail (Settings → Forms; owner, administrator): the site's <code>forms.&lt;id&gt;.reply</code> gives the first words; a
+change here is kept in <code>&lt;dataDir&gt;/forms-settings.json</code> (0600) and wins until it is put back. <code>GET site/forms</code> →
+<code>{version, siteName, variables, forms: [{id, label, canReply, reply: {subject, text} | null, fromConfig, changed}]}</code>;
+<code>PUT site/forms/:id/reply {version, on, subject, text}</code> (<code>on: false</code>: none) and <code>DELETE site/forms/:id/reply
+{version}</code> (back to the site's own): <code>409 stale</code>, <code>404</code> for no such form, <code>400</code> in words; audited <code>forms.reply</code>.</p>
+<p>Old WordPress contact messages come in with <code>markstage-server forms import-wordpress</code> (docs/DEPLOY.md &quot;Forms&quot;).
+They are never sent to Odoo: WordPress kept no record of which went (its <code>wp_contact</code> table has no such column).</p>
+<h3 id="odoo">Odoo</h3>
+<p>A form with <code>crm: {kind: 'odoo', source, …}</code> (docs/CONFIG.md &quot;Forms&quot;) sends each message to Odoo as a lead, the way
+the old WordPress theme did (<code>functions.php</code> <code>odooInsert</code>), over XML-RPC (<code>src/forms/crm.mjs</code>, <code>xmlrpc.mjs</code>):</p>
+<ol><li><code>/xmlrpc/2/common</code> <code>authenticate(db, email, password, {})</code> → the user id.</li><li><code>/xmlrpc/2/object</code> <code>execute_kw</code> <code>search</code> on <code>utm.source</code> (<code>name</code> = <code>crm.source</code>), <code>res.country</code> (<code>code</code> = the
+visitor's country code) and <code>res.country.state</code> (<code>name</code> = the visitor's region): the first id, or <code>false</code>. They
+are looked up, never created, as before. No place: no country or state search.</li><li><code>crm.lead</code> <code>create</code> with the old theme's keys and values:</li></ol>
+<div class="table-wrap"><table><thead><tr><th scope="col">Odoo field</th><th scope="col">Value</th></tr></thead><tbody><tr><td><code>name</code>, <code>contact_name</code></td><td>the form's <code>name</code> field</td></tr><tr><td><code>email_from</code></td><td>the form's <code>email</code> field</td></tr><tr><td><code>phone</code></td><td><code>crm.phone</code> (default the <code>phone</code> or <code>number</code> field)</td></tr><tr><td><code>mobile_country_code</code></td><td>the visitor's country code from their address (the city file), in capitals, e.g. <code>CA</code>; nothing found: empty</td></tr><tr><td><code>description</code></td><td><code>crm.description</code> (default the first long text): tags out, on one line, HTML-escaped (WordPress's <code>sanitize_text_field</code> then <code>esc_html</code>)</td></tr><tr><td><code>country_id</code>, <code>state_id</code>, <code>source_id</code></td><td>the ids found above, or <code>false</code></td></tr><tr><td><code>city</code></td><td>the visitor's city from the city database (empty without one)</td></tr><tr><td><code>url</code>, <code>referred</code>, <code>landing_url</code>, <code>refering_domain</code></td><td><code>meta.page</code>, <code>meta.referrer</code>, <code>meta.landing</code>, <code>meta.referringDomain</code></td></tr><tr><td><code>is_auto_created</code></td><td><code>true</code></td></tr></tbody></table></div>
+<p>Left out on purpose: the file attachment (the old handler attached a server file named in the request) and its
+<code>res.users</code> search (its answer was never used). Ids go as numbers and a missing one as <code>false</code>; the old code sent
+the source id as text and a missing id as <code>0</code> or <code>&quot;&quot;</code>, which Odoo reads the same way.</p>
+<h3 id="leads-for-analytics-skald">Leads for analytics (Skald)</h3>
+<p>A form with <code>leads: {kind: 'skald', url, …}</code> (docs/CONFIG.md &quot;Forms&quot;) also tells an analytics tool about each real
+message, as a lead, so the tool can count it and join it to the visit (<code>src/forms/leads.mjs</code>). Skald only for now,
+signed exactly as Skald's own <code>skald-lead.cjs</code> signs it:</p>
+<ul><li><code>POST &lt;leads.url&gt;</code> (Skald's lead hook, <code>https://app.skaldanalytics.com/traffic-hooks/&lt;site&gt;/lead</code>), JSON, with
+<code>X-Skald-Signature: t=&lt;unix seconds&gt;,v1=&lt;hex HMAC-SHA256(secret, &quot;&lt;t&gt;.&lt;body&gt;&quot;)&gt;</code>.</li><li>The lead: <code>external_ref</code> (the message's id, so a repeat is never counted twice), <code>action</code> (<code>leads.action</code>, default
+<code>contact</code>), <code>email</code> and <code>name</code> (the form's fields), <code>ip</code> (the visitor's address as Markstage recorded it: the
+connection, or the hop a trusted proxy appended; Skald looks up the country and drops it), <code>vid</code> (the visitor id
+the page posted in <code>leads.vid</code>, Skald's <code>skald('id')</code>, when it is one), <code>test: true</code> (when the page posted <code>1</code> in
+<code>leads.test</code>: a team's own test, which Skald keeps out of its counts).</li></ul>
+<p>Spam (the honeypot, a form sent too fast) never goes, and nothing goes outside production. It runs after the message
+is stored and the visitor answered; a send that fails is tried again like the Odoo push (5, 15, 60, 240, 720 minutes,
+then daily; given up after 12 tries). Each outcome is in the message's history (&quot;sent to Skald as a lead&quot;, &quot;not sent
+to Skald as a lead: …&quot;), <code>GET /inbox/:mid</code> has <code>lead</code> (how it went), and Site health counts the ones that did not
+go. The secret is read from the environment at each send (<code>SKALD_LEAD_SECRET</code>; <code>leads.env</code> picks another prefix) and
+is never written, logged or audited.
+<code>test/odoo.test.mjs</code> reads the keys out of a verbatim copy of the theme's <code>$leadData</code> array
+(<code>test/odoo-lead-data.php.txt</code>) and checks that the lead the stand-in Odoo gets has those keys and no others, so a
+field left out or renamed fails it.</p>
+<p>When: after the message is stored and the visitor answered, never in the way of it. It is marked <code>pending</code>, then
+<code>sent</code> with the lead's id (<code>crm.leadId</code>; history &quot;sent to Odoo (lead 123)&quot;), or <code>failed</code> with the reason in words
+(<code>crmError</code>), tried again after 5, 15, 60, 240 and 720 minutes, then daily, 12 tries in all (history &quot;not sent to
+Odoo: …&quot;, then &quot;gave up…&quot;); &quot;Send to Odoo again&quot; tries at once. Site health: <code>forms.crm: {forms: [{form, label, kind,
+name, on, problem}], failed}</code>.
+In the editor's Inbox: a &quot;Not sent to Odoo&quot; mark on the message (why on hover or focus, with a copy icon), the
+filter <code>#/inbox?crm=failed</code> with its count (&quot;2 messages not sent to Odoo&quot;), and in the message's drawer
+(<code>&amp;open=&lt;id&gt;</code>) its tries, when it is tried next, why, and &quot;Send to Odoo again&quot;, which shows the server's words when it
+is refused (<code>502</code> &quot;Not sent: …&quot;, <code>409</code> &quot;It is in Odoo already (lead N).&quot;). Proof: <code>e2e/inbox-odoo.e2e.mjs</code>.</p>
+<p>The connection is read from the environment at each push, never from a file in the repo: <code>&lt;env&gt;_URL</code> (https; http
+only on this machine; no sign-in in it), <code>&lt;env&gt;_DB</code>, <code>&lt;env&gt;_EMAIL</code>, <code>&lt;env&gt;_PASSWORD</code>, and <code>&lt;env&gt;_ENABLE</code> = <code>true</code>
+(<code>env</code> defaults to <code>ODOO</code>: the old theme's names). Without <code>_ENABLE=true</code> nothing is marked or sent, as before;
+anything else missing fails in words that name the variable. The values are never logged, audited, kept or
+answered: an error that quotes one has it replaced by <code>[hidden]</code>.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-INBOX.md" target="_blank" rel="noopener">docs/API-INBOX.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../api-import/"><span class="small muted">Previous</span>Importing entries and media</a>
+          <a class="next" href="../api-translations/"><span class="small muted">Next</span>Translation status</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
+          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>
