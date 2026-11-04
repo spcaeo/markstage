@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/spcaeo/markstage/discussions
+    about: Questions, ideas and show-and-tell.
+  - name: Security problem
+    url: https://github.com/spcaeo/markstage/security/policy
+    about: Report it privately, never as an issue.
+  - name: Docs
+    url: https://github.com/spcaeo/markstage/tree/main/docs
+    about: How to set a site up, run the server and use the editor.

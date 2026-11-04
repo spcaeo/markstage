@@ -1,0 +1,56 @@
+/* The Translations screen (translations/screen.ts): status badges, and each field's source beside its translation. */
+.ms-tr-badge {
+  margin-left: 0;
+}
+.ms-tr-badge--missing {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-tr-badge--outdated {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-tr-badge--done {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-tr-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-tr-field__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-tr-field__row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 2px 10px;
+  align-items: baseline;
+}
+.ms-tr-field__row > .ms-adm-sub {
+  grid-column: 2;
+}
+.ms-tr-field__tag {
+  color: var(--ms-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ms-tr-table td:first-child {
+  min-width: 200px;
+}
+.ms-adm-split:has(> .ms-adm-drawer) .ms-tr-more {
+  display: none;
+}
+.ms-tr-acts {
+  margin-top: 18px;
+}

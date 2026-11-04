@@ -1,0 +1,10 @@
+/* Settings → Roles (roles/): the promotion rules' cards and forms (environments.css); the page keeps the settings
+   column's full width whether the list, one role or a rule's form is open. Tokens only, so the themes apply. */
+.ms-roles {
+  width: 880px;
+  max-width: 100%;
+}
+.ms-roles .ms-adm-card + .ms-env-rules__h,
+.ms-roles .ms-env-try {
+  margin-top: 20px;
+}

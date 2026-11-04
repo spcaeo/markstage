@@ -1,0 +1,966 @@
+/* Markstage chrome: the layout around the article (header, settings panel, dialogs, Source mode; the search is in
+   palette.css). The canvas itself is drawn by the site's CSS; canvas.css adds only what editing needs on it. The
+   --ms-* tokens below are the defaults; a site can set them (e.g. --ms-accent) in its own editor CSS. */
+
+.ms {
+  --ms-bg: #f4f4f6;
+  --ms-chrome: #fbfbfc;
+  --ms-line: #e6e7ea;
+  --ms-line-2: #d9dbe0;
+  --ms-text: #1c2026;
+  --ms-muted: #6b7079;
+  --ms-faint: #9a9ea6;
+  --ms-hover: #eff0f2;
+  --ms-radius: 8px;
+  --ms-shadow: 0 1px 2px rgb(11 16 21 / 0.05), 0 8px 28px -10px rgb(11 16 21 / 0.18);
+  --ms-pop: 0 0 0 1px rgb(11 16 21 / 0.07), 0 12px 32px -8px rgb(11 16 21 / 0.22), 0 2px 6px -2px rgb(11 16 21 / 0.08);
+  --ms-ink: #0b1015;
+  --ms-paper: #ffffff;
+  --ms-paper-3: #f1f1f3;
+  --ms-placeholder: #6e737b;
+  --ms-accent: #6161ff;
+  --ms-accent-hover: #5151d5;
+  --ms-accent-text: #5151d5;
+  --ms-accent-tint: #efeffe;
+  --ms-accent-deep: #4747dd;
+  --ms-ok: #12a150;
+  --ms-ok-ink: #0a7a3c;
+  --ms-ok-tint: #e9f7ef;
+  --ms-warn-ink: #a34d00;
+  --ms-warn-tint: #fdf2e6;
+  --ms-danger: #c4231b;
+  --ms-danger-tint: #fdecea;
+  /* the sheet the article sits on: the site's paper, in every editor theme */
+  --ms-sheet: #ffffff;
+  --ms-sheet-ink: #0b1015;
+  --ms-head-bg: rgb(255 255 255 / 0.9);
+  --ms-label: #444a53;
+  --ms-seg-bg: #ececef;
+  --ms-seg-on: #ffffff;
+  --ms-stage: #e8e9ed;
+  --ms-accent-tint-2: #e2e2fd;
+  --ms-warn-tint-2: #fbe5cc;
+  --ms-warn-line: #f0c99c;
+  --ms-mark: rgb(255 214 102 / 0.35);
+  --ms-mark-ink: #7a5200;
+  --ms-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ms-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --ms-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ms-dur: 180ms;
+  --ms-panel-w: 360px;
+  --ms-article-w: 903px;
+  background: var(--ms-bg);
+  overflow: hidden;
+}
+/* the editor's own type; the sheet keeps the site's (it inherits from the page's html and body like the real page) */
+:is(.ms-head, .ms-banner, .ms-blank, .ms-panel, .ms-pop, .ms-pal, .ms-dialog, .ms-chip, .ms-handle, .ms-bar, .ms-hint) {
+  color: var(--ms-text);
+  font-family: var(--ms-sans);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.ms [hidden] {
+  display: none !important;
+}
+/* Astro's dev toolbar would sit on the canvas */
+.ms astro-dev-toolbar {
+  display: none !important;
+}
+
+/* the skip link: off screen until a keyboard reaches it, then over the top bar (QA pass 2, N6) */
+.ms-skip {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 50;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ms-accent);
+  color: #fff;
+  font: 500 13px/1.3 var(--ms-sans);
+  text-decoration: none;
+}
+.ms-skip:focus-visible {
+  top: 10px;
+  outline: 2px solid var(--ms-text);
+  outline-offset: 2px;
+}
+.ms-main:focus {
+  outline: none;
+}
+.ms-app {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 0px;
+  grid-template-rows: minmax(0, 1fr);
+  transition: grid-template-columns 220ms var(--ms-ease);
+}
+/* the settings panel (or the Post settings drawer, in the same column) takes its column only while it is open */
+.ms-app:has(> .ms-panel.is-open) {
+  grid-template-columns: minmax(0, 1fr) var(--ms-panel-w);
+}
+.ms-app.is-resizing {
+  transition: none;
+  cursor: col-resize;
+  user-select: none;
+}
+.ms-app > .ms-panel {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+}
+.ms-app > .ms-panel:not(.is-open) {
+  visibility: hidden;
+}
+/* drag the left edge to make the panel wider or narrower (320 to 560 px, remembered) */
+.ms-panel__grip {
+  position: absolute;
+  inset: 0 auto 0 -3px;
+  z-index: 2;
+  width: 7px;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: col-resize;
+}
+.ms-panel__grip::after {
+  content: '';
+  position: absolute;
+  inset: 0 3px;
+  background: transparent;
+  transition: background var(--ms-dur) var(--ms-ease);
+}
+.ms-panel__grip:hover::after,
+.ms-panel__grip:focus-visible::after,
+.ms-app.is-resizing .ms-panel__grip::after {
+  background: var(--ms-accent);
+}
+
+/* ---------- buttons and inputs ---------- */
+.ms-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background var(--ms-dur) var(--ms-ease), border-color var(--ms-dur) var(--ms-ease), box-shadow var(--ms-dur) var(--ms-ease);
+}
+.ms-btn:hover {
+  background: var(--ms-hover);
+}
+.ms-btn--sm {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12.5px;
+}
+.ms-btn--primary {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(97 97 255 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.18);
+}
+.ms-btn--primary:hover {
+  background: var(--ms-accent-hover);
+  border-color: var(--ms-accent-hover);
+}
+.ms-btn--danger {
+  color: var(--ms-danger);
+}
+.ms-btn--danger:hover {
+  background: var(--ms-danger-tint);
+  border-color: color-mix(in srgb, var(--ms-danger) 30%, var(--ms-line-2));
+}
+.ms-btn kbd {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.18);
+  font: 500 10.5px var(--ms-mono);
+}
+.ms-btn .ms-i,
+.ms-iconbtn .ms-i {
+  flex: none;
+}
+.ms-iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-muted);
+  transition: background var(--ms-dur) var(--ms-ease), color var(--ms-dur) var(--ms-ease);
+}
+.ms-iconbtn--lg {
+  width: 32px;
+  height: 32px;
+}
+.ms-iconbtn:hover {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-iconbtn--danger:hover {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+/* the side panels own their box model and fonts: the host site may set neither (no global border-box, form
+   controls in the browser's default font) */
+.ms-panel,
+.ms-panel *,
+.ms-panel *::before,
+.ms-panel *::after {
+  box-sizing: border-box;
+}
+.ms-input,
+.ms-select,
+.ms-search input {
+  box-sizing: border-box;
+  width: 100%;
+  font-family: var(--ms-sans);
+  min-height: 32px;
+  padding: 6px 9px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font-size: 13px;
+  line-height: 1.4;
+  transition: border-color var(--ms-dur) var(--ms-ease), box-shadow var(--ms-dur) var(--ms-ease);
+}
+.ms-input:focus,
+.ms-select:focus,
+.ms-search input:focus {
+  outline: none;
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 3px rgb(97 97 255 / 0.16);
+}
+.ms-input--area {
+  min-height: 64px;
+  resize: vertical;
+}
+.ms-input--code {
+  font: 12px/1.5 var(--ms-mono);
+  white-space: pre;
+}
+
+/* ---------- copy / open on hover (owner rule) ---------- */
+.ms-copyable {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  min-width: 0;
+}
+.ms-copyable__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-copyable__tools {
+  display: inline-flex;
+  flex: none;
+  gap: 1px;
+  opacity: 0;
+  transition: opacity var(--ms-dur) var(--ms-ease);
+}
+.ms-copyable:hover .ms-copyable__tools,
+.ms-copyable:focus-within .ms-copyable__tools,
+.ms-copyable.is-done .ms-copyable__tools {
+  opacity: 1;
+}
+.ms-copyable.is-rest:not(.is-done) .ms-copyable__tools {
+  opacity: 0;
+}
+/* a 24 px hit area (touch guidance), the glyph itself 14 px (QA N16) */
+.ms-copyable__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--ms-muted);
+}
+.ms-copyable__btn:hover {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-copyable.is-done .ms-copyable__btn:first-child {
+  color: var(--ms-ok);
+}
+@media (hover: none) {
+  .ms-copyable__tools {
+    opacity: 1;
+  }
+}
+
+/* ---------- header ---------- */
+.ms-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  container: ms-main / inline-size;
+}
+/* a narrow editing column (a panel open, the rail, Publish): the header's buttons drop their words, not the Save */
+@container ms-main (max-width: 1180px) {
+  .ms-head__new span,
+  .ms-head [data-sections] > span,
+  .ms-head [data-seo] > span,
+  .ms-head__search kbd,
+  .ms-devtag span {
+    display: none;
+  }
+}
+/* a phone (QA F5): the view switch, Outline, SEO, Library, undo, redo, the screen check and Preview fold into the
+   More (⋯) menu (more-menu.ts lists what is folded), so Post settings, Publish and Save are always on screen */
+@media (max-width: 720px) {
+  .ms-app.has-entry .ms-head__actions [data-fold],
+  .ms-app.has-entry .ms-head [data-publish] span,
+  .ms-app.has-entry .ms-head [data-save] kbd,
+  .ms-app.has-entry .ms-head .ms-status {
+    display: none;
+  }
+  .ms-app.has-entry .ms-head {
+    gap: 4px;
+    padding: 0 8px;
+  }
+  .ms-app.has-entry .ms-head__doc {
+    min-width: 60px;
+  }
+  .ms-app.has-entry .ms-head__actions {
+    gap: 2px;
+  }
+  .ms-app.has-entry .ms-head__actions .ms-btn--primary {
+    margin-left: 2px;
+  }
+  .ms-head__state__when {
+    display: none;
+  }
+}
+/* a 1380 screen with the drawer open: Outline, SEO, Library and Preview keep their icons and the title gets the
+   room they give up: the controls shrink first, the title keeps at least 320px (QA F41, pass 2). The status is one
+   word ("Saved", "Unsaved", "Saving…"; its full words stay for screen readers and in its tooltip): "Unsaved changes"
+   or a refused save's sentence would push Help and the account button off the bar */
+@container ms-main (max-width: 1180px) {
+  .ms-head .ms-status__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  /* the word is for the eye only (alt text ''): a screen reader has the full words */
+  .ms-head .ms-status[data-status='loading']::after {
+    content: 'Opening…';
+    content: 'Opening…' / '';
+  }
+  .ms-head .ms-status[data-status='saved']::after {
+    content: 'Saved';
+    content: 'Saved' / '';
+  }
+  .ms-head .ms-status[data-status='dirty']::after {
+    content: 'Unsaved';
+    content: 'Unsaved' / '';
+  }
+  .ms-head .ms-status[data-status='saving']::after {
+    content: 'Saving…';
+    content: 'Saving…' / '';
+  }
+  .ms-head .ms-status[data-status='conflict']::after {
+    content: 'Conflict';
+    content: 'Conflict' / '';
+  }
+  .ms-head .ms-status[data-status='error']::after {
+    content: 'Not saved';
+    content: 'Not saved' / '';
+  }
+  .ms-head :is([data-sections], [data-seo], [data-library], [data-preview]) span {
+    display: none;
+  }
+  .ms-head .ms-head__doc {
+    min-width: 320px;
+  }
+}
+/* a 1280 screen with the drawer open, or a side panel open as well: Publish keeps its icon; the title keeps 220px
+   (320px there pushed the account button 87px off the bar) */
+@container ms-main (max-width: 1080px) {
+  .ms-head [data-publish] span {
+    display: none;
+  }
+  .ms-head .ms-head__doc {
+    min-width: 220px;
+  }
+}
+/* a panel open: the buttons keep their icons (the status is one word from 1180px down), Save its word; the title and
+   the address keep at least 140px */
+@container ms-main (max-width: 960px) {
+  .ms-head {
+    gap: 10px;
+    padding-left: 16px;
+  }
+  .ms-app.has-entry:not(.is-screen) .ms-head__search > span,
+  .ms-head [data-save] kbd {
+    display: none;
+  }
+  .ms-head .ms-viewswitch .ms-seg__btn {
+    min-width: 0;
+    padding: 0 9px;
+  }
+  .ms-head .ms-head__doc {
+    min-width: 140px;
+  }
+}
+/* narrower still (a 1280 screen with a panel): "New" comes back when the panel closes; Publish keeps its icon,
+   the gaps close up and the title gives way, so Save stays on screen */
+@container ms-main (max-width: 820px) {
+  .ms-head .ms-head__new {
+    display: none;
+  }
+  .ms-head {
+    gap: 6px;
+  }
+  .ms-head .ms-head__actions {
+    gap: 2px;
+  }
+  .ms-head .ms-head__doc {
+    min-width: 88px;
+  }
+  .ms-head .ms-viewswitch .ms-seg__btn {
+    padding: 0 7px;
+  }
+  .ms-head .ms-status__dot {
+    display: none;
+  }
+}
+/* the drawer and a panel both open on a 1280 screen (about 660px for the page): undo, redo and the screen check go
+   into the More (⋯) menu (fold.ts lists what is hidden here; ⌘Z and ⇧⌘Z still work), so Help and the account
+   button stay on the bar */
+@container ms-main (max-width: 700px) {
+  .ms-app.has-entry .ms-head__actions :is([data-undo], [data-redo], [data-devices])[data-fold] {
+    display: none;
+  }
+}
+/* narrower still (a wide panel): every control that can fold goes into More, as on a phone */
+@container ms-main (max-width: 600px) {
+  .ms-app.has-entry .ms-head__actions [data-fold] {
+    display: none;
+  }
+}
+.ms-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  height: 56px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--ms-line);
+  background: var(--ms-head-bg);
+  backdrop-filter: blur(8px);
+}
+.ms-head__doc {
+  flex: 1;
+  min-width: 0;
+}
+.ms-head__search kbd,
+.ms-blank kbd {
+  background: var(--ms-hover);
+  color: var(--ms-muted);
+}
+.ms-btn--primary kbd {
+  background: rgb(255 255 255 / 0.18);
+  color: inherit;
+}
+.ms-btn--quiet {
+  border-color: transparent;
+  background: none;
+  color: var(--ms-muted);
+}
+.ms-btn--quiet:hover,
+.ms-btn--quiet[aria-expanded='true'],
+.ms-btn--quiet[aria-pressed='true'] {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+a.ms-btn {
+  text-decoration: none;
+}
+/* Preview page with unsaved changes: a small amber dot (the tooltip says why) */
+.ms-btn[data-unsaved]::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-left: 2px;
+  border-radius: 50%;
+  background: #e8a33d;
+}
+.ms-menu__empty {
+  padding: 8px 10px;
+  color: var(--ms-muted);
+}
+.ms-head__title {
+  overflow: hidden;
+  color: var(--ms-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+}
+.ms-head__url {
+  display: flex;
+  min-width: 0;
+  color: var(--ms-muted);
+  font: 11.5px var(--ms-mono);
+}
+.ms-head__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+.ms-head__actions .ms-btn--primary {
+  margin-left: 6px;
+}
+/* dev mode: saves go to the file on this computer, not the live site (dev-note.ts) */
+.ms-devtag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  margin: 0 8px 0 -2px;
+  padding: 0 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--ms-muted);
+  font: 500 11.5px/1 var(--ms-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ms-devtag:hover,
+.ms-devtag:focus-visible {
+  border-color: var(--ms-accent);
+  color: var(--ms-accent-deep);
+}
+.ms-devtag svg {
+  color: var(--ms-accent);
+}
+.ms-app.is-screen .ms-devtag {
+  display: none;
+}
+@keyframes ms-pulse {
+  to {
+    opacity: 0.3;
+  }
+}
+
+.ms-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 16px 0;
+  padding: 10px 12px 10px 14px;
+  border: 1px solid var(--ms-line);
+  border-radius: var(--ms-radius);
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+  font-size: 13px;
+}
+.ms-banner[data-kind='conflict'],
+.ms-banner[data-kind='error'] {
+  border-color: color-mix(in srgb, var(--ms-danger) 30%, var(--ms-line));
+  background: linear-gradient(90deg, var(--ms-danger-tint), var(--ms-paper) 60%);
+}
+.ms-banner__icon {
+  color: var(--ms-danger);
+}
+.ms-banner[data-kind='info'] .ms-banner__icon {
+  color: var(--ms-accent);
+}
+.ms-banner p {
+  flex: 1;
+}
+.ms-banner__tools {
+  display: flex;
+  gap: 6px;
+}
+
+/* ---------- canvas ---------- */
+.ms-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scroll-padding: 80px 0;
+}
+.ms-sheet {
+  position: relative;
+  box-sizing: content-box;
+  max-width: var(--ms-article-w);
+  margin: 28px auto 160px;
+  padding: 56px 72px 96px;
+  border-radius: 12px;
+  background: var(--ms-sheet);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-sheet-ink);
+}
+/* centred while it fits; a narrower canvas (settings panel open on a small screen) keeps a small margin */
+.ms-scroll {
+  container-type: inline-size;
+}
+@container (max-width: 1110px) {
+  .ms-sheet {
+    margin-inline: 24px;
+    padding-inline: 56px;
+  }
+}
+/* the space between the canvas head (title, cover…) and the text */
+.ms-canvas {
+  margin-top: 2rem;
+}
+
+.ms-blank {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+.ms-blank__box {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  max-width: 360px;
+  padding: 40px;
+  color: var(--ms-muted);
+  text-align: center;
+}
+.ms-blank__box h2 {
+  color: var(--ms-text);
+  font-size: 18px;
+}
+
+/* ---------- right: settings panel (only while a box with settings is selected) ---------- */
+.ms-panel {
+  display: flex;
+  flex-direction: column;
+  width: var(--ms-panel-w);
+  min-height: 0;
+  overflow: hidden;
+  border-left: 1px solid var(--ms-line);
+  background: var(--ms-chrome);
+  transform: translateX(24px);
+  opacity: 0;
+  transition: transform 220ms var(--ms-ease), opacity 160ms var(--ms-ease);
+}
+.ms-panel.is-open {
+  transform: none;
+  opacity: 1;
+}
+.ms-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 56px;
+  padding: 0 12px 0 20px;
+  border-bottom: 1px solid var(--ms-line);
+}
+.ms-panel__title {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ms-text);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ms-panel__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 20px 40px;
+  scrollbar-width: thin;
+}
+.ms-panel__note {
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.ms-panel__sub {
+  margin-bottom: 6px;
+  color: var(--ms-faint);
+  font: 500 10.5px var(--ms-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ms-panel__stat {
+  color: var(--ms-text);
+  font-size: 13px;
+}
+.ms-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+}
+.ms-field__row {
+  position: relative;
+  display: block;
+}
+.ms-field__row .ms-input {
+  padding-right: 58px;
+}
+.ms-field__row .ms-field__tools {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.ms-field__row:hover .ms-copyable__tools,
+.ms-field__row:focus-within .ms-copyable__tools {
+  opacity: 1;
+}
+.ms-field__label {
+  color: var(--ms-label);
+  font-size: 12px;
+  font-weight: 500;
+}
+.ms-field__hint {
+  color: var(--ms-faint);
+  font-size: 11.5px;
+}
+.ms-field__tools:empty {
+  display: none;
+}
+.ms-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 3px;
+  border-radius: 8px;
+  background: var(--ms-seg-bg);
+}
+.ms-seg__btn {
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background var(--ms-dur) var(--ms-ease), color var(--ms-dur) var(--ms-ease), box-shadow var(--ms-dur) var(--ms-ease);
+}
+.ms-seg__btn.is-on {
+  background: var(--ms-seg-on);
+  color: var(--ms-accent-deep);
+  box-shadow: 0 1px 3px rgb(11 16 21 / 0.12);
+}
+/* panel actions: one shape for all, stacked; destructive ones last, under a rule, in red text */
+.ms-actions {
+  display: grid;
+  gap: 8px;
+}
+.ms-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--ms-dur) var(--ms-ease), border-color var(--ms-dur) var(--ms-ease);
+}
+.ms-action svg {
+  flex: none;
+  color: var(--ms-muted);
+}
+.ms-action:hover {
+  background: var(--ms-hover);
+}
+.ms-action:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 1px;
+}
+.ms-action--primary,
+.ms-action--primary svg {
+  color: var(--ms-accent-deep);
+}
+.ms-action--danger,
+.ms-action--danger svg {
+  color: var(--ms-danger);
+}
+.ms-action--danger:hover {
+  border-color: var(--ms-danger);
+  background: var(--ms-danger-tint);
+}
+.ms-actions__rule {
+  margin: 4px 0;
+  border: 0;
+  border-top: 1px solid var(--ms-line);
+}
+/* text areas grow with their text (panel-form autoGrow): no inner scrollbar, no drag corner */
+.ms-input--grow {
+  resize: none;
+  overflow: hidden;
+}
+.ms-rows {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-row {
+  display: grid;
+  gap: 8px;
+  padding: 10px 10px 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: var(--ms-radius);
+  background: var(--ms-paper);
+}
+.ms-row__n {
+  color: var(--ms-accent);
+  font: 500 11px var(--ms-mono);
+}
+/* the rows are on the order component (panel-items.ts): the grip at the top left of each card */
+.ms-rows .ms-order__row {
+  align-items: flex-start;
+  padding: 0;
+}
+.ms-rows .ms-order__row > .ms-row {
+  flex: 1;
+  min-width: 0;
+}
+.ms-rows .ms-order__row > .ms-order__grip {
+  margin-top: 6px;
+}
+.ms-rows--items .ms-order__row {
+  align-items: center;
+}
+.ms-rows--items .ms-order__row > .ms-order__grip {
+  margin-top: 0;
+}
+/* ---------- dialog ---------- */
+.ms-dialog {
+  width: 420px;
+  padding: 22px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  color: var(--ms-text);
+  font-size: 13.5px;
+}
+.ms-dialog::backdrop {
+  background: rgb(11 16 21 / 0.28);
+  backdrop-filter: blur(3px);
+}
+.ms-dialog h2 {
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.ms-dialog p {
+  color: var(--ms-muted);
+}
+.ms-dialog__tools {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+.ms .ProseMirror .ms-raw-inline--code {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--ms-paper-3);
+  color: var(--ms-muted);
+  font: 11px var(--ms-mono);
+}
+
+/* ---------- Source mode: the file in a code editor, on the same sheet as the canvas ---------- */
+.ms-source {
+  box-sizing: border-box;
+  max-width: calc(var(--ms-article-w) + 144px);
+  min-height: calc(100% - 56px);
+  margin: 28px auto 28px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+}
+@container (max-width: 1110px) {
+  .ms-source {
+    margin-inline: 24px;
+  }
+}
+.ms-viewswitch .ms-seg__btn {
+  min-width: 58px;
+}
+
+/* the plain canvas head (a block pack draws the site's own; in the page shell the page's rules draw it) */
+.ms-sheet:not(.is-shell) .ms-dochead {
+  margin-bottom: 2rem;
+}
+.ms-sheet:not(.is-shell) .ms-dochead__title {
+  margin: 0 0 8px;
+  font-size: 2.25rem;
+  line-height: 1.15;
+}
+.ms-pal__status {
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+  font-size: 11px;
+  text-transform: capitalize;
+}
+.ms-pal__status.is-held {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+  text-transform: none;
+}
+/* the header's state pill: "Scheduled · goes live …" before the address */
+.ms-head__state {
+  flex: none;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  margin-right: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ms-accent, #2f6fed) 14%, transparent);
+  color: var(--ms-text);
+  font: 500 11px var(--ms-font, system-ui);
+  white-space: nowrap;
+}
+/* the chosen date in the site's words beside a native date input (dates.ts echoDate, QA F38) */
+.ms-date-words {
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.ms-date-words:empty {
+  display: none;
+}

@@ -1,0 +1,169 @@
+/* The author field of Post settings (settings/author-field.ts): the chosen author, a search box with its list,
+   co-authors as chips, the inline "new author" form, and the warning for an author the site does not have.
+   Then the Authors screen (admin/authors/): the photo or initials, the profile head, the posts that name them. */
+.ms-author__current {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 6px;
+}
+.ms-author__who {
+  display: grid;
+  min-width: 0;
+}
+.ms-author__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-author__meta,
+.ms-author__none {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-author__slug {
+  flex: none;
+  color: var(--ms-muted);
+  font: 12px var(--ms-mono);
+}
+.ms-author__picker {
+  position: relative;
+}
+.ms-author__list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  max-height: 260px;
+  margin: 0;
+  padding: 4px;
+  overflow: auto;
+  border-radius: var(--ms-radius);
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  list-style: none;
+}
+.ms-author__opt {
+  display: grid;
+  gap: 1px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ms-author__opt.is-active,
+.ms-author__opt:hover {
+  background: var(--ms-accent-tint);
+}
+.ms-author__opt--add {
+  color: var(--ms-accent-text);
+  font-weight: 500;
+}
+.ms-author__warn {
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  border: 1px solid var(--ms-warn-line);
+  border-radius: 6px;
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+  font-size: 12.5px;
+}
+.ms-author__warn[hidden] {
+  display: none;
+}
+.ms-author__colabel {
+  margin-top: 10px;
+}
+.ms-author__co {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+.ms-author__co:empty {
+  display: none;
+}
+.ms-author__chip.is-unknown {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-author__add {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: var(--ms-radius);
+  background: var(--ms-chrome);
+}
+.ms-author__addrow {
+  display: grid;
+  gap: 4px;
+}
+.ms-author__add .ms-field__error:empty {
+  display: none;
+}
+
+/* ---------- the Authors screen ---------- */
+.ms-adm-avatar {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--size, 40px);
+  height: var(--size, 40px);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--ms-chrome);
+  color: var(--ms-muted);
+  font-size: calc(var(--size, 40px) * 0.38);
+  font-weight: 600;
+}
+.ms-adm-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ms-adm-authorcell,
+.ms-adm-authorhead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ms-adm-authorhead {
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.ms-adm-authorhead strong {
+  font-size: 16px;
+}
+.ms-adm-authorbio {
+  margin: 12px 0;
+}
+.ms-adm-authorbio__text .ms-copyable__text {
+  white-space: pre-wrap;
+}
+.ms-adm-drawer .ms-adm-actions {
+  margin: 14px 0;
+}
+.ms-adm-authorposts {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-authorpost {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.ms-adm-authorpost > a {
+  color: var(--ms-accent-text);
+  text-decoration: none;
+}
+.ms-adm-authorpost > a:hover {
+  text-decoration: underline;
+}

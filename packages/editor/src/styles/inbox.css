@@ -1,0 +1,77 @@
+/* The Inbox (inbox/): the admin screens' table and drawer, plus a new item in bold, and the notes. Tokens only. */
+.ms-adm-table tr.is-new td {
+  font-weight: 600;
+}
+.ms-adm-badge.is-new {
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+}
+.ms-inbox__notes {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ms-inbox__note {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+}
+.ms-inbox__history {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ms-muted);
+}
+.ms-inbox__acts {
+  margin-bottom: 16px;
+}
+.ms-inbox__long .ms-copyable__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-inbox__long {
+  align-items: flex-start;
+}
+/* "Not sent to Odoo" (inbox/crm.ts): why shows on hover or focus, with its copy icon */
+.ms-inbox__crm {
+  position: relative;
+  display: inline-block;
+}
+.ms-inbox__crm > .ms-adm-badge:focus-visible {
+  outline: 2px solid var(--ms-danger);
+  outline-offset: 2px;
+}
+.ms-inbox__why {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  right: 0;
+  width: max-content;
+  max-width: 360px;
+  padding: 8px 10px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 8px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-ink);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: normal;
+}
+.ms-inbox__why .ms-copyable__text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.ms-inbox__crm:hover .ms-inbox__why,
+.ms-inbox__crm:focus-within .ms-inbox__why {
+  display: block;
+}
+.ms-inbox__crmrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+.ms-inbox__crmrow .ms-adm-badge {
+  margin-left: 0;
+}

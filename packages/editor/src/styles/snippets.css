@@ -1,0 +1,53 @@
+/* The snippets library (snippets/): the Page tree's rows (pages-tree.css) for snippets and folders, and the drawer's
+   fields and Markdown. The save dialog is here too. Tokens only, so the themes apply. */
+.ms-snips {
+  padding: 6px 8px;
+}
+.ms-snips .ms-tree__page.is-open .ms-tree__title {
+  color: var(--ms-accent-deep);
+}
+.ms-snip__field {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.ms-snip__field .ms-input {
+  flex: 1;
+  min-width: 0;
+}
+.ms-snip__check,
+.ms-snipsave__check {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.ms-snip__head {
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.ms-snip__md {
+  max-height: 320px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+  color: var(--ms-text);
+  font: 12px/1.5 var(--ms-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-snipsave {
+  width: min(440px, calc(100vw - 32px));
+}
+.ms-snipsave__field {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0;
+}
+.ms-snipsave__field span {
+  font-weight: 600;
+}
+.ms-snipsave__check {
+  margin-bottom: 16px;
+}

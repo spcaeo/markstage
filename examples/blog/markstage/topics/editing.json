@@ -1,0 +1,23 @@
+{
+  "title": "Editing",
+  "description": "Changing a post: on the canvas, in Source mode, with the keyboard.",
+  "pillar": "posts/hello-markstage",
+  "money": null,
+  "anchors": [
+    "the editing guide"
+  ],
+  "keywords": [
+    "editing"
+  ],
+  "members": [],
+  "groups": [
+    {
+      "id": "ways-to-write",
+      "name": "Ways to write",
+      "lead": "posts/writing-with-source-mode",
+      "members": [
+        "posts/keyboard-shortcuts"
+      ]
+    }
+  ]
+}

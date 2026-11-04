@@ -1,0 +1,78 @@
+{
+  "wpId": 23,
+  "title": "Contact us",
+  "uri": "/contact-us/",
+  "modified": "2026-10-28T02:38:02+00:00",
+  "seo": {
+    "title": "Example Co - Contact Us About Your Project",
+    "description": "Contact Example Co about set-up, data moves or automation work. Send your requirements or book a free 30-minute call.",
+    "canonical": "https://www.example.com/contact-us/",
+    "robots": [
+      "follow",
+      "index",
+      "max-snippet:-1",
+      "max-video-preview:-1",
+      "max-image-preview:large"
+    ],
+    "ogType": "article",
+    "ogTitle": "Example Co - Contact Us About Your Project",
+    "ogDescription": "Contact Example Co about set-up, data moves or automation work. Send your requirements or book a free 30-minute call.",
+    "focusKeywords": [],
+    "breadcrumbTitle": "Contact us",
+    "jsonLd": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.example.com/#organization\",\"name\":\"Example Co\",\"sameAs\":[\"https://social.example.com/exampleco\"]},{\"@type\":\"WebSite\",\"@id\":\"https://www.example.com/#website\",\"url\":\"https://www.example.com\",\"name\":\"Example Co\",\"publisher\":{\"@id\":\"https://www.example.com/#organization\"},\"inLanguage\":\"en-US\"},{\"@type\":\"ImageObject\",\"@id\":\"https://www.example.com/uploads/2024/03/check-icon.svg\",\"url\":\"https://www.example.com/uploads/2024/03/check-icon.svg\",\"width\":\"1200\",\"height\":\"630\",\"inLanguage\":\"en-US\"},{\"@type\":\"WebPage\",\"@id\":\"https://www.example.com/contact-us/#webpage\",\"url\":\"https://www.example.com/contact-us/\",\"name\":\"Example Co - Contact Us About Your Project\",\"datePublished\":\"2024-07-09T11:41:39+00:00\",\"dateModified\":\"2026-10-28T02:38:02+00:00\",\"isPartOf\":{\"@id\":\"https://www.example.com/#website\"},\"primaryImageOfPage\":{\"@id\":\"https://www.example.com/uploads/2024/03/check-icon.svg\"},\"inLanguage\":\"en-US\"},{\"@type\":\"Person\",\"@id\":\"https://www.example.com/author/editor/\",\"name\":\"Sample Editor\",\"url\":\"https://www.example.com/author/editor/\"},{\"@type\":\"Article\",\"headline\":\"Example Co - Contact Us About Your Project\",\"datePublished\":\"2024-07-09T11:41:39+00:00\",\"dateModified\":\"2026-10-28T02:38:02+00:00\",\"author\":{\"@id\":\"https://www.example.com/author/editor/\",\"name\":\"Sample Editor\"},\"publisher\":{\"@id\":\"https://www.example.com/#organization\"},\"description\":\"Contact Example Co about set-up, data moves or automation work. Send your requirements or book a free 30-minute call.\",\"name\":\"Example Co - Contact Us About Your Project\",\"@id\":\"https://www.example.com/contact-us/#richSnippet\",\"isPartOf\":{\"@id\":\"https://www.example.com/contact-us/#webpage\"},\"inLanguage\":\"en-US\",\"mainEntityOfPage\":{\"@id\":\"https://www.example.com/contact-us/#webpage\"}}]}",
+    "extraJsonLd": []
+  },
+  "exitPopup": true,
+  "sections": [
+    {
+      "discriminant": "contact",
+      "value": {
+        "id": "lets-discuss-your-idea",
+        "heading": "Let’s Discuss Your Idea",
+        "headingLevel": 1,
+        "variant": "form",
+        "items": [
+          {
+            "title": "Every project is covered by an NDA",
+            "titleLevel": 0,
+            "icon": {
+              "src": "2024/03/check-icon.svg",
+              "alt": "check icon",
+              "width": 24,
+              "height": 24
+            },
+            "link": {}
+          },
+          {
+            "title": "Zero spam.",
+            "titleLevel": 0,
+            "icon": {
+              "src": "2024/03/check-icon.svg",
+              "alt": "check icon",
+              "width": 24,
+              "height": 24
+            },
+            "link": {}
+          }
+        ],
+        "html": "<form noValidate>\n<label>Name *</label>\n<input type=\"text\" name=\"name\" placeholder=\"Your full name*\" required>\n<label>Email *</label>\n<input type=\"email\" name=\"email\" placeholder=\"Your email address\" required>\n<label>Phone *</label>\n<input id=\"number\" type=\"tel\" name=\"number\" placeholder=\"Your phone number\" required>\n<label>Share your requirements *</label>\n<textarea name=\"comment\" required placeholder=\"Please let us know about your requirements in detail.*\"></textarea>\n<label for=\"file\">Have a file to share?</label>\n<label for=\"project_brief\">\n<p>Upload your project brief here </p>\n<p>x</p>\n<div class=\"button\">upload</div>\n</label>\n<input id=\"upload_project_brief\" name=\"upload_project_brief\" type=\"file\" value placeholder=\"Upload project brief\">\n<span>Only Document, Image or ZIP file. (Max size 8MB)</span>\n<input id=\"form_type\" name=\"form_type\" type=\"hidden\" value=\"contactus_form\">\n<button type=\"submit\" class=\"button\">Submit </button>\n</form>"
+      }
+    },
+    {
+      "discriminant": "testimonials",
+      "value": {
+        "id": "trusted-by",
+        "eyebrow": "Trusted by",
+        "variant": "contact",
+        "images": [
+          {
+            "src": "2024/03/Trusted-by.svg",
+            "width": 625,
+            "height": 232
+          }
+        ],
+        "quotes": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+# gitleaks settings for this repo (CI runs `gitleaks git` on every push; see .github/workflows/ci.yml).
+# The default rules, plus two published test vectors that look like keys but are not secrets. Each is allowed only
+# for the rule that flags it, by its exact value AND only in its own test file: the same value anywhere else, or any
+# other key in those files, still fails the scan. Today's test files build both values at run time (no key-shaped literal
+# in the tree); the entries stay because CI scans every past commit, where the literals still are.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "RFC 6455 section 1.3: the sample Sec-WebSocket-Key ('the sample nonce'), for the preview's WebSocket upgrade test"
+condition = "AND"
+paths = ['''^packages/server/test/preview\.test\.mjs$''']
+regexes = ['''^dGhlIHNhbXBsZSBub25jZQ==$''']
+
+[[rules.allowlists]]
+description = "RFC 6238 appendix B: the TOTP test secret '12345678901234567890' in base32, for the two-factor code test"
+condition = "AND"
+paths = ['''^packages/server/test/unit\.test\.mjs$''']
+regexes = ['''^GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ$''']

@@ -1,0 +1,105 @@
+/* The media library chooser (library.ts): a search, a grid of the site's images, upload by button, drop or paste.
+   Tokens only, so the themes apply. */
+.ms-dialog.ms-lib {
+  width: min(920px, calc(100vw - 48px));
+  height: min(720px, calc(100vh - 64px));
+  flex-direction: column;
+  padding: 0;
+}
+.ms-lib[open] {
+  display: flex;
+}
+.ms-lib.is-over {
+  outline: 2px dashed var(--ms-accent);
+  outline-offset: -8px;
+}
+.ms-lib__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 22px 8px;
+}
+.ms-lib__head h2 {
+  flex: 1;
+  margin: 0;
+}
+.ms-lib__search {
+  width: 280px;
+}
+.ms-lib__status {
+  min-height: 18px;
+  padding: 0 22px 8px;
+  font-size: 12.5px;
+}
+.ms-lib__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 2px 22px 12px;
+}
+.ms-lib__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-lib__tile {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-lib__tile:hover {
+  border-color: color-mix(in srgb, var(--ms-accent) 45%, var(--ms-line));
+}
+.ms-lib__tile[aria-pressed='true'] {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 2px var(--ms-accent);
+}
+.ms-lib__img {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+}
+.ms-lib__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ms-lib__name {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-lib__meta {
+  min-height: 15px;
+  color: var(--ms-muted);
+  font-size: 11px;
+}
+.ms-lib__more {
+  display: block;
+  margin: 14px auto 0;
+}
+.ms-lib .ms-dialog__tools {
+  align-items: center;
+  margin: 0;
+  padding: 12px 22px 16px;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-lib__hint {
+  flex: 1;
+  color: var(--ms-muted);
+  font-size: 12px;
+}

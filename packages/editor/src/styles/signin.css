@@ -1,0 +1,68 @@
+/* Sign in again over the editor (signin.ts): the session ended while an entry was open. */
+.ms-signin__fields {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.ms-signin__field {
+  display: grid;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.ms-signin__field input {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: inherit;
+  font-weight: 400;
+}
+.ms-signin__field input:read-only {
+  background: var(--ms-hover);
+  color: var(--ms-muted);
+}
+.ms-signin__field input:focus-visible {
+  border-color: var(--ms-accent);
+  outline: 2px solid color-mix(in srgb, var(--ms-accent) 30%, transparent);
+}
+.ms-signin__fields > .ms-btn {
+  justify-self: start;
+}
+.ms-dialog p.ms-signin__error {
+  margin-top: 12px;
+  color: var(--ms-danger);
+}
+.ms-signin__sso {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.ms-dialog p.ms-signin__or {
+  margin: 14px 0 0;
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  text-align: center;
+}
+.ms-signin__sso[hidden],
+.ms-signin__fields[hidden],
+.ms-dialog .ms-btn[hidden] {
+  display: none;
+}
+.ms-signin__field .ms-pw {
+  position: relative;
+  display: grid;
+}
+.ms-signin__field .ms-pw input {
+  width: 100%;
+  padding-right: 38px;
+}
+.ms-signin__field .ms-pw__eye {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  translate: 0 -50%;
+  color: var(--ms-muted);
+}

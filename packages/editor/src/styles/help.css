@@ -1,0 +1,94 @@
+/* "How do I…" (help.ts): the guide's topics in the right column, and the ring "Show me" puts around a control. */
+.ms-help {
+  gap: 10px;
+  padding: 14px 16px 40px;
+}
+.ms-help__q {
+  width: 100%;
+}
+.ms-help__list {
+  display: grid;
+  gap: 2px;
+}
+.ms-help__item {
+  border-radius: 8px;
+}
+.ms-help__item.is-open {
+  background: var(--ms-hover);
+}
+.ms-help__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ms-text);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-help__head:hover {
+  background: var(--ms-hover);
+}
+.ms-help__chev {
+  display: inline-flex;
+  flex: none;
+  color: var(--ms-faint);
+  transform: rotate(-90deg);
+}
+.ms-help__item.is-open .ms-help__chev {
+  transform: none;
+}
+.ms-help__body {
+  display: grid;
+  gap: 10px;
+  padding: 0 10px 12px;
+}
+.ms-help__steps {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ms-text);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.ms-help__keys {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px 10px;
+  margin: 0;
+  font-size: 12px;
+}
+.ms-help__keys dt {
+  font-family: var(--ms-mono);
+  font-size: 11.5px;
+}
+.ms-help__keys dd {
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-help__body .ms-btn {
+  justify-self: start;
+}
+/* "Show me": a ring that pulses twice around the control */
+.ms-spot {
+  position: relative;
+  z-index: 5;
+  animation: ms-spot 1.3s ease-out 2;
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 3px;
+}
+@keyframes ms-spot {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ms-accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}

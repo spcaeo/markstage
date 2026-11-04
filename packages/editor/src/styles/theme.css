@@ -1,0 +1,170 @@
+/* The editor's dark theme (theme.ts): the --ms-* tokens again, for the chrome only. Chosen in the person's menu or
+   More (Light, Dark, System); System follows the computer. The attribute is data-ms-theme on body.ms, never the
+   site's own theme attribute, so the site's dark CSS stays off. The sheet (the article on the site's paper) keeps
+   the light values: what the editor draws on it reads as it does on the page. */
+
+.ms[data-ms-theme='dark'] {
+  --ms-bg: #111317;
+  --ms-chrome: #17191e;
+  --ms-line: #2a2d34;
+  --ms-line-2: #383c45;
+  --ms-text: #e8e9ec;
+  --ms-muted: #a3a8b1;
+  --ms-faint: #767b85;
+  --ms-hover: #23262d;
+  --ms-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 28px -10px rgb(0 0 0 / 0.7);
+  --ms-pop: 0 0 0 1px rgb(255 255 255 / 0.09), 0 12px 32px -8px rgb(0 0 0 / 0.7), 0 2px 6px -2px rgb(0 0 0 / 0.5);
+  --ms-ink: #050608;
+  --ms-paper: #1c1f25;
+  --ms-paper-3: #262930;
+  --ms-placeholder: #858a94;
+  --ms-accent: #6c6cff;
+  --ms-accent-hover: #8585ff;
+  --ms-accent-text: #a9a9ff;
+  --ms-accent-tint: #26274c;
+  --ms-accent-deep: #b9b9ff;
+  --ms-accent-tint-2: #303163;
+  --ms-ok: #34c472;
+  --ms-ok-ink: #63d896;
+  --ms-ok-tint: #15291e;
+  --ms-warn-ink: #f2ab5e;
+  --ms-warn-tint: #33250f;
+  --ms-warn-tint-2: #3f2c12;
+  --ms-warn-line: #6e4c1f;
+  --ms-danger: #f2655e;
+  --ms-danger-tint: #3b1b1a;
+  --ms-head-bg: rgb(23 25 30 / 0.92);
+  --ms-label: #c5c9d0;
+  --ms-seg-bg: #262930;
+  --ms-seg-on: #3a3e48;
+  --ms-stage: #0c0d10;
+  --ms-mark: rgb(255 214 102 / 0.2);
+  --ms-mark-ink: #f3cb6e;
+}
+@media (prefers-color-scheme: dark) {
+  .ms:not([data-ms-theme='light']) {
+    --ms-bg: #111317;
+    --ms-chrome: #17191e;
+    --ms-line: #2a2d34;
+    --ms-line-2: #383c45;
+    --ms-text: #e8e9ec;
+    --ms-muted: #a3a8b1;
+    --ms-faint: #767b85;
+    --ms-hover: #23262d;
+    --ms-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 28px -10px rgb(0 0 0 / 0.7);
+    --ms-pop: 0 0 0 1px rgb(255 255 255 / 0.09), 0 12px 32px -8px rgb(0 0 0 / 0.7), 0 2px 6px -2px rgb(0 0 0 / 0.5);
+    --ms-ink: #050608;
+    --ms-paper: #1c1f25;
+    --ms-paper-3: #262930;
+    --ms-placeholder: #858a94;
+    --ms-accent: #6c6cff;
+    --ms-accent-hover: #8585ff;
+    --ms-accent-text: #a9a9ff;
+    --ms-accent-tint: #26274c;
+    --ms-accent-deep: #b9b9ff;
+    --ms-accent-tint-2: #303163;
+    --ms-ok: #34c472;
+    --ms-ok-ink: #63d896;
+    --ms-ok-tint: #15291e;
+    --ms-warn-ink: #f2ab5e;
+    --ms-warn-tint: #33250f;
+    --ms-warn-tint-2: #3f2c12;
+    --ms-warn-line: #6e4c1f;
+    --ms-danger: #f2655e;
+    --ms-danger-tint: #3b1b1a;
+    --ms-head-bg: rgb(23 25 30 / 0.92);
+    --ms-label: #c5c9d0;
+    --ms-seg-bg: #262930;
+  --ms-seg-on: #3a3e48;
+    --ms-stage: #0c0d10;
+    --ms-mark: rgb(255 214 102 / 0.2);
+    --ms-mark-ink: #f3cb6e;
+  }
+}
+
+/* the sheet: the light values again (placeholders, the image's caption line, cells, the tools drawn on the page) */
+.ms[data-ms-theme='dark'] .ms-sheet {
+  --ms-text: #1c2026;
+  --ms-muted: #6b7079;
+  --ms-faint: #9a9ea6;
+  --ms-placeholder: #6e737b;
+  --ms-line: #e6e7ea;
+  --ms-line-2: #d9dbe0;
+  --ms-hover: #eff0f2;
+  --ms-paper: #ffffff;
+  --ms-paper-3: #f1f1f3;
+  --ms-accent-text: #5151d5;
+  --ms-accent-tint: #efeffe;
+  --ms-accent-deep: #4747dd;
+  --ms-label: #444a53;
+  --ms-seg-bg: #ececef;
+  --ms-seg-on: #ffffff;
+  --ms-warn-tint-2: #fbe5cc;
+  --ms-warn-line: #f0c99c;
+  --ms-ok-ink: #0a7a3c;
+  --ms-ok-tint: #e9f7ef;
+  --ms-warn-ink: #a34d00;
+  --ms-warn-tint: #fdf2e6;
+  --ms-danger: #c4231b;
+  --ms-danger-tint: #fdecea;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  .ms:not([data-ms-theme='light']) .ms-sheet {
+    --ms-text: #1c2026;
+    --ms-muted: #6b7079;
+    --ms-faint: #9a9ea6;
+    --ms-placeholder: #6e737b;
+    --ms-line: #e6e7ea;
+    --ms-line-2: #d9dbe0;
+    --ms-hover: #eff0f2;
+    --ms-paper: #ffffff;
+    --ms-paper-3: #f1f1f3;
+    --ms-accent-text: #5151d5;
+    --ms-accent-tint: #efeffe;
+    --ms-accent-deep: #4747dd;
+    --ms-label: #444a53;
+    --ms-seg-bg: #ececef;
+  --ms-seg-on: #ffffff;
+    --ms-warn-tint-2: #fbe5cc;
+    --ms-warn-line: #f0c99c;
+    --ms-ok-ink: #0a7a3c;
+    --ms-ok-tint: #e9f7ef;
+    --ms-warn-ink: #a34d00;
+    --ms-warn-tint: #fdf2e6;
+    --ms-danger: #c4231b;
+    --ms-danger-tint: #fdecea;
+    color-scheme: light;
+  }
+}
+
+/* form controls and scroll bars of the chrome in the dark (the page and its frames keep the site's) */
+.ms[data-ms-theme='dark']
+  :is(.ms-head, .ms-nav, .ms-panel, .ms-pop, .ms-pal, .ms-dialog, .ms-screen, .ms-source, .ms-banner, .ms-devbar, .ms-blank, .ms-imgedit, .msp-side) {
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  .ms:not([data-ms-theme='light'])
+    :is(.ms-head, .ms-nav, .ms-panel, .ms-pop, .ms-pal, .ms-dialog, .ms-screen, .ms-source, .ms-banner, .ms-devbar, .ms-blank, .ms-imgedit, .msp-side) {
+    color-scheme: dark;
+  }
+}
+
+/* the theme switch (in the person's menu and in More) */
+.ms-themerow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px 6px 12px;
+  margin-top: 4px;
+  border-top: 1px solid var(--ms-line);
+  font: 13px/1.4 var(--ms-sans);
+  color: var(--ms-muted);
+}
+.ms-themerow .ms-seg__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+}

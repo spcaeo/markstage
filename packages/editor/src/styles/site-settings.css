@@ -1,0 +1,211 @@
+/* Site settings (site-settings/): a centred column like the Menus screen; Locks lists a row per box or section
+   with its three switches. Tokens only, so the themes apply. */
+.ms-site-settings {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 32px 64px;
+  color: var(--ms-text);
+  font: 13px/1.5 var(--ms-sans);
+}
+/* the headings take the editor's text colour, not the site's (dark on dark in the dark theme otherwise) */
+.ms-locks__title {
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.ms-locks__lead {
+  margin: 4px 0 0;
+  color: var(--ms-muted);
+}
+.ms-locks__note {
+  margin: 14px 0 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+  color: var(--ms-text);
+}
+.ms-locks__group {
+  margin-top: 28px;
+}
+.ms-locks__h {
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 15px;
+  font-weight: 600;
+}
+.ms-locks__rows {
+  margin-top: 10px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  overflow: hidden;
+}
+.ms-locks__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--ms-line-2);
+}
+.ms-locks__row:first-child {
+  border-top: 0;
+}
+.ms-locks__row.is-picked {
+  box-shadow: inset 3px 0 0 var(--ms-accent);
+  background: var(--ms-accent-tint);
+}
+.ms-locks__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--ms-muted);
+}
+.ms-locks__row.is-locked .ms-locks__name {
+  color: var(--ms-accent-deep);
+}
+.ms-locks__name strong {
+  color: var(--ms-text);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ms-locks__type {
+  color: var(--ms-muted);
+  font-family: var(--ms-mono);
+  font-size: 12px;
+}
+.ms-locks__parts {
+  display: flex;
+  flex-shrink: 0;
+  gap: 16px;
+}
+.ms-locks__part {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ms-locks__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.ms-locks__bar .ms-locks__note {
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: var(--ms-muted);
+}
+
+/* the parts of Site settings, as links; on a phone the row scrolls sideways in its own box (QA F5) */
+.ms-site-settings__parts {
+  display: flex;
+  gap: 4px;
+  max-width: 100%;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--ms-line-2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.ms-site-settings__parts a {
+  flex: none;
+  padding: 6px 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--ms-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+/* a phone (QA F5): the settings column fits the window, a lock's row puts its checkboxes under its name, and a
+   wide part (the alert kinds, the rules) scrolls inside its own box */
+@media (max-width: 720px) {
+  .ms-site-settings {
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 20px 16px 48px;
+    overflow-x: hidden;
+  }
+  .ms-locks__row {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .ms-locks__parts {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    width: 100%;
+  }
+  .ms-locks__name strong {
+    white-space: normal;
+  }
+  .ms-alerts__who,
+  .ms-alerts__kind .ms-alerts__who {
+    width: auto;
+    max-width: 100%;
+  }
+  .ms-site-settings table,
+  .ms-site-settings .ms-adm-table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+.ms-site-settings__parts a[aria-current='page'] {
+  border-bottom-color: var(--ms-accent);
+  color: var(--ms-text);
+  font-weight: 600;
+}
+
+/* Alerts: a channel's line, a kind with who gets it, and the test's answer */
+.ms-alerts__channel {
+  display: grid;
+  gap: 2px;
+}
+.ms-alerts__kind {
+  border-top: 1px solid var(--ms-line-2);
+}
+.ms-alerts__kind:first-child {
+  border-top: 0;
+}
+.ms-alerts__kind > .ms-locks__row {
+  border-top: 0;
+}
+.ms-alerts__kind.is-picked {
+  box-shadow: inset 3px 0 0 var(--ms-accent);
+}
+.ms-alerts__who {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-alerts__whobox {
+  display: grid;
+  gap: 12px;
+  padding: 4px 14px 14px 40px;
+}
+.ms-alerts__extra {
+  display: grid;
+  gap: 4px;
+  max-width: 420px;
+}
+.ms-alerts__test {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-alerts__test[data-kind='ok'] {
+  color: var(--ms-ok-ink);
+}
+.ms-alerts__test[data-kind='error'] {
+  color: var(--ms-danger);
+}
+.ms-alerts__kind .ms-locks__name {
+  flex: 1;
+}
+.ms-alerts__kind .ms-alerts__who {
+  width: 240px;
+  text-align: left;
+}

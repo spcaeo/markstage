@@ -1,0 +1,33 @@
+{
+  "$comment": "Markstage server config: copy to <dataDir>/config.json (dir 0700, file 0600; never inside the site repo). Secrets never go in this file: the SMTP sign-in is MARKSTAGE_SMTP_USER and MARKSTAGE_SMTP_PASSWORD in the environment (or notify.email.passwordFile outside the repo), Slack is MARKSTAGE_SLACK_WEBHOOK (or slack.webhookFile), a CRM's or an integration's sign-in is named by its own env prefix. docs/DEPLOY.md and docs/CONFIG.md explain every key.",
+  "$secrets": {
+    "$comment": "Where each secret comes from. Nothing here is read by the server; set what you use in the server's environment (or a file outside the repo, as each line says) and leave it out of config.json.",
+    "SMTP sign-in (notify.email)": "<MARKSTAGE_SMTP_USER and MARKSTAGE_SMTP_PASSWORD from env, or notify.email.passwordFile>",
+    "Slack alerts (notify.slack)": "<MARKSTAGE_SLACK_WEBHOOK from env, or notify.slack.webhookFile>",
+    "AI suggestions and summaries (ai)": "<MARKSTAGE_AI_KEY from env, or ai.keyFile>",
+    "Stock photos (stock)": "<MARKSTAGE_STOCK_KEY from env, or stock.keyFile>",
+    "Chrome UX Report (crux)": "<MARKSTAGE_CRUX_KEY from env, or crux.keyFile>",
+    "Single sign-on client (sso, per issuer id)": "<MARKSTAGE_SSO_<ID>_SECRET from env, or its clientSecretFile>",
+    "Integrations (integrations, per integration)": "<the MARKSTAGE_INTEGRATION_* variable its auth.env names, from env, or auth.keyFile>",
+    "A form's CRM (forms.<id>.crm, env prefix ODOO by default)": "<<PREFIX>_URL, <PREFIX>_DB, <PREFIX>_EMAIL, <PREFIX>_PASSWORD and <PREFIX>_ENABLE=true from env>"
+  },
+  "contentRoot": "/srv/content",
+  "publicOrigin": "https://cms.example.com",
+  "host": "127.0.0.1",
+  "port": 18231,
+  "trustProxy": true,
+  "siteName": "Example Co",
+  "siteUrl": "https://www.example.com",
+  "siteHosts": ["www.example.com"],
+  "commands": { "build": ["npx", "astro", "build"], "deploy": ["markstage-deploy", "--to", "/srv/site"], "timeoutSeconds": 600 },
+  "validate": ["node", "scripts/validate-entry.mjs"],
+  "protectedPages": { "dir": "/srv/site/current/private", "hosts": ["www.example.com"] },
+  "preview": { "origin": "https://preview.example.com", "port": 18245 },
+  "share": { "origin": "https://share.example.com", "port": 18251 },
+  "media": { "dir": "src/assets/uploads", "url": "/uploads/{path}", "maxBytes": 10485760, "importMaxBytes": 67108864 },
+  "library": { "dir": "markstage/library", "importMaxBytes": 67108864 },
+  "login": { "ipWindowSeconds": 600, "ipMaxAttempts": 30, "accountFreeFailures": 5, "lockBaseSeconds": 60, "lockMaxSeconds": 3600, "accountMaxFailures": 50, "accountWindowSeconds": 3600 },
+  "notify": {
+    "email": { "host": "smtp.example.com", "port": 587, "security": "starttls", "from": "Example Co <cms@example.com>", "to": ["team@example.com"] }
+  }
+}

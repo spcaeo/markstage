@@ -1,0 +1,463 @@
+/* Post settings drawer, the title edited in place, the first-open hint and the popup-link badges. Tokens from
+   chrome.css (--ms-*). */
+
+/* ---------- the title on the canvas ---------- */
+.ms-title {
+  outline: none;
+  cursor: text;
+}
+.ms-title:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ms-faint);
+  pointer-events: none;
+}
+.ms-title:focus {
+  caret-color: var(--ms-accent);
+}
+/* the title is past the limit: the count under it, in the danger colour (QA N11) */
+.ms-title__over {
+  margin: 4px 0 0;
+  color: var(--ms-danger);
+  font: 13px/1.4 var(--ms-sans);
+}
+/* the byline, date and cover open Post settings */
+.ms-settarget {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: box-shadow var(--ms-dur) var(--ms-ease);
+}
+.ms-settarget:hover,
+.ms-settarget:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ms-accent) 35%, transparent);
+}
+
+/* ---------- the gear in the header ---------- */
+.ms-iconbtn.is-on {
+  background: var(--ms-hover);
+  color: var(--ms-accent-deep);
+}
+
+/* ---------- first-open hint ---------- */
+.ms-main {
+  position: relative;
+}
+.ms-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 999px;
+  background: var(--ms-paper);
+  box-shadow: 0 6px 24px rgb(11 16 21 / 0.12);
+  color: var(--ms-text);
+  font: 13px/1.4 var(--ms-sans);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.ms-hint kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 4px;
+  background: var(--ms-chrome);
+  font: 500 12px var(--ms-mono);
+}
+
+/* ---------- links that open the site's popup ---------- */
+.ms-badges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ms-badge {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ms-accent);
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--ms-paper);
+}
+.ms-badge.is-small {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 0 1px var(--ms-paper);
+}
+/* the note takes its own row under the link and its buttons */
+.ms-linkcard:has(.ms-linkcard__note) {
+  flex-wrap: wrap;
+}
+.ms-linkcard:has(.ms-linkcard__note) .ms-copyable {
+  min-width: 120px;
+}
+.ms-linkcard__note {
+  display: flex;
+  flex: 1 0 100%;
+  align-items: center;
+  gap: 6px;
+  order: 3;
+  padding: 6px 0 2px;
+  border-top: 1px solid var(--ms-line);
+  color: var(--ms-accent-deep);
+  font-size: 12.5px;
+}
+.ms-link__item--special .ms-link__icon {
+  color: var(--ms-accent);
+}
+
+/* ---------- Post settings fields ---------- */
+.ms-settings {
+  gap: 18px;
+}
+.ms-field__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ms-count {
+  color: var(--ms-faint);
+  font: 11px var(--ms-mono);
+}
+.ms-count.is-over {
+  color: var(--ms-danger);
+}
+.ms-field__after {
+  display: grid;
+  gap: 4px;
+}
+.ms-field__after:empty {
+  display: none;
+}
+.ms-field__url {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.ms-field__error {
+  color: var(--ms-danger);
+  font-size: 12px;
+}
+.ms-input.is-invalid {
+  border-color: var(--ms-danger);
+}
+.ms-field--sub {
+  margin-top: 6px;
+}
+/* a switch setting: the box and its label on one line, the hint under it */
+.ms-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ms-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+.ms-switch__box {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ms-accent);
+  cursor: pointer;
+}
+.ms-field--switch .ms-field__hint {
+  padding-left: 24px;
+}
+.ms-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 36px;
+  padding: 5px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  cursor: text;
+}
+.ms-tags:focus-within {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ms-accent) 18%, transparent);
+}
+.ms-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding: 0 2px 0 8px;
+  border-radius: 5px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+  font-size: 12.5px;
+}
+.ms-tag .ms-copyable__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-tag__x {
+  width: 22px;
+  height: 22px;
+}
+.ms-tags__input {
+  flex: 1;
+  min-width: 90px;
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+}
+/* the cover at its own shape (the social card below shows how networks crop it) */
+.ms-imagefield {
+  display: grid;
+  place-items: center;
+  min-height: 72px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  border: 1px solid var(--ms-line);
+  border-radius: 7px;
+  background: var(--ms-paper-3);
+}
+.ms-imagefield img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ms-imagefield__empty {
+  color: var(--ms-faint);
+  font-size: 12.5px;
+}
+.ms-setgroup {
+  display: grid;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-setgroup__title {
+  color: var(--ms-text);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ms-setgroup__sub {
+  margin-bottom: -6px;
+  color: var(--ms-faint);
+  font: 500 10.5px var(--ms-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* the Google result: as Google draws it (Arial, blue title, grey address) */
+.ms-serp {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: #fff;
+  font-family: Arial, sans-serif;
+}
+.ms-serp__site {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ms-serp__favicon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f1f3f4;
+  color: #4d5156;
+  font-size: 12px;
+}
+.ms-serp__where {
+  display: grid;
+  min-width: 0;
+}
+.ms-serp__name {
+  color: #202124;
+  font-size: 14px;
+}
+.ms-serp__url {
+  overflow: hidden;
+  color: #4d5156;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-serp__title {
+  color: #1a0dab;
+  font-size: 18px;
+  line-height: 1.3;
+}
+.ms-serp__desc {
+  color: #4d5156;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.ms-serp__copy {
+  margin-top: 6px;
+  font-family: var(--ms-mono);
+}
+
+/* the social card: image over text, as most networks draw a shared link */
+.ms-card {
+  overflow: hidden;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 10px;
+  background: var(--ms-paper);
+}
+.ms-card__image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1200 / 630;
+  background: var(--ms-paper-3);
+  color: var(--ms-faint);
+  font-size: 12.5px;
+}
+.ms-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ms-card__text {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-card__host {
+  color: var(--ms-faint);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+.ms-card__title {
+  color: var(--ms-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.ms-card__desc {
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+/* ---------- Languages and regions (settings/locales.ts) ---------- */
+.ms-locales__list,
+.ms-locales__tags {
+  display: grid;
+  gap: 8px;
+}
+.ms-locale {
+  display: grid;
+  gap: 3px;
+  padding: 8px 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 7px;
+  background: var(--ms-paper);
+}
+.ms-locale__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ms-text);
+  font-size: 13px;
+  font-weight: 500;
+}
+.ms-locale__code {
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ms-hover);
+  color: var(--ms-muted);
+  font: 11px var(--ms-mono);
+}
+.ms-locale__tag {
+  margin-left: auto;
+  color: var(--ms-accent-deep);
+  font: 500 10.5px var(--ms-mono);
+  letter-spacing: 0.04em;
+}
+.ms-locale .ms-copyable,
+.ms-locale__alt .ms-copyable {
+  color: var(--ms-muted);
+  font: 11.5px var(--ms-mono);
+}
+.ms-locale__alt {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.ms-locale__alt .ms-locale__code {
+  justify-self: start;
+}
+.ms-locales__draft {
+  color: var(--ms-warn-ink);
+}
+
+/* the slug where the server moves entries (fields.ts addressField): the change waits for Change address */
+.ms-move {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--ms-warn-line);
+  border-radius: 8px;
+  background: var(--ms-warn-tint);
+}
+.ms-move[hidden] {
+  display: none;
+}
+.ms-move__note {
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.ms-move .ms-field__error:empty {
+  display: none;
+}
+.ms-move__actions {
+  display: flex;
+  gap: 6px;
+}
+.ms-locales .ms-ai__ask {
+  justify-self: start;
+}
+.ms-locales__ai:empty {
+  display: none;
+}
+
+/* ---------- a field the person's role may not change (field-access.ts lockField): readable, not typed in ---------- */
+.ms-field.is-locked .ms-field__label,
+.ms-imgpick.is-locked .ms-field__label {
+  color: var(--ms-muted);
+}
+.is-locked .ms-input,
+.is-locked .ms-tags,
+.is-locked .ms-tags__input {
+  border-style: dashed;
+  background: var(--ms-paper-3);
+  color: var(--ms-muted);
+  cursor: not-allowed;
+}
+.is-locked .ms-input:focus {
+  border-color: var(--ms-line-2);
+  box-shadow: none;
+}
+.is-locked button:disabled:not(.ms-copyable__btn) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.ms-field__locked {
+  color: var(--ms-muted);
+}

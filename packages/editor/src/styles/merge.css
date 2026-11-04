@@ -1,0 +1,77 @@
+/* The merge picker (merge-ui.ts): the parts both people changed, theirs and yours side by side, and what to keep.
+   Tokens only, so the themes apply. */
+.ms-dialog.ms-merge {
+  width: min(880px, calc(100vw - 48px));
+  max-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.ms-merge[open] {
+  display: flex;
+}
+.ms-merge__head {
+  padding: 22px 22px 10px;
+}
+.ms-merge__list {
+  display: grid;
+  gap: 14px;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 22px 4px;
+}
+.ms-merge__item {
+  padding: 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+}
+.ms-merge__item h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-merge__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ms-merge__col {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: var(--ms-bg);
+}
+.ms-merge__label {
+  margin-bottom: 4px;
+  color: var(--ms-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ms-merge__text {
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+/* the words that differ between the two sides */
+.ms-merge__text mark {
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ms-accent) 18%, transparent);
+  color: inherit;
+}
+/* what will be kept is outlined */
+.ms-merge__item:is([data-choice='mine'], [data-choice='both']) .ms-merge__col.is-mine,
+.ms-merge__item:is([data-choice='theirs'], [data-choice='both']) .ms-merge__col.is-theirs {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 1px var(--ms-accent);
+}
+.ms-merge .ms-dialog__tools {
+  margin: 0;
+  padding: 14px 22px 18px;
+  border-top: 1px solid var(--ms-line);
+}

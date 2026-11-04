@@ -1,0 +1,17 @@
+---
+import '../styles/blog.css';
+// the page's frame (markstage.config `frames`): full, reading or plain; the body says it, blog.css draws it
+const { title, frame = 'reading' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body class={`frame-${frame}`}>
+    {frame !== 'plain' && <header class="site"><a href="/">Example blog</a></header>}
+    <main><slot /></main>
+  </body>
+</html>

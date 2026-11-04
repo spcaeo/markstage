@@ -1,0 +1,533 @@
+{
+  "wpId": 1359,
+  "title": "Data Migration Services",
+  "uri": "/data-migration/",
+  "legacyUris": [
+    "/old-data-migration/"
+  ],
+  "modified": "2026-10-28T02:49:52+00:00",
+  "seo": {
+    "title": "Data Migration Services | Example Co",
+    "description": "Move your projects, tasks and customer records into a new tool: a free assessment, a fixed quote after it, and a test move on a sample first.",
+    "canonical": "https://www.example.com/data-migration/",
+    "robots": [
+      "follow",
+      "index",
+      "max-snippet:-1",
+      "max-video-preview:-1",
+      "max-image-preview:large"
+    ],
+    "ogType": "article",
+    "ogTitle": "Data Migration Services | Example Co",
+    "ogDescription": "Move your projects, tasks and customer records into a new tool: a free assessment, a fixed quote after it, and a test move on a sample first.",
+    "ogImage": "2024/07/data-migration-services.jpg",
+    "focusKeywords": [
+      "data migration services"
+    ],
+    "breadcrumbTitle": "Data Migration Services",
+    "extraJsonLd": [
+      "{\"@type\":\"Service\",\"serviceType\":\"Data Migration Services\",\"description\":\"Move your data into a new tool safely, with fewer errors. A free assessment and a fixed quote first.\",\"category\":\"data migration\",\"provider\":{\"@type\":\"Organization\",\"name\":\"Example Co\",\"url\":\"https://www.example.com/\",\"sameAs\":[\"https://social.example.com/exampleco\"],\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://www.example.com/uploads/2024/05/example-co-logo.svg\"}},\"mainEntityOfPage\":{\"@type\":\"WebPage\",\"@id\":\"https://www.example.com/data-migration/\"},\"audience\":[{\"@type\":\"Audience\",\"audienceType\":\"business owners\"},{\"@type\":\"Audience\",\"audienceType\":\"enterprise businesses\"},{\"@type\":\"Audience\",\"audienceType\":\"IT administrators\"},{\"@type\":\"Audience\",\"audienceType\":\"project managers\"},{\"@type\":\"Audience\",\"audienceType\":\"operations teams\"}],\"serviceOutput\":[{\"@type\":\"Thing\",\"name\":\"Secure data migration\"},{\"@type\":\"Thing\",\"name\":\"Customized data mapping\"},{\"@type\":\"Thing\",\"name\":\"Seamless platform transition\"}],\"serviceArea\":{\"@type\":\"Place\",\"name\":\"Global\"},\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.example.com/data-migration/\",\"priceCurrency\":\"USD\",\"availability\":\"http://schema.org/InStock\",\"eligibleRegion\":{\"@type\":\"Place\",\"name\":\"Global\"}},\"image\":{\"@type\":\"ImageObject\",\"url\":\"https://www.example.com/uploads/2024/07/data-migration-services-1024x538.jpg\"}}"
+    ]
+  },
+  "exitPopup": true,
+  "stickyCta": {
+    "text": "Moving to a new tool? Book a free assessment for a fixed quote.",
+    "button": "Get a fixed quote",
+    "service": "migration"
+  },
+  "sections": [
+    {
+      "discriminant": "hero",
+      "value": {
+        "id": "data-migration-services",
+        "heading": "Data Migration Services",
+        "headingLevel": 1,
+        "lead": "Are you moving your work from one tool to another? We move projects, tasks, customers and their history into the new tool for you, without the manual typing, the broken formats and the errors that come with it.",
+        "variant": "migration-flow",
+        "buttons": [
+          {
+            "text": "Schedule a Call",
+            "href": "/contact-us/",
+            "external": false
+          },
+          {
+            "text": "Try the Tool for Free",
+            "href": "https://partner.example.com/try",
+            "external": true,
+            "rel": "noreferrer noopener nofollow"
+          }
+        ],
+        "image": {
+          "src": "2024/07/data-migration-hero-2x.jpg",
+          "width": 2560,
+          "height": 976
+        }
+      }
+    },
+    {
+      "discriminant": "logos",
+      "value": {
+        "id": "our-badges",
+        "heading": "Our Badges and Awards",
+        "headingLevel": 0,
+        "lead": "We are proud of the certifications our team has earned.",
+        "variant": "badges",
+        "images": [
+          {
+            "src": "2024/03/certified-partner.svg",
+            "width": 200,
+            "height": 200
+          },
+          {
+            "src": "2024/03/product-badge.svg",
+            "width": 200,
+            "height": 200
+          },
+          {
+            "src": "2024/03/product-light.svg",
+            "width": 200,
+            "height": 200
+          },
+          {
+            "src": "2024/03/workflow-badge.svg",
+            "width": 200,
+            "height": 200
+          },
+          {
+            "src": "2024/06/admin-badge.svg",
+            "alt": "Certified administrator badge",
+            "width": 160,
+            "height": 160
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "feature",
+      "value": {
+        "id": "move-without-the-mess",
+        "items": [
+          {
+            "title": "Move Without the Mess",
+            "titleLevel": 2,
+            "body": "<p><a href=\"/services/setup/\">A new work tool</a> is a step towards simpler workflows and a more productive team. But to make the move a success, your existing data has to come along cleanly. Doing it by hand takes long, causes errors and is easy to get wrong.&nbsp;</p>\n<p>This is where we come in. We map your data from the old tool to the new one, clean it on the way, and run a test move on a sample before the full move. With no manual typing and clean data, your team gets going sooner, with numbers it can trust.</p>",
+            "icon": {
+              "src": "2024/07/move-illustration.png",
+              "alt": "data moving between two tools",
+              "width": 618,
+              "height": 408
+            },
+            "link": {}
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "page-list",
+      "value": {
+        "id": "migration-services",
+        "heading": "Migration Services",
+        "headingLevel": 2,
+        "lead": "Pick where your data is today. Each page lists what moves, what we rebuild and what cannot move, with the official documents behind it.",
+        "groups": [
+          {
+            "id": "account-moves",
+            "title": "Account Moves",
+            "lead": "Merge, split or move accounts, including between data regions."
+          },
+          {
+            "id": "project-tools",
+            "title": "Project Tools",
+            "lead": "Projects, tasks, comments and files from the tool your team uses today."
+          },
+          {
+            "id": "crms",
+            "title": "CRMs",
+            "lead": "Contacts, companies, deals and their history."
+          },
+          {
+            "id": "other",
+            "title": "Other Moves",
+            "lead": "Moves between any two other tools."
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cards",
+      "value": {
+        "id": "trusted-by-120-clients",
+        "heading": "Trusted by 120 Clients",
+        "headingLevel": 0,
+        "lead": "Example Co has worked with 120 clients around the world.",
+        "variant": "bordered stats",
+        "items": [
+          {
+            "title": "120",
+            "titleLevel": 0,
+            "body": "<p>Clients Served Worldwide</p>",
+            "icon": {
+              "src": "2024/03/clients-served.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cards",
+      "value": {
+        "id": "our-migration-process",
+        "heading": "Our Migration Process",
+        "headingLevel": 2,
+        "variant": "blue",
+        "items": [
+          {
+            "title": "A Full Look at Your Needs",
+            "titleLevel": 3,
+            "body": "<p>We start by learning how you work today: the tool you are leaving, the kinds of data to move, and how you want it laid out in the new tool.</p>",
+            "icon": {
+              "src": "2024/07/process-1.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "A Plan Made for You",
+            "titleLevel": 3,
+            "body": "<p>From your needs and your data, we write a migration plan. It lists the data to move, how each field maps to its new place, and a clear timeline.</p>",
+            "icon": {
+              "src": "2024/07/process-2.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Safe Data Transfer",
+            "titleLevel": 3,
+            "body": "<p>Your data stays safe. We move it through each tool’s own export files and API, and hand the export files over to you.</p>",
+            "icon": {
+              "src": "2024/07/process-3.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Careful Mapping & Cleaning",
+            "titleLevel": 3,
+            "body": "<p>We match each of your fields to its place in the new tool, so everything stays clear and consistent. We also clean and tidy your data, fixing the gaps and formats that would get in the way of reports.</p>",
+            "icon": {
+              "src": "2024/07/process-4.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Testing & Checks",
+            "titleLevel": 3,
+            "body": "<p>Before the move is final, we test it to make sure the data is right and everything works. This keeps the switch smooth and the risk of errors low.</p>",
+            "icon": {
+              "src": "2024/07/process-5.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Help After the Move",
+            "titleLevel": 3,
+            "body": "<p>Our work does not end with the move. We answer your questions, fix what comes up, and make sure your team is at home in the new tool with its data.</p>",
+            "icon": {
+              "src": "2024/07/process-6.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cards",
+      "value": {
+        "id": "why-a-professional-data-migration",
+        "heading": "Why a Professional Data Migration?",
+        "headingLevel": 2,
+        "variant": "bordered",
+        "items": [
+          {
+            "title": "Saves Time",
+            "titleLevel": 3,
+            "body": "<p>No manual typing and a smooth move to the new tool, so your team has time for the work that matters.</p>",
+            "icon": {
+              "src": "2024/07/why-1.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Accurate, Consistent Data",
+            "titleLevel": 3,
+            "body": "<p>A careful move keeps your data right and its format consistent in the new tool, so reports can be trusted.</p>",
+            "icon": {
+              "src": "2024/07/why-2.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Fewer Errors",
+            "titleLevel": 3,
+            "body": "<p>Less typing means fewer mistakes and better decisions from the numbers. Your data also stays protected all the way through.</p>",
+            "icon": {
+              "src": "2024/07/why-3.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Faster Take-Up",
+            "titleLevel": 3,
+            "body": "<p>A smooth move helps the team pick up the new tool quickly and use all of it</p>",
+            "icon": {
+              "src": "2024/07/why-4.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cards",
+      "value": {
+        "id": "industries-we-serve",
+        "heading": "Industries We Serve",
+        "headingLevel": 2,
+        "variant": "blue",
+        "items": [
+          {
+            "title": "Technology",
+            "titleLevel": 0,
+            "icon": {
+              "src": "2024/02/Technology.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Healthcare",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Healthcare.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Finance",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Finance.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Education",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Education.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Manufacturing",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Manufacturing-1.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Retail",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Retail.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Real Estate",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Real-Estate.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Legal Services",
+            "titleLevel": 3,
+            "icon": {
+              "src": "2024/02/Legal-Services.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cta",
+      "value": {
+        "id": "ready-to-make-the-move",
+        "heading": "Ready to Make the Move?",
+        "headingLevel": 0,
+        "lead": "Book a free call today for a simpler way of working, better teamwork and better use of your time.",
+        "buttons": [
+          {
+            "text": "Start Your Move",
+            "href": "/contact-us/",
+            "external": false
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cards",
+      "value": {
+        "id": "why-choose-us-for-your-data-migration",
+        "heading": "Why Choose Us for Your Data Migration?",
+        "headingLevel": 2,
+        "variant": "blue",
+        "items": [
+          {
+            "title": "Migration Specialists",
+            "titleLevel": 3,
+            "body": "<p>We move data between project tools, CRMs and spreadsheets, with a free assessment and a fixed quote first, a test move on a sample before the full move, and your export files handed over.</p>",
+            "icon": {
+              "src": "2024/07/choose-1.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "A Move Made for You",
+            "titleLevel": 3,
+            "titleHref": "/services/custom-apps/",
+            "body": "<p>Do you have special needs? No problem: we make a migration plan that fits your business and your data. One size does not fit all.</p>",
+            "icon": {
+              "src": "2024/07/choose-2.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Security First",
+            "titleLevel": 3,
+            "body": "<p>Keeping your data safe comes first in every move. We use secure tools and strict steps to protect it from start to finish.</p>",
+            "icon": {
+              "src": "2024/07/choose-3.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Help After the Move",
+            "titleLevel": 3,
+            "body": "<p>Any questions? Our work goes beyond the move itself. We keep helping, so your team succeeds with the new tool.</p>",
+            "icon": {
+              "src": "2024/07/choose-4.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "Get the Most From Your Tool",
+            "titleLevel": 3,
+            "body": "<p>Clean and accurate data from day one lets you use all of the new tool: simpler workflows, clear numbers and a platform that works for you.</p>",
+            "icon": {
+              "src": "2024/07/choose-5.svg",
+              "width": 54,
+              "height": 54
+            },
+            "link": {}
+          },
+          {
+            "title": "One Point of Contact",
+            "titleLevel": 3,
+            "body": "<p>One project manager is your contact for the whole move. They keep you informed, set clear expectations and keep the work on track.</p>",
+            "icon": {
+              "src": "2024/07/choose-6.svg",
+              "width": 55,
+              "height": 54
+            },
+            "link": {}
+          }
+        ]
+      }
+    },
+    {
+      "discriminant": "cluster-list",
+      "value": {
+        "id": "data-migration-guides",
+        "heading": "Data Migration Guides",
+        "headingLevel": 2,
+        "lead": "Step-by-step guides, checklists and comparisons for moving projects and CRM data.",
+        "cluster": "data-migration"
+      }
+    },
+    {
+      "discriminant": "faq",
+      "value": {
+        "id": "frequently-asked-questions-about-data-migration",
+        "heading": "Frequently Asked Questions About Data Migration",
+        "headingLevel": 2,
+        "faqs": [
+          {
+            "q": "Can you move data from the tool we use today?",
+            "a": "<p>Yes. We have moved data from many project tools, CRMs and help desks, and also from custom databases and spreadsheets.</p>"
+          },
+          {
+            "q": "Is moving our data a complex job?",
+            "a": "<p>It depends on how much data you have and the tool you are leaving. We plan around the new tool’s limits, such as the most items one board can hold, and make a plan for your data.</p>"
+          },
+          {
+            "q": "How long does a data migration take?",
+            "a": "<p>It depends on how complex your data is and how much of it there is. We give a closer estimate after the first call.</p>"
+          },
+          {
+            "q": "How much does a data migration cost?",
+            "a": "<p>It depends on how complex the move is. The first 30-minute call and the assessment of your data are free, and you get a fixed quote after the assessment.</p>"
+          }
+        ]
+      }
+    }
+  ]
+}

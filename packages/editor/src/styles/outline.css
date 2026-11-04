@@ -1,0 +1,120 @@
+/* The Outline (outline.ts): the article's blocks in the right column, a row per block with its kind and words; a
+   section's blocks under its heading, which folds. */
+.ms-outline__count {
+  color: var(--ms-faint);
+  font-weight: 400;
+}
+.ms-outline__body {
+  gap: 10px;
+  padding: 14px 12px 40px;
+}
+.ms-outline__body > .ms-panel__note {
+  padding: 0 8px;
+}
+.ms-outline__tools {
+  display: flex;
+  gap: 4px;
+  padding: 0 4px;
+}
+.ms-outline__tools [hidden] {
+  display: none;
+}
+.ms-outline .ms-order__row {
+  min-height: 34px;
+  padding: 2px 6px 2px 0;
+}
+/* the block the caret is in: a short bar at its left */
+.ms-outline .ms-order__row.is-here::after {
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: -5px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--ms-accent);
+  content: '';
+}
+.ms-outline__go {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 4px;
+  border: 0;
+  background: none;
+  color: var(--ms-text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  /* Shift-click picks rows, not words */
+  user-select: none;
+}
+.ms-outline__kind {
+  flex: none;
+  min-width: 34px;
+  color: var(--ms-faint);
+  font: 500 10.5px var(--ms-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ms-outline__fold {
+  display: grid;
+  flex: none;
+  align-self: center;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin: 0 -2px 0 -4px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ms-faint);
+  cursor: pointer;
+}
+.ms-outline__fold:hover {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-order__row[aria-expanded='false'] .ms-outline__fold .ms-i {
+  transform: rotate(-90deg);
+}
+/* a heading with no section to fold lines up with the ones that have one */
+.ms-outline .ms-order__row[data-depth='0'] .ms-outline__go[data-level]:not(:has(.ms-outline__fold)) {
+  padding-left: 18px;
+}
+/* how many blocks a row hides (a folded section, Headings only) */
+.ms-outline__more {
+  flex: none;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--ms-hover);
+  color: var(--ms-muted);
+  font: 500 10.5px var(--ms-mono);
+}
+.ms-outline__text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* headings read as the article's sections; a level-3 one sits under its level-2 one */
+.ms-outline__go[data-level] .ms-outline__text {
+  font-weight: 600;
+}
+.ms-outline__go[data-level='3'] .ms-outline__text,
+.ms-outline__go[data-level='4'] .ms-outline__text {
+  padding-left: 12px;
+  font-weight: 500;
+}
+.ms-outline__go:not([data-level]) .ms-outline__text {
+  color: var(--ms-muted);
+}
+.ms-outline__go:hover .ms-outline__text {
+  color: var(--ms-text);
+}
+.ms-head [data-sections][aria-pressed='true'] {
+  color: var(--ms-accent-deep);
+}

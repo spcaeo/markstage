@@ -1,0 +1,231 @@
+/* Find and replace across the site, Change many entries and Redirects (#/replace, #/bulk, #/redirects).
+   .ms-adm-warnline is also the publish sheet's "is editing this now" and the Users "only you" card. */
+.ms-adm-findform,
+.ms-adm-bulkform {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+.ms-adm-findform > .ms-adm-row,
+.ms-adm-bulkform > .ms-adm-field:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+.ms-adm-checkline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.ms-adm-findsum {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 12px;
+}
+.ms-adm-findsum p {
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-adm-findlist {
+  display: grid;
+  gap: 10px;
+}
+.ms-adm-findhit {
+  display: grid;
+  gap: 8px;
+}
+.ms-adm-findhit__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.ms-adm-findhit__title {
+  font-weight: 600;
+  color: var(--ms-ink);
+}
+.ms-adm-warnline {
+  margin: 0;
+  padding: 6px 10px;
+  border-left: 3px solid var(--ms-warn-ink);
+  border-radius: 6px;
+  background: var(--ms-warn-tint);
+  font-size: 13px;
+}
+.ms-adm-samples {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-sample {
+  display: grid;
+  grid-template-columns: 9em 1fr;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 13px;
+}
+.ms-adm-sample__where {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-adm-sample__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12.5px;
+}
+.ms-adm-sample__text del {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-adm-sample__text ins {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+  text-decoration: none;
+  margin-left: 2px;
+}
+/* plain text as it reads (a sans face, like the page), a link as a chip with its address's copy and open icons */
+.ms-adm-sample__text--read {
+  font-size: 13px;
+}
+.ms-adm-sample__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+/* the address's icons float just after the words, over the text, so the sentence reads without a gap */
+.ms-adm-sample__chip > .ms-copyable {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+.ms-adm-sample__chip .ms-copyable__tools {
+  border-radius: 6px;
+  background: var(--ms-paper);
+  box-shadow: 0 0 0 1px var(--ms-line);
+}
+/* hidden, the icons take no clicks: the words under them stay selectable */
+.ms-adm-sample__chip .ms-copyable {
+  pointer-events: none;
+}
+.ms-adm-sample__chip:hover .ms-copyable,
+.ms-adm-sample__chip:focus-within .ms-copyable {
+  pointer-events: auto;
+}
+.ms-adm-sample__chip > span:first-child {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* hovering the link's words shows its address's icons too */
+.ms-adm-sample__chip:hover .ms-copyable:not(.is-rest) .ms-copyable__tools {
+  opacity: 1;
+}
+.ms-adm-findresult {
+  margin-bottom: 16px;
+  border-left: 3px solid var(--ms-ok);
+}
+.ms-adm-findskips {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+.ms-adm-table tr.is-muted td {
+  color: var(--ms-muted);
+}
+section.ms-adm-warnline {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+/* Redirects: problem badges in a row, a flag's note in the drawer, a test's hops */
+.ms-adm-redirflags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ms-adm-redirflags .ms-adm-badge {
+  margin-left: 0;
+}
+.ms-adm-redirflag {
+  margin: 10px 0;
+}
+.ms-adm-redirflag .ms-adm-row {
+  margin-top: 6px;
+}
+.ms-adm-h3 {
+  margin: 16px 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-adm-hops {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding-left: 22px;
+}
+
+/* Trash: the entry title as a copyable value, in bold */
+.ms-adm-strong {
+  font-weight: 600;
+}
+
+/* Replace everywhere: the old image, an arrow, the new one */
+.ms-adm-swap {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+.ms-adm-swap__img {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.ms-adm-swap__img img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  background: var(--ms-paper-3);
+  border-radius: 8px;
+}
+.ms-adm-swap__arrow {
+  font-size: 20px;
+  color: var(--ms-muted);
+}
+
+/* Find and replace: a group per place kind; the careful ones (addresses, HTML, code, field names) start unticked */
+.ms-adm-findgroup {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.ms-adm-findgroup__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ms-adm-findgroup__head .ms-adm-h2 {
+  margin: 0;
+  font-size: 15px;
+}
+.ms-adm-findgroup--careful .ms-adm-findhit {
+  border-left: 3px solid var(--ms-warn-ink);
+}
+.ms-adm-sample {
+  grid-template-columns: minmax(9em, 14em) 1fr;
+}

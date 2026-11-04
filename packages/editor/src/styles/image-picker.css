@@ -1,0 +1,141 @@
+/* An image field (image-picker.ts): the picture, its tools, the alt text with its note, the path under Details.
+   Tokens only, so the themes apply. */
+.ms-imgpick {
+  gap: 8px;
+}
+.ms-imgpick__pic {
+  display: grid;
+  place-items: center;
+  min-height: 92px;
+  overflow: hidden;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+}
+.ms-imgpick__pic:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+.ms-imgpick__pic img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+.ms-imgpick__none {
+  padding: 14px 16px;
+  color: var(--ms-faint);
+  font-size: 12.5px;
+  line-height: 1.45;
+  text-align: center;
+}
+.ms-imgpick.is-over .ms-imgpick__pic {
+  border-color: var(--ms-accent);
+  outline: 2px dashed var(--ms-accent);
+  outline-offset: -6px;
+}
+.ms-imgpick.is-busy .ms-imgpick__pic img {
+  opacity: 0.45;
+}
+.ms-imgpick__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ms-imgpick__tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ms-imgpick__tool[hidden] {
+  display: none;
+}
+.ms-imgpick__status {
+  min-height: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-imgpick__status:empty {
+  display: none;
+}
+.ms-imgpick__alt[hidden] {
+  display: none;
+}
+.ms-imgpick__alt {
+  display: grid;
+  gap: 5px;
+  margin-top: 4px;
+}
+.ms-imgpick__note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.ms-imgpick__icon {
+  display: inline-flex;
+  padding-top: 2px;
+}
+.ms-imgpick__note:empty {
+  display: none;
+}
+.ms-imgpick__note[data-state='fallback'] {
+  color: var(--ms-muted);
+}
+.ms-imgpick__note[data-state='fallback'] svg {
+  color: var(--ms-accent);
+}
+.ms-imgpick__note[data-state='missing'] {
+  color: var(--ms-warn-ink);
+}
+.ms-imgpick .ms-linkbtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ms-accent);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.ms-imgpick .ms-linkbtn:hover {
+  text-decoration: underline;
+}
+.ms-imgpick__details {
+  display: grid;
+  gap: 5px;
+}
+.ms-imgpick__details summary {
+  width: fit-content;
+  color: var(--ms-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.ms-imgpick__details[open] summary {
+  margin-bottom: 4px;
+}
+/* decorative: no alt text asked for, the box says why */
+.ms-imgpick__skip {
+  display: none;
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-imgpick__alt.is-decorative > :not(.ms-imgpick__skip) {
+  display: none;
+}
+.ms-imgpick__alt.is-decorative > .ms-imgpick__skip {
+  display: block;
+}
+.ms-imgpick__althead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ms-imgpick__althead [hidden] {
+  display: none;
+}
+.ms-imgpick__ai:empty {
+  display: none;
+}

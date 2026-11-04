@@ -1,0 +1,43 @@
+/* The Page tree (pages-tree/): a page per row (title, its address with copy and open, its status), a group as a
+   quiet heading row. Tokens only, so the themes apply. */
+.ms-tree {
+  padding: 6px 8px;
+}
+/* a phone (QA F5): the tree's wide rows scroll sideways inside the card, the page itself does not */
+@media (max-width: 720px) {
+  .ms-tree {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+}
+.ms-tree__page {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ms-tree__title {
+  color: var(--ms-text);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ms-tree__title:hover {
+  text-decoration: underline;
+}
+.ms-tree__url {
+  min-width: 0;
+  color: var(--ms-muted);
+  font: 12px var(--ms-mono);
+}
+.ms-tree__group {
+  color: var(--ms-muted);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ms-tree__group strong {
+  color: var(--ms-text);
+  font-weight: 600;
+}

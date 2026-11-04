@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { isLive } from '../lib/live';
+
+const posts = (await getCollection('posts', isLive)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Example blog">
+  <h1>Posts</h1>
+  <ul class="list">
+    {posts.map((p) => <li><a href={`/posts/${p.id}/`}>{p.data.title}</a> <span>{p.data.description}</span></li>)}
+  </ul>
+  <p><a href="/author/">Authors</a></p>
+</Base>

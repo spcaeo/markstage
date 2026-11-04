@@ -1,0 +1,502 @@
+/* Markstage canvas: what editing needs on the article (placeholders, in-place fields, the outline and chip of the
+   block being edited) and the tools that float over it (block handle, insert menu, format bar, link, block and
+   table menus). The article itself is drawn by the site's CSS; a block pack adds rules for its own boxes;
+   chrome.css holds the layout around it. */
+
+/* ---------- the editable article ---------- */
+.ms .ProseMirror {
+  outline: none;
+  caret-color: var(--ms-accent);
+}
+.ms .ProseMirror::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ms-flow {
+  display: contents;
+}
+/* placeholders: an empty line, an empty question, an empty in-place field */
+.ms .ProseMirror :is(p, h1, h2, h3, h4, summary h3).is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--ms-placeholder);
+  opacity: 0.7;
+  pointer-events: none;
+}
+.ms .ProseMirror [data-ms-field] {
+  outline: none;
+  border-radius: 3px;
+  cursor: text;
+  transition: box-shadow var(--ms-dur) var(--ms-ease), background var(--ms-dur) var(--ms-ease);
+}
+.ms .ProseMirror [data-ms-field]:hover {
+  box-shadow: 0 0 0 3px rgb(97 97 255 / 0.1);
+  background: rgb(97 97 255 / 0.06);
+}
+.ms .ProseMirror [data-ms-field]:focus {
+  box-shadow: 0 0 0 3px rgb(97 97 255 / 0.25);
+  background: rgb(255 255 255 / 0.6);
+}
+.ms .ProseMirror [data-ms-field].is-empty::before {
+  content: attr(data-placeholder);
+  color: var(--ms-placeholder);
+  font-weight: 400;
+}
+
+/* the box being edited: outline + label chip (main.ts places the chip), once the writer is in the article. The
+   outline follows the box's own corners: being edited never changes how the box itself looks (no radius of ours) */
+.ms-canvas:not(.ms-engaged) .ms-active {
+  outline: 0 !important;
+}
+.ms .ProseMirror .ms-active {
+  outline: 1.5px solid var(--ms-accent);
+  outline-offset: 5px;
+}
+.ms .ProseMirror li.ms-active,
+.ms .ProseMirror p.ms-active {
+  outline: 0;
+}
+/* every block that is not plain text shows its frame on hover */
+.ms .ProseMirror > :not(p, h1, h2, h3, h4, h5, h6, ul, ol, hr, pre):not(.ms-active):hover {
+  outline: 1px dashed var(--ms-line-2);
+  outline-offset: 5px;
+}
+.ms-chip {
+  position: absolute;
+  z-index: 5;
+  padding: 2px 8px;
+  border-radius: 5px 5px 5px 0;
+  background: var(--ms-accent);
+  color: #fff;
+  font: 500 10.5px/1.6 var(--ms-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+  box-shadow: 0 4px 10px -4px rgb(97 97 255 / 0.7);
+  border: 0;
+}
+/* the chip of a box whose settings were closed: a click brings them back */
+.ms-chip.is-action {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.ms-chip.is-action:hover {
+  background: var(--ms-accent-hover);
+}
+/* table cells hold paragraphs in the editor; on the site they are bare text */
+.ms .ProseMirror :is(td, th) > p {
+  margin: 0;
+}
+.ms .ProseMirror :is(td, th) > p + p {
+  margin-top: 0.6em;
+}
+.ms .ProseMirror .selectedCell {
+  background: var(--ms-accent-tint) !important;
+}
+/* raw HTML stays in its box: fixed or absolute pieces are clipped to it, and no z-index reaches past it (S6) */
+.ms .ProseMirror .ms-raw {
+  position: relative;
+  contain: paint;
+  isolation: isolate;
+}
+.ms .ProseMirror .ms-raw-inline {
+  position: relative;
+  isolation: isolate;
+}
+.ms .ProseMirror .ms-raw:empty::before {
+  content: 'Empty HTML block';
+  color: var(--ms-placeholder);
+}
+.ms .ProseMirror .ms-empty {
+  color: var(--ms-placeholder);
+  font-size: 0.875em;
+}
+.ms .ProseMirror .ProseMirror-selectednode {
+  outline: 1.5px solid var(--ms-accent);
+  outline-offset: 5px;
+}
+.ms .ProseMirror-gapcursor::after {
+  border-top-color: var(--ms-accent);
+}
+.ms .ProseMirror hr.ProseMirror-selectednode {
+  outline-offset: 2px;
+}
+
+/* ---------- block handle: + and grip ---------- */
+.ms-handle.is-off {
+  opacity: 0;
+  pointer-events: none;
+}
+.ms-handle {
+  display: flex;
+  gap: 1px;
+  padding-right: 10px;
+  transition: opacity var(--ms-dur) var(--ms-ease);
+}
+.ms-handle__btn {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-faint);
+  transition: background var(--ms-dur) var(--ms-ease), color var(--ms-dur) var(--ms-ease);
+}
+.ms-handle__btn:hover,
+.ms-handle__btn:focus-visible {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-handle__grip {
+  cursor: grab;
+}
+/* a box the site locks: its grip opens the menu (which says why) but does not drag */
+.ms-handle.is-locked .ms-handle__grip {
+  cursor: pointer;
+  color: var(--ms-line-2);
+}
+.ms-handle__grip:active {
+  cursor: grabbing;
+}
+.ms-handle.is-empty-line .ms-handle__btn:first-child {
+  color: var(--ms-accent);
+}
+/* on an item inside a box (a list item, an FAQ question) only the grip: blocks are added between blocks */
+.ms-handle.is-nested .ms-handle__btn:first-child {
+  visibility: hidden;
+}
+
+/* ---------- popovers: insert menu, format bar, link, block and table menus ---------- */
+.ms-pop {
+  position: fixed;
+  z-index: 50;
+  border-radius: 10px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  color: var(--ms-text);
+  font-family: var(--ms-sans);
+  font-size: 13px;
+  line-height: 1.4;
+  animation: ms-pop-in 120ms var(--ms-ease);
+}
+@keyframes ms-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.98);
+  }
+}
+.ms-insert {
+  width: 340px;
+  padding: 8px;
+}
+.ms-insert__search {
+  position: relative;
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ms-faint);
+}
+.ms-insert__search .ms-i {
+  position: absolute;
+  left: 10px;
+  top: 9px;
+}
+.ms-insert__search input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px 0 30px;
+  border: 1px solid var(--ms-line);
+  border-radius: 7px;
+  background: var(--ms-chrome);
+  color: var(--ms-text);
+  font-size: 13px;
+}
+.ms-insert__search input:focus {
+  outline: none;
+  border-color: var(--ms-accent);
+  background: var(--ms-paper);
+}
+.ms-insert__list {
+  max-height: min(440px, 60vh);
+  overflow: auto;
+  scrollbar-width: thin;
+}
+.ms-insert__group {
+  padding: 8px 8px 4px;
+  color: var(--ms-faint);
+  font: 500 10.5px var(--ms-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ms-insert__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  text-align: left;
+}
+.ms-insert__item.is-active {
+  background: var(--ms-accent-tint);
+}
+.ms-insert__pic svg {
+  display: block;
+  border-radius: 6px;
+}
+.ms-insert__item.is-active .ms-insert__pic svg {
+  box-shadow: 0 0 0 1.5px var(--ms-accent);
+}
+.ms-insert__txt {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.ms-insert__txt strong {
+  font-weight: 500;
+}
+.ms-insert__txt span {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+
+.ms-bar {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 4px;
+  background: #16191f;
+  color: #e9eaee;
+  box-shadow: 0 10px 28px -8px rgb(11 16 21 / 0.45);
+}
+.ms-bar__btn {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+}
+.ms-bar__btn b {
+  font-weight: 600;
+}
+.ms-bar__btn:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.ms-bar__btn.is-on {
+  background: rgb(97 97 255 / 0.9);
+  color: #fff;
+}
+.ms-bar__sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 3px;
+  background: rgb(255 255 255 / 0.16);
+}
+.ms-link {
+  display: grid;
+  gap: 6px;
+  width: 480px;
+  padding: 8px;
+}
+.ms-link__row {
+  display: flex;
+  gap: 6px;
+}
+.ms-link__list {
+  display: grid;
+  max-height: 300px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+.ms-link__hint {
+  padding: 4px 6px 2px;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-link__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ms-link__item.is-active {
+  background: var(--ms-accent-tint);
+}
+.ms-link__icon {
+  flex: none;
+  padding-top: 2px;
+  color: var(--ms-muted);
+}
+.ms-link__text {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+.ms-link__title {
+  color: var(--ms-text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.ms-link__text .ms-copyable {
+  color: var(--ms-muted);
+  font: 11.5px var(--ms-mono);
+}
+.ms-linkcard__title {
+  flex: none;
+  max-width: 200px;
+  overflow: hidden;
+  color: var(--ms-text);
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ms-link input {
+  flex: 1;
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.ms-link input:focus {
+  outline: none;
+  border-color: var(--ms-accent);
+}
+.ms-linkcard {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 460px;
+  padding: 6px 6px 6px 10px;
+  color: var(--ms-accent-text);
+  font-size: 12.5px;
+}
+.ms-linkcard .ms-copyable {
+  flex: 1;
+  min-width: 150px;
+  margin-right: 4px;
+}
+/* with its options shown (New tab · nofollow) the card is wider, so the address still shows */
+.ms-linkcard:has(.ms-linkcard__opts) {
+  max-width: 600px;
+}
+.ms-menu {
+  display: grid;
+  min-width: 190px;
+  padding: 5px;
+}
+.ms-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-text);
+  font-size: 13px;
+  text-align: left;
+}
+.ms-menu__item:hover,
+.ms-menu__item:focus-visible {
+  outline: none;
+  background: var(--ms-hover);
+}
+.ms-menu__item .ms-i {
+  color: var(--ms-muted);
+}
+/* the header controls a narrow screen folded into the menu: a pressed one shows it */
+.ms-menu__item--folded[aria-pressed='true'] {
+  background: var(--ms-hover);
+  font-weight: 600;
+}
+.ms-menu__rule {
+  margin: 4px 2px;
+  border: 0;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-menu__item.is-danger,
+.ms-menu__item.is-danger .ms-i {
+  color: var(--ms-danger);
+}
+.ms-tablebtn {
+  position: fixed;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 6px;
+  background: var(--ms-paper);
+  color: var(--ms-muted);
+  font-size: 12px;
+  box-shadow: var(--ms-shadow);
+}
+.ms-tablebtn:hover {
+  color: var(--ms-text);
+}
+
+/* tables without a pack's own view: scroll sideways when wide */
+.ms .ProseMirror .ms-table {
+  overflow-x: auto;
+}
+/* the link's options (link-rel.ts): a row of checkboxes under the address */
+.ms-link__opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 2px 4px 4px;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-link__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.ms-link__opt input {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--ms-accent);
+}
+.ms-linkcard__opts {
+  flex: none;
+  color: var(--ms-muted);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+/* the link box's refusal (an unsafe address) */
+.ms-link__err {
+  margin: 4px 0 0;
+  color: var(--ms-danger);
+  font-size: 12px;
+}
+.ms-link__err[hidden] {
+  display: none;
+}
+/* each block follows the direction of its own words: an Arabic paragraph runs right to left in an English site (QA N14) */
+.ms .ProseMirror :is(p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, figcaption) {
+  unicode-bidi: plaintext;
+}

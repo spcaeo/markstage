@@ -1,0 +1,39 @@
+name: Feature idea
+description: Something Markstage should do, or do better.
+title: '[Idea]: '
+labels: ['enhancement', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Ideas that are still open-ended fit well in Discussions first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The job, in plain words, and who does it (a writer, an editor, the site's developer, the owner).
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: What gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+      description: How it could work, if you have an idea. Screens or sketches are welcome.
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else?
+      description: Other editors that do this well, links, or why it matters to you.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send
+      options:
+        - label: I searched the existing issues and discussions.
+          required: true

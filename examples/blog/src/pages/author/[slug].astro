@@ -1,0 +1,31 @@
+---
+// One author's page (/author/<slug>/, markstage.config `authors.url`): their profile, their published posts newest
+// first, and schema.org Person JSON-LD (name, page, job title, profiles as sameAs). Archived authors keep their page:
+// their old posts still link to it.
+import { getAuthors, getEntriesByAuthor, personJsonLd, type Author } from '@markstage/astro/authors';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  return (await getAuthors({ archived: true })).map((author) => ({ params: { slug: author.slug }, props: { author } }));
+}
+const { author } = Astro.props as { author: Author };
+const posts = await getEntriesByAuthor(author.slug);
+const ld = await personJsonLd(author, { url: new URL(author.url ?? `/author/${author.slug}/`, Astro.site ?? 'https://example.com').href });
+// JSON in a script tag: "<" escaped so text in the profile can never close the tag
+const json = JSON.stringify(ld).replace(/</g, '\\u003c');
+---
+<Base title={author.seoTitle || `${author.name} · Example blog`}>
+  <div><script type="application/ld+json" set:html={json} /></div>
+  <article class="post">
+    <h1>{author.name}</h1>
+    {author.role && <p class="post__date">{author.role}</p>}
+    {author.bio && <p>{author.bio}</p>}
+    {author.website && <p><a href={author.website} rel="me">{author.website}</a></p>}
+    <h2>Posts</h2>
+    <ul class="list">
+      {posts.map((p) => (
+        <li><a href={p.url}>{p.title}</a> <span>{p.date?.slice(0, 10)}{p.role === 'co-author' ? ' · co-author' : ''}</span></li>
+      ))}
+    </ul>
+  </article>
+</Base>

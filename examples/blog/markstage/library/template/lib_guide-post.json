@@ -1,0 +1,22 @@
+{
+  "id": "lib_guide-post",
+  "name": "Guide",
+  "description": "The hub of a topic: what it is, the articles in order, where to start.",
+  "collection": "posts",
+  "body": {
+    "frontmatter": {
+      "pageType": "guide",
+      "topic": ""
+    },
+    "doc": {
+      "type": "doc",
+      "content": [
+        { "type": "paragraph", "content": [{ "type": "text", "text": "What this topic is, in two sentences, and who it is for." }] },
+        { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "Start here" }] },
+        { "type": "paragraph", "content": [{ "type": "text", "text": "The first article to read, linked." }] },
+        { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "Every article on this topic" }] },
+        { "type": "bulletList", "attrs": { "tight": true }, "content": [{ "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "An article, linked, with one line on what it teaches." }] }] }] }
+      ]
+    }
+  }
+}

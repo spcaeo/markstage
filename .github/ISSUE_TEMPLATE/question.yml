@@ -1,0 +1,25 @@
+name: Question
+description: Ask how to do something with Markstage.
+title: '[Question]: '
+labels: ['question']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The docs may already have the answer: docs/CONFIG.md (set a site up), docs/DEPLOY.md (run the server) and
+        docs/WRITING.md (everyday jobs in the editor). Open-ended questions fit best in Discussions.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+  - type: input
+    id: version
+    attributes:
+      label: Markstage version and where it runs
+      placeholder: v0.2.0, Node 24, Docker compose

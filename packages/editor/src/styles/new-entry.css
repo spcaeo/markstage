@@ -1,0 +1,150 @@
+/* The "New" sheet (new-entry.ts): a centred card like the admin screens' sign-in, with the title first, the settings
+   the site asks for (the Post settings fields, settings.css), and Create / Cancel. Tokens only, so the themes apply. */
+.ms-new {
+  display: grid;
+  gap: 16px;
+  max-width: 520px;
+  margin: 9vh auto 64px;
+  padding: 28px;
+  border: 1px solid var(--ms-line);
+  border-radius: 14px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-text);
+  font: 13px/1.5 var(--ms-sans);
+}
+/* the editor's text colour, not the site's heading colour (dark on dark in the dark theme otherwise) */
+.ms-new__title {
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.ms-new__intro {
+  margin: 4px 0 0;
+  color: var(--ms-muted);
+}
+.ms-new__where {
+  justify-self: start;
+}
+.ms-new .ms-field {
+  padding: 0;
+  border: 0;
+}
+.ms-new__name {
+  font-size: 16px;
+  padding-block: 9px;
+}
+.ms-new__address {
+  margin-top: 6px;
+  color: var(--ms-muted);
+  overflow-wrap: anywhere;
+}
+.ms-new__error {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-new__error[hidden] {
+  display: none;
+}
+.ms-new__actions {
+  display: flex;
+  gap: 8px;
+}
+.ms-new__none {
+  margin: 12vh auto;
+  color: var(--ms-muted);
+  font: 13px/1.5 var(--ms-sans);
+  text-align: center;
+}
+.ms-blank__new {
+  margin-top: 2px;
+}
+/* Start from: Blank or a page template (reusable/pick-template.ts), small cards with the Library's pictures */
+.ms-new__templates {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.ms-new__templates[hidden] {
+  display: none;
+}
+.ms-new__tplrow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+.ms-new__tpl {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-new__tpl:hover {
+  border-color: var(--ms-muted);
+}
+.ms-new__tpl.is-on {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 1px var(--ms-accent);
+}
+.ms-new__tpl .ms-lib__pic {
+  height: 64px;
+}
+.ms-new__tpl .ms-adm-sub {
+  font-size: 12px;
+  line-height: 1.35;
+}
+/* What the page is: its page type (config pageTypes), a card each with what the type is for */
+.ms-new__types {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.ms-new__types > legend {
+  margin-bottom: 6px;
+}
+.ms-new__type {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  padding: 8px 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-new__type:hover {
+  border-color: var(--ms-muted);
+}
+.ms-new__type.is-on {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 1px var(--ms-accent);
+}
+.ms-new__type .ms-adm-sub {
+  font-size: 12px;
+  line-height: 1.35;
+}
+/* the title gives no address name: the day names the entry, said in warm words */
+.ms-new__address.is-note {
+  color: var(--ms-warn-ink);
+}

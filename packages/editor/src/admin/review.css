@@ -1,0 +1,421 @@
+/* Review before and after: the history's side-by-side compare, the publish sheet's checks and phone, stock photos.
+   Shell tokens only (--ms-*). The compared blocks themselves are styled by the site's own article classes. */
+
+/* ---------- history: the list ---------- */
+.ms-adm-revside {
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+}
+.ms-adm-revside .ms-adm-revs {
+  max-height: none;
+  overflow: visible;
+}
+.ms-adm-revgroup {
+  margin: 14px 10px 4px;
+  color: var(--ms-muted);
+  font: 600 11px/1.4 var(--ms-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* a two- or three-way switch (side by side / text; now / later) */
+.ms-adm-seg {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+}
+.ms-adm-seg__btn {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ms-muted);
+  font: 500 13px/1.4 var(--ms-sans);
+  cursor: pointer;
+}
+.ms-adm-seg__btn[aria-pressed='true'] {
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  box-shadow: var(--ms-shadow);
+}
+.ms-adm-seg__btn:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 1px;
+}
+
+/* ---------- history: side by side ---------- */
+.ms-adm-sbs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 16px;
+  margin-top: 12px;
+}
+.ms-adm-sbs__head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ms-line);
+  background: var(--ms-paper);
+  color: var(--ms-muted);
+  font: 600 12px/1.4 var(--ms-sans);
+}
+.ms-adm-sbs__cell {
+  position: relative;
+  min-width: 0;
+  padding: 6px 12px;
+  border-left: 3px solid transparent;
+  overflow: hidden;
+}
+.ms-adm-sbs__cell.is-change {
+  border-left-color: var(--ms-accent);
+  background: color-mix(in srgb, var(--ms-accent-tint) 50%, transparent);
+}
+.ms-adm-sbs__cell--a.is-del,
+.ms-adm-sbs__cell--a.is-change {
+  border-left-color: var(--ms-danger);
+}
+.ms-adm-sbs__cell--a.is-del {
+  background: var(--ms-danger-tint);
+}
+.ms-adm-sbs__cell--b.is-ins {
+  border-left-color: var(--ms-ok);
+  background: var(--ms-ok-tint);
+}
+.ms-adm-sbs__cell--b.is-change {
+  border-left-color: var(--ms-ok);
+}
+/* the side a block is missing from */
+.ms-adm-sbs__cell.is-empty {
+  background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--ms-line) 55%, transparent) 6px 7px);
+}
+/* the site's article and body classes on each cell: their own outer spacing is not the compare's */
+.ms-adm-sbs__page,
+.ms-adm-sbs__body {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.ms-adm-sbs__body > :first-child {
+  margin-top: 0;
+}
+.ms-adm-sbs__body > :last-child {
+  margin-bottom: 0;
+}
+.ms-adm-sbs__body img {
+  max-width: 100%;
+  height: auto;
+}
+.ms-adm-sbs__w {
+  border-radius: 3px;
+  text-decoration: none;
+}
+del.ms-adm-sbs__w {
+  background: color-mix(in srgb, var(--ms-danger) 22%, transparent);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--ms-danger) 70%, transparent);
+}
+ins.ms-adm-sbs__w {
+  background: color-mix(in srgb, var(--ms-ok) 24%, transparent);
+}
+.ms-adm-sbs__tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  color: var(--ms-muted);
+  font: 600 11px/1.4 var(--ms-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ms-adm-sbs__tag .ms-btn {
+  text-transform: none;
+  letter-spacing: 0;
+}
+.ms-adm-sbs__fold {
+  grid-column: 1 / -1;
+}
+
+/* pages: field by field */
+.ms-adm-fields td,
+.ms-adm-fields th[scope='row'] {
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.ms-adm-fields del {
+  background: var(--ms-danger-tint);
+}
+.ms-adm-fields ins {
+  background: var(--ms-ok-tint);
+  text-decoration: none;
+}
+.ms-adm-fields__more {
+  padding: 8px 12px;
+}
+.ms-adm-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- the publish sheet ---------- */
+.ms-adm-addresses {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-addresses li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ms-adm-compare--short {
+  margin: 8px 0;
+}
+.ms-adm-pflist {
+  display: grid;
+  gap: 2px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-pf {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+.ms-adm-pf__ico {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.ms-adm-pf.is-ok .ms-adm-pf__ico {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-adm-pf.is-bad {
+  background: var(--ms-danger-tint);
+}
+.ms-adm-pf.is-bad .ms-adm-pf__ico {
+  color: var(--ms-danger);
+}
+.ms-adm-pf.is-warn {
+  background: var(--ms-warn-tint);
+}
+.ms-adm-pf.is-warn .ms-adm-pf__ico {
+  color: var(--ms-warn-ink);
+}
+.ms-adm-pf.is-wait .ms-adm-pf__ico,
+.ms-adm-pf.is-info .ms-adm-pf__ico {
+  color: var(--ms-muted);
+}
+.ms-adm-pf__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+.ms-adm-pf .ms-adm-issues {
+  margin-top: 6px;
+}
+
+/* the page on a phone: the frame is 390 px wide, drawn at 40% */
+.ms-adm-pf__phone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 12px 0 0 40px;
+}
+/* a phone (QA F39): the small phone picture and its button go under each other, never past the card's edge */
+@media (max-width: 720px) {
+  .ms-adm-pf__phone {
+    margin-left: 0;
+  }
+}
+.ms-adm-pf__phone:empty {
+  display: none;
+}
+.ms-adm-phone {
+  width: calc(390px * 0.4 + 12px);
+  height: calc(844px * 0.4 + 12px);
+  padding: 6px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 22px;
+  background: var(--ms-ink);
+  overflow: hidden;
+}
+.ms-adm-phone__frame {
+  width: 390px;
+  height: 844px;
+  border: 0;
+  border-radius: 40px;
+  background: var(--ms-paper);
+  transform: scale(0.4);
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.ms-adm-live {
+  border-color: color-mix(in srgb, var(--ms-ok) 50%, var(--ms-line));
+  background: var(--ms-ok-tint);
+}
+.ms-adm-live .ms-adm-row {
+  margin-top: 12px;
+}
+
+/* ---------- stock photos ---------- */
+.ms-adm-tile--stock {
+  cursor: default;
+}
+.ms-adm-tile--stock .ms-btn {
+  justify-self: start;
+  margin-top: 6px;
+}
+.ms-adm-figure figcaption {
+  margin-top: 8px;
+}
+
+/* addresses on the publish sheet and the live card: copy and open always showing, not only on hover */
+.ms-adm-addresses .ms-copyable__tools,
+.ms-adm-addresses .ms-copyable.is-rest .ms-copyable__tools {
+  opacity: 1;
+}
+.ms-adm-also {
+  display: grid;
+  gap: 4px;
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.ms-adm-also__more summary,
+.ms-adm-details summary {
+  cursor: pointer;
+  color: var(--ms-muted);
+}
+.ms-adm-also__more {
+  margin-top: 4px;
+  padding-left: 18px;
+}
+/* a job's engine output, folded (block, not the card's grid: a closed details would keep its gap) */
+.ms-adm-card.ms-adm-details {
+  display: block;
+  padding-block: 14px;
+}
+.ms-adm-details > .ms-adm-row {
+  margin-bottom: 8px;
+}
+.ms-adm-details summary {
+  font: 500 13px/1.5 var(--ms-sans);
+}
+.ms-adm-details[open] summary {
+  margin-bottom: 10px;
+}
+.ms-adm-details .ms-adm-log {
+  margin-top: 8px;
+}
+
+/* a step after the site is live that did not go through (CDN purge, IndexNow): a warning, never a failure */
+.ms-adm-step.is-warned .ms-adm-step__dot {
+  border-color: var(--ms-warn-ink);
+  background: var(--ms-warn-tint);
+}
+
+/* site health: what needs a look per page, and Google's field speed with its rating */
+.ms-adm-health > .ms-adm-card + .ms-adm-card {
+  margin-top: 0;
+}
+.ms-adm-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ms-adm-badges .ms-adm-badge {
+  margin-left: 0;
+}
+.ms-adm-badge.is-bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-adm-vitals {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.ms-adm-vital {
+  white-space: nowrap;
+}
+.ms-adm-vital::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--ms-line);
+  vertical-align: 1px;
+}
+.ms-adm-vital.is-good::before {
+  background: var(--ms-ok);
+}
+.ms-adm-vital.is-needs-work::before {
+  background: var(--ms-warn-ink);
+}
+.ms-adm-vital.is-poor::before {
+  background: var(--ms-danger);
+}
+.ms-adm-sub.is-bad {
+  color: var(--ms-danger);
+}
+
+/* notices for you (the Publishing screen): kept until marked seen */
+.ms-adm-notice {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--ms-line);
+  border-radius: 6px;
+  background: var(--ms-paper-2, var(--ms-paper));
+}
+.ms-adm-notice.is-error {
+  border-left-color: var(--ms-danger);
+  background: var(--ms-danger-tint);
+}
+.ms-adm-notice.is-warn {
+  border-left-color: var(--ms-warn-ink);
+  background: var(--ms-warn-tint);
+}
+.ms-adm-notices .ms-adm-issues {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+/* a document (PDF) in the library: an icon where the picture would be */
+.ms-adm-tile__doc,
+.ms-adm-figure--doc {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  color: var(--ms-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.ms-adm-figure--doc {
+  padding: 24px 12px 12px;
+}

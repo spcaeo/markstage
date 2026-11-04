@@ -1,0 +1,44 @@
+/* The save status in the top bar ("Saved", "Unsaved changes", "Saving…"; setStatus in index.ts): a dot and the words.
+   Its narrow forms (one word, no dot, folded on a phone) are in chrome.css's container queries. Tokens from
+   chrome.css (--ms-*). Loaded right after chrome.css (packages/astro/src/client.mjs, e2e/editor-entry.ts). */
+.ms-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-right: 8px;
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.ms-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ms-line-2);
+  transition: background var(--ms-dur) var(--ms-ease);
+}
+.ms-status[data-status='idle'] {
+  visibility: hidden;
+}
+.ms-status[data-status='saved'] .ms-status__dot {
+  background: var(--ms-ok);
+}
+.ms-status[data-status='dirty'] .ms-status__dot {
+  background: #e8a33d;
+}
+.ms-status[data-status='dirty'] {
+  color: var(--ms-warn-ink);
+}
+.ms-status[data-status='saving'] .ms-status__dot,
+.ms-status[data-status='loading'] .ms-status__dot {
+  background: var(--ms-accent);
+  animation: ms-pulse 0.9s ease-in-out infinite alternate;
+}
+.ms-status[data-status='conflict'],
+.ms-status[data-status='error'] {
+  color: var(--ms-danger);
+}
+.ms-status[data-status='conflict'] .ms-status__dot,
+.ms-status[data-status='error'] .ms-status__dot {
+  background: var(--ms-danger);
+}

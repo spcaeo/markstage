@@ -1,0 +1,95 @@
+/* The notices bar (notices.ts): one slim line under the header, the newest thing the server kept for this person.
+   Tokens only, so the themes apply. */
+.ms-notices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 22px;
+  border-bottom: 1px solid var(--ms-warn-line);
+  background: var(--ms-warn-tint);
+  color: var(--ms-text);
+  font: 13px/1.4 var(--ms-sans);
+}
+.ms-notices[hidden] {
+  display: none;
+}
+.ms-notices[data-level='error'] {
+  border-bottom-color: color-mix(in srgb, var(--ms-danger) 30%, transparent);
+  background: var(--ms-danger-tint);
+}
+.ms-notices[data-level='info'] {
+  border-bottom-color: var(--ms-line);
+  background: var(--ms-accent-tint);
+}
+.ms-notices__icon {
+  display: grid;
+  flex: none;
+  color: var(--ms-warn-ink);
+}
+.ms-notices[data-level='error'] .ms-notices__icon {
+  color: var(--ms-danger);
+}
+.ms-notices[data-level='info'] .ms-notices__icon {
+  color: var(--ms-accent);
+}
+.ms-notices__text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-notices__link,
+.ms-notices__more {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ms-accent-deep);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.ms-notices__more {
+  color: var(--ms-muted);
+  font-weight: 500;
+}
+.ms-notices__link:hover,
+.ms-notices__more:hover {
+  text-decoration: underline;
+}
+
+/* one notice per row; opened, every notice with its whole words */
+.ms-notices__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ms-notices__text:not(.is-full) {
+  cursor: pointer;
+}
+.ms-notices__text.is-full {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.ms-notices__list {
+  display: grid;
+  gap: 8px;
+  max-height: 40vh;
+  overflow: auto;
+}
+.ms-notices__list .ms-notices__row {
+  align-items: flex-start;
+}
+.ms-notices__list .ms-notices__icon {
+  margin-top: 2px;
+}
+.ms-notices__tools {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+}

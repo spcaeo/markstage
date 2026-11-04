@@ -1,0 +1,615 @@
+/* The Topic map's Journey view (admin/topics/journey.ts): columns of page cards left to right, the links between
+   them drawn under the cards, the link words on chips in the gap after each card, and the side panel's links. Only
+   the shell's --ms-* tokens, so it reads in the light and the dark theme alike. */
+
+.ms-tb-views {
+  margin-right: 4px;
+}
+/* the map wants room: the screen widens while it shows, and its margins narrow on a smaller screen */
+.ms-adm:has(.ms-jr-wrap) {
+  max-width: 1880px;
+}
+@media (max-width: 1399px) {
+  .ms-adm:has(.ms-jr-wrap) {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+.ms-jr-summary {
+  margin: 4px 0 8px;
+  color: var(--ms-text);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.ms-jr-summary p {
+  margin: 0;
+}
+.ms-jr-summary strong {
+  font-variant-numeric: tabular-nums;
+}
+.ms-jr-groups {
+  margin: 0 0 10px;
+}
+.ms-jr-gaps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-jr-gap {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12.5px;
+}
+.ms-jr-gap--warn {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-jr-gap--bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-jr-key {
+  margin: 0 0 12px;
+}
+.ms-jr-off {
+  margin: 4px 0 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-jr-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-jr-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+/* the map scrolls in its own box, both ways, so the later columns can stay in view while the articles go by */
+.ms-jr-scroll {
+  max-height: max(480px, calc(100vh - 140px));
+  overflow: auto;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-bg);
+  overscroll-behavior: contain;
+  container-type: inline-size;
+}
+
+/* the map: columns over the lines, chips over both. The four columns share the box's width (they fit from a 1280px
+   wide window); the gaps hold the link words, so they grow with it. */
+.ms-jr {
+  --jr-gap: clamp(150px, max(calc(120px + 4.6cqw), calc((100cqw - 984px) / 3)), 270px);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--jr-gap);
+  min-width: 100%;
+  padding: 16px 12px 32px;
+  box-sizing: border-box;
+}
+.ms-jr-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.ms-jr-line {
+  fill: none;
+  stroke: var(--ms-faint);
+  stroke-width: 1.5;
+}
+.ms-jr-line.is-missing {
+  stroke: var(--ms-warn-ink);
+  stroke-dasharray: 5 4;
+}
+.ms-jr-line.is-hot {
+  stroke: var(--ms-accent-text);
+  stroke-width: 2;
+}
+.ms-jr-line.is-back.is-hot {
+  stroke-width: 1.5;
+  opacity: 1;
+}
+/* a link back: lighter, so the way on stays easy to follow */
+.ms-jr-line.is-back {
+  stroke: var(--ms-faint);
+  stroke-width: 1;
+  stroke-dasharray: 1 3;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+/* through a redirect: amber, solid (a missing link is dashed) */
+.ms-jr-line.is-redirect {
+  stroke: var(--ms-warn-ink);
+}
+.ms-jr.has-picked .ms-jr-line:not(.is-hot) {
+  opacity: 0.25;
+}
+.ms-jr-col {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 160px;
+  max-width: 290px;
+}
+/* the later columns stay in view while the articles scroll by */
+.ms-jr-col:not([data-col='member']) {
+  position: sticky;
+  top: 12px;
+}
+.ms-jr-col__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-jr-col__hint {
+  margin: -6px 0 2px;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-jr-empty {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed var(--ms-line);
+  border-radius: var(--ms-radius);
+  color: var(--ms-muted);
+  font-size: 13px;
+}
+
+/* a group of articles */
+.ms-jr-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper-3);
+}
+.ms-jr-group__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 2px;
+  color: var(--ms-label);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.ms-jr-group__n {
+  margin-left: auto;
+  color: var(--ms-muted);
+  font-variant-numeric: tabular-nums;
+}
+.ms-jr-more {
+  height: 30px;
+  border: 1px dashed var(--ms-line-2, var(--ms-line));
+  border-radius: var(--ms-radius);
+  background: transparent;
+  color: var(--ms-accent-text);
+  font: 500 12.5px var(--ms-sans);
+  cursor: pointer;
+}
+.ms-jr-more:hover {
+  background: var(--ms-hover);
+}
+
+/* a page */
+.ms-jr-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: var(--ms-radius);
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.ms-jr-card:hover {
+  border-color: var(--ms-line-2, var(--ms-faint));
+}
+.ms-jr-card.is-problem {
+  border-left: 3px solid var(--ms-warn-line);
+}
+.ms-jr-card:focus-visible,
+.ms-jr-card.is-picked {
+  outline: 2px solid var(--ms-accent-text);
+  outline-offset: 1px;
+}
+.ms-jr-card.is-linked {
+  border-color: var(--ms-accent-text);
+}
+.ms-jr.has-picked .ms-jr-card:not(.is-picked, .is-linked) {
+  opacity: 0.45;
+}
+.ms-jr-card__head::after {
+  display: block;
+  clear: both;
+  content: '';
+}
+.ms-jr-card__title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+.ms-jr-plus {
+  display: inline-grid;
+  float: right;
+  margin: 0 0 2px 6px;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--ms-line);
+  border-radius: 6px;
+  background: var(--ms-paper);
+  color: var(--ms-muted);
+  cursor: pointer;
+}
+.ms-jr-plus:hover,
+.ms-jr-plus:focus-visible {
+  border-color: var(--ms-accent-text);
+  color: var(--ms-accent-text);
+}
+.ms-jr-card__state {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-jr-state--live {
+  color: var(--ms-ok-ink);
+}
+.ms-jr-state--draft {
+  color: var(--ms-warn-ink);
+}
+.ms-jr-card__url {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+/* the whole address, broken after a slash or a hyphen, never cut short; copy and open come after its end */
+.ms-jr-card__url.ms-copyable {
+  display: block;
+}
+.ms-jr-card__url .ms-copyable__text {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.ms-jr-card__url .ms-copyable__tools {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.ms-jr-card {
+  container-type: inline-size;
+}
+.ms-jr-card__nums {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 14px;
+  margin: 0;
+  font-size: 12px;
+}
+/* a narrow card: one number a line, so no label breaks */
+@container (max-width: 205px) {
+  .ms-jr-card__nums {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.ms-jr-card__nums div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ms-jr-card__nums dt {
+  color: var(--ms-muted);
+}
+.ms-jr-card__nums dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.ms-jr-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ms-jr-tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--ms-hover);
+  color: var(--ms-muted);
+  font-size: 11.5px;
+}
+.ms-jr-tag--bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-jr-tag--warn {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-jr-card__rel {
+  padding: 5px 7px;
+  border-radius: 6px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-text);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.ms-jr-card__rel p {
+  margin: 0;
+}
+.ms-jr-rel__dir {
+  color: var(--ms-muted);
+}
+
+/* the link words on a line */
+.ms-jr-chips {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.ms-jr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 3px 5px 3px 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: 500 11.5px/1.3 var(--ms-sans);
+  text-align: left;
+  cursor: pointer;
+}
+.ms-jr-chips .ms-jr-chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+}
+.ms-jr-chip:hover {
+  border-color: var(--ms-accent-text);
+}
+.ms-jr-chip:focus-visible {
+  outline: 2px solid var(--ms-accent-text);
+  outline-offset: 1px;
+}
+.ms-jr-chip__text {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.ms-jr-chip__to {
+  flex: none;
+  color: var(--ms-accent-text);
+  font-weight: 600;
+}
+.ms-jr-card__skip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.ms-jr-card__skiplabel {
+  width: 100%;
+  color: var(--ms-muted);
+  font-size: 11.5px;
+}
+.ms-jr-card__skip .ms-jr-chip {
+  max-width: 100%;
+}
+/* on a card: where it goes on a line of its own, the words under it */
+.ms-jr-chip.is-skip {
+  flex-wrap: wrap;
+}
+.ms-jr-chip.is-skip .ms-jr-chip__to {
+  flex-basis: 100%;
+}
+.ms-jr-chip.is-skip .ms-jr-chip__text {
+  flex: 1;
+}
+.ms-jr-card__url .ms-jr-url__end {
+  white-space: nowrap;
+}
+.ms-jr-chip__n {
+  color: var(--ms-muted);
+  font-variant-numeric: tabular-nums;
+}
+.ms-jr-chip .ms-adm-ico {
+  display: inline-grid;
+  color: var(--ms-muted);
+}
+.ms-jr-chip.is-missing {
+  border-style: dashed;
+  border-color: var(--ms-warn-line);
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-jr-chip.is-missing .ms-adm-ico {
+  color: var(--ms-warn-ink);
+}
+.ms-jr-chip.is-open {
+  outline: 2px solid var(--ms-accent-text);
+  outline-offset: 1px;
+}
+.ms-jr-chip.is-redirect {
+  border-color: var(--ms-warn-line);
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-jr-chip__mark {
+  display: inline-grid;
+  flex: none;
+  color: var(--ms-warn-ink);
+}
+.ms-jr-chip.is-hot {
+  border-color: var(--ms-accent-text);
+  background: var(--ms-accent-tint);
+}
+.ms-jr.has-picked .ms-jr-chip:not(.is-hot) {
+  opacity: 0.45;
+}
+.ms-jr-chip.is-sample {
+  cursor: default;
+}
+
+/* the side panel */
+.ms-jr-ends {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+.ms-jr-ends dt {
+  color: var(--ms-muted);
+}
+.ms-jr-ends dd {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+}
+.ms-jr-link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-jr-link__section {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-jr-link__sentence {
+  margin: 0;
+  padding: 6px 10px;
+  border-left: 3px solid var(--ms-accent-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.ms-jr-link__sentence mark {
+  padding: 0 2px;
+  border-radius: 3px;
+  background: var(--ms-accent-tint);
+  color: inherit;
+  font-weight: 600;
+}
+.ms-jr-link__words {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.ms-jr-link__label {
+  color: var(--ms-muted);
+}
+.ms-jr-link__warn {
+  margin: 0;
+  color: var(--ms-warn-ink);
+  font-size: 12.5px;
+}
+.ms-jr-link__warn.is-bad {
+  color: var(--ms-danger);
+}
+.ms-jr-link__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ms-jr-panel__h {
+  margin: 14px 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-jr-panel__lead {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.ms-jr-panel__place {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-jr-panel__nums {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 8px 0;
+}
+.ms-jr-panel__problems {
+  margin: 0 0 8px;
+  padding-left: 18px;
+  color: var(--ms-warn-ink);
+  font-size: 13px;
+}
+.ms-jr-panel__other {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ms-jr-panel__page {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ms-accent-text);
+  font: 600 13px var(--ms-sans);
+  text-align: left;
+  cursor: pointer;
+}
+.ms-jr-panel__page:hover {
+  text-decoration: underline;
+}
+.ms-jr-panel__where {
+  flex: none;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+
+/* Below 1640px wide the side panel lies over the map's right edge, so the map keeps its four columns */
+@media (max-width: 1639px) {
+  .ms-adm-split:has(.ms-jr-scroll):has(> .ms-adm-drawer) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ms-adm-split:has(.ms-jr-scroll) > .ms-adm-drawer {
+    position: fixed;
+    top: 68px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 30;
+    width: 380px;
+    max-height: none;
+  }
+}
+/* the panel says every address and title in full too */
+.ms-adm-split:has(.ms-jr-scroll) > .ms-adm-drawer .ms-copyable__text,
+.ms-adm-split:has(.ms-jr-scroll) > .ms-adm-drawer .ms-adm-drawer__head h2 {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

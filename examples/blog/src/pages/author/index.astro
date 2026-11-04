@@ -1,0 +1,18 @@
+---
+// The author hub (/author/): everyone the posts are by, with how many published posts each has. The authors are
+// files in src/content/authors/ (markstage.config `authors`); @markstage/astro/authors reads them, never the email.
+import { getAuthors, getEntriesByAuthor } from '@markstage/astro/authors';
+import Base from '../../layouts/Base.astro';
+
+const authors = await Promise.all((await getAuthors()).map(async (a) => ({ ...a, posts: (await getEntriesByAuthor(a.slug)).length })));
+---
+<Base title="Authors · Example blog">
+  <h1>Authors</h1>
+  <ul class="list">
+    {authors.map((a) => (
+      <li>
+        <a href={a.url}>{a.name}</a> <span>{a.role}{a.role ? ' · ' : ''}{a.posts} {a.posts === 1 ? 'post' : 'posts'}</span>
+      </li>
+    ))}
+  </ul>
+</Base>

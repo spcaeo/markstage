@@ -1,0 +1,110 @@
+# Every push to main and every pull request into it: the repo's checks, every workspace's tests, the server's
+# browser tests, an audit of the runtime dependencies and a secrets scan. CONTRIBUTING.md says what each one guards.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # the release test counts commits for the build number
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      # the tests make git commits in their own throwaway repos
+      - name: Git identity for test commits
+        run: |
+          git config --global user.name "Markstage CI"
+          git config --global user.email "ci@example.com"
+      - name: Install (exactly the lockfile)
+        run: npm ci
+      - name: Types (editor)
+        run: npm run typecheck
+      - name: No file over 1000 lines
+        run: npm run lines
+      - name: No site's names in the packages or the repo
+        run: npm run generic
+      - name: Licence words (source-available, Elastic License 2.0)
+        run: npm run licence
+      - name: Tests, repo scripts (publish kit, secret scan, SECURITY.md versions)
+        run: npm run test:scripts
+      - name: Tests, core
+        run: npm test -w packages/core
+      # a few editor tests draw in a real browser (raw HTML, Word paste)
+      - name: Chromium and its system libraries
+        run: npx playwright install --with-deps chromium
+      - name: Tests, editor
+        run: npm test -w packages/editor
+      - name: Tests, Astro integration
+        run: npm test -w packages/astro
+      - name: Tests, server (unit; the browser tests are the e2e job)
+        run: npm run test:unit -w packages/server
+      - name: Tests, example blog
+        run: npm test -w examples/blog
+      - name: Audit of the runtime dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+  e2e:
+    name: Server browser tests (Playwright, Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # the release test counts commits for the build number
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Git identity for test commits
+        run: |
+          git config --global user.name "Markstage CI"
+          git config --global user.email "ci@example.com"
+      - name: Install (exactly the lockfile)
+        run: npm ci
+      # the browser tests copy the preview agent the editor build emits; npm ci does not build it
+      - name: Build the editor's preview agent
+        run: npm run build:agent -w packages/editor
+      - name: Chromium and its system libraries
+        run: npx playwright install --with-deps chromium
+      - name: Browser tests (a skip fails the run)
+        run: npm run test:e2e -w packages/server
+        env:
+          MARKSTAGE_E2E_REQUIRED: "1"
+
+  secrets:
+    name: Secrets scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Install gitleaks (checksum checked)
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/gitleaks.tar.gz" "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+      # the whole history, with the repo's .gitleaks.toml (two published test vectors allowed, nothing else)
+      - name: Scan every commit
+        run: '"$RUNNER_TEMP/gitleaks" git . --no-banner --redact --verbose'

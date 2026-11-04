@@ -1,0 +1,13 @@
+# build context is the repo root; send only what the image copies
+**
+!package.json
+!package-lock.json
+!packages/core/**
+!packages/server/package.json
+!packages/server/bin/**
+!packages/server/src/**
+!packages/editor/package.json
+!packages/astro/package.json
+!examples/blog/package.json
+**/node_modules
+**/test

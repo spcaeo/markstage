@@ -1,0 +1,30 @@
+{
+  "name": "@markstage/server",
+  "version": "0.2.0",
+  "description": "Markstage production server: sign-in, roles, content API, publish jobs, revisions, media, audit log.",
+  "license": "Elastic-2.0",
+  "type": "module",
+  "main": "./src/app.mjs",
+  "exports": {
+    ".": "./src/app.mjs"
+  },
+  "bin": {
+    "markstage-server": "./bin/markstage-server.mjs",
+    "markstage-deploy": "./bin/markstage-deploy.mjs"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node bin/markstage-server.mjs serve",
+    "test": "npm run -s test:unit && npm run -s test:e2e",
+    "test:unit": "node --test --test-concurrency=1 \"test/*.test.mjs\"",
+    "test:e2e": "node e2e/run.mjs"
+  },
+  "dependencies": {
+    "@markstage/core": "0.2.0"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.35.5"
+  }
+}

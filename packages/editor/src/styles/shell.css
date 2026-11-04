@@ -1,0 +1,111 @@
+/* The page shell (canvas-shell/page.ts, docs/CANVAS-FIDELITY.md): the canvas inside the entry's real page. The
+   sheet stops being a sheet of paper and becomes the page's window: as wide as the canvas, no margin, no shadow, and
+   the container (ms-vp) the page's breakpoints are measured on. */
+.ms-sheet.is-shell,
+.ms-scroll .ms-sheet.is-shell {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  container: ms-vp / inline-size;
+}
+/* the editor's own article is empty while its parts are in the page */
+.ms-sheet.is-shell > article {
+  display: none;
+}
+/* the editor's parts take the place of the page's: no box of their own */
+.ms-sheet.is-shell .ms-headslot,
+.ms-sheet.is-shell .ms-headslot > *,
+.ms-sheet.is-shell .ms-canvas {
+  display: contents;
+}
+.ms-sheet.is-shell .ms-canvas {
+  margin: 0;
+}
+/* the page's own elements the editor draws (title, byline, cover), and what the page lays over the window */
+.ms-sheet.is-shell:not(.is-readers) .ms-pg-covered,
+.ms-sheet.is-shell .ms-pg-fixed,
+.ms-sheet.is-shell:not(.is-readers) .ms-pg-readers {
+  display: none !important;
+}
+/* "What readers see": the page's own head and text in place of the editor's */
+.ms-sheet.is-readers .ms-headslot,
+.ms-sheet.is-readers .ms-canvas {
+  display: none !important;
+}
+/* the site's frame is shown, not used */
+.ms-pg [inert] {
+  cursor: default;
+}
+.ms-pg [inert] a {
+  cursor: default;
+}
+
+/* "What readers see" and its note, at the bottom right of the canvas */
+.ms-pg-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+  height: 0;
+}
+.ms-pg-bar__in {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ms-pg-bar__note {
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--ms-chrome, #fff);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-muted);
+  font: 12px/1.4 var(--ms-sans, system-ui);
+}
+.ms-pg-bar [data-readers] {
+  box-shadow: var(--ms-shadow);
+}
+.ms-pg-bar [data-readers][aria-pressed='true'] {
+  border-color: var(--ms-accent);
+  color: var(--ms-accent);
+}
+
+/* lines break where the page breaks them: a space at the end of a line hangs, as in the page's text (ProseMirror's
+   own break-spaces gives that space room, so a line that just fits on the page would wrap one word early) */
+.ms-sheet.is-shell .ms-canvas > .ProseMirror {
+  white-space: pre-wrap;
+}
+/* a field typed in place (a card's button text) keeps its spaces as typed but wraps, or not, as the site's element
+   around it says (TipTap's own rule makes it wrap always: a button the site keeps on one line would wrap) */
+.ms-sheet.is-shell .ProseMirror [contenteditable='false'] [contenteditable='true'] {
+  text-wrap-mode: inherit;
+}
+
+/* no clearfix (canvas.css) at the end of the text: the page's text element has none, so its last block's bottom
+   margin runs out of it, and the page's floats end where they end. With it, everything after the text was drawn
+   that margin lower than on the page (48px on a real site's posts). */
+.ms-sheet.is-shell .ms-canvas > .ProseMirror::after {
+  content: none;
+}
+
+/* a line break typed in the source inside a paragraph (decorations.ts `pageDecorations`): a space on the page, so
+   here too; and a tight list's items hold their text with no paragraph (and so no paragraph margins) around it */
+.ms-sheet.is-shell .ProseMirror .ms-soft {
+  white-space: normal;
+}
+.ms-sheet.is-shell .ProseMirror pre {
+  white-space: var(--ms-pre-ws, pre-wrap);
+  overflow-x: auto;
+}
+.ms-sheet.is-shell .ProseMirror .ms-tight > li > p {
+  margin-block: 0;
+}
+/* a cover the post does not have yet takes no room the page does not give it: it is added in Post settings */
+.ms-sheet.is-shell:not(.is-readers) .ms-headimg__empty {
+  display: none;
+}

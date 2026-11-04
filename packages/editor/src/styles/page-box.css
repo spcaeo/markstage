@@ -1,0 +1,76 @@
+/* The Page box (settings/page-box.ts): the page type, the frame as a short list of choices, and what the type still
+   needs (a tick, a warning or a cross per check, with what to do). Tokens only, so the themes apply. */
+.ms-pagebox {
+  display: grid;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ms-line);
+}
+.ms-pagebox .ms-field {
+  padding: 0;
+  border: 0;
+}
+.ms-pagebox__frames {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.ms-pagebox__frame {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.ms-pagebox__frame input {
+  margin: 0;
+}
+.ms-pagebox__inherit {
+  color: var(--ms-muted);
+}
+.ms-pagebox__checkhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.ms-pagebox__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-pagebox__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ms-pagebox__check > svg {
+  flex: none;
+  margin-top: 2px;
+}
+.ms-pagebox__check.is-ok > svg {
+  color: var(--ms-ok);
+}
+.ms-pagebox__check.is-warn > svg {
+  color: var(--ms-warn-ink);
+}
+.ms-pagebox__check.is-block > svg {
+  color: var(--ms-danger);
+}
+.ms-pagebox__words {
+  display: grid;
+  min-width: 0;
+}
+.ms-pagebox__msg {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-pagebox__note.is-bad {
+  margin: 0;
+  color: var(--ms-danger);
+}

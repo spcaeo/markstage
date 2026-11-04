@@ -1,0 +1,290 @@
+/* The Library (reusable/): folders of cards with a picture, the drawer's picture and uses, Import's ways and lists,
+   and the panel on the canvas (panel.ts). Tokens only, so the themes apply. */
+.ms-lib__group {
+  margin-bottom: 22px;
+}
+.ms-lib__group .ms-adm-h2 {
+  margin: 0 0 10px;
+}
+.ms-lib__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-lib__card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+}
+.ms-lib__card:hover,
+.ms-lib__card:focus-within,
+.ms-lib__card.is-open {
+  border-color: var(--ms-accent);
+}
+.ms-lib__pic {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--ms-accent-tint);
+}
+.ms-lib__pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.ms-lib__pic svg {
+  width: 60%;
+  height: auto;
+}
+.ms-lib__pickind {
+  color: var(--ms-accent-deep);
+  font: 600 12px var(--ms-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ms-lib__txt {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 10px 12px 12px;
+}
+.ms-lib__top {
+  display: flex;
+  gap: 8px;
+  align-items: start;
+  justify-content: space-between;
+}
+.ms-lib__name {
+  color: var(--ms-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+.ms-lib__name:hover,
+.ms-lib__name:focus-visible {
+  color: var(--ms-accent-deep);
+  text-decoration: underline;
+}
+.ms-lib__desc {
+  color: var(--ms-text);
+  font-size: 12.5px;
+}
+.ms-lib__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.ms-lib__tag {
+  padding: 1px 7px;
+  border: 1px solid var(--ms-line);
+  border-radius: 999px;
+  color: var(--ms-muted);
+  font-size: 11px;
+}
+.ms-lib__bigpic .ms-lib__pic {
+  margin-bottom: 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+}
+.ms-lib__locks {
+  display: flex;
+  gap: 12px;
+}
+.ms-lib__uses,
+.ms-lib__history {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+.ms-lib__ways {
+  display: grid;
+  gap: 8px;
+}
+.ms-lib__way {
+  display: grid;
+  gap: 2px;
+  padding: 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-lib__way:hover,
+.ms-lib__way:focus-visible {
+  border-color: var(--ms-accent);
+  outline: 0;
+}
+.ms-lib__out {
+  margin-top: 12px;
+}
+.ms-lib__preview,
+.ms-lib__problems {
+  max-height: 260px;
+  overflow: auto;
+  padding-left: 18px;
+}
+.ms-lib__problems {
+  color: var(--ms-danger, #b42318);
+}
+.ms-lib__parts {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-lib__parts label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ms-lib__parts input {
+  margin-top: 3px;
+}
+.ms-lib__words {
+  display: block;
+  margin-top: 2px;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-lib__preview .is-bad {
+  color: var(--ms-danger, #b42318);
+}
+
+/* the panel beside the canvas (panel.ts): items to drag, and the line where a drop lands */
+.ms-libpanel {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.ms-libpanel__hint {
+  margin: 0;
+}
+.ms-libpanel__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-libpanel__item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  cursor: grab;
+}
+.ms-libpanel__item:hover,
+.ms-libpanel__item:focus-visible {
+  border-color: var(--ms-accent);
+  outline: 0;
+}
+.ms-libpanel__item .ms-lib__pic {
+  border-radius: 6px;
+}
+.ms-libpanel__txt {
+  display: grid;
+  min-width: 0;
+}
+.ms-libpanel__txt strong {
+  overflow: hidden;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ms-libdrop {
+  position: fixed;
+  z-index: 60;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ms-accent);
+  box-shadow: 0 0 0 2px var(--ms-accent-tint);
+  pointer-events: none;
+}
+
+/* Synced copies on the canvas (reusable/synced.ts): a tint around the item's blocks, and a pill at their top left (the
+   padlock keeps the top right), in a layer over the canvas like the padlocks */
+.ms .ProseMirror .ms-synced {
+  border-radius: 3px;
+  background: var(--ms-accent-tint);
+  box-shadow: 0 0 0 6px var(--ms-accent-tint);
+}
+.ms .ProseMirror .ms-synced.is-editing {
+  outline: 1.5px dashed var(--ms-accent);
+  outline-offset: 6px;
+}
+.ms-synced-pills {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.ms-synced-pill {
+  position: absolute;
+  max-width: 340px;
+  height: 19px;
+  overflow: hidden;
+  padding: 0 8px;
+  border: 1px solid var(--ms-accent);
+  border-radius: 999px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-accent-deep);
+  font: 600 11px/17px var(--ms-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.ms-synced-pill:hover,
+.ms-synced-pill.is-editing {
+  background: var(--ms-accent-tint);
+}
+.ms-synced-pill:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 1px;
+}
+.ms-lib__bigpic + .ms-adm-row {
+  margin: 8px 0 14px;
+}
+
+/* The Library screen's bar: Synced is a toggle chip with its count; Export pack is a link drawn like the buttons */
+.ms-lib__syncedchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ms-lib__export {
+  color: var(--ms-text);
+  text-decoration: none;
+}
+.ms-lib__export[aria-disabled='true'] {
+  color: var(--ms-muted);
+}

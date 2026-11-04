@@ -1,0 +1,176 @@
+/* The order component (order/index.ts): rows with a grip, the selection, the depth in a tree, the drop line while
+   dragging, and "Move to…". Tokens only, so the themes apply. */
+.ms-order {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ms-order__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  margin-left: calc(var(--depth, 0) * var(--indent, 24px));
+  padding: 4px 8px 4px 2px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--ms-text);
+  outline: none;
+}
+.ms-order__row:hover {
+  background: var(--ms-hover);
+}
+.ms-order__row:focus-visible {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 2px var(--ms-accent-tint);
+}
+.ms-order__row[aria-selected='true'] {
+  border-color: var(--ms-accent-tint);
+  background: var(--ms-accent-tint);
+}
+/* a line down the left of a tree's children, so the levels read at a glance */
+.ms-order--tree .ms-order__row:not([data-depth='0'])::before {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: calc(var(--indent, 24px) * -0.5);
+  border-left: 1px solid var(--ms-line);
+  content: '';
+}
+.ms-order__grip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-faint);
+  cursor: grab;
+  opacity: 0;
+  touch-action: none;
+}
+.ms-order__row:is(:hover, :focus-within, [aria-selected='true']) .ms-order__grip,
+.ms-order__grip[aria-expanded='true'] {
+  opacity: 1;
+}
+.ms-order__grip:hover,
+.ms-order__grip[aria-expanded='true'] {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-order__grip:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--ms-accent);
+}
+.ms-order__lock {
+  display: inline-flex;
+  flex: none;
+  order: 9;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0 9px 0 7px;
+  border: 1px solid var(--ms-accent);
+  border-radius: 999px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+  font: 600 11.5px/1 var(--ms-sans);
+  white-space: nowrap;
+}
+.ms-order__lock.is-quiet {
+  display: none;
+}
+/* while dragging: the moving rows fade, a line shows where they land, a label follows the pointer */
+.ms-order.is-dragging,
+.ms-order.is-dragging * {
+  cursor: grabbing;
+  user-select: none;
+}
+.ms-order__row.is-moving {
+  opacity: 0.4;
+}
+.ms-order__line {
+  position: absolute;
+  right: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ms-accent);
+  pointer-events: none;
+}
+.ms-order__line::before {
+  position: absolute;
+  top: -3px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ms-accent);
+  content: '';
+}
+.ms-order__ghost {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  max-width: 280px;
+  overflow: hidden;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--ms-ink);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-paper);
+  font-size: 13px;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-order__live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* a blocked action in the grip menu: greyed, still focusable so its reason is read */
+.ms-menu__item[aria-disabled='true'] {
+  color: var(--ms-faint);
+  cursor: not-allowed;
+}
+.ms-menu__item[aria-disabled='true']:hover {
+  background: none;
+}
+
+/* "Move to…" */
+.ms-dialog.ms-moveto {
+  width: min(480px, calc(100vw - 48px));
+}
+.ms-moveto .ms-input {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.ms-moveto__list {
+  display: flex;
+  flex-direction: column;
+  max-height: min(420px, calc(100vh - 260px));
+  overflow: auto;
+}
+.ms-moveto__item {
+  padding: 7px 10px 7px calc(10px + var(--depth, 0) * 18px);
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-moveto__item:is(:hover, :focus-visible) {
+  background: var(--ms-accent-tint);
+  outline: none;
+}

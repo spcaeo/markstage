@@ -1,0 +1,83 @@
+name: Bug report
+description: Something in Markstage does not work as it should.
+title: '[Bug]: '
+labels: ['bug', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report this. Please **never paste passwords, tokens, API keys or session
+        cookies**, and no real person's data: use `example.com` addresses and made-up accounts.
+        A security problem goes privately, as SECURITY.md says, not here.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see? A screenshot helps (hide anything private first).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open a blog post in the editor
+        2. Move the second paragraph up
+        3. Save
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Markstage version
+      description: The release line in the editor's footer, or what `markstage-server version` prints.
+      placeholder: v0.2.0 · build 400
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part?
+      multiple: true
+      options:
+        - Editor (writing, the canvas, saving)
+        - Pages editor or the Library
+        - Publishing, releases or environments
+        - Sign-in, users or roles
+        - Images and files
+        - Forms and the inbox
+        - Site check-up, SEO or links
+        - Astro integration (@markstage/astro)
+        - Core converter (@markstage/core)
+        - Deploy (Docker, nginx, markstage-deploy)
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Where it runs
+      description: Node version, operating system, browser, and Docker or not.
+      placeholder: Node 24.4, Ubuntu 24.04, Docker compose, Chrome 142
+  - type: textarea
+    id: log
+    attributes:
+      label: Log lines
+      description: From the server's log, if there are any. Remove anything private first.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send
+      options:
+        - label: I searched the existing issues.
+          required: true
+        - label: I removed passwords, tokens, keys and private data from this report.
+          required: true

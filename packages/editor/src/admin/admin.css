@@ -1,0 +1,915 @@
+/* The admin screens (admin/**): the shell's calm look, from its --ms-* tokens only, so the themes apply. A screen is
+   a centred column: a head (title, one line on what it is for, actions), a filter bar, then cards, tables and grids;
+   the open item sits in a drawer on the right. */
+.ms-adm {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 32px 64px;
+  color: var(--ms-text);
+  font-family: var(--ms-sans);
+  font-size: 13px;
+  line-height: 1.5;
+}
+/* a site's own heading colour (h1–h4 { color: var(--ink) }) would be dark on the dark theme: the screen's text colour
+   wins over a bare tag rule, and any class that sets a colour still wins over this */
+.ms-adm :where(h1, h2, h3, h4, h5, h6) {
+  color: inherit;
+}
+.ms-adm--narrow {
+  max-width: 640px;
+}
+.ms-adm--auth {
+  max-width: 420px;
+  padding-top: 9vh;
+}
+.ms-adm--auth .ms-adm-body {
+  padding: 24px;
+  border: 1px solid var(--ms-line);
+  border-radius: 14px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+}
+.ms-adm-ico {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* ---------- head and bar ---------- */
+.ms-adm-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.ms-adm-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.ms-adm-intro {
+  margin: 4px 0 0;
+  color: var(--ms-muted);
+}
+.ms-adm-head__actions {
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+.ms-adm-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.ms-adm-bar[hidden] {
+  display: none;
+}
+.ms-adm-searchwrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 240px;
+  max-width: 320px;
+}
+.ms-adm-searchwrap .ms-adm-ico {
+  position: absolute;
+  left: 10px;
+  color: var(--ms-faint);
+  pointer-events: none;
+}
+.ms-adm-search {
+  width: 100%;
+  padding-left: 32px !important;
+}
+.ms-adm-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+}
+.ms-adm-chip {
+  height: 26px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ms-muted);
+  font: 500 12.5px var(--ms-sans);
+  cursor: pointer;
+}
+.ms-adm-chip:hover {
+  color: var(--ms-text);
+}
+.ms-adm-chip[aria-pressed='true'] {
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  box-shadow: 0 1px 2px rgb(11 16 21 / 0.08);
+}
+.ms-adm-chip:focus-visible,
+.ms-adm-rowlink:focus-visible,
+.ms-adm-tile:focus-visible,
+.ms-adm-rev:focus-visible,
+.ms-adm-fold:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+.ms-adm-select,
+.ms-adm-date {
+  width: auto;
+  min-width: 140px;
+}
+.ms-adm-datewrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ms-muted);
+}
+
+/* ---------- cards, rows, text ---------- */
+.ms-adm-card {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+}
+.ms-adm-card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+.ms-adm-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ms-adm-grow {
+  flex: 1;
+}
+.ms-adm-stack {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.ms-adm-h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.ms-adm-h3 {
+  margin: 18px 0 8px;
+  color: var(--ms-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ms-adm-lead {
+  margin: 0;
+}
+.ms-adm-sub,
+.ms-adm-count {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 12.5px;
+}
+.ms-adm-count {
+  margin-bottom: 8px;
+}
+.ms-adm-none {
+  color: var(--ms-faint);
+}
+.ms-adm-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+  color: var(--ms-muted);
+}
+.ms-adm-foot {
+  margin: 18px 0 0;
+  color: var(--ms-muted);
+  text-align: center;
+}
+.ms-adm-foot a,
+.ms-adm-list a,
+.ms-adm-table a:not(.ms-btn) {
+  color: var(--ms-accent-text);
+  text-decoration: none;
+}
+.ms-adm-foot a:hover,
+.ms-adm-list a:hover,
+.ms-adm-table a:not(.ms-btn):hover {
+  text-decoration: underline;
+}
+.ms-adm-mono,
+.ms-adm-mono .ms-copyable__text {
+  font-family: var(--ms-mono);
+  font-size: 12px;
+}
+
+/* ---------- badges and statuses ---------- */
+.ms-adm-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--ms-paper-3);
+  color: var(--ms-muted);
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+.ms-adm-badge--ok {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-adm-badge--invited {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-adm-badge--disabled {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-adm-status,
+.ms-adm-job {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.ms-adm-status::before,
+.ms-adm-job::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ms-faint);
+}
+.ms-adm-status--published::before,
+.ms-adm-job--succeeded::before {
+  background: var(--ms-ok);
+}
+.ms-adm-status--scheduled::before,
+.ms-adm-job--running::before,
+.ms-adm-job--queued::before {
+  background: var(--ms-accent);
+}
+.ms-adm-job--failed {
+  color: var(--ms-danger);
+}
+.ms-adm-job--failed::before {
+  background: var(--ms-danger);
+}
+
+/* ---------- tables ---------- */
+.ms-adm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ms-adm-table th {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ms-line);
+  background: var(--ms-chrome);
+  color: var(--ms-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-align: left;
+}
+.ms-adm-table td {
+  max-width: 320px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ms-line);
+  vertical-align: middle;
+}
+.ms-adm-table tr:last-child td {
+  border-bottom: 0;
+}
+.ms-adm-table--rows tbody tr:hover,
+.ms-adm-table tr.is-open {
+  background: var(--ms-hover);
+}
+.ms-adm-table tr.is-bad td:first-child {
+  box-shadow: inset 3px 0 0 var(--ms-danger);
+}
+.ms-adm-cell--end {
+  text-align: right;
+}
+.ms-adm-rowlink {
+  color: var(--ms-text) !important;
+  font-weight: 600;
+}
+
+/* ---------- the drawer (the open item) ---------- */
+.ms-adm-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.ms-adm-split:has(> .ms-adm-drawer) {
+  grid-template-columns: minmax(0, 1fr) 380px;
+}
+.ms-adm-split__main {
+  min-width: 0;
+}
+.ms-adm-drawer {
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 120px);
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+}
+.ms-adm-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ms-line);
+}
+.ms-adm-drawer__head h2 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-adm-drawer__body {
+  overflow: auto;
+  padding: 16px;
+}
+.ms-adm-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 8px 14px;
+  margin: 0;
+}
+.ms-adm-facts dt {
+  color: var(--ms-muted);
+}
+.ms-adm-facts dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.ms-adm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ms-adm-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- forms ---------- */
+.ms-adm-form {
+  display: grid;
+  gap: 14px;
+}
+/* in a wide card a form keeps a readable width; in the drawer and the sign-in card it fills */
+.ms-adm-card .ms-adm-form {
+  max-width: 420px;
+}
+.ms-btn.is-done {
+  border-color: color-mix(in srgb, var(--ms-ok) 40%, var(--ms-line-2));
+  color: var(--ms-ok-ink);
+}
+.ms-adm-field .ms-input {
+  width: 100%;
+}
+.ms-adm-field__err,
+.ms-adm-form__err {
+  margin: 0;
+  color: var(--ms-danger);
+  font-size: 12px;
+}
+.ms-adm-field__err:empty,
+.ms-adm-form__err:empty {
+  display: none;
+}
+.ms-adm-form__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ms-btn.is-busy {
+  opacity: 0.7;
+  cursor: progress;
+}
+.ms-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- one-time secrets, QR ---------- */
+.ms-adm-secret {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--ms-warn-ink) 25%, var(--ms-line));
+  border-radius: 10px;
+  background: var(--ms-warn-tint);
+}
+.ms-adm-secret h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.ms-adm-secret p {
+  margin: 0;
+  color: var(--ms-warn-ink);
+}
+.ms-adm-secret__values {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px;
+}
+.ms-adm-secret__value {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--ms-paper);
+  font-family: var(--ms-mono);
+}
+.ms-adm-2fa {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 28px;
+}
+.ms-adm-qr svg {
+  display: block;
+  margin: 10px 0;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+}
+
+/* ---------- states ---------- */
+.ms-adm-state {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 48px 24px;
+  color: var(--ms-muted);
+  text-align: center;
+}
+.ms-adm-state h2 {
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 16px;
+}
+.ms-adm-state p {
+  max-width: 420px;
+  margin: 0;
+}
+.ms-adm-state--error .ms-adm-ico {
+  color: var(--ms-danger);
+}
+
+/* ---------- media ---------- */
+.ms-adm.is-drop {
+  outline: 2px dashed var(--ms-accent);
+  outline-offset: -12px;
+  background: var(--ms-accent-tint);
+}
+.ms-adm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-tile {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  padding: 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 10px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  text-decoration: none;
+}
+.ms-adm-tile:hover,
+.ms-adm-grid li.is-open .ms-adm-tile {
+  border-color: var(--ms-accent);
+}
+.ms-adm-tile__img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 6px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+}
+/* the whole image inside the 4:3 box, whatever its own shape (its width/height attributes only reserve the ratio) */
+.ms-adm-tile__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.ms-adm-tile__name {
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-adm-tile__meta {
+  color: var(--ms-faint);
+  font-size: 11.5px;
+}
+.ms-adm-tile .ms-adm-badge {
+  justify-self: start;
+  margin: 4px 0 0;
+}
+.ms-adm-figure {
+  margin: 0 0 14px;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+  text-align: center;
+}
+.ms-adm-figure img {
+  max-width: 100%;
+  height: auto;
+  max-height: 260px;
+}
+.ms-adm-uploads {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.ms-adm-uploads:empty {
+  display: none;
+}
+.ms-adm-upload {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+}
+.ms-adm-upload.is-done {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-adm-upload.is-bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-adm-paging {
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ---------- revisions ---------- */
+.ms-adm-revlayout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.ms-adm-revside {
+  position: sticky;
+  top: 12px;
+}
+.ms-adm-revs {
+  display: grid;
+  gap: 2px;
+  max-height: calc(100vh - 200px);
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+.ms-adm-rev {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--ms-text);
+  text-decoration: none;
+}
+.ms-adm-rev:hover {
+  background: var(--ms-hover);
+}
+.ms-adm-rev[aria-current='true'] {
+  background: var(--ms-accent-tint);
+}
+.ms-adm-rev__msg {
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-adm-rev__meta {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-adm-revhead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.ms-adm-revbar {
+  margin-bottom: 10px;
+  color: var(--ms-muted);
+}
+.ms-adm-compare {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+.ms-adm-cmp {
+  position: relative;
+  padding: 8px 12px;
+  border-left: 3px solid transparent;
+  border-radius: 6px;
+}
+.ms-adm-cmp--same {
+  color: var(--ms-muted);
+}
+.ms-adm-cmp--change {
+  border-left-color: var(--ms-accent);
+  background: var(--ms-paper);
+}
+.ms-adm-cmp--ins {
+  border-left-color: var(--ms-ok);
+  background: var(--ms-ok-tint);
+}
+.ms-adm-cmp--del {
+  border-left-color: var(--ms-danger);
+  background: var(--ms-danger-tint);
+}
+.ms-adm-cmp--del .ms-adm-cmp__text {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--ms-danger) 60%, transparent);
+}
+.ms-adm-cmp__tag {
+  float: right;
+  color: var(--ms-faint);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ms-adm-cmp__text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-adm-cmp ins {
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ms-ok) 22%, transparent);
+  color: var(--ms-ok-ink);
+  text-decoration: none;
+}
+.ms-adm-cmp del {
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ms-danger) 16%, transparent);
+  color: var(--ms-danger);
+}
+.ms-adm-fold {
+  justify-self: start;
+  padding: 4px 10px;
+  border: 1px dashed var(--ms-line-2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ms-muted);
+  font: 500 12px var(--ms-sans);
+  cursor: pointer;
+}
+.ms-adm-rawdiff {
+  margin-top: 18px;
+  color: var(--ms-muted);
+}
+.ms-adm-code .ms-copyable__text,
+.ms-adm-log {
+  display: block;
+  max-height: 420px;
+  margin: 0;
+  padding: 12px 14px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--ms-ink);
+  color: #e6e8eb;
+  font: 12px/1.55 var(--ms-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-adm-code .ms-copyable {
+  display: block;
+  position: relative;
+}
+.ms-adm-code .ms-copyable__tools {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+/* ---------- publishing ---------- */
+.ms-adm-checks {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-check {
+  padding: 8px 12px;
+  border-left: 3px solid var(--ms-ok);
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+}
+.ms-adm-check.is-bad {
+  border-left-color: var(--ms-danger);
+  background: var(--ms-danger-tint);
+}
+.ms-adm-check.is-warn {
+  border-left-color: var(--ms-warn-ink);
+  background: var(--ms-warn-tint);
+}
+.ms-adm-check__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ms-adm-issues {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.ms-adm-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-adm-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ms-adm-step__dot {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--ms-line-2);
+  border-radius: 50%;
+}
+.ms-adm-step.is-succeeded .ms-adm-step__dot {
+  border-color: var(--ms-ok);
+  background: var(--ms-ok);
+}
+.ms-adm-step.is-running .ms-adm-step__dot {
+  border-color: var(--ms-accent);
+  animation: ms-adm-pulse 1.2s var(--ms-ease) infinite;
+}
+.ms-adm-step.is-failed .ms-adm-step__dot {
+  border-color: var(--ms-danger);
+  background: var(--ms-danger);
+}
+@keyframes ms-adm-pulse {
+  50% {
+    box-shadow: 0 0 0 4px var(--ms-accent-tint);
+  }
+}
+/* a phone (QA F5): a wide table scrolls inside its card instead of being cut at the edge (the entries list has
+   its own phone layout in lists.css); a chip bar scrolls too */
+@media (max-width: 720px) {
+  .ms-adm-table:not(.ms-adm-entries) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .ms-adm-table:not(.ms-adm-entries) td {
+    max-width: 240px;
+  }
+  .ms-adm-bar,
+  .ms-adm-chips {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-adm-step.is-running .ms-adm-step__dot {
+    animation: none;
+  }
+}
+.ms-adm-outcome {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--ms-accent-tint);
+}
+.ms-adm-outcome.is-ok {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-adm-outcome.is-bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+
+/* Site health, addresses: the search and count row above a flush table, and its paging */
+.ms-adm-pad {
+  padding: 10px 14px;
+}
+/* media: several files at once on "Not used" (a tick box on each tile, a bar with the count and Delete) */
+.ms-adm-grid li {
+  position: relative;
+}
+.ms-adm-tile__pick {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ms-accent);
+  cursor: pointer;
+}
+.ms-adm-grid li.is-picked .ms-adm-tile {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+}
+.ms-adm-selbar {
+  margin: 0 0 12px;
+  min-height: 32px;
+}
+
+/* numbers line up (owner rule): right-aligned in a column, header too, tabular figures everywhere */
+.ms-adm th.ms-num,
+.ms-adm td.ms-num {
+  text-align: right;
+}
+.ms-adm .ms-num {
+  font-variant-numeric: tabular-nums;
+}
+/* a password with its eye (src/password.ts): the eye sits inside the input's box */
+.ms-pw {
+  position: relative;
+  display: grid;
+}
+.ms-pw .ms-input,
+.ms-pw input {
+  padding-right: 38px;
+}
+.ms-pw__eye {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  translate: 0 -50%;
+  color: var(--ms-muted);
+}
+/* the release line (src/release.ts) at the foot of every screen: small and quiet */
+.ms-release {
+  margin-top: 40px;
+  color: var(--ms-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.ms-adm--auth .ms-release {
+  margin-top: 20px;
+}
+
+/* ---------- plain notices (plain.ts): the detail for administrators under a fold ---------- */
+.ms-adm-fold {
+  display: inline-block;
+  color: var(--ms-muted);
+}
+.ms-adm-fold summary {
+  cursor: pointer;
+  color: var(--ms-accent-text);
+}
+.ms-adm-fold summary:hover {
+  text-decoration: underline;
+}
+.ms-adm-fold p {
+  margin: 4px 0 0;
+}
+.ms-adm-plain {
+  cursor: help;
+}

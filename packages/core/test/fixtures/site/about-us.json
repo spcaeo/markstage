@@ -1,0 +1,82 @@
+{
+  "wpId": 21,
+  "title": "About Us",
+  "uri": "/about-us/",
+  "modified": "2026-10-28T13:00:44+00:00",
+  "seo": {
+    "title": "About Us - Example Co: Plans, Builds and Moves for Teams",
+    "description": "Example Co helps teams plan their work, set up their tools and move their data. Meet the people and the way we work.",
+    "canonical": "https://www.example.com/about-us/",
+    "robots": [
+      "follow",
+      "index",
+      "max-snippet:-1",
+      "max-video-preview:-1",
+      "max-image-preview:large"
+    ],
+    "ogType": "article",
+    "ogTitle": "About Us - Example Co: Plans, Builds and Moves for Teams",
+    "ogDescription": "Example Co helps teams plan their work, set up their tools and move their data. Meet the people and the way we work.",
+    "ogImage": "2024/12/about-example-co.jpg",
+    "focusKeywords": [],
+    "breadcrumbTitle": "About Us",
+    "jsonLd": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"https://www.example.com/#organization\",\"name\":\"Example Co\",\"sameAs\":[\"https://social.example.com/exampleco\"]},{\"@type\":\"WebSite\",\"@id\":\"https://www.example.com/#website\",\"url\":\"https://www.example.com\",\"name\":\"Example Co\",\"publisher\":{\"@id\":\"https://www.example.com/#organization\"},\"inLanguage\":\"en-US\"},{\"@type\":\"ImageObject\",\"@id\":\"https://www.example.com/uploads/2024/12/about-example-co.jpg\",\"url\":\"https://www.example.com/uploads/2024/12/about-example-co.jpg\",\"width\":\"1200\",\"height\":\"630\",\"inLanguage\":\"en-US\"},{\"@type\":\"WebPage\",\"@id\":\"https://www.example.com/about-us/#webpage\",\"url\":\"https://www.example.com/about-us/\",\"name\":\"About Us - Example Co: Plans, Builds and Moves for Teams\",\"datePublished\":\"2024-07-09T11:41:39+00:00\",\"dateModified\":\"2026-10-28T13:00:44+00:00\",\"isPartOf\":{\"@id\":\"https://www.example.com/#website\"},\"primaryImageOfPage\":{\"@id\":\"https://www.example.com/uploads/2024/12/about-example-co.jpg\"},\"inLanguage\":\"en-US\"},{\"@type\":\"Person\",\"@id\":\"https://www.example.com/author/editor/\",\"name\":\"Sample Editor\",\"url\":\"https://www.example.com/author/editor/\"},{\"@type\":\"Article\",\"headline\":\"About Us - Example Co: Plans, Builds and Moves for Teams\",\"datePublished\":\"2024-07-09T11:41:39+00:00\",\"dateModified\":\"2026-10-28T13:00:44+00:00\",\"author\":{\"@id\":\"https://www.example.com/author/editor/\",\"name\":\"Sample Editor\"},\"publisher\":{\"@id\":\"https://www.example.com/#organization\"},\"description\":\"Example Co helps teams plan their work, set up their tools and move their data. Meet the people and the way we work.\",\"name\":\"About Us - Example Co: Plans, Builds and Moves for Teams\",\"@id\":\"https://www.example.com/about-us/#richSnippet\",\"isPartOf\":{\"@id\":\"https://www.example.com/about-us/#webpage\"},\"inLanguage\":\"en-US\",\"mainEntityOfPage\":{\"@id\":\"https://www.example.com/about-us/#webpage\"}}]}",
+    "extraJsonLd": []
+  },
+  "exitPopup": true,
+  "sections": [
+    {
+      "discriminant": "hero",
+      "value": {
+        "id": "our-story",
+        "heading": "Our Story",
+        "headingLevel": 1,
+        "lead": "We are a small team of planners, builders and helpers. We set up the tools a business runs on, move its data into them, and stay around after launch so the team can grow with them.",
+        "buttons": [],
+        "image": {}
+      }
+    },
+    {
+      "discriminant": "prose",
+      "value": {
+        "variant": "legal",
+        "html": "<h2>About Us</h2>\n<p>Welcome to Example Co, a part of <a href=\"https://group.example.com/\" target=\"_blank\" rel=\"noreferrer noopener nofollow\">Example Group</a>, which sets up work tools for teams. From the first plan to <a href=\"/services/setup/\">set-up</a> and <a href=\"/services/custom-apps/\">custom apps</a> to <a href=\"/services/integrations/\">connecting the tools you already use</a>, we do it all for you. </p>\n<p>To help small businesses and large ones run smoothly, our team brings years of practice and a love of tidy systems to every project, and shapes each one around your goals.&nbsp;</p>\n<h2>Our Mission</h2>\n<p>We help businesses of every size work with less friction: fewer copies of the same data, fewer manual steps and clearer hand-offs. Our team turns many separate systems and spreadsheets into one work platform that fits your business.&nbsp;</p>\n<h2>Our Commitment</h2>\n<p>Our work does not stop at launch. We want you to be happy with the result and to use every part of it. We build long relationships on trust and plain talk, learn your goals and keep working until the tools fit.&nbsp;</p>\n<h2>Why Work With Us?</h2>\n<p>When you pick us, you pick a partner who cares about your success. There is more than one reason to work with us:</p>\n<h3>Experience</h3>\n<p>Our team has hands-on experience with <a href=\"/\">work platforms and the services around them</a>, so you get solutions shaped to the way your business runs.&nbsp;</p>\n<h3><strong>People First </strong></h3>\n<p>Your team comes first. We take the time to understand your business and its problems so that the result meets your needs.&nbsp;</p>\n<h3><strong>A Long Record </strong></h3>\n<p>With 120 clients served, you can count on faster workflows, automation that saves time and a team that works well together.&nbsp;</p>\n<h3>Always Learning</h3>\n<p>Our specialists and developers keep up with new tools and ideas, and keep looking for new ways to make our clients’ work simpler.&nbsp;</p>"
+      }
+    },
+    {
+      "discriminant": "credentials",
+      "value": {
+        "id": "certified-team",
+        "heading": "A Certified Team",
+        "headingLevel": 2,
+        "lead": "Our lead consultant holds six industry certifications, each with an official certificate.",
+        "variant": "summary",
+        "buttons": [
+          {
+            "text": "See all certificates",
+            "href": "/about-us/certifications/",
+            "external": false
+          }
+        ],
+        "credentials": [],
+        "source": "about-us-certifications"
+      }
+    },
+    {
+      "discriminant": "cta",
+      "value": {
+        "id": "ready-to-change-the-way-your-team-works",
+        "heading": "Ready to Change the Way Your Team Works?",
+        "headingLevel": 2,
+        "lead": "Book a free call now, and let’s talk about how the right set-up can help your business.",
+        "buttons": [
+          {
+            "text": "Book a Free Call Today",
+            "href": "/contact-us/",
+            "external": false
+          }
+        ]
+      }
+    }
+  ]
+}

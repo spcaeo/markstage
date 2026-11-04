@@ -1,0 +1,37 @@
+{
+  "name": "@markstage/editor",
+  "version": "0.2.0",
+  "description": "Markstage editor: the browser client (TipTap 3, vanilla TypeScript) that edits content on the site's own design.",
+  "license": "Elastic-2.0",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./pack": "./src/pack.ts",
+    "./fidelity": "./scripts/canvas-fidelity.mjs",
+    "./styles/*": "./src/styles/*"
+  },
+  "scripts": {
+    "build:agent": "node scripts/build-agent.mjs",
+    "test": "node --test \"test/*.test.ts\""
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.8.1",
+    "@codemirror/lang-markdown": "^6.3.3",
+    "@codemirror/language": "^6.11.2",
+    "@codemirror/search": "^6.5.11",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.38.1",
+    "@lezer/highlight": "^1.2.5",
+    "@markstage/core": "0.2.0",
+    "@tiptap/core": "3.32.2",
+    "@tiptap/extension-drag-handle": "3.32.2",
+    "@tiptap/extension-link": "3.32.2",
+    "@tiptap/extension-table": "3.32.2",
+    "@tiptap/extensions": "3.32.2",
+    "@tiptap/pm": "3.32.2",
+    "@tiptap/starter-kit": "3.32.2"
+  }
+}

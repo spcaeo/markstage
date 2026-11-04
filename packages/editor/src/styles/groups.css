@@ -1,0 +1,65 @@
+/* The Groups screen (groups/): the group chips, the open group's name and address, and its entries on the order
+   component, the ones with a place of their own marked. Tokens only, so the themes apply. */
+.ms-groups__head {
+  display: grid;
+  gap: 4px;
+  margin: 16px 0 10px;
+}
+.ms-groups__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+.ms-groups__name .ms-adm-h2 {
+  margin: 0;
+}
+.ms-groups__row {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+.ms-groups__title {
+  overflow: hidden;
+  color: var(--ms-text);
+  font-weight: 600;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-groups__title:hover,
+.ms-groups__title:focus-visible {
+  text-decoration: underline;
+}
+.ms-groups__url {
+  min-width: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-groups__place {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.ms-groups__plan {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.ms-groups__fromto {
+  display: grid;
+  gap: 2px;
+}
+.ms-groups__redirects {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

@@ -1,0 +1,291 @@
+/* The screen check (?device=): the bar of screens, the page in its frame, and the list of checks. Tokens from
+   chrome.css (--ms-*). */
+
+.ms-devices {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.ms-devices[hidden],
+.ms-scroll[hidden] {
+  display: none;
+}
+/* the canvas hint is about the canvas */
+.ms-main:has(> .ms-devices:not([hidden])) .ms-hint {
+  display: none;
+}
+
+/* ---------- the bar ---------- */
+.ms-devbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--ms-line);
+  background: var(--ms-chrome);
+  font: 13px/1.4 var(--ms-sans);
+}
+.ms-devbar__presets .ms-seg__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+.ms-devbar__presets small {
+  color: var(--ms-faint);
+  font: 11px var(--ms-mono);
+}
+.ms-devbar__presets .is-on small {
+  color: inherit;
+}
+.ms-devbar__custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ms-muted);
+  font-size: 12.5px;
+}
+.ms-devbar__custom .ms-input {
+  width: 78px;
+  min-height: 30px;
+  padding: 4px 8px;
+  font: 12.5px var(--ms-mono);
+}
+.ms-devbar__custom.is-on .ms-input {
+  border-color: var(--ms-accent);
+}
+.ms-devbar [data-rotate][aria-pressed='true'] {
+  background: var(--ms-hover);
+  color: var(--ms-accent-deep);
+}
+.ms-devbar__size {
+  color: var(--ms-muted);
+  font: 11.5px var(--ms-mono);
+  white-space: nowrap;
+}
+.ms-devbar__url {
+  flex: 1 1 0;
+  min-width: 80px;
+  font: 11.5px var(--ms-mono);
+  color: var(--ms-muted);
+}
+.ms-devbar__done {
+  margin-left: auto;
+}
+.ms-devbar__note {
+  flex-basis: 100%;
+  order: 9;
+  color: var(--ms-warn-ink);
+  font-size: 12.5px;
+}
+
+/* ---------- the page in its frame, scaled to fit (stage.ts) ---------- */
+.ms-devstage {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 0;
+  overflow: hidden;
+  padding: 24px;
+  background: var(--ms-stage);
+}
+.ms-devframe {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgb(11 16 21 / 0.1),
+    0 12px 40px rgb(11 16 21 / 0.16);
+}
+.ms-devframe iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  background: #fff;
+  transform-origin: 0 0;
+}
+
+/* ---------- the checks ---------- */
+.ms-checks__tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ms-checks__body {
+  gap: 18px;
+}
+.ms-checks__msg {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 13px;
+}
+.ms-checks__msg.is-busy {
+  animation: ms-pulse 0.9s ease-in-out infinite alternate;
+}
+.ms-checks__sum {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+}
+.ms-checks__sum > svg {
+  flex: none;
+  margin-top: 2px;
+}
+.ms-checks__sum strong {
+  display: block;
+  color: var(--ms-text);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ms-checks__sum span {
+  color: var(--ms-muted);
+}
+.ms-checks__sum.is-ok {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok);
+}
+.ms-checks__sum.is-bad {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-checks__group {
+  display: grid;
+  gap: 6px;
+}
+.ms-checks__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-checks__count {
+  min-width: 22px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+  font: 500 11px var(--ms-mono);
+  text-align: center;
+}
+.ms-checks__why {
+  margin: 0 0 2px;
+  color: var(--ms-faint);
+  font-size: 12px;
+}
+.ms-check {
+  display: grid;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  transition: border-color var(--ms-dur) var(--ms-ease);
+}
+.ms-check:hover,
+.ms-check.is-on {
+  border-color: var(--ms-accent);
+}
+.ms-check__go {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ms-text);
+  font: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-check__go:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.ms-check__label {
+  color: var(--ms-muted);
+  font: 11.5px var(--ms-mono);
+}
+
+/* ---------- the Region row (region.ts) ---------- */
+.ms-devbar__region {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  order: 8;
+}
+.ms-devbar__region[hidden] {
+  display: none;
+}
+.ms-devbar__label {
+  color: var(--ms-muted);
+  font-size: 12.5px;
+}
+.ms-devbar__region .ms-seg__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+.ms-devbar__region .ms-seg__btn small {
+  color: var(--ms-faint);
+  font: 11px var(--ms-mono);
+}
+.ms-devbar__region .ms-seg__btn.is-on small {
+  color: inherit;
+}
+.ms-devbar__hint {
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  cursor: help;
+  text-decoration: underline dotted var(--ms-line-2);
+  text-underline-offset: 3px;
+}
+.ms-devbar__spell {
+  padding: 2px 8px;
+  border-radius: 999px;
+  /* the themed highlight colours, so the dark theme keeps it readable */
+  background: var(--ms-mark);
+  color: var(--ms-mark-ink);
+  font-size: 12px;
+}
+.ms-checks__results {
+  display: grid;
+  gap: 18px;
+}
+.ms-checks__count.is-info {
+  background: var(--ms-mark);
+  color: var(--ms-mark-ink);
+}
+.ms-check--spell .ms-check__go {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ms-check__times {
+  color: var(--ms-faint);
+  font: 11.5px var(--ms-mono);
+}
+
+/* the site's colours on the page (?theme=dark); greyed when the site has no dark scheme (config `themes`) */
+.ms-devbar__theme .ms-seg__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  padding: 0;
+}
+.ms-devbar__theme.is-disabled .ms-seg__btn {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

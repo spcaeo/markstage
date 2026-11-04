@@ -1,0 +1,140 @@
+:root {
+  --text: #1d1f23;
+  --muted: #666b73;
+  --link: #2f5bd8;
+  --bg: #fff;
+  font: 17px/1.65 Georgia, 'Times New Roman', serif;
+  color: var(--text);
+}
+/* the dark scheme (markstage.config.mjs `themes`: the editor's screen check shows the page in it) */
+:root[data-theme='dark'] {
+  --text: #e4e5e8;
+  --muted: #9ba0a8;
+  --link: #8eadff;
+  --bg: #15171b;
+  color-scheme: dark;
+}
+body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--bg);
+}
+.site a {
+  color: var(--text);
+  font: 600 15px system-ui, sans-serif;
+  text-decoration: none;
+}
+a {
+  color: var(--link);
+}
+.list span {
+  display: block;
+  color: var(--muted);
+  font-size: 15px;
+}
+.post h1 {
+  font-size: 2.2rem;
+  line-height: 1.2;
+}
+.post__date {
+  color: var(--muted);
+  font: 14px system-ui, sans-serif;
+}
+.post__body table {
+  border-collapse: collapse;
+}
+.post__body :is(th, td) {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+}
+.post__body blockquote {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 3px solid #ddd;
+  color: var(--muted);
+}
+.post__body pre {
+  padding: 12px;
+  overflow-x: auto;
+  background: #f5f5f7;
+}
+
+.post__body img {
+  max-width: 100%;
+  height: auto;
+}
+.post__body figure {
+  margin: 1.6em 0;
+}
+.post__body figure > p {
+  margin: 0;
+}
+.post__body figure.wide {
+  margin-inline: -60px;
+}
+.post__body figure.wide img {
+  width: 100%;
+}
+.post__body figcaption {
+  margin-top: 0.5em;
+  color: var(--muted);
+  font: 14px/1.5 system-ui, sans-serif;
+  text-align: center;
+}
+
+.post__cover {
+  margin: 1.2em 0 1.6em;
+}
+.post__cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* the frames (markstage.config `frames`, src/layouts/Base.astro): full width for a guide, one reading column with
+   its contents for an article, the text alone for a legal page */
+body.frame-full {
+  max-width: 1040px;
+}
+body.frame-full .post__body {
+  columns: 2 320px;
+  column-gap: 48px;
+}
+body.frame-full .post__body :is(h2, h3, ul, ol) {
+  break-after: avoid;
+}
+body.frame-plain {
+  max-width: 640px;
+  font-size: 16px;
+}
+.post__contents {
+  margin: 1em 0 1.6em;
+  padding: 12px 16px;
+  border-left: 3px solid #ddd;
+  font: 15px/1.6 system-ui, sans-serif;
+}
+.post__contents ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+/* "More on this topic" under a post (src/components/MoreOnTopic.astro) */
+.more-topic {
+  margin: 2.4em 0 0;
+  padding: 16px 18px;
+  border-top: 1px solid #ddd;
+  font: 15px/1.6 system-ui, sans-serif;
+}
+.more-topic h2 {
+  margin: 0 0 0.4em;
+  font-size: 18px;
+}
+.more-topic ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.more-topic span {
+  color: #666;
+}

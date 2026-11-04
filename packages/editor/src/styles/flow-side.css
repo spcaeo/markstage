@@ -1,0 +1,112 @@
+/* The Flow view's side panel (admin/topics/flow-side.ts): the picked page's details, beside the map (flow.css), on a
+   16px rhythm. */
+
+.ms-fl-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  max-height: clamp(560px, calc(100vh - 150px), 1500px);
+  overflow: auto;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+  font-size: 13px;
+}
+.ms-fl-side[hidden] {
+  display: none;
+}
+.ms-fl-side > * {
+  margin: 0;
+}
+/* the parts a page has none of (no address, no problems) take no room */
+.ms-fl-side > span:empty {
+  display: none;
+}
+.ms-fl-side__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ms-fl-side__title {
+  flex: 1;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.ms-fl-side__place,
+.ms-fl-dates {
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-fl-side__dates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.ms-fl-way {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+.ms-fl-way__label,
+.ms-fl-way__n {
+  color: var(--ms-muted);
+}
+.ms-fl-side .ms-jr-link__actions {
+  margin: 0;
+}
+.ms-fl-side .ms-jr-panel__problems {
+  margin: 0;
+}
+
+/* addresses wrap in full, never cut short */
+.ms-fl-side .ms-copyable {
+  display: block;
+  max-width: 100%;
+}
+.ms-fl-side .ms-copyable__text {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.ms-fl-side .ms-copyable__tools {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
+/* the picked page's counts: three boxes, each number right-aligned with tabular digits */
+.ms-fl-side .ms-jr-panel__nums {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.ms-fl-side .ms-jr-panel__nums div {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ms-paper-2, var(--ms-paper-3));
+}
+.ms-fl-side .ms-jr-panel__nums dt {
+  color: var(--ms-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.ms-fl-side .ms-jr-panel__nums dd {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

@@ -1,0 +1,21 @@
+// The lead the old WordPress theme sent to Odoo (twentytwentyfour-child/functions.php, odooInsert), copied as it was.
+// test/odoo.test.mjs reads the keys out of this array: a field Markstage leaves out or renames fails it.
+    $leadData = array(
+        'name' => $name,
+        'contact_name' => $name,
+        'email_from' => $email,
+        'phone' => $phone,
+        'mobile_country_code' => strtoupper($country_code),
+        'description' => $description,
+        'country_id' => intval($countryID),
+        'state_id' => intval($stateID),
+        'city' => $city,
+        'url' => $url,
+        'referred' => $referral_url,
+        'source_id' => $sourceID,
+        // 'user_id' => $userID,
+        'landing_url' => $session_url,
+        'refering_domain' => $u_referring_domain,
+        'is_auto_created' => true
+
+    );

@@ -1,0 +1,48 @@
+{
+  "name": "@markstage/astro",
+  "version": "0.2.0",
+  "description": "Markstage for Astro: the editor in `astro dev` (no sign-in, 127.0.0.1 only), its production build for a Markstage server (markstage build-editor) and the site config loader.",
+  "license": "Elastic-2.0",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "type": "module",
+  "bin": {
+    "markstage": "./bin/markstage.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.mjs"
+    },
+    "./config": "./src/config.mjs",
+    "./bind": {
+      "types": "./src/bind.d.ts",
+      "default": "./src/bind.mjs"
+    },
+    "./authors": {
+      "types": "./src/authors.d.ts",
+      "default": "./src/authors.mjs"
+    },
+    "./pages": {
+      "types": "./src/pages.d.ts",
+      "default": "./src/pages.mjs"
+    },
+    "./topics": {
+      "types": "./src/topics.d.ts",
+      "default": "./src/topics.mjs"
+    },
+    "./page.astro": "./src/page.astro"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@markstage/core": "0.2.0",
+    "@markstage/editor": "0.2.0",
+    "yaml": "^2.9.1"
+  },
+  "peerDependencies": {
+    "astro": "^7.4.4"
+  }
+}

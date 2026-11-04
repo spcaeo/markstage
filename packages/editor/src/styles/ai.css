@@ -1,0 +1,195 @@
+/* An AI suggestion (ai/card.ts): the value now next to the suggested one, the actions, and the states (asking, off,
+   too many, failed). Tokens only, so the themes apply. */
+.ms-ai {
+  display: block;
+  margin: 8px 0;
+  border: 1px solid var(--ms-line);
+  border-left: 3px solid var(--ms-accent);
+  border-radius: 8px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font-family: var(--ms-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  cursor: auto;
+  user-select: text;
+}
+.ms-ai__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border-bottom: 1px solid var(--ms-line);
+}
+.ms-ai__title {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--ms-text);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.ms-ai__title svg {
+  color: var(--ms-accent);
+}
+.ms-ai__body {
+  display: grid;
+  gap: 10px;
+  padding: 10px 12px 12px;
+}
+.ms-ai__state {
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-ai__state.is-failed,
+.ms-ai__state.is-denied {
+  color: var(--ms-danger);
+}
+.ms-ai__state.is-rate {
+  color: var(--ms-warn-ink);
+}
+.ms-ai__body[aria-busy='true'] .ms-ai__state::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border: 2px solid var(--ms-line-2);
+  border-top-color: var(--ms-accent);
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: ms-ai-spin 0.8s linear infinite;
+}
+@keyframes ms-ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-ai__body[aria-busy='true'] .ms-ai__state::before {
+    animation: none;
+  }
+}
+.ms-ai__env {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.ms-ai__code .ms-copyable__text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+.ms-ai__field {
+  display: grid;
+  gap: 4px;
+}
+.ms-ai__label {
+  margin: 0;
+  color: var(--ms-label);
+  font-size: 12px;
+  font-weight: 600;
+}
+.ms-ai__row {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+}
+.ms-ai__tag {
+  padding-top: 1px;
+  color: var(--ms-faint);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ms-ai__val {
+  min-width: 0;
+}
+.ms-ai__now .ms-ai__val {
+  color: var(--ms-muted);
+}
+.ms-ai__new .ms-ai__val {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-text);
+}
+.ms-ai__new:has(.ms-ai__input) .ms-ai__val {
+  padding: 0;
+  background: none;
+}
+.ms-ai__text .ms-copyable__text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-ai__empty {
+  color: var(--ms-faint);
+  font-style: italic;
+}
+.ms-ai__input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.ms-ai__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.ms-ai__grow {
+  flex: 1;
+}
+.ms-ai__why {
+  margin: 0;
+  color: var(--ms-danger);
+}
+.ms-ai__why[hidden] {
+  display: none;
+}
+.ms-ai__note {
+  margin: 0;
+  color: var(--ms-faint);
+  font-size: 11.5px;
+}
+.ms-ai__ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ms-ai__ask svg {
+  color: var(--ms-accent);
+}
+
+/* on the canvas, under an image: the text's own styles stay out */
+.ms .ProseMirror .ms-ai {
+  max-width: 560px;
+  margin: 10px auto 0;
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.45;
+}
+.ms .ProseMirror .ms-ai :is(p, h3) {
+  margin: 0;
+  font-family: var(--ms-sans);
+  font-size: inherit;
+  line-height: inherit;
+}
+.ms .ProseMirror .ms-ai .ms-ai__title {
+  font-size: 12.5px;
+}
+.ms .ProseMirror .ms-ai .ms-ai__note {
+  font-size: 11.5px;
+}
+.ms-ai:focus {
+  outline: none;
+}
+.ms-ai:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}

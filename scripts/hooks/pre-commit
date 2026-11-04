@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blocks a commit that adds an API key, token, password or private key (docs/PUBLISHING.md "Guard rails").
+# Switched on by `npm ci` / `npm install` (scripts/hooks/install.mjs sets core.hooksPath).
+# Skip once, on purpose, with: git commit --no-verify
+exec node scripts/hooks/secret-scan.mjs --staged

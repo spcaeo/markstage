@@ -1,0 +1,23 @@
+---
+// "More on this topic" (docs/API-LINKS.md): the other live posts of this post's topic, its own group first, from the
+// topic files (markstage/topics/). A new post shows up here on its neighbours at the next build, without editing them.
+import { getEntry } from 'astro:content';
+import { moreOnTopic } from '@markstage/astro/topics';
+import { isLive } from '../lib/live';
+
+interface Props {
+  id: string;
+  limit?: number;
+}
+const { id, limit = 4 } = Astro.props;
+const more = await moreOnTopic('posts', id, { limit: limit + 4 });
+const posts = (await Promise.all(more.filter((m) => m.collection === 'posts').map((m) => getEntry('posts', m.id))))
+  .filter((p) => p !== undefined && isLive(p))
+  .slice(0, limit);
+---
+{posts.length > 0 && (
+  <aside class="more-topic" aria-labelledby="more-topic-title">
+    <h2 id="more-topic-title">More on this topic</h2>
+    <ul>{posts.map((p) => <li><a href={`/posts/${p!.id}/`}>{p!.data.title}</a>{p!.data.description && <span> {p!.data.description}</span>}</li>)}</ul>
+  </aside>
+)}

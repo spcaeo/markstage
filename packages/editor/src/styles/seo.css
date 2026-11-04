@@ -1,0 +1,434 @@
+/* The SEO check (seo/index.ts): sections of findings in the right column. */
+.ms-seo {
+  gap: 0;
+  padding: 0 0 40px;
+}
+.ms-seo-sum {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 14px 16px 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.ms-seo-sum > svg {
+  flex: none;
+  margin-top: 1px;
+}
+.ms-seo-sum strong {
+  display: block;
+  font-size: 13px;
+}
+.ms-seo-sum span {
+  color: var(--ms-muted);
+}
+.ms-seo-sum.is-ok {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok);
+}
+.ms-seo-sum.is-warn {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-seo-sum.is-error {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-seo-sum strong,
+.ms-seo-sec__title {
+  color: var(--ms-text);
+}
+.ms-seo-sec {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ms-line);
+}
+.ms-seo-sec[hidden] {
+  display: none;
+}
+.ms-seo-sec__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-seo-sec__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.ms-seo-sec__count.is-ok {
+  color: var(--ms-ok);
+}
+.ms-seo-sec__count.is-warn {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-seo-sec__count.is-error {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-seo-sec__body,
+.ms-seo-list {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.ms-seo-note {
+  color: var(--ms-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.ms-seo-note.is-busy {
+  font-style: italic;
+}
+.ms-seo-note.is-unsaved {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-text);
+}
+.ms-seo-counts {
+  color: var(--ms-text);
+}
+
+/* a finding: an icon by its level, its words (copyable), a button to show it in the text */
+.ms-seo-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+  padding: 4px 4px 4px 2px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.ms-seo-row.is-go {
+  cursor: pointer;
+}
+.ms-seo-row.is-go:hover {
+  background: var(--ms-hover);
+}
+.ms-seo-row__icon {
+  flex: none;
+  display: inline-flex;
+  padding-top: 2px;
+}
+.ms-seo-row.is-error .ms-seo-row__icon {
+  color: var(--ms-danger);
+}
+.ms-seo-row.is-warn .ms-seo-row__icon {
+  color: var(--ms-warn-ink);
+}
+.ms-seo-row.is-ok .ms-seo-row__icon {
+  color: var(--ms-ok);
+}
+.ms-seo-row.is-ok .ms-copyable__text {
+  color: var(--ms-muted);
+}
+.ms-seo-row__text {
+  flex: 1;
+  min-width: 0;
+}
+.ms-seo-row__text .ms-copyable__text {
+  white-space: normal;
+}
+.ms-seo-row__go {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  opacity: 0.55;
+}
+.ms-seo-row:hover .ms-seo-row__go,
+.ms-seo-row__go:focus-visible {
+  opacity: 1;
+}
+
+/* the search result and its widths */
+.ms-seo-serp {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  /* a result looks as on Google's light page, in either editor theme */
+  background: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.ms-seo-serp__url {
+  color: #4d5156;
+  font-size: 12px;
+}
+/* its copy and open buttons, on the result's own light page */
+.ms-seo-serp .ms-copyable__btn {
+  width: 18px;
+  height: 18px;
+  color: #4d5156;
+}
+.ms-seo-serp .ms-copyable__btn:hover {
+  background: #f1f3f4;
+  color: #202124;
+}
+.ms-seo-serp__title {
+  color: #1a0dab;
+  font-size: 17px;
+  line-height: 1.3;
+}
+.ms-seo-serp__desc {
+  color: #4d5156;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.ms-seo-meter {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+}
+.ms-seo-meter__top {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ms-muted);
+}
+.ms-seo-meter__px {
+  font-family: var(--ms-mono);
+  font-size: 11px;
+}
+.ms-seo-meter__bar {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--ms-line);
+}
+.ms-seo-meter__bar span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--ms-ok);
+}
+.ms-seo-meter.is-warn .ms-seo-meter__bar span {
+  background: var(--ms-warn-ink);
+}
+.ms-seo-meter.is-error .ms-seo-meter__bar span {
+  background: var(--ms-danger);
+}
+.ms-seo-sec .ms-btn--sm {
+  justify-self: start;
+}
+.ms-seo-switch {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ms-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.ms-seo-switch input {
+  margin: 0;
+  accent-color: var(--ms-accent);
+}
+
+/* the headings as an outline: a level-3 one sits under its level-2 one */
+.ms-seo-tree {
+  display: grid;
+  gap: 1px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-seo-tree__go {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--ms-text);
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-seo-tree__go:hover {
+  background: var(--ms-hover);
+}
+.ms-seo-tree__go > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ms-seo-tree__lv {
+  flex: none;
+  color: var(--ms-faint);
+  font: 500 10.5px var(--ms-mono);
+}
+.ms-seo-tree__item[data-level='3'] {
+  padding-left: 14px;
+}
+.ms-seo-tree__item[data-level='4'],
+.ms-seo-tree__item[data-level='5'],
+.ms-seo-tree__item[data-level='6'] {
+  padding-left: 28px;
+}
+
+/* what Google sees: the head's values and a card per structured data item */
+.ms-seo-kvs {
+  display: grid;
+  gap: 4px;
+}
+.ms-seo-kv {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.ms-seo-kv__k {
+  color: var(--ms-muted);
+}
+.ms-seo-kv__v .ms-copyable__text {
+  white-space: normal;
+  word-break: break-word;
+}
+.ms-seo-kv__v.is-none {
+  color: var(--ms-faint);
+}
+.ms-seo-schema {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid var(--ms-line);
+  border-left: 3px solid var(--ms-ok);
+  border-radius: 8px;
+}
+.ms-seo-schema.is-warn {
+  border-left-color: var(--ms-warn-ink);
+}
+.ms-seo-schema.is-error {
+  border-left-color: var(--ms-danger);
+}
+.ms-seo-schema__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ms-seo-schema__type {
+  font: 600 12.5px var(--ms-mono);
+}
+.ms-seo-schema__about {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-seo-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* when shared: the share image as each place cuts it */
+.ms-seo-share {
+  display: grid;
+  gap: 12px;
+  margin-top: 4px;
+}
+.ms-seo-share__card {
+  display: grid;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  /* previews of other sites' cards: their light colours, in either editor theme */
+  background: #fff;
+  color: #1c1e21;
+}
+.ms-seo-share__img {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--ms-line);
+  color: var(--ms-faint);
+  font-size: 12px;
+}
+.ms-seo-share__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ms-seo-share__text {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.ms-seo-share__host {
+  color: #65676b;
+  font-size: 11px;
+}
+.ms-seo-share__title {
+  font-size: 13px;
+}
+.ms-seo-share__desc {
+  color: #65676b;
+}
+.ms-seo-share__label {
+  padding: 5px 10px;
+  border-top: 1px solid var(--ms-line);
+  color: var(--ms-faint);
+  font-size: 11px;
+}
+/* a chat app: a square thumbnail beside the words */
+.ms-seo-share__card--chat {
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+.ms-seo-share__card--chat .ms-seo-share__label {
+  grid-column: 1 / -1;
+}
+.ms-seo-share__card--x .ms-seo-share__img {
+  border-radius: 8px 8px 0 0;
+}
+
+.ms-head [data-seo][aria-pressed='true'] {
+  color: var(--ms-accent-deep);
+}
+
+/* the SEO check's "Mark nofollow links": the canvas shows which links search engines are told not to follow */
+.ms-mark-nofollow .ProseMirror a[rel~='nofollow'],
+.ms-mark-nofollow .ProseMirror a[rel~='sponsored'],
+.ms-mark-nofollow .ProseMirror a[rel~='ugc'] {
+  outline: 2px dashed var(--ms-warn-ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+  background: var(--ms-warn-tint);
+}
+.ms-seo-also {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  font-size: 12px;
+}
+.ms-seo-also__k {
+  color: var(--ms-muted);
+}
+.ms-seo-also__item .ms-copyable__text {
+  font-family: var(--ms-mono);
+  font-size: 11.5px;
+}
+.ms-seo-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}

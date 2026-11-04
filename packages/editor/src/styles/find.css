@@ -1,0 +1,78 @@
+/* Find and replace (find.ts): a bar under the header, the matches marked on the canvas. */
+.ms-find {
+  display: grid;
+  gap: 6px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--ms-line);
+  background: var(--ms-chrome);
+}
+.ms-find[hidden] {
+  display: none;
+}
+.ms-find__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 760px;
+}
+.ms-find__row[hidden] {
+  display: none;
+}
+.ms-find__rep {
+  padding-left: 34px;
+}
+.ms-find input[type='text'] {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 6px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font-size: 13px;
+}
+.ms-find input[type='text']:focus {
+  outline: none;
+  border-color: var(--ms-accent);
+}
+.ms-find__count {
+  flex: none;
+  min-width: 70px;
+  color: var(--ms-muted);
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ms-find__count.is-none {
+  color: var(--ms-danger);
+}
+.ms-find__toggle svg {
+  transform: rotate(-90deg);
+  transition: transform var(--ms-dur, 0.15s);
+}
+.ms-find__toggle.is-open svg {
+  transform: none;
+}
+.ms-find__opt {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  color: var(--ms-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.ms-find__opt input {
+  margin: 0;
+  accent-color: var(--ms-accent);
+}
+/* the matches on the canvas; the current one stronger */
+.ms-canvas .ms-found {
+  border-radius: 2px;
+  background: rgb(255 214 102 / 0.55);
+}
+.ms-canvas .ms-found.is-current {
+  background: rgb(255 153 0 / 0.65);
+  box-shadow: 0 0 0 1px rgb(214 120 0 / 0.8);
+}

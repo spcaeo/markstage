@@ -1,0 +1,27 @@
+---
+// The editor page at /markstage/ (dev only: the integration injects it in `astro dev`). It loads the site's own
+// CSS so the canvas draws an entry exactly as its page does; the editor is @markstage/editor (virtual:markstage/client).
+// Data the block packs need from the site (words, icons…) comes from the config's `pageData` in #ms-page-data.
+import meta from 'virtual:markstage/meta';
+import pageData from 'virtual:markstage/page-data';
+
+const data = (await pageData()) ?? {};
+---
+<!doctype html>
+<html lang={meta.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{meta.siteName} · Markstage</title>
+    {meta.favicon && <link rel="icon" href={meta.favicon} />}
+    {meta.preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+    <script type="application/json" id="ms-page-data" set:html={JSON.stringify(data).replace(/</g, '\\u003c')} />
+  </head>
+  <body class="ms">
+    <div id="markstage" class="ms-app" aria-busy="true"></div>
+    <script>
+      import 'virtual:markstage/client';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+/* numbers line up (num-columns.ts): a column of numbers is right-aligned, its header too, with tabular figures */
+th.ms-num,
+td.ms-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

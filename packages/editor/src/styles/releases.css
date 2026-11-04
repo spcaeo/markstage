@@ -1,0 +1,153 @@
+/* Releases (releases/): the list, one release's cards (go live, preview, items, share links), the add screen's release
+   picker and the share link shown once. The admin screens' parts (admin.css) carry the rest. Tokens only, so the
+   themes apply. */
+
+/* ---------- the list ---------- */
+.ms-rel-name {
+  color: var(--ms-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+.ms-rel-name:hover,
+.ms-rel-name:focus-visible {
+  color: var(--ms-accent-text);
+  text-decoration: underline;
+}
+.ms-rel-desc {
+  max-width: 48ch;
+  margin-top: 2px;
+}
+.ms-adm-badge.ms-rel-badge--soon {
+  border-color: var(--ms-warn-line);
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-rel-status--cancelled,
+.ms-rel-status--rolled-back {
+  color: var(--ms-muted);
+}
+
+/* ---------- one release ---------- */
+.ms-adm-head__actions .ms-rel-status {
+  align-self: center;
+}
+.ms-rel .ms-adm-outcome a {
+  color: inherit;
+  font-weight: 600;
+}
+.ms-rel-when {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.ms-rel-approvals {
+  margin: 0 0 12px;
+  padding-left: 18px;
+}
+.ms-rel-approvals li {
+  margin: 2px 0;
+}
+.ms-rel-approvals li.is-old {
+  color: var(--ms-muted);
+  text-decoration: line-through;
+}
+.ms-rel-why:empty {
+  display: none;
+}
+.ms-rel-follow {
+  margin-top: 8px;
+}
+.ms-rel-tabs {
+  margin: 4px 0 12px;
+}
+.ms-rel-warn {
+  margin-top: 4px;
+  padding: 4px 8px;
+  border: 1px solid var(--ms-warn-line);
+  border-radius: 6px;
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+  font-size: 12px;
+}
+.ms-adm-table tr.is-past td {
+  color: var(--ms-muted);
+}
+
+/* an item's change takes the page's whole width; closing it brings the release back */
+.ms-adm-split:has(> .ms-rel-drawer--wide) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ms-adm-split:has(> .ms-rel-drawer--wide) > .ms-adm-split__main {
+  display: none;
+}
+.ms-adm-drawer.ms-rel-drawer--wide {
+  position: static;
+  max-height: none;
+}
+.ms-rel-pic {
+  display: block;
+  max-width: 100%;
+  max-height: 60vh;
+  margin-bottom: 8px;
+  border: 1px solid var(--ms-line);
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+}
+.ms-rel-text {
+  max-height: 60vh;
+  margin: 0;
+  overflow: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--ms-line);
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+  font-family: var(--ms-mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- the share link, shown once ---------- */
+/* the whole address, wrapped: it is shown this once */
+.ms-rel-secret .ms-rel-url .ms-copyable__text {
+  font-family: var(--ms-mono);
+  font-size: 12px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.ms-rel-secret + .ms-adm-actions {
+  margin-top: 12px;
+}
+
+/* ---------- add to a release: which one ---------- */
+.ms-rel-pick {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.ms-rel-pick__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ms-rel-pick__row:hover {
+  background: var(--ms-hover);
+}
+.ms-rel-pick__row.is-on {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+}
+.ms-rel-pick__name {
+  font-weight: 600;
+}
+.ms-rel-pick__new {
+  flex: 1 1 220px;
+}
+.ms-rel-pick__new .ms-input {
+  width: 100%;
+}

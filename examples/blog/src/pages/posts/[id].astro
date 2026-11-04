@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getAuthor } from '@markstage/astro/authors';
+import { frameOf } from '@markstage/astro/pages';
+import MoreOnTopic from '../../components/MoreOnTopic.astro';
+import Base from '../../layouts/Base.astro';
+import { isLive } from '../../lib/live';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', isLive);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+// the post's frame (its own, its type's, else the collection's): a reading post lists its contents, a plain one is
+// the text alone (no date, byline or cover)
+const frame = (await frameOf('posts', post.data))?.id ?? 'reading';
+const contents = frame === 'reading' && post.data.contents !== false ? headings.filter((h) => h.depth === 2) : [];
+// the byline: the author, then any co-authors, each linked to their page
+const byline = (await Promise.all([post.data.author, ...(post.data.coAuthors ?? [])].filter(Boolean).map((slug) => getAuthor(slug!)))).filter((a) => a !== null);
+---
+<Base title={post.data.title} frame={frame}>
+  <article class="post">
+    <h1>{post.data.title}</h1>
+    {frame !== 'plain' && <p class="post__date">
+      {post.data.date.toISOString().slice(0, 10)}
+      {byline.length > 0 && <> · by {byline.map((a, i) => <>{i > 0 && (i === byline.length - 1 ? ' and ' : ', ')}<a href={a.url ?? undefined}>{a.name}</a></>)}</>}
+    </p>}
+    {contents.length > 0 && (
+      <nav class="post__contents" aria-label="Contents">
+        <ol>{contents.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+      </nav>
+    )}
+    {frame !== 'plain' && post.data.cover && (
+      <figure class="post__cover">
+        <img src={`/uploads/${post.data.cover.src}`} alt={post.data.cover.alt ?? ''} style={post.data.cover.focal ? `object-position: ${post.data.cover.focal}` : undefined} />
+      </figure>
+    )}
+    <div class="post__body"><Content /></div>
+    {frame !== 'plain' && <MoreOnTopic id={post.id} />}
+  </article>
+</Base>

@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.markstage/
+*.log
+.env*
+.astro/
+.DS_Store
+# a local data dir or backup can never be committed by accident (it holds password hashes and sessions)
+*.db
+*.db-wal
+*.db-shm
+markstage-backup-*/
+*-data/
+# git worktrees made next to the checkout
+.wt-*/
+# Claude Code session notes (transcripts can hold anything said in a session) and an example's test uploads
+.claude/
+examples/*/public/uploads/
+# the public repo's working copy (scripts/public-sync.mjs, docs/PUBLISHING.md): its own git repo, never part of this one
+.public-export/

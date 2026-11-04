@@ -1,0 +1,407 @@
+/* The shell's hosts (host.ts): the pages editor (#/p, .ms-pagehost and .ms-pagepanel), screens another part
+   registers (#/users…, .ms-screen), toasts, and the drawer (nav.ts). Tokens only, so the themes apply. */
+.ms-pagehost,
+.ms-screen {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.ms-pagehost[hidden],
+.ms-screen[hidden] {
+  display: none;
+}
+.ms-screen__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* a screen replaces the canvas and the entry's tools; the search and the name stay */
+.ms-app.is-screen :is(.ms-scroll, .ms-pagehost, .ms-devices, .ms-banner, .ms-head__actions, .ms-head__url) {
+  display: none !important;
+}
+.ms-app.is-screen > .ms-panel:not(.ms-help-panel) {
+  display: none;
+}
+.ms-app.is-screen:not(:has(> .ms-help-panel.is-open)) {
+  grid-template-columns: minmax(0, 1fr) 0px;
+}
+
+/* ---------- toasts ---------- */
+.ms-toasts {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 60;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.ms-toast {
+  max-width: 480px;
+  padding: 9px 14px;
+  border-radius: var(--ms-radius);
+  background: var(--ms-ink);
+  color: #fff;
+  box-shadow: var(--ms-pop);
+  font: 13px/1.4 var(--ms-sans);
+  animation: ms-toast-in var(--ms-dur) var(--ms-ease);
+}
+.ms-toast--ok::before {
+  content: '✓ ';
+  color: var(--ms-ok-tint);
+}
+.ms-toast--error {
+  background: var(--ms-danger);
+}
+.ms-toast:has(button) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+.ms-toast__action,
+.ms-toast__close {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: 600 13px/1 var(--ms-sans);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.ms-toast__close {
+  font-size: 17px;
+  text-decoration: none;
+  opacity: 0.8;
+}
+.ms-toast__close:hover {
+  opacity: 1;
+}
+@keyframes ms-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* the canvas hint ("/ to add a block") is about articles: not on a page, a screen or Home (QA N2) */
+.ms-main:has(> .ms-pagehost:not([hidden])) .ms-hint,
+.ms-app.is-screen .ms-hint,
+.ms-app.is-home .ms-hint {
+  display: none;
+}
+
+/* ---------- the drawer (nav.ts): Create, Home, the groups of places, the release line ---------- */
+.ms-app.has-nav {
+  --ms-nav-w: 272px;
+  padding-left: var(--ms-nav-w);
+  /* the side panels' column keeps its slide (chrome.css) */
+  transition: padding-left 200ms var(--ms-ease), grid-template-columns 220ms var(--ms-ease);
+}
+.ms-app.has-nav.nav-folded {
+  --ms-nav-w: 80px;
+}
+/* the top bar runs the whole width, over the drawer's column */
+.ms-app.has-nav .ms-head {
+  margin-left: calc(-1 * var(--ms-nav-w));
+  padding-left: 8px;
+}
+/* the drawer owns its box model: the host site may set no global border-box */
+.ms-nav,
+.ms-nav *,
+.ms-nav *::before,
+.ms-nav *::after {
+  box-sizing: border-box;
+}
+.ms-nav {
+  position: fixed;
+  inset: 56px auto 0 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  width: var(--ms-nav-w);
+  padding: 8px 12px 12px;
+  overflow: auto;
+  border-right: 1px solid var(--ms-line);
+  background: var(--ms-chrome);
+  color: var(--ms-text);
+  font: 13.5px/1.4 var(--ms-sans);
+  transition: width 200ms var(--ms-ease);
+}
+.ms-nav__scrim {
+  display: none;
+}
+.ms-nav__create {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  height: 48px;
+  margin: 4px 4px 12px;
+  padding: 0 20px 0 14px;
+  border-radius: 16px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--ms-shadow);
+  transition: background var(--ms-dur) var(--ms-ease);
+}
+.ms-nav__create:hover {
+  background: var(--ms-accent-tint);
+}
+.ms-nav__create .ms-i {
+  color: var(--ms-accent-deep);
+}
+.ms-nav__list {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+}
+.ms-nav__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 38px;
+  padding: 0 14px 0 16px;
+  border: 0;
+  border-radius: 19px;
+  background: none;
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--ms-dur) var(--ms-ease);
+}
+.ms-nav__item .ms-i {
+  flex: none;
+  color: var(--ms-muted);
+}
+.ms-nav__item:hover {
+  background: var(--ms-hover);
+}
+.ms-nav__item[aria-current='page'] {
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+  font-weight: 600;
+}
+.ms-nav__item[aria-current='page'] .ms-i {
+  color: var(--ms-accent-deep);
+}
+.ms-nav__item:focus-visible,
+.ms-nav__group:focus-visible,
+.ms-nav__create:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+.ms-nav__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms-nav__count {
+  flex: none;
+  color: var(--ms-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.ms-nav__count.is-hot {
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--ms-accent);
+  color: #fff;
+  font-weight: 600;
+}
+.ms-nav__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  margin-top: 10px;
+  padding: 0 14px 0 16px;
+  border: 0;
+  border-radius: 17px;
+  background: none;
+  color: var(--ms-muted);
+  font: 600 11.5px/1 var(--ms-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-nav__group span {
+  flex: 1;
+}
+.ms-nav__group .ms-i {
+  transition: transform var(--ms-dur) var(--ms-ease);
+}
+.ms-nav__group[aria-expanded='false'] .ms-i {
+  transform: rotate(-90deg);
+}
+.ms-nav__group:hover {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-nav__items {
+  display: grid;
+  gap: 2px;
+}
+.ms-nav__items.is-folded {
+  display: none;
+}
+.ms-nav__foot {
+  margin-top: auto;
+  padding: 16px 16px 0;
+  color: var(--ms-faint);
+  font-size: 11px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ms-nav__who {
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--ms-line);
+  font-family: var(--ms-sans);
+}
+.ms-nav__who strong {
+  font-size: 13px;
+  color: var(--ms-text);
+}
+.ms-nav__who span {
+  font-size: 12px;
+  color: var(--ms-muted);
+}
+/* folded: icons only, the names as tooltips, every group's items shown whatever its state (a rule between groups) */
+.nav-folded .ms-nav {
+  padding: 8px 8px 12px;
+}
+.nav-folded .ms-nav__create {
+  width: 48px;
+  margin-inline: auto;
+  padding: 0;
+  justify-content: center;
+}
+.nav-folded :is(.ms-nav__create span, .ms-nav__label, .ms-nav__group, .ms-nav__foot, .ms-nav__count) {
+  display: none;
+}
+.nav-folded .ms-nav__items.is-folded {
+  display: grid;
+}
+.nav-folded .ms-nav__item {
+  width: 48px;
+  height: 44px;
+  margin-inline: auto;
+  padding: 0;
+  justify-content: center;
+  border-radius: 14px;
+}
+.nav-folded .ms-nav__items {
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--ms-line);
+}
+.nav-folded .ms-nav__items:last-child {
+  border-bottom: 0;
+}
+.nav-folded .ms-nav__item:is(:hover, :focus-visible)::after {
+  content: attr(title);
+  position: absolute;
+  left: calc(100% + 8px);
+  z-index: 3;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--ms-ink);
+  color: #fff;
+  font: 500 12px/1.2 var(--ms-sans);
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* a phone: the drawer slides over the page */
+@media (max-width: 720px) {
+  .ms-app.has-nav,
+  .ms-app.has-nav.nav-folded {
+    --ms-nav-w: 0px;
+    padding-left: 0;
+  }
+  .ms-app.has-nav .ms-head {
+    margin-left: 0;
+  }
+  .ms-nav,
+  .nav-folded .ms-nav {
+    inset: 0 auto 0 0;
+    width: 272px;
+    padding: 12px 12px 12px;
+    box-shadow: 0 0 24px rgb(0 0 0 / 0.2);
+    transform: translateX(-100%);
+    transition: transform 200ms var(--ms-ease);
+  }
+  .nav-open .ms-nav {
+    transform: none;
+  }
+  .nav-folded :is(.ms-nav__create span, .ms-nav__label, .ms-nav__group, .ms-nav__foot, .ms-nav__count) {
+    display: revert;
+  }
+  .nav-folded .ms-nav__label {
+    display: block;
+  }
+  .nav-folded .ms-nav__group {
+    display: flex;
+  }
+  .nav-folded .ms-nav__items.is-folded {
+    display: none;
+  }
+  .nav-folded .ms-nav__create {
+    width: fit-content;
+    margin: 4px 4px 12px;
+    padding: 0 20px 0 14px;
+  }
+  .nav-folded .ms-nav__item {
+    width: 100%;
+    height: 38px;
+    padding: 0 14px 0 16px;
+    justify-content: flex-start;
+    border-radius: 19px;
+  }
+  .nav-folded .ms-nav__items {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: 0;
+  }
+  .nav-folded .ms-nav__item:is(:hover, :focus-visible)::after {
+    content: none;
+  }
+  .nav-open .ms-nav__scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    background: rgb(0 0 0 / 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-app.has-nav,
+  .ms-nav {
+    transition: none;
+  }
+}
+/* a public screen (sign-in, setup) shows alone */
+.ms-app.is-public {
+  padding-left: 0;
+}
+.ms-app.is-public :is(.ms-nav, .ms-nav__scrim, .ms-head) {
+  display: none !important;
+}

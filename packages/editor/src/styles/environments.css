@@ -1,0 +1,419 @@
+/* Environments (environments/): the header's badge and the ribbon outside production, the overview's cards, a plan's
+   review (conflicts side by side, approvals, before and after screenshots), and Settings → Promotion rules and Tokens.
+   The admin screens' parts (admin.css) carry the rest. Tokens only, so the themes apply. */
+
+/* ---------- the place chip and the ribbon: grey On my computer, amber Staging, green Live site ---------- */
+.ms-envbadge {
+  --ms-place: var(--ms-env-ribbon, var(--ms-warn-ink));
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  margin-right: 4px;
+  padding: 4px 11px;
+  border: 1px solid color-mix(in srgb, var(--ms-place) 40%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ms-place) 12%, var(--ms-paper));
+  color: var(--ms-text);
+  font-size: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ms-envbadge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ms-place);
+}
+.ms-envbadge strong {
+  color: var(--ms-text);
+  font-weight: 600;
+}
+.ms-envbadge.is-grey {
+  --ms-place: var(--ms-muted);
+}
+.ms-envbadge.is-green {
+  --ms-place: var(--ms-ok);
+}
+.ms-envbadge__branch {
+  color: var(--ms-muted);
+  font-family: var(--ms-mono);
+  font-size: 11px;
+}
+a.ms-envbadge:hover {
+  border-color: var(--ms-env-ribbon, var(--ms-accent));
+}
+.ms-envbadge:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+.ms-envribbon {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 3px;
+  background: var(--ms-env-ribbon, var(--ms-warn-ink));
+  pointer-events: none;
+}
+
+/* ---------- shared ---------- */
+.ms-adm-badge.is-bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-adm-note.is-bad {
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+}
+.ms-env .ms-adm-card + .ms-adm-card,
+.ms-env > * + .ms-adm-card {
+  margin-top: 16px;
+}
+.ms-env .ms-adm-h2 {
+  margin: 0;
+}
+.ms-env .ms-adm-card > .ms-adm-row:first-child {
+  margin-bottom: 10px;
+}
+.ms-env-pill {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ms-env-ribbon, var(--ms-accent)) 14%, var(--ms-paper));
+  color: var(--ms-env-ribbon, var(--ms-accent-deep));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ms-env-pill.is-production {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-env-line {
+  margin: 0;
+}
+.ms-env-here .ms-adm-row {
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.ms-env-bad {
+  color: var(--ms-danger);
+}
+.ms-env-caption {
+  padding: 10px 0 4px;
+  color: var(--ms-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* ---------- a plan ---------- */
+.ms-env-follow {
+  margin-bottom: 16px;
+}
+.ms-env-summary {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.ms-env-facts summary,
+.ms-env-trace summary {
+  color: var(--ms-muted);
+  cursor: pointer;
+}
+.ms-env-facts ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.ms-env-conflicts {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-env-conflict {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--ms-warn-line);
+  border-radius: 10px;
+  background: var(--ms-warn-tint);
+}
+.ms-env-conflict.is-done {
+  border-color: var(--ms-line-2);
+  background: var(--ms-paper);
+}
+.ms-env-conflict__words {
+  margin: 0;
+}
+/* side by side takes the page's whole width; closing it brings the plan back */
+.ms-adm-split:has(> .ms-env-drawer--wide) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ms-adm-split:has(> .ms-env-drawer--wide) > .ms-adm-split__main {
+  display: none;
+}
+.ms-adm-drawer.ms-env-drawer--wide {
+  position: static;
+  max-height: none;
+}
+.ms-env-sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+.ms-env-side h3 {
+  margin: 0 0 6px;
+}
+.ms-env-side__text {
+  max-height: 420px;
+  padding: 8px 0;
+  overflow: auto;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 8px;
+  background: var(--ms-paper);
+  font: 12px/1.5 var(--ms-mono);
+}
+.ms-env-side__text .ms-env-line {
+  min-height: 1.5em;
+  padding: 0 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-env-line.is-del {
+  background: var(--ms-danger-tint);
+}
+.ms-env-line.is-ins {
+  background: var(--ms-ok-tint);
+}
+.ms-env-line.is-gap {
+  background: var(--ms-paper-3);
+}
+.ms-env-line del {
+  background: color-mix(in srgb, var(--ms-danger) 22%, transparent);
+  text-decoration: line-through;
+}
+.ms-env-line ins {
+  background: color-mix(in srgb, var(--ms-ok-ink) 22%, transparent);
+  text-decoration: none;
+}
+.ms-env-merge {
+  width: 100%;
+  font: 12px/1.5 var(--ms-mono);
+}
+.ms-env-decision .ms-adm-outcome {
+  margin: 8px 0 12px;
+}
+.ms-env-approvals {
+  margin: 4px 0 12px;
+  padding-left: 18px;
+}
+.ms-env-approver .ms-copyable__text {
+  font-weight: 600;
+}
+.ms-env-approvals li.is-old {
+  color: var(--ms-muted);
+  text-decoration: line-through;
+}
+.ms-env-approve {
+  margin-bottom: 12px;
+}
+.ms-env-approve .ms-input {
+  flex: 1;
+}
+.ms-env-why {
+  margin: 8px 0 0;
+}
+.ms-env-pages + .ms-env-pages {
+  margin-top: 12px;
+}
+.ms-env-pages.is-bad h3 {
+  color: var(--ms-danger);
+}
+.ms-env-shots {
+  display: grid;
+  gap: 18px;
+}
+.ms-env-shotrow {
+  display: grid;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ms-line-2);
+}
+.ms-env-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.ms-env-shotrow--w390 .ms-env-pair {
+  grid-template-columns: repeat(2, minmax(0, 260px));
+}
+.ms-env-pair figure {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.ms-env-shot {
+  display: block;
+  max-height: 520px;
+  overflow: hidden;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+}
+.ms-env-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ms-env-shot.is-none {
+  display: grid;
+  min-height: 120px;
+  place-items: center;
+}
+.ms-env-shot:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Settings: promotion rules and tokens ---------- */
+.ms-env-rules__head {
+  margin-bottom: 14px;
+}
+.ms-env-rules__bar {
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.ms-env-rules__h {
+  margin: 22px 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.ms-env-rules {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-env-rule {
+  padding: 12px 14px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 10px;
+  background: var(--ms-paper);
+}
+.ms-env-rule--deny {
+  border-left: 3px solid var(--ms-danger);
+}
+.ms-env-rule.is-editing {
+  border-color: var(--ms-accent);
+}
+.ms-env-rule .ms-adm-badge {
+  margin-left: 0;
+}
+.ms-env-rule__sentence {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+.ms-env-rule__lines {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  color: var(--ms-muted);
+}
+.ms-env-groups__list {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-env-groups__list > li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ms-env-groups__list > li.ms-env-groups__edit {
+  display: grid;
+}
+.ms-rule__form {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+.ms-rule__h {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-rule__part {
+  display: grid;
+  gap: 6px;
+}
+.ms-rule__boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ms-rule__boxes legend {
+  width: 100%;
+  margin-bottom: 4px;
+}
+.ms-rule__box {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.ms-rule__pair,
+.ms-env-try__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.ms-rule__rows {
+  display: grid;
+  gap: 8px;
+}
+.ms-rule__row {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--ms-paper-3);
+}
+.ms-rule__window,
+.ms-rule__freeze {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px 12px;
+}
+.ms-rule__row > button {
+  align-self: center;
+}
+.ms-env-groups,
+.ms-env-try {
+  margin-top: 18px;
+}
+.ms-env-try__out {
+  margin-top: 12px;
+}
+.ms-env-try__out .ms-adm-outcome {
+  margin-bottom: 8px;
+}
+.ms-env-token {
+  margin-bottom: 14px;
+}
+.ms-adm-head__actions .ms-env-status {
+  align-self: center;
+  margin-left: 0;
+}

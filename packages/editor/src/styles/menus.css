@@ -1,0 +1,216 @@
+/* The Menus screen (menus/index.ts): a centred column with the menu picker, the list in a card, and the open item
+   (or "Add a link") on its right. Tokens only, so the themes apply. */
+.ms-menus {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 28px 32px 64px;
+  color: var(--ms-text);
+  font: 13px/1.5 var(--ms-sans);
+}
+.ms-menus__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.ms-menus__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.ms-menus__intro {
+  margin: 4px 0 0;
+  color: var(--ms-muted);
+}
+.ms-menus__status {
+  padding-top: 6px;
+  color: var(--ms-muted);
+  white-space: nowrap;
+}
+.ms-menus__status[data-kind='ok'] {
+  color: var(--ms-ok-ink);
+}
+.ms-menus__status[data-kind='error'] {
+  color: var(--ms-danger);
+}
+.ms-menus__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.ms-menus__which {
+  grid-auto-columns: auto;
+}
+.ms-menus__which .ms-seg__btn {
+  padding: 0 14px;
+}
+.ms-menus__lang {
+  width: auto;
+}
+.ms-menus__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+.ms-menus__main:has(> .ms-menus__side:not([hidden])) {
+  grid-template-columns: minmax(0, 1fr) 320px;
+}
+.ms-menus__card,
+.ms-menus__side {
+  padding: 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+}
+.ms-menus__side {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px 16px;
+}
+.ms-menus__side[hidden] {
+  display: none;
+}
+.ms-menus__side .ms-field {
+  padding: 0;
+  border: 0;
+}
+.ms-menus__sidehead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ms-menus__sidehead h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.ms-menus__sidefoot {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+.ms-menus__none {
+  margin: 0;
+  padding: 18px;
+  color: var(--ms-muted);
+}
+.ms-menus__add {
+  margin: 8px 0 2px 28px;
+}
+
+/* one link in the list */
+.ms-menus__row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.ms-menus__label {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-menus__href {
+  flex: 1;
+  min-width: 0;
+  color: var(--ms-muted);
+}
+.ms-menus__href.is-none {
+  font-style: italic;
+}
+.ms-menus__edit {
+  flex: none;
+  margin-left: auto;
+  opacity: 0;
+}
+.ms-order__row:is(:hover, :focus-within) .ms-menus__edit,
+.ms-menus__row.is-open .ms-menus__edit {
+  opacity: 1;
+}
+.ms-order__row:has(.ms-menus__row.is-open) {
+  border-color: var(--ms-accent);
+}
+
+/* pages and posts to link to */
+.ms-menus__hits {
+  display: grid;
+  gap: 2px;
+}
+.ms-menus__hits:empty {
+  display: none;
+}
+.ms-menus__hits--add {
+  max-height: 300px;
+  overflow: auto;
+}
+.ms-menus__hit {
+  display: grid;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ms-menus__hit:is(:hover, :focus-visible) {
+  background: var(--ms-accent-tint);
+  outline: none;
+}
+.ms-menus__hithref {
+  overflow: hidden;
+  color: var(--ms-muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ms-menus__custom {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ms-line);
+}
+.ms-menus__custom h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-menus__custom .ms-btn {
+  justify-self: end;
+}
+.ms-menus__note {
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-menus__href.is-missing {
+  color: var(--ms-warn-ink);
+  font-style: normal;
+}
+/* where the open item links: the page's title and address, and a better link when there is one */
+.ms-menus__now {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.ms-menus__now .ms-menus__href {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--ms-text);
+}
+.ms-menus__now .ms-linkbtn {
+  justify-self: start;
+  text-align: left;
+}

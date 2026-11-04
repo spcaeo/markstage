@@ -1,0 +1,131 @@
+/* The padlock on a locked block and its popover (lock-ui.ts). Tokens only, so the themes apply. */
+.ms-padlocks {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.ms-padlock {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 10px 0 8px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 999px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-shadow);
+  color: var(--ms-muted);
+  font: 600 12px/1 var(--ms-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.ms-padlock.is-locked {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+}
+.ms-padlock:hover,
+.ms-padlock[aria-expanded='true'] {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+}
+.ms-padlock:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 1px;
+}
+/* an edit-locked box reads as one you can't type in */
+.ms-edit-locked {
+  cursor: default;
+}
+
+.ms-lockpop {
+  position: fixed;
+  z-index: 60;
+  display: grid;
+  gap: 10px;
+  width: 340px;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  color: var(--ms-text);
+  font-family: var(--ms-sans);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.ms-lockpop__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ms-accent-deep);
+}
+.ms-lockpop__head strong {
+  color: var(--ms-text);
+  font-weight: 600;
+}
+.ms-lockpop__text {
+  margin: 0;
+}
+.ms-lockpop__text.is-note {
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-lockpop__parts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ms-lockpop__parts legend {
+  float: left;
+  padding: 0;
+  color: var(--ms-muted);
+}
+.ms-lockpop__parts label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.ms-lockpop__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* the same pill in a page's section rows (pages/outline.ts): a locked section's on its own line under the title
+   (the column is narrow), always shown; an unlocked one's open padlock with the row's tools (on hover or focus) */
+.msp-sec:has(> .ms-padlock) {
+  flex-wrap: wrap;
+}
+.msp-sec:has(> .ms-padlock) .msp-sec__main {
+  flex-basis: 100%;
+  padding-bottom: 2px;
+}
+.msp-sec:has(> .ms-padlock) .msp-sec__tools {
+  top: 24px;
+}
+.msp-sec .ms-padlock {
+  position: static;
+  flex: none;
+  height: 24px;
+  margin: 0 0 6px 8px;
+  box-shadow: none;
+}
+.msp-sec .ms-padlock:focus-visible {
+  outline-offset: 1px;
+}
+.msp-sec__tools .ms-padlock {
+  margin: 0;
+}
+/* the section rows draw their own pill (above), so the list's own lock badge stays hidden there */
+.msp-outline .ms-order__lock {
+  display: none;
+}

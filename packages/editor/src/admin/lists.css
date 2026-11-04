@@ -1,0 +1,276 @@
+/* The lists screen (entries.ts, #/entries), docs/EDITOR-UX.md section 4 "List". The title column takes the room
+   and never wraps one word per line: it has a least width and an ellipsis (the whole title is in the tooltip); the
+   other columns have set widths, so they keep their place from one view to the next. Tokens only, so the themes
+   apply. Under 720px the table becomes a list of rows (title, pill, last edited), with no sideways scroll. */
+.ms-adm-entries {
+  table-layout: fixed;
+  width: 100%;
+}
+.ms-adm-entries th {
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+.ms-adm-entries th.ms-adm-tick,
+.ms-adm-entries td.ms-adm-tick {
+  width: 44px;
+}
+/* the title keeps at least 40% of the table: the other columns drop out first (Words under 900px), never the title */
+.ms-adm-entries .ms-adm-col--title {
+  min-width: max(240px, 40%);
+}
+@media (max-width: 899px) {
+  .ms-adm-entries .ms-adm-col--words {
+    display: none;
+  }
+}
+.ms-adm-entries td.ms-adm-col--title {
+  max-width: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ms-adm-entries .ms-adm-col--status {
+  width: 104px;
+}
+.ms-adm-entries .ms-adm-col--modified {
+  width: 150px;
+}
+.ms-adm-entries .ms-adm-col--words {
+  width: 90px;
+}
+.ms-adm-entries .ms-adm-col--more {
+  width: 44px;
+  padding-left: 0;
+  padding-right: 8px;
+  text-align: right;
+}
+/* a date and time on one line */
+.ms-adm-entries td.ms-adm-when {
+  white-space: nowrap;
+  color: var(--ms-muted);
+}
+.ms-adm-entries .ms-adm-rowlink {
+  font-weight: 600;
+}
+.ms-adm-rowmore {
+  opacity: 0;
+}
+.ms-adm-entries tr:hover .ms-adm-rowmore,
+.ms-adm-entries tr.is-open .ms-adm-rowmore,
+.ms-adm-rowmore:focus-visible {
+  opacity: 1;
+}
+.ms-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- the status pill and the language chips ---------- */
+.ms-adm-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ms-adm-pill.is-published {
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+}
+.ms-adm-pill.is-draft,
+.ms-adm-pill.is-scheduled {
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+}
+.ms-adm-langs {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 8px;
+  vertical-align: 1px;
+}
+.ms-adm-lang {
+  padding: 0 5px;
+  border: 1px solid var(--ms-line);
+  border-radius: 4px;
+  color: var(--ms-muted);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ms-adm-lang.is-done {
+  color: var(--ms-ok-ink);
+  border-color: var(--ms-ok-tint);
+  background: var(--ms-ok-tint);
+}
+
+/* ---------- the filters ---------- */
+.ms-adm-chip__n {
+  margin-left: 2px;
+  color: var(--ms-faint);
+  font-variant-numeric: tabular-nums;
+}
+.ms-adm-chip[aria-pressed='true'] .ms-adm-chip__n {
+  color: var(--ms-muted);
+}
+.ms-adm-bar .ms-adm-select {
+  min-width: 0;
+  max-width: 220px;
+}
+.ms-adm-bar .ms-adm-select.is-on {
+  border-color: var(--ms-accent);
+  color: var(--ms-text);
+}
+.ms-adm-searchwrap--end {
+  flex: 1 1 160px;
+  margin-left: auto;
+  max-width: 260px;
+}
+
+/* ---------- sorting ---------- */
+.ms-adm-sort {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.ms-adm-sort:hover {
+  color: var(--ms-text);
+}
+.ms-adm-sort:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.ms-adm-sort__dir {
+  min-width: 0.8em;
+}
+th.ms-num .ms-adm-sort {
+  flex-direction: row-reverse;
+}
+.ms-adm-entries th[aria-sort='ascending'],
+.ms-adm-entries th[aria-sort='descending'] {
+  color: var(--ms-text);
+}
+.ms-adm-tick {
+  width: 36px;
+}
+
+/* ---------- the pager and the ticked rows' bar ---------- */
+.ms-adm-paging {
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ms-adm-paging__btns {
+  display: inline-flex;
+  gap: 4px;
+}
+.ms-adm-paging__btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--ms-line);
+  font-size: 18px;
+  line-height: 1;
+}
+.ms-adm-paging__btn:disabled {
+  opacity: 0.4;
+}
+.ms-adm-selbar {
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+/* the ticked rows' bar keeps its place when nothing is ticked: ticking never moves the table under the cursor */
+.ms-adm-selbar--lists {
+  min-height: 32px;
+  margin: -6px 0 6px;
+  flex-wrap: wrap;
+}
+.ms-adm-selbar__n {
+  margin-right: 4px;
+}
+.ms-adm-drawer__actions {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* ---------- a phone: rows, not a table ---------- */
+@media (max-width: 720px) {
+  .ms-adm {
+    padding: 16px 16px 48px;
+  }
+  .ms-adm-head {
+    flex-wrap: wrap;
+  }
+  .ms-adm-entries,
+  .ms-adm-entries tbody {
+    display: block;
+  }
+  .ms-adm-entries thead {
+    display: none;
+  }
+  .ms-adm-entries tbody tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'tick title status' 'tick when status';
+    align-items: center;
+    column-gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--ms-line);
+  }
+  .ms-adm-entries tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .ms-adm-entries tbody td {
+    display: block;
+    width: auto;
+    max-width: none;
+    padding: 0;
+    border: 0;
+  }
+  .ms-adm-entries td.ms-adm-tick {
+    grid-area: tick;
+    width: auto;
+  }
+  .ms-adm-entries td.ms-adm-col--title {
+    grid-area: title;
+    min-width: 0;
+  }
+  .ms-adm-entries td.ms-adm-col--status {
+    grid-area: status;
+  }
+  .ms-adm-entries td.ms-adm-col--modified {
+    grid-area: when;
+    font-size: 12px;
+  }
+  .ms-adm-entries td.ms-adm-col--words,
+  .ms-adm-entries td.ms-adm-col--more {
+    display: none;
+  }
+  .ms-adm-split:has(> .ms-adm-drawer) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ms-adm-drawer {
+    position: static;
+    max-height: none;
+  }
+  .ms-adm-searchwrap--end {
+    flex-basis: 100%;
+    max-width: none;
+    margin-left: 0;
+  }
+}

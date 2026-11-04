@@ -1,0 +1,556 @@
+/* Images on the canvas (views/image.ts) and the crop dialog (views/image-edit.ts). The image and its caption keep
+   the site's own styles; only the editor's parts are drawn here. */
+
+.ms .ProseMirror .ms-image {
+  position: relative;
+}
+.ms .ProseMirror .ms-image.ProseMirror-selectednode {
+  outline: 0;
+}
+/* the image keeps the site's layout (its width, its alignment); the editor's parts sit centred over it */
+.ms-image__frame {
+  position: relative;
+  display: block;
+}
+.ms .ProseMirror .ms-image__frame img {
+  cursor: pointer;
+}
+.ms .ProseMirror .ms-image.is-selected .ms-image__frame img {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+.ms-image.is-uploading .ms-image__frame img {
+  opacity: 0.55;
+}
+.ms-image.is-uploading .ms-image__frame::after {
+  content: 'Uploading…';
+  position: absolute;
+  inset: auto auto 12px 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgb(11 16 21 / 0.72);
+  color: #fff;
+  font: 500 12px/1.4 var(--ms-sans);
+}
+
+/* missing alt text: a badge on the image's corner */
+.ms-image__badge {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+  box-shadow: 0 1px 3px rgb(11 16 21 / 0.18);
+  font: 600 11.5px/1 var(--ms-sans);
+  cursor: pointer;
+}
+.ms-image.is-selected .ms-image__badge,
+.ms-image__badge[hidden],
+.ms-image__tool[hidden] {
+  display: none;
+}
+.ms-image__badge:hover,
+.ms-image__badge:focus-visible {
+  background: var(--ms-warn-tint-2);
+  outline: 2px solid var(--ms-warn-ink);
+  outline-offset: 1px;
+}
+
+/* the bar on a selected image: widths, replace, crop */
+.ms-image__bar {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  translate: -50% 0;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  font: 500 12.5px/1 var(--ms-sans);
+}
+.ms-image.is-selected:not(.is-empty) .ms-image__bar,
+.ms-image:not(.is-empty) .ms-image__frame:focus-within .ms-image__bar {
+  display: flex;
+}
+.ms-image__seg {
+  display: flex;
+  gap: 2px;
+  padding-right: 4px;
+  margin-right: 2px;
+  border-right: 1px solid var(--ms-line);
+}
+.ms-image__w,
+.ms-image__tool {
+  display: inline-grid;
+  place-items: center;
+  height: 28px;
+  min-width: 28px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.ms-image__tool {
+  padding: 0;
+}
+.ms-image__w:hover,
+.ms-image__tool:hover {
+  background: var(--ms-hover);
+  color: var(--ms-text);
+}
+.ms-image__w.is-on {
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+}
+:is(.ms-image__w, .ms-image__tool, .ms-image__altbtn, .ms-image__aibtn):focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 1px;
+}
+
+/* the caption line: caption or alt text, the Alt toggle, the decorative switch */
+.ms .ProseMirror .ms-image__line {
+  display: none;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 1.6em;
+}
+.ms .ProseMirror :is(.ms-image.has-caption, .ms-image.is-selected, .ms-image.is-alt, .ms-image:focus-within) .ms-image__line {
+  display: flex;
+}
+.ms .ProseMirror p.ms-image .ms-image__line {
+  margin-top: 0.6em;
+  font-size: 0.875em;
+  color: var(--ms-muted);
+}
+.ms-image__cap,
+.ms-image__alt {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.ms .ProseMirror .ms-image__alt {
+  font-family: var(--ms-sans);
+  font-size: 13.5px;
+  font-style: normal;
+  color: var(--ms-text);
+}
+.ms .ProseMirror .ms-image__alt.is-off {
+  color: var(--ms-faint);
+  cursor: default;
+}
+.ms-image__cap[hidden],
+.ms-image__alt[hidden],
+.ms-image__deco[hidden],
+.ms-image__altbtn[hidden],
+.ms-image__aibtn[hidden] {
+  display: none;
+}
+.ms-image__altbtn {
+  flex: none;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 6px;
+  background: var(--ms-paper);
+  color: var(--ms-muted);
+  font: 600 11px/1 var(--ms-sans);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.ms-image__aibtn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 6px;
+  background: var(--ms-paper);
+  color: var(--ms-muted);
+  font: 600 11px/1 var(--ms-sans);
+  cursor: pointer;
+}
+.ms-image__aibtn svg {
+  color: var(--ms-accent);
+}
+.ms-image__aibtn:hover,
+.ms-image__altbtn:hover {
+  color: var(--ms-text);
+}
+.ms-image__altbtn.is-missing {
+  border-color: var(--ms-warn-line);
+  color: var(--ms-warn-ink);
+}
+.ms-image__altbtn.is-on {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+}
+.ms-image__deco {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ms-muted);
+  font: 500 12px/1 var(--ms-sans);
+  font-style: normal;
+  cursor: pointer;
+}
+.ms-image__deco input {
+  margin: 0;
+  accent-color: var(--ms-accent);
+}
+
+/* no file yet: upload, drop, paste or a URL */
+.ms-image__empty {
+  display: none;
+}
+.ms-image.is-empty .ms-image__frame {
+  width: 100%;
+}
+.ms-image.is-empty .ms-image__frame img {
+  display: none;
+}
+.ms-image__picks {
+  display: flex;
+  gap: 8px;
+}
+.ms-image__picks .ms-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ms-image.is-empty .ms-image__empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 32px 24px;
+  border: 1.5px dashed var(--ms-line-2);
+  border-radius: 12px;
+  background: var(--ms-paper-3);
+  font-family: var(--ms-sans);
+  transition: border-color var(--ms-dur) var(--ms-ease), background var(--ms-dur) var(--ms-ease);
+}
+.ms-image.is-empty.is-selected .ms-image__empty,
+.ms-image__empty.is-over {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+}
+.ms-image__emptyicon {
+  color: var(--ms-faint);
+}
+.ms-image__hint {
+  color: var(--ms-muted);
+  font-size: 13px;
+}
+.ms .ProseMirror .ms-image__url {
+  width: min(360px, 100%);
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: 13px var(--ms-sans);
+}
+.ms-image__url:focus {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: -1px;
+}
+
+/* ---------- crop and rotate ---------- */
+.ms-imgedit {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: rgb(11 16 21 / 0.55);
+  font-family: var(--ms-sans);
+}
+.ms-imgedit__box {
+  display: grid;
+  gap: 14px;
+  max-width: calc(100vw - 48px);
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+}
+.ms-imgedit__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ms-imgedit__head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ms-text);
+}
+.ms-imgedit__size {
+  color: var(--ms-muted);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.ms-imgedit__stage {
+  position: relative;
+  justify-self: center;
+  overflow: hidden;
+  background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0 / 16px 16px;
+  user-select: none;
+}
+.ms-imgedit__stage canvas {
+  display: block;
+}
+.ms-imgedit__crop {
+  position: absolute;
+  box-shadow: 0 0 0 9999px rgb(11 16 21 / 0.5);
+  outline: 1.5px solid #fff;
+  cursor: move;
+  touch-action: none;
+}
+.ms-imgedit__crop:focus-visible {
+  outline: 2px solid var(--ms-accent);
+}
+.ms-imgedit__crop::before {
+  /* thirds */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent calc(33.33% - 0.5px), rgb(255 255 255 / 0.45) 0 calc(33.33% + 0.5px), transparent 0 calc(66.66% - 0.5px), rgb(255 255 255 / 0.45) 0 calc(66.66% + 0.5px), transparent 0),
+    linear-gradient(transparent calc(33.33% - 0.5px), rgb(255 255 255 / 0.45) 0 calc(33.33% + 0.5px), transparent 0 calc(66.66% - 0.5px), rgb(255 255 255 / 0.45) 0 calc(66.66% + 0.5px), transparent 0);
+  pointer-events: none;
+}
+.ms-imgedit__crop i {
+  /* inside the frame: the stage clips what is outside the image */
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ms-accent);
+  border-radius: 3px;
+  background: #fff;
+}
+.ms-imgedit__crop i[data-h='nw'] { left: 0; top: 0; cursor: nwse-resize; }
+.ms-imgedit__crop i[data-h='n'] { left: calc(50% - 7px); top: 0; cursor: ns-resize; }
+.ms-imgedit__crop i[data-h='ne'] { right: 0; top: 0; cursor: nesw-resize; }
+.ms-imgedit__crop i[data-h='e'] { right: 0; top: calc(50% - 7px); cursor: ew-resize; }
+.ms-imgedit__crop i[data-h='se'] { right: 0; bottom: 0; cursor: nwse-resize; }
+.ms-imgedit__crop i[data-h='s'] { left: calc(50% - 7px); bottom: 0; cursor: ns-resize; }
+.ms-imgedit__crop i[data-h='sw'] { left: 0; bottom: 0; cursor: nesw-resize; }
+.ms-imgedit__crop i[data-h='w'] { left: 0; top: calc(50% - 7px); cursor: ew-resize; }
+.ms-imgedit__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ms-imgedit__foot .ms-seg {
+  min-width: 220px;
+}
+.ms-imgedit__gap {
+  flex: 1;
+}
+
+/* ---------- a frontmatter image in the head (head-image.ts) ---------- */
+.ms-headimg {
+  position: relative;
+}
+.ms-headimg.is-uploading img {
+  opacity: 0.55;
+}
+.ms-headimg.is-over {
+  outline: 2px dashed var(--ms-accent);
+  outline-offset: 4px;
+}
+.ms-headimg__ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--ms-sans);
+}
+.ms-headimg__ui > * {
+  pointer-events: auto;
+}
+.ms-headimg__bar {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  opacity: 0;
+  transition: opacity var(--ms-dur) var(--ms-ease);
+}
+.ms-headimg:hover .ms-headimg__bar,
+.ms-headimg:focus-within .ms-headimg__bar,
+.ms-headimg.is-alt .ms-headimg__bar,
+.ms-headimg.is-focal .ms-headimg__bar {
+  opacity: 1;
+}
+.ms-headimg:hover .ms-headimg__badge,
+.ms-headimg:focus-within .ms-headimg__badge {
+  top: 54px;
+}
+.ms-headimg__tool {
+  display: inline-grid;
+  place-items: center;
+  height: 28px;
+  min-width: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ms-muted);
+  font: 600 11.5px/1 var(--ms-sans);
+  cursor: pointer;
+}
+.ms-headimg__tool--text {
+  padding: 0 9px;
+}
+.ms-headimg__tool:hover,
+.ms-headimg__tool[aria-pressed='true'] {
+  background: var(--ms-accent-tint);
+  color: var(--ms-accent-deep);
+}
+.ms-headimg__tool:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 1px;
+}
+.ms-headimg__alt {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  translate: -50% 0;
+  display: grid;
+  gap: 6px;
+  width: min(420px, calc(100% - 24px));
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--ms-paper);
+  box-shadow: var(--ms-pop);
+  font: 600 12px/1.3 var(--ms-sans);
+  color: var(--ms-muted);
+}
+.ms-headimg__alt[hidden],
+.ms-headimg__focal[hidden],
+.ms-headimg__badge[hidden] {
+  display: none;
+}
+/* the site fills the alt text in (altFallback): a calm note, not a warning */
+.ms-headimg__badge.is-calm {
+  background: var(--ms-paper);
+  color: var(--ms-muted);
+  font-weight: 500;
+}
+.ms-headimg__badge.is-calm svg {
+  color: var(--ms-accent);
+}
+.ms-headimg__badge.is-calm:hover,
+.ms-headimg__badge.is-calm:focus-visible {
+  background: var(--ms-paper);
+  outline-color: var(--ms-accent);
+}
+.ms-headimg__better {
+  color: var(--ms-accent);
+  font-weight: 600;
+}
+.ms-headimg__alt textarea {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  color: var(--ms-text);
+  font: 400 13.5px/1.45 var(--ms-sans);
+  resize: vertical;
+}
+.ms-headimg__alt textarea:focus {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: -1px;
+}
+.ms-headimg__focal {
+  position: absolute;
+  inset: 0;
+  background: rgb(11 16 21 / 0.18);
+  cursor: crosshair;
+}
+.ms-headimg__dot {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  translate: -50% -50%;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--ms-accent);
+  box-shadow: 0 0 0 1px rgb(11 16 21 / 0.3), 0 2px 8px rgb(11 16 21 / 0.35);
+  pointer-events: none;
+}
+.ms-headimg__focalhint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  translate: -50% 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgb(11 16 21 / 0.75);
+  color: #fff;
+  font: 500 12px/1.3 var(--ms-sans);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.ms-headimg__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 8px;
+  padding: 14px;
+  border: 1.5px dashed var(--ms-line-2);
+  border-radius: 10px;
+  font-family: var(--ms-sans);
+}
+.ms-headimg__empty.is-over {
+  border-color: var(--ms-accent);
+  background: var(--ms-accent-tint);
+  outline: 0;
+}
+.ms-headimg__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--ms-line-2);
+  border-radius: 7px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: 500 13px var(--ms-sans);
+  cursor: pointer;
+}
+.ms-headimg__add:hover {
+  background: var(--ms-hover);
+}
+.ms-headimg__hint {
+  color: var(--ms-muted);
+  font-size: 13px;
+}
