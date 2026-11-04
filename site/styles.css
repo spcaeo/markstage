@@ -1,24 +1,42 @@
 /* The Markstage site. Plain CSS, no build step; light and dark follow the visitor's system setting.
-   Colours: the editor's indigo. Every text colour pair passes WCAG AA (4.5:1) in both themes. */
+   Colours: "velvet curtain and brass" (scripts/site/brand.mjs). Every text colour pair passes WCAG AA (4.5:1), and the
+   mark 3:1 against the page, in both themes (scripts/site/brand.test.mjs checks). Headings and the wordmark use Big
+   Shoulders Display (site/fonts/OFL.txt), body text the system font. home.css adds the home, story and showcase parts. */
+@font-face {
+  font-family: 'Big Shoulders Display';
+  src: url('fonts/big-shoulders-display-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --bg: #ffffff;
-  --bg-2: #f6f7fb;
+  --bg-2: #f8f4f5;
   --surface: #ffffff;
-  --line: #e4e6ef;
-  --line-2: #cfd3e1;
-  --ink: #12131c;
-  --ink-2: #3a3d4f;
-  --ink-3: #5a5e72;
-  --brand: #4f46e5;
-  --brand-hover: #4338ca;
-  --brand-ink: #3730a3;
+  --line: #ece2e5;
+  --line-2: #d9cbd0;
+  --ink: #1f1218;
+  --ink-2: #4a3a41;
+  --ink-3: #685860;
+  --brand: #9e1b3f;
+  --brand-hover: #82132f;
+  --brand-ink: #8c1838;
   --on-brand: #ffffff;
-  --brand-soft: #eef2ff;
+  --brand-soft: #fbeef1;
+  --accent: #f2b33d;
+  --on-accent: #2a1606;
+  --stage: #2a0f1b;
+  --stage-ink: #fbeef1;
+  --stage-ink-2: #e2c9d1;
+  --logo-tile: #9e1b3f;
+  --logo-letter: #fff6e8;
+  --logo-pool: #f2b33d;
   --ok: #15803d;
-  --code-bg: #f1f3f9;
-  --shadow: 0 1px 2px rgb(16 18 40 / 6%), 0 8px 24px rgb(16 18 40 / 8%);
+  --code-bg: #f6f0f2;
+  --shadow: 0 1px 2px rgb(42 15 27 / 6%), 0 8px 24px rgb(42 15 27 / 8%);
   --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --display: 'Big Shoulders Display', 'Arial Narrow', 'Helvetica Neue', sans-serif;
   --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --radius: 12px;
 }
@@ -26,21 +44,29 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --bg: #0e1020;
-    --bg-2: #14172b;
-    --surface: #181b31;
-    --line: #2a2e4a;
-    --line-2: #3b4066;
-    --ink: #eef0fa;
-    --ink-2: #c9cce0;
-    --ink-3: #a3a7c2;
-    --brand: #818cf8;
-    --brand-hover: #a5b4fc;
-    --brand-ink: #a5b4fc;
-    --on-brand: #0e1020;
-    --brand-soft: #1e2142;
+    --bg: #170d12;
+    --bg-2: #1e1218;
+    --surface: #24161d;
+    --line: #3a2630;
+    --line-2: #4e3541;
+    --ink: #f8eef1;
+    --ink-2: #d7c4cb;
+    --ink-3: #b8a2ab;
+    --brand: #f0718f;
+    --brand-hover: #f59ab0;
+    --brand-ink: #f59ab0;
+    --on-brand: #22060f;
+    --brand-soft: #2c1620;
+    --accent: #f5c04f;
+    --on-accent: #2a1606;
+    --stage: #0f070b;
+    --stage-ink: #fbeef1;
+    --stage-ink-2: #e2c9d1;
+    --logo-tile: #c42a52;
+    --logo-letter: #fff6e8;
+    --logo-pool: #f5c04f;
     --ok: #4ade80;
-    --code-bg: #1d2038;
+    --code-bg: #24161d;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 35%);
   }
 }
@@ -122,13 +148,21 @@ h3 {
   letter-spacing: -0.01em;
 }
 
+h1,
+h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
 h1 {
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(38px, 5.2vw, 60px);
   margin: 0 0 16px;
 }
 
 h2 {
-  font-size: clamp(26px, 3.2vw, 34px);
+  font-size: clamp(30px, 3.6vw, 42px);
   margin: 48px 0 12px;
 }
 
@@ -182,24 +216,48 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 60px;
+  min-height: 64px;
   gap: 16px;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   color: var(--ink);
   text-decoration: none;
-  font-weight: 700;
-  font-size: 19px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 27px;
+  line-height: 1;
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.logo {
+  flex: none;
+}
+
+.logo .lt {
+  fill: var(--logo-tile);
+}
+
+.logo .la,
+.logo .ll {
+  stroke: var(--logo-letter);
+}
+
+.logo .lp {
+  fill: var(--logo-pool);
 }
 
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 20px;
+  margin-left: auto;
 }
 
 .main-nav a {
@@ -214,13 +272,47 @@ h3 {
   color: var(--brand-ink);
 }
 
-.nav-gh {
+/* GitHub, always in view: a filled button with the mark, "Star on GitHub" and the live star count (enhance.js) */
+.topbar-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gh-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border: 1px solid var(--line-2);
+  gap: 8px;
+  flex: none;
+  padding: 7px 8px 7px 13px;
+  border-radius: 10px;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.gh-btn:hover {
+  background: var(--brand-hover);
+  color: var(--on-brand);
+}
+
+.gh-count {
+  min-width: 28px;
+  padding: 1px 8px;
   border-radius: 999px;
-  padding: 5px 12px;
+  background: var(--on-brand);
+  color: var(--brand-ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.gh-count:empty {
+  display: none;
 }
 
 .icon {
@@ -238,20 +330,6 @@ h3 {
   padding: 6px;
 }
 
-/* Hero */
-.hero {
-  padding: 64px 0 24px;
-  text-align: center;
-  background: radial-gradient(60% 50% at 50% 0%, var(--brand-soft), transparent);
-}
-
-.eyebrow {
-  color: var(--brand-ink);
-  font-weight: 600;
-  font-size: 15px;
-  margin: 0 0 12px;
-}
-
 .lead {
   font-size: 20px;
   color: var(--ink-2);
@@ -261,12 +339,6 @@ h3 {
 
 .lead.left {
   margin-left: 0;
-}
-
-.hero h1 {
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .cta-row {
@@ -317,25 +389,6 @@ h3 {
   color: var(--brand-ink);
 }
 
-.pills {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 36px;
-}
-
-.pills li {
-  border: 1px solid var(--line-2);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 14px;
-  color: var(--ink-2);
-  background: var(--surface);
-}
-
 /* Screenshots: light frames in both themes, so the editor's light UI never sits dark on dark */
 .shot {
   margin: 24px 0;
@@ -349,10 +402,6 @@ h3 {
   background: #fff;
 }
 
-.hero-shot img {
-  margin: 0 auto;
-}
-
 .shot figcaption {
   font-size: 14px;
   color: var(--ink-3);
@@ -360,79 +409,6 @@ h3 {
 }
 
 /* Sections */
-.band {
-  background: var(--bg-2);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 8px 0 40px;
-  margin: 48px 0;
-}
-
-.section-lead {
-  color: var(--ink-2);
-  font-size: 19px;
-  max-width: 760px;
-}
-
-.feature {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 40px;
-  align-items: center;
-  margin: 56px 0;
-}
-
-.feature.flip {
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-}
-
-.feature.flip .feature-text {
-  order: 2;
-}
-
-.feature h3 {
-  font-size: 24px;
-}
-
-.feature p {
-  color: var(--ink-2);
-}
-
-.sub {
-  margin-top: 48px;
-}
-
-.ticks {
-  list-style: none;
-  padding: 0;
-}
-
-.ticks li {
-  position: relative;
-  padding-left: 28px;
-  margin: 10px 0;
-}
-
-.ticks li::before {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 0.45em;
-  width: 12px;
-  height: 7px;
-  border-left: 2px solid var(--ok);
-  border-bottom: 2px solid var(--ok);
-  transform: rotate(-45deg);
-}
-
-.ticks.two {
-  columns: 2;
-  column-gap: 40px;
-}
-
-.ticks.two li {
-  break-inside: avoid;
-}
 
 .cards {
   display: grid;
@@ -487,41 +463,6 @@ h3 {
   margin-bottom: 10px;
 }
 
-.steps {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 16px;
-  counter-reset: step;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 8px 32px;
-  align-items: start;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  min-width: 0;
-}
-
-.step h3 {
-  margin-top: 0;
-}
-
-.step h3::before {
-  counter-increment: step;
-  content: counter(step) '. ';
-  color: var(--brand-ink);
-}
-
-.step-text p {
-  margin: 0 0 8px;
-  color: var(--ink-2);
-}
-
 .cmd {
   margin: 8px 0;
 }
@@ -539,11 +480,6 @@ h3 {
   background: none;
   padding: 0;
   font-size: 13.5px;
-}
-
-.cta-end {
-  text-align: center;
-  padding-bottom: 32px;
 }
 
 /* FAQ */
@@ -862,18 +798,8 @@ th.center {
 
 /* Narrow windows */
 @media (max-width: 900px) {
-  .feature,
   .doc-layout,
   .footer-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .feature.flip .feature-text {
-    order: 0;
-  }
-
-  .feature.flip,
-  .step {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -885,9 +811,15 @@ th.center {
 
   .cards.three,
   .cards.four,
-  .steps,
   .faq {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* the menu folds into a button before the links would crowd the GitHub button */
+@media (max-width: 1120px) {
+  .topbar-end {
+    margin-left: auto;
   }
 
   .menu-btn {
@@ -897,7 +829,7 @@ th.center {
   .main-nav {
     display: none;
     position: absolute;
-    top: 60px;
+    top: 64px;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -913,12 +845,15 @@ th.center {
 }
 
 @media (max-width: 640px) {
+  .gh-long {
+    display: none;
+  }
+
   .cards.two,
   .footer-cols {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .ticks.two,
   .link-list {
     columns: 1;
   }

@@ -49,7 +49,11 @@ function softwareData(media, version) {
   };
 }
 
-export function home({ media, version, faq = FAQ }) {
+/**
+ * The home page. `story` holds its story and showcase sections (story.mjs, from site-content/), and `compared` the
+ * number of other products in docs/COMPARISON.md (the hero's claim is scoped to them; no claim without it).
+ */
+export function home({ media, version, faq = FAQ, story = { why: '', showcase: '' }, compared = 0 }) {
   const root = './';
   const features = FEATURES.map(
     (f, i) => `        <article class="feature${i % 2 ? ' flip' : ''}" id="${f.id}">
@@ -64,9 +68,9 @@ export function home({ media, version, faq = FAQ }) {
   const body = `    <main id="main">
       <section class="hero">
         <div class="wrap">
-          <p class="eyebrow">Source-available · Self-hosted · For Astro</p>
-          <h1>A visual editor for Astro: edit Markdown on the real page</h1>
-          <p class="lead">Markstage lets writers change your Astro site’s Markdown and JSON content on its own design, not in grey form fields. Every save is a clean git diff of exactly what changed, committed in the writer’s name on a Markstage server. No content database, no MDX, no cloud.</p>
+          <h1><span class="eyebrow">A visual editor for Astro sites, free to self-host<span class="sr">:</span></span> <span class="hero-title"><span>Edit the real page.</span> <span>Keep the content in git.</span></span></h1>
+          <p class="lead">We built Markstage when we moved our own site off WordPress. Writers click into the site’s own design and type; every save is a clean git diff of exactly what changed, committed in their name. No content database, no subscription, no MDX.</p>
+${compared ? `          <p class="hero-claim">We compared ${compared} other editors. None of them lets writers edit on the real page from your own server with no database server. <a href="compare/">See the comparison</a></p>\n` : ''}
           <p class="cta-row">${button(REPO_URL, 'Get it on GitHub', 'primary', ICONS.github)}${button('#install', 'Install in 3 steps', 'secondary')}${button('docs/', 'Read the docs', 'text', '')}</p>
           <ul class="pills" aria-label="In short">
             <li>Free to self-host</li>
@@ -75,8 +79,9 @@ export function home({ media, version, faq = FAQ }) {
             <li>Roles, releases and staging</li>
           </ul>
         </div>
-        <div class="wrap wide">${figure(media, 'hero', 'The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit', root, { eager: true, cls: 'hero-shot' })}</div>
+        <div class="stage"><div class="wrap wide">${figure(media, 'hero', 'The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit', root, { eager: true, cls: 'hero-shot' })}</div></div>
       </section>
+${story.why}
 
       <section class="band" id="features" aria-labelledby="features-title">
         <div class="wrap">
@@ -89,7 +94,7 @@ ${MORE_FEATURES.map((t) => `            <li>${e(t)}</li>`).join('\n')}
           </ul>
         </div>
       </section>
-
+${story.showcase}
       <section class="wrap" id="how" aria-labelledby="how-title">
         <h2 id="how-title">How it works</h2>
         <ol class="cards four">
@@ -117,7 +122,7 @@ ${install}
 
       <section class="wrap" id="compare" aria-labelledby="compare-title">
         <h2 id="compare-title">How Markstage compares</h2>
-        <p>Markstage is for teams who want a visual editor without giving up Markdown files, git history and their own servers. See where it fits next to hosted and git-based CMSs, and where they lead.</p>
+        <p>Markstage is for teams who want a visual editor without giving up Markdown files, git history and their own servers. See where it fits next to WordPress, Ghost, Prismic and other hosted and git-based CMSs, and where they lead.</p>
         <p class="cta-row left">${button('compare/', 'See the comparison', 'secondary', ICONS.arrow)}${button('alternatives/', 'Alternatives, one by one', 'text')}</p>
       </section>
 
@@ -148,6 +153,7 @@ ${faq.map((x) => `            <div class="qa"><h3>${e(x.q)}</h3><p>${e(x.a)}</p>
         'Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use.',
       body,
       data: [softwareData(media, version), faqData(faq.map(({ q, a }) => ({ question: q, answer: a }))), organizationData()],
+      styles: ['home.css'],
     }),
   };
 }

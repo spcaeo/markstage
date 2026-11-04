@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Why We Built Markstage: The Editor Our Own Site Needed</title>
+    <meta name="description" content="Why Space-O Technologies built Markstage: our site moved off WordPress to Astro, and writers still needed to edit on the real page, from our own server." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/why/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Why We Built Markstage: The Editor Our Own Site Needed" />
+    <meta property="og:description" content="Why Space-O Technologies built Markstage: our site moved off WordPress to Astro, and writers still needed to edit on the real page, from our own server." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/why/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/story.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Why we built Markstage: our own site moved off WordPress, and writers still needed the real page." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-04" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Why We Built Markstage: The Editor Our Own Site Needed" />
+    <meta name="twitter:description" content="Why Space-O Technologies built Markstage: our site moved off WordPress to Astro, and writers still needed to edit on the real page, from our own server." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/story.png" />
+    <meta name="twitter:image:alt" content="Why we built Markstage: our own site moved off WordPress, and writers still needed the real page." />
+    <link rel="icon" href="../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../llms.txt" />
+    <link rel="preload" href="../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../home.css" />
+
+    <script src="../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Why we built Markstage",
+          "item": "https://spcaeo.github.io/markstage/why/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Why we built Markstage",
+      "description": "Why Space-O Technologies built Markstage: our site moved off WordPress to Astro, and writers still needed to edit on the real page, from our own server.",
+      "url": "https://spcaeo.github.io/markstage/why/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-04",
+      "author": {
+        "@type": "Person",
+        "name": "Rakesh Patel",
+        "jobTitle": "CEO, Space-O Technologies",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Space-O Technologies",
+          "url": "https://www.spaceo.ca",
+          "email": "rp@spaceo.ca",
+          "founder": {
+            "@type": "Person",
+            "name": "Rakesh Patel"
+          }
+        }
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      },
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../#features">Features</a>
+          <a href="../docs/">Docs</a>
+          <a href="../compare/">Compare</a>
+          <a href="../alternatives/">Alternatives</a>
+          <a href="../faq/">FAQ</a>
+          <a href="../why/" aria-current="page">Why we built it</a>
+          <a href="../showcase/">Showcase</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc story">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Why we built Markstage</li></ol></nav>
+      <h1>Why we built Markstage</h1>
+      <p class="byline">By Rakesh Patel, CEO, Space-O Technologies. Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+      <div class="prose">
+<h2 id="our-own-site-came-first">Our own site came first</h2>
+<p>Space-O Technologies runs taskrhino.ca, a services site with a blog. In October 2026 we decided to move it off
+WordPress to a static site built with Astro: every post, page, image and file came across, 158 posts, 20 pages and
+2,414 images and files. Every address was kept, and the search titles and descriptions came across with the
+pages. The <a href="../showcase/">showcase</a> has the before and after.</p>
+<p>A static site is fast, and there is little on it to attack. But WordPress had one thing the new
+site did not: a place where people who do not write code could change a page.</p>
+<h2 id="writers-still-needed-the-real-page">Writers still needed the real page</h2>
+<p>The people who change our pages are writers, SEO people and developers. They all said the same thing: they need to
+see exactly how the page will look while they change it. A form beside a preview, or a canvas wider than the real
+column, makes every edit a guess.</p>
+<p>So the editor had to draw each page with the site's own design: its components, its CSS and its column. And a
+save had to change only what the writer changed, so a review in git shows exactly that edit.</p>
+<h2 id="what-we-tried-first">What we tried first</h2>
+<ul><li><strong>A git-based editor in local mode.</strong> Its visual editor altered 143 of the 148 posts we tested it on, so we
+turned it off and gave writers a plain Markdown box instead.</li><li><strong>Editors that show block labels instead of the page.</strong> Writers saw grey boxes, not the design, and a save
+rewrote the whole file.</li><li><strong>A hosted headless CMS.</strong> The content moves into someone else's database, behind an API and a monthly plan.
+On the one we had used before, a proper path from a developer's laptop to staging to production was sold only
+on its top plans.</li><li><strong>MDX.</strong> Some of the editors we looked at edit rich text as MDX. Our content is plain Markdown and JSON, and we
+wanted to keep it that way.</li></ul>
+<h2 id="what-we-wanted-all-at-once">What we wanted, all at once</h2>
+<ul><li>Writers edit on the site's own design.</li><li>A save changes only what was edited: a clean git diff, committed in the writer's name.</li><li>No database server holds the content. It stays Markdown and JSON files in our repo.</li><li>Staging and production, with rules for who may move what live, at no extra cost.</li><li>Templates, sections and snippets that writers reuse by drag and drop, with no code.</li><li>All of it on our own server.</li></ul>
+<p>We compared Markstage with 21 other editors and content systems. None of them lets writers edit on the real page
+from your own server with no database server: the ones that edit on the real page are hosted services, or, for
+TinaCMS on your own server, need a database adapter. The <a href="../compare/">comparison</a> lists each one, with its sources,
+and says where the others lead.</p>
+<h2 id="so-we-built-markstage">So we built Markstage</h2>
+<p>Markstage started as the editor for taskrhino.ca. From the first day we kept it apart from that one site, because
+we run more than one site and wanted the same editor for all of them. Everything about a site lives in its own
+config and block pack; the editor itself knows no site's name.</p>
+<p>The name says what it does: edit your Markdown on the real stage. The page is the stage, and the writer works on
+it. Today taskrhino.ca is written and published with Markstage, on its own server, with releases, roles and staging.</p>
+<h2 id="now-it-is-yours-to-run">Now it is yours to run</h2>
+<p>Markstage is source-available under the Elastic License 2.0 and free to self-host, for your own sites and your
+clients' sites. Offering it to others as a hosted service needs a commercial licence. It is pre-release: we use it
+every day, and we fix what we find.</p>
+<p>If you have an Astro site and writers who want the real page, <a href="../docs/">start with the docs</a>, or
+<a href="../#install">try the example blog in three commands</a>.</p>
+      </div>
+      <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get it on GitHub</span></a><a class="btn btn-secondary" href="../showcase/"><span>See the showcase</span></a><a class="btn btn-text" href="../compare/"><span>See the comparison</span></a></p>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../#features">Features</a>
+            <a href="../#install">Install</a>
+            <a href="../compare/">Compare</a>
+            <a href="../alternatives/">Alternatives</a>
+            <a href="../faq/">FAQ</a>
+            <a href="../glossary/">Glossary</a>
+            <a href="../why/">Why we built it</a>
+            <a href="../showcase/">Showcase</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../docs/">All docs</a>
+            <a href="../docs/writing/">Writing with Markstage</a>
+            <a href="../docs/config/">Site config</a>
+            <a href="../docs/deploy/">Deploy the server</a>
+            <a href="../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

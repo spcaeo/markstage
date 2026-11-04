@@ -12,12 +12,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { alternativePage, alternativesIndex, checkedOn, comparePage, comparisonPage } from './compare.mjs';
+import { alternativePage, alternativesIndex, checkedOn, comparePage, comparisonPage, leadFirst } from './compare.mjs';
 import { CLONE_URL, NAME, REPO_URL, SITE_URL, TAGLINE, repoFile } from './config.mjs';
 import { DOCS, FAQ, FEATURES } from './content.mjs';
 import { faqPage, glossaryPage } from './learn.mjs';
 import { parseFrontMatter, renderMarkdown } from './markdown.mjs';
 import { docPage, docsIndex, home, notFound } from './pages.mjs';
+import { showcasePage, storySections, whyPage } from './story.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(here, '..', '..');
@@ -87,7 +88,7 @@ export function readDocs(root = REPO_ROOT) {
   });
 }
 
-/** site-content/alternatives/*.md, sorted by slug; each `{slug, meta, rendered}`. */
+/** site-content/alternatives/*.md, WordPress, Ghost and Prismic first, then by slug; each `{slug, meta, rendered}`. */
 export function readAlternatives(contentDir) {
   const dir = path.join(contentDir, 'alternatives');
   if (!fs.existsSync(dir)) return [];
@@ -101,7 +102,8 @@ export function readAlternatives(contentDir) {
       for (const key of ['title', 'description']) if (!meta[key]) throw new Error(`site-content/alternatives/${f}: front matter needs "${key}"`);
       return { slug: f.replace(/\.md$/, ''), meta, rendered: renderMarkdown(body, { link: siteContentLink('../../') }) };
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .sort(leadFirst);
 }
 
 /** Links in site-content files: `/compare/`-style site paths become relative, repo files go to GitHub. */
@@ -123,6 +125,27 @@ function readComparison(root) {
   const docs = docLink('docs', '../../docs/');
   const link = (href) => (/^(\.\.\/)?README\.md#how-markstage-compares$/.test(href) ? '../' : docs(href));
   return { rendered: renderMarkdown(source, { link }), checked: checkedOn(source) };
+}
+
+/**
+ * How many other products docs/COMPARISON.md compares, from its "Where Markstage leads" point 1 ("Of the 20
+ * products, ..."), which the home page's claim rests on; 0 (no claim) when the file or the sentence is missing.
+ */
+export function comparedCount(root = REPO_ROOT) {
+  const file = path.join(root, 'docs', 'COMPARISON.md');
+  if (!fs.existsSync(file)) return 0;
+  const lead = /## Where Markstage leads[\s\S]*?\n1\. \*\*Editing on the site's own design, from your own server, with no database server\.\*\* Of the (\d+) products/.exec(fs.readFileSync(file, 'utf8'));
+  return lead ? Number(lead[1]) : 0;
+}
+
+/** site-content/<name>.md as `{ meta, rendered }` (null when missing or not published): the story and showcase. */
+export function readPage(contentDir, name, required = ['title', 'description', 'h1']) {
+  const file = path.join(contentDir, `${name}.md`);
+  if (!fs.existsSync(file)) return null;
+  const { meta, body } = parseFrontMatter(fs.readFileSync(file, 'utf8'));
+  if (!published(meta)) return null;
+  for (const key of required) if (!meta[key]) throw new Error(`site-content/${name}.md: front matter needs "${key}"`);
+  return { meta, rendered: renderMarkdown(body, { link: siteContentLink('../') }) };
 }
 
 /** A file in site-content/ is published unless its front matter says `publish: false` (keywords.md: notes only). */
@@ -186,8 +209,12 @@ export function buildSite(root = REPO_ROOT, { contentDir = path.join(root, 'site
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   const renderSection = (md) => renderMarkdown(md, { link: siteContentLink('../') });
   const comparison = readComparison(root);
+  const why = readPage(contentDir, 'why');
+  const showcase = readPage(contentDir, 'showcase');
   const pages = [
-    home({ media, version }),
+    home({ media, version, story: storySections({ why, showcase, media }), compared: comparedCount(root) }),
+    ...(why ? [whyPage({ why })] : []),
+    ...(showcase ? [showcasePage({ showcase, media })] : []),
     docsIndex(),
     ...docs.map(docPage),
     comparePage({ readme, alternatives, renderSection, hasComparison: Boolean(comparison) }),

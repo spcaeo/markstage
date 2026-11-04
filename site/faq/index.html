@@ -8,7 +8,7 @@
     <link rel="canonical" href="https://spcaeo.github.io/markstage/faq/" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Markstage" />
     <meta property="og:title" content="Markstage FAQ: the visual editor for Astro sites" />
@@ -25,9 +25,13 @@
     <meta name="twitter:description" content="Answers about Markstage: what a visual editor for Astro is, price, licence, self-hosting, databases, MDX and how it differs from a headless CMS." />
     <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/learn.png" />
     <meta name="twitter:image:alt" content="Markstage: answers and words for editing Markdown sites visually." />
+    <link rel="icon" href="../favicon.ico" sizes="32x32" />
     <link rel="icon" href="../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../llms.txt" />
+    <link rel="preload" href="../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../styles.css" />
+
     <script src="../enhance.js" defer></script>
     <script type="application/ld+json">
     {
@@ -84,6 +88,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "It is not open source in the OSI sense. Markstage is source-available under the Elastic License 2.0: the code is public, and you may run and change it for free, with the one limit above."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Markstage compare with WordPress, Ghost and Prismic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "WordPress and Ghost are mature publishing platforms with large communities; with Astro, both are used headless, so writers work in their own admin and Astro reads the content by API. Ghost also has newsletters and paid memberships built in. Prismic is a hosted page builder. Markstage lets writers edit on the Astro site's own design, keeps content as files in git and runs on your own server. The comparison puts the four side by side, with sources."
           }
         },
         {
@@ -198,16 +210,20 @@
     <a class="skip" href="#main">Skip to content</a>
     <header class="topbar">
       <div class="wrap topbar-row">
-        <a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a>
-        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a>
         <nav id="main-nav" class="main-nav" aria-label="Main">
           <a href="../#features">Features</a>
           <a href="../docs/">Docs</a>
           <a href="../compare/">Compare</a>
           <a href="../alternatives/">Alternatives</a>
           <a href="../faq/" aria-current="page">FAQ</a>
-          <a class="nav-gh" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>GitHub</span></a>
+          <a href="../why/">Why we built it</a>
+          <a href="../showcase/">Showcase</a>
         </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
       </div>
     </header>
 
@@ -228,6 +244,11 @@ There are no per-user, per-site or per-language fees. The one thing you may not 
 offer Markstage to others as a hosted or managed service.</p></div>
         <div class="qa" id="is-markstage-free-software-under-an-osi-licence"><h3>Is Markstage free software under an OSI licence?</h3><p>It is not open source in the OSI sense. Markstage is source-available under the Elastic License 2.0: the code is
 public, and you may run and change it for free, with the one limit above.</p></div>
+        <div class="qa" id="how-does-markstage-compare-with-wordpress-ghost-and-prismic"><h3>How does Markstage compare with WordPress, Ghost and Prismic?</h3><p>WordPress and Ghost are mature publishing platforms with large communities; with Astro, both are used headless, so
+writers work in their own admin and Astro reads the content by API. Ghost also has newsletters and paid memberships
+built in. Prismic is a hosted page builder. Markstage lets writers edit on the Astro site's own design, keeps
+content as files in git and runs on your own server. The <a href="../compare/">comparison</a> puts the four side by side, with
+sources.</p></div>
         <div class="qa" id="how-is-markstage-different-from-a-headless-cms"><h3>How is Markstage different from a headless CMS?</h3><p>A headless CMS keeps your content in its own database, usually hosted, and your site reads it through an API.
 Markstage keeps content as Markdown and JSON files in your git repository, and the Astro site reads them like any
 other files. There is no content database and no content API to depend on.</p></div>
@@ -265,8 +286,8 @@ site first.</p></div>
     <footer class="footer">
       <div class="wrap footer-grid">
         <div>
-          <p class="footer-brand"><a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg><span>Markstage</span></a></p>
-          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="footer-brand"><a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
           <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
         </div>
         <nav aria-label="Footer" class="footer-cols">
@@ -278,6 +299,8 @@ site first.</p></div>
             <a href="../alternatives/">Alternatives</a>
             <a href="../faq/">FAQ</a>
             <a href="../glossary/">Glossary</a>
+            <a href="../why/">Why we built it</a>
+            <a href="../showcase/">Showcase</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

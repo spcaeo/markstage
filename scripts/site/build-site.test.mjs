@@ -7,11 +7,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, test } from 'node:test';
-import { buildSite, imageSize, REPO_ROOT } from './build-site.mjs';
+import { buildSite, comparedCount, imageSize, REPO_ROOT } from './build-site.mjs';
 import { OG_IMAGES, OG_SIZE, SITE_URL } from './config.mjs';
 import { DOCS, FAQ } from './content.mjs';
 import { renderMarkdown } from './markdown.mjs';
 import { licenceHits } from '../lib/licence-words.mjs';
+import { withoutShowcase } from '../lib/showcase.mjs';
 
 const SITE = path.join(REPO_ROOT, 'site');
 const FIXTURES = path.join(path.dirname(new URL(import.meta.url).pathname), 'fixtures', 'site-content');
@@ -68,7 +69,8 @@ function checkSite(label, built) {
 
     test('names no private site or person, and calls Markstage source-available only', () => {
       for (const f of built.files) {
-        assert.doesNotMatch(f.content, PRIVATE, f.file);
+        // the first site's public address is allowed as the showcase, on the showcase pages only (lib/showcase.mjs)
+        assert.doesNotMatch(withoutShowcase(`site/${f.file}`, f.content), PRIVATE, f.file);
         assert.equal(claimsOther(f.content), false, `${f.file} names another kind of licence`);
         // another product's licence name only on the comparison pages, never in Markstage's column or sentence
         assert.deepEqual(licenceHits(`site/${f.file}`, f.content), [], f.file);
@@ -207,6 +209,37 @@ describe('site/ is built from its sources', () => {
     for (const { q } of FAQ) assert.ok(home.includes(q.replace(/’/g, '’')), q);
   });
 
+  test('the home page claims a lead only as docs/COMPARISON.md states it, scoped to the products compared and linked', () => {
+    const home = built.files.find((f) => f.file === 'index.html').content;
+    const n = comparedCount();
+    assert.ok(n >= 20, `COMPARISON.md compares ${n} products`);
+    const claim = /<p class="hero-claim">([\s\S]*?)<\/p>/.exec(home)?.[1];
+    assert.ok(claim, 'no hero claim');
+    assert.match(claim, new RegExp(`^We compared ${n} other editors\\. None of them `));
+    assert.match(claim, /<a href="compare\/">/);
+    // never a bare "first", "only" or "best" anywhere in the hero
+    const hero = /<section class="hero">[\s\S]*?<\/section>/.exec(home)[0];
+    assert.doesNotMatch(text(hero), /\b(first|only|best)\b/i);
+  });
+
+  test('every page has the GitHub button in its top bar, the new mark and the favicons', () => {
+    for (const f of built.files.filter((x) => x.file.endsWith('.html'))) {
+      const bar = /<header class="topbar">[\s\S]*?<\/header>/.exec(f.content)[0];
+      assert.match(bar, /<a class="gh-btn" href="https:\/\/github\.com\/spcaeo\/markstage"[^>]*>.*Star<span class="gh-long"> on GitHub<\/span>/, f.file);
+      assert.match(bar, /<svg class="logo"[^>]*><path class="lt"/, f.file);
+      assert.match(f.content, /<link rel="icon" href="[^"]*favicon\.ico"/, f.file);
+    }
+    for (const file of ['icon.svg', 'favicon.ico', 'apple-touch-icon.png', 'fonts/big-shoulders-display-800.woff2', 'fonts/OFL.txt', 'home.css']) assert.ok(fs.existsSync(path.join(SITE, file)), file);
+  });
+
+  test('builds the story and the showcase from site-content/, and shows both on the home page', () => {
+    const home = built.files.find((f) => f.file === 'index.html').content;
+    assert.ok(built.files.some((f) => f.file === 'why/index.html'));
+    assert.ok(built.files.some((f) => f.file === 'showcase/index.html'));
+    assert.match(home, /<section class="story-band" id="why"/);
+    assert.match(home, /<section class="wrap built-with" id="built-with"/);
+  });
+
   checkSite('repo', built);
 });
 
@@ -252,6 +285,24 @@ describe('site-content files render (fixtures)', () => {
     // built-in terms the file does not define come after, once
     assert.ok(html.indexOf('>Block<') < html.indexOf('>Headless CMS<'));
     assert.equal((html.match(/<h3>Block<\/h3>/g) ?? []).length, 1);
+  });
+
+  test('the story and showcase pages and their home sections come from the files', () => {
+    const why = page('why/index.html');
+    assert.match(why, /<h1>Why the fixture exists<\/h1>/);
+    assert.match(why, /By Sam Lee, Editor, Example Co\./);
+    assert.match(why, /"@type": "Article"/);
+    assert.match(why, /href="\.\.\/showcase\/"/);
+    const show = page('showcase/index.html');
+    assert.match(show, /<h1>example\.com: a fixture showcase<\/h1>/);
+    // the site's address gets the shared copy and open icons
+    assert.match(show, /<span class="copyable"><span class="copyable-value">example\.com<\/span><button type="button" class="icon-btn copy-btn" data-copy="https:\/\/www\.example\.com\/"/);
+    assert.match(show, /<figcaption>Before: fixture<\/figcaption>/);
+    assert.match(show, /<dt>Fixture speed score<\/dt><dd><span class="sr">from <\/span><span class="was">50<\/span>/);
+    assert.match(show, /<td class="num">98<\/td>/);
+    const home = page('index.html');
+    assert.match(home, /<h2 id="why-title">Fixture story title<\/h2>/);
+    assert.match(home, /<h2 id="built-title">Built with Markstage: example\.com<\/h2>/);
   });
 
   test('a file whose front matter says publish: false is never a page or a link', () => {

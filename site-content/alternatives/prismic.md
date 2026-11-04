@@ -57,7 +57,9 @@ JSON shape.
 ### Is there a free Prismic alternative?
 
 Markstage is free to self-host, with no per-user, per-locale or per-environment fees. Prismic also has a free plan,
-for 1 user and 2 locales.
+for 1 user and 2 locales. WordPress and Ghost are free software you can host yourself; see
+[Markstage vs WordPress](/alternatives/wordpress/), [Markstage vs Ghost](/alternatives/ghost/) and the
+[comparison of all four](/compare/).
 
 ### Does Prismic work with Astro?
 

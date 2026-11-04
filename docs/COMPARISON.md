@@ -1,8 +1,8 @@
 # Markstage compared
 
-> **A note on the names in this document.** TinaCMS, CloudCannon, Decap CMS, Sveltia CMS, Keystatic, Pages CMS,
-> Front Matter CMS, Outstatic, Sitepins, EmDash, StudioCMS, Storyblok, Prismic, Sanity, Contentful, Builder.io,
-> Payload, Strapi, WordPress, Statamic and Astro are trademarks of their owners. We name them only to compare.
+> **A note on the names in this document.** WordPress, Ghost, Prismic, TinaCMS, CloudCannon, Decap CMS, Sveltia CMS,
+> Keystatic, Pages CMS, Front Matter CMS, Outstatic, Sitepins, EmDash, StudioCMS, Storyblok, Sanity, Contentful,
+> Builder.io, Payload, Strapi, Statamic and Astro are trademarks of their owners. We name them only to compare.
 > Markstage is not associated with, affiliated with or endorsed by any of them. Many of them are excellent, and this
 > page says where each one fits better than Markstage. If a fact is out of date, please open an issue.
 
@@ -11,7 +11,7 @@ editors and content systems people use with Astro. A short version is in the
 [README](../README.md#how-markstage-compares).
 
 Facts about other products come from each vendor's own website, pricing page, docs or code repository, and from
-Astro's own docs, all checked on **2026-11-03**. No review sites or third-party lists were used as a source.
+Astro's own docs, all checked on **2026-11-03** (Ghost's on 2026-11-04). No review sites or third-party lists were used as a source.
 Markstage's column claims only what is in this repository's code and docs on that date. Every cell links its source
 in the footnotes. Prices are the list prices shown on that date, monthly unless the cell says otherwise; they change
 often, so check the vendor's page before you buy.
@@ -36,9 +36,46 @@ years of production use and much larger communities. Weigh that as well as the f
   changes only what was edited (a clean git diff) and, with the Markstage server, is committed as the person who
   saved; no database server holds the content; staging and release rules are
   included; and it all runs on your own server for free.
+- **WordPress, Ghost and Prismic are the three people weigh most often.** WordPress and Ghost are mature
+  publishing platforms with large communities; with Astro, both are used headless (Astro reads their content by
+  API, and writers work in their own admin). Prismic is a hosted page builder. The next section puts the three
+  side by side with Markstage.
 - **The closest products** are CloudCannon (git-based, edits on a preview of your built site, hosted only, from $55
   a month), TinaCMS (git-based, click-to-edit on Astro pages, hosted or self-hosted), and Storyblok, Sanity and
   Prismic (visual editing on a hosted content database).
+
+## Markstage vs WordPress, Ghost and Prismic
+
+The rows a team usually decides on. Each cell is the same, with the same source, as in the full tables below.
+
+| Feature | **Markstage** | WordPress | Ghost | Prismic |
+| --- | :---: | :---: | :---: | :---: |
+| Edits on the site's own design | ✓ <sub>The site's own components and CSS</sub> [^ms-arch] | ✗ <sub>Headless: written in WordPress's admin</sub> [^wp-astro] | ✗ <sub>Headless: written in Ghost's own editor</sub> [^go-feat] [^go-astro] | ◐ <sub>Page Builder: drag sections, live preview</sub> [^pr-pb] |
+| Content as files in git | ✓ [^ms-readme] | ✗ <sub>Read by REST API</sub> [^wp-astro] | ✗ <sub>MySQL database, read by the Content API</sub> [^go-ubuntu] [^go-content] | ✗ <sub>Hosted, read by API</sub> [^pr-price] |
+| What you run | One Node server next to your static site [^ms-deploy] | A WordPress site (PHP with MySQL or MariaDB) [^wp-astro] [^wp-req] | A Ghost server (Node.js and MySQL 8), or Ghost(Pro) [^go-ubuntu] [^go-price] | Nothing; hosted [^pr-price] |
+| Guide in Astro's own CMS docs | ✗ <sub>Not listed yet</sub> [^as-cms] | ✓ [^wp-astro] | ✓ [^go-astro] | ◐ <sub>Community resources only</sub> [^pr-astro] |
+| Roles | ✓ <sub>Five built in, plus custom roles</sub> [^ms-roles] | ✓ <sub>Six roles</sub> [^wp-roles] | ✓ <sub>Contributor, Author, Editor, Administrator, Owner</sub> [^go-roles] [^go-price] | ◐ <sub>From Medium ($150); custom on Enterprise</sub> [^pr-price] |
+| Single sign-on | ✓ <sub>OpenID Connect, included</sub> [^ms-sso] | ? [^wp-lic] | ◐ <sub>Custom plan on Ghost(Pro)</sub> [^go-price] | ◐ <sub>Enterprise</sub> [^pr-price] |
+| Environments or staging | ✓ <sub>Local, staging, production; free</sub> [^ms-env] | ? [^wp-lic] | ? [^go-price] | ◐ <sub>Paid option on Platinum ($675); 2 on Enterprise</sub> [^pr-price] |
+| Releases (publish many changes at once) | ✓ <sub>With a preview and share links</sub> [^ms-releases] | ? [^wp-lic] | ? [^go-feat] | ✓ [^pr-pb] |
+| Forms inbox | ✓ [^ms-inbox] | ? [^wp-lic] | ? [^go-feat] | ✗ [^pr-price] |
+| WordPress import | ◐ <sub>Reusable blocks and old contact messages from a WordPress export or dump; posts and media through the JSON import</sub> [^ms-library] [^ms-import] | – | ✓ <sub>Built-in importer for a WordPress XML export</sub> [^go-wp] | ◐ <sub>A general Migration API</sub> [^pr-price] |
+| Self-host | ✓ [^ms-deploy] | ✓ [^wp-astro] | ✓ <sub>Ubuntu with Ghost-CLI, or Docker (preview)</sub> [^go-install] | ✗ [^pr-price] |
+| Price to start | Free [^ms-readme] | Free software; you pay for hosting [^wp-lic] | Free software; Ghost(Pro) Starter $18/mo ($15 yearly) [^go-price] | Free; Starter $10/mo per repository, yearly [^pr-price] |
+| Licence | Elastic License 2.0 <sub>Source-available, free to self-host</sub> [^ms-licence] | GPLv2 or later [^wp-lic] | MIT [^go-gh] | Closed, hosted service [^pr-price] |
+
+How to choose among these four:
+
+- **WordPress** if you want its very large ecosystem of themes, plugins, hosts and people who know it, or a
+  familiar admin for content that Astro reads by API.
+- **Ghost** if the site is a publication: newsletters, memberships and paid subscriptions are built in
+  [^go-feat], with its own editor and themes, self-hosted or on Ghost(Pro). Its code is under the MIT licence
+  [^go-gh].
+- **Prismic** if you want a hosted page builder with nothing to run, and your developers build the sections
+  ("slices") [^pr-pb].
+- **Markstage** if writers should edit on the Astro site's own design, content should stay as files in git, and
+  staging, roles and single sign-on should come included on your own server. Markstage is pre-release; WordPress
+  and Ghost have many years of production use and much larger communities.
 
 ## Group A: git-based editors
 
@@ -107,48 +144,49 @@ integration.
 
 ### Editing and content
 
-| Feature | **Markstage** | EmDash | StudioCMS | Storyblok | Prismic | Sanity | Contentful | Builder.io | Payload | Strapi | WordPress | Statamic |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Edits on the site's own design | ✓ [^ms-arch] | ◐ <sub>"Inline visual editing" in its README; the docs we read edit in the admin</sub> [^em-gh] [^em-docs] | ✗ <sub>Dashboard</sub> [^sc-docs] | ✓ <sub>Visual Editor: click a component on your site, its block opens</sub> [^sb-astro] | ◐ <sub>Page Builder: drag sections, live preview</sub> [^pr-pb] | ✓ <sub>Presentation tool with overlays, on a server-rendered Astro site</sub> [^sa-astro] | ? [^cf-price] | ✓ <sub>Drag-and-drop visual editor on a preview page of your site</sub> [^bu-astro] | ◐ <sub>Live Preview in an iframe; a Visual Editor is "coming soon" for Enterprise</sub> [^pa-preview] [^pa-visual] | ◐ <sub>Live Preview on Growth and up</sub> [^st-preview] | ✗ <sub>Headless: written in WordPress's admin</sub> [^wp-astro] | ◐ <sub>Live Preview</sub> [^sm-feat] |
-| Content as files in git | ✓ [^ms-readme] | ✗ <sub>SQL database</sub> [^em-gh] | ✗ <sub>libSQL, MySQL or PostgreSQL</sub> [^sc-docs] | ✗ <sub>Hosted, read by API</sub> [^sb-price] | ✗ <sub>Hosted, read by API</sub> [^pr-price] | ✗ <sub>Hosted Content Lake</sub> [^sa-price] | ✗ <sub>Hosted, read by SDK</sub> [^cf-astro] | ✗ <sub>Your Builder space</sub> [^bu-astro] | ✗ <sub>MongoDB, Postgres or SQLite</sub> [^pa-db] | ✗ <sub>Read by API</sub> [^st-astro] | ✗ <sub>Read by REST API</sub> [^wp-astro] | ✓ <sub>Flat files; git automation on Pro</sub> [^sm-feat] [^sm-price] |
-| What you run | One Node server next to your static site [^ms-deploy] | The Astro site on Cloudflare Workers, or Node with SQLite [^em-gh] | Astro in server mode, plus a database [^sc-docs] | Nothing; hosted [^sb-price] | Nothing; hosted [^pr-price] | Nothing for content; hosted [^sa-price] | Nothing; hosted [^cf-astro] | Nothing; hosted [^bu-price] | A Next.js app and its database [^pa-gh] [^pa-db] | A Strapi server, or Strapi Cloud [^st-price] | A WordPress site [^wp-astro] | A Laravel (PHP) app [^sm-feat] |
+| Feature | **Markstage** | WordPress | Ghost | Prismic | EmDash | StudioCMS | Storyblok | Sanity | Contentful | Builder.io | Payload | Strapi | Statamic |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Edits on the site's own design | ✓ [^ms-arch] | ✗ <sub>Headless: written in WordPress's admin</sub> [^wp-astro] | ✗ <sub>Headless: written in Ghost's own editor</sub> [^go-feat] [^go-astro] | ◐ <sub>Page Builder: drag sections, live preview</sub> [^pr-pb] | ◐ <sub>"Inline visual editing" in its README; the docs we read edit in the admin</sub> [^em-gh] [^em-docs] | ✗ <sub>Dashboard</sub> [^sc-docs] | ✓ <sub>Visual Editor: click a component on your site, its block opens</sub> [^sb-astro] | ✓ <sub>Presentation tool with overlays, on a server-rendered Astro site</sub> [^sa-astro] | ? [^cf-price] | ✓ <sub>Drag-and-drop visual editor on a preview page of your site</sub> [^bu-astro] | ◐ <sub>Live Preview in an iframe; a Visual Editor is "coming soon" for Enterprise</sub> [^pa-preview] [^pa-visual] | ◐ <sub>Live Preview on Growth and up</sub> [^st-preview] | ◐ <sub>Live Preview</sub> [^sm-feat] |
+| Content as files in git | ✓ [^ms-readme] | ✗ <sub>Read by REST API</sub> [^wp-astro] | ✗ <sub>MySQL database, read by the Content API</sub> [^go-ubuntu] [^go-content] | ✗ <sub>Hosted, read by API</sub> [^pr-price] | ✗ <sub>SQL database</sub> [^em-gh] | ✗ <sub>libSQL, MySQL or PostgreSQL</sub> [^sc-docs] | ✗ <sub>Hosted, read by API</sub> [^sb-price] | ✗ <sub>Hosted Content Lake</sub> [^sa-price] | ✗ <sub>Hosted, read by SDK</sub> [^cf-astro] | ✗ <sub>Your Builder space</sub> [^bu-astro] | ✗ <sub>MongoDB, Postgres or SQLite</sub> [^pa-db] | ✗ <sub>Read by API</sub> [^st-astro] | ✓ <sub>Flat files; git automation on Pro</sub> [^sm-feat] [^sm-price] |
+| What you run | One Node server next to your static site [^ms-deploy] | A WordPress site (PHP with MySQL or MariaDB) [^wp-astro] [^wp-req] | A Ghost server (Node.js and MySQL 8), or Ghost(Pro) [^go-ubuntu] [^go-price] | Nothing; hosted [^pr-price] | The Astro site on Cloudflare Workers, or Node with SQLite [^em-gh] | Astro in server mode, plus a database [^sc-docs] | Nothing; hosted [^sb-price] | Nothing for content; hosted [^sa-price] | Nothing; hosted [^cf-astro] | Nothing; hosted [^bu-price] | A Next.js app and its database [^pa-gh] [^pa-db] | A Strapi server, or Strapi Cloud [^st-price] | A Laravel (PHP) app [^sm-feat] |
 
 ### Astro
 
-| Feature | **Markstage** | EmDash | StudioCMS | Storyblok | Prismic | Sanity | Contentful | Builder.io | Payload | Strapi | WordPress | Statamic |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Guide in Astro's own CMS docs | ✗ <sub>Not listed yet</sub> [^as-cms] | ✓ [^em-astro] | ✓ [^sc-astro] | ✓ [^as-storyblok] | ◐ <sub>Community resources only</sub> [^pr-astro] | ✓ [^as-sanity] | ✓ [^cf-astro] | ✓ [^bu-astro] | ✓ [^pa-astro] | ✓ [^st-astro] | ✓ [^wp-astro] | ✓ [^sm-astro] |
-| Official Astro integration | ✓ [^ms-arch] | ✓ <sub>Built on Astro</sub> [^em-gh] | ✓ <sub>Built for Astro</sub> [^sc-gh] | ✓ <sub>`@storyblok/astro`</sub> [^as-storyblok] | ✗ [^pr-astro] | ✓ <sub>`@sanity/astro`</sub> [^as-sanity] | ✗ <sub>Contentful SDK</sub> [^cf-astro] | ✗ <sub>A preview page you add</sub> [^bu-astro] | ✗ <sub>An example project</sub> [^pa-astro] | ✗ <sub>A wrapper you write</sub> [^st-astro] | ✗ <sub>REST API</sub> [^wp-astro] | ✗ <sub>REST or GraphQL API, on Pro</sub> [^sm-astro] [^sm-price] |
+| Feature | **Markstage** | WordPress | Ghost | Prismic | EmDash | StudioCMS | Storyblok | Sanity | Contentful | Builder.io | Payload | Strapi | Statamic |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Guide in Astro's own CMS docs | ✗ <sub>Not listed yet</sub> [^as-cms] | ✓ [^wp-astro] | ✓ [^go-astro] | ◐ <sub>Community resources only</sub> [^pr-astro] | ✓ [^em-astro] | ✓ [^sc-astro] | ✓ [^as-storyblok] | ✓ [^as-sanity] | ✓ [^cf-astro] | ✓ [^bu-astro] | ✓ [^pa-astro] | ✓ [^st-astro] | ✓ [^sm-astro] |
+| Official Astro integration | ✓ [^ms-arch] | ✗ <sub>REST API</sub> [^wp-astro] | ✗ <sub>Content API client, `@tryghost/content-api`</sub> [^go-astro] | ✗ [^pr-astro] | ✓ <sub>Built on Astro</sub> [^em-gh] | ✓ <sub>Built for Astro</sub> [^sc-gh] | ✓ <sub>`@storyblok/astro`</sub> [^as-storyblok] | ✓ <sub>`@sanity/astro`</sub> [^as-sanity] | ✗ <sub>Contentful SDK</sub> [^cf-astro] | ✗ <sub>A preview page you add</sub> [^bu-astro] | ✗ <sub>An example project</sub> [^pa-astro] | ✗ <sub>A wrapper you write</sub> [^st-astro] | ✗ <sub>REST or GraphQL API, on Pro</sub> [^sm-astro] [^sm-price] |
 
 ### Team and workflow
 
-| Feature | **Markstage** | EmDash | StudioCMS | Storyblok | Prismic | Sanity | Contentful | Builder.io | Payload | Strapi | WordPress | Statamic |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Roles | ✓ <sub>Five built in, plus custom roles</sub> [^ms-roles] | ✓ <sub>Administrator, Editor, Author, Contributor</sub> [^em-gh] | ? [^sc-docs] | ◐ <sub>Custom roles on Premium and Elite</sub> [^sb-price] | ◐ <sub>From Medium ($150); custom on Enterprise</sub> [^pr-price] | ✓ <sub>2 roles free, 5 on Growth, custom on Enterprise</sub> [^sa-price] | ? [^cf-price] | ◐ <sub>Admin only on Free and Pro; four roles on Team; custom roles and RBAC on Enterprise</sub> [^bu-price] | ✓ <sub>Granular access control</sub> [^pa-gh] | ✓ <sub>Role-based access in the free edition</sub> [^st-price] | ✓ <sub>Six roles</sub> [^wp-roles] | ◐ <sub>Core: one admin; Pro: unlimited users and roles</sub> [^sm-price] |
-| Single sign-on | ✓ <sub>OpenID Connect, included</sub> [^ms-sso] | ✗ <sub>Passkeys, OAuth and magic links; no single sign-on listed</sub> [^em-gh] | ? [^sc-docs] | ◐ <sub>Premium and Elite</sub> [^sb-price] | ◐ <sub>Enterprise</sub> [^pr-price] | ◐ <sub>SAML on Enterprise</sub> [^sa-price] | ? [^cf-price] | ◐ <sub>Enterprise</sub> [^bu-price] | ◐ <sub>Enterprise feature</sub> [^pa-visual] | ◐ <sub>$150/mo add-on</sub> [^st-price] | ? [^wp-lic] | ? [^sm-price] |
-| Environments or staging | ✓ <sub>Local, staging, production; free</sub> [^ms-env] | ? [^em-gh] | ? [^sc-docs] | ◐ <sub>Premium and Elite</sub> [^sb-price] | ◐ <sub>Paid option on Platinum ($675); 2 on Enterprise</sub> [^pr-price] | ◐ <sub>2 datasets; more at $999 each a month</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-visual] | ? [^st-price] | ? [^wp-lic] | ? [^sm-price] |
-| Releases (publish many changes at once) | ✓ <sub>With a preview and share links</sub> [^ms-releases] | ? [^em-gh] | ? [^sc-docs] | ◐ <sub>Premium and Elite</sub> [^sb-price] | ✓ [^pr-pb] | ◐ <sub>Content Releases on Enterprise</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-visual] | ◐ <sub>Growth and up</sub> [^st-preview] | ? [^wp-lic] | ? [^sm-price] |
-| Real-time collaboration | ✗ <sub>Locks and a three-way merge</sub> [^ms-readme] | ? [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ? [^pr-price] | ✓ <sub>Real-time content database; comments and tasks on Growth</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ? [^st-price] | ? [^wp-lic] | ? [^sm-price] |
-| MCP server for AI agents | ✓ [^ms-mcp] | ✓ [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ✓ <sub>Claude and ChatGPT plugins</sub> [^pr-price] | ✓ [^sa-price] | ? [^cf-price] | ◐ <sub>Built-in MCP servers from Pro; custom ones on Team</sub> [^bu-price] | ? [^pa-gh] | ? [^st-price] | ? [^wp-lic] | ? [^sm-price] |
-| Forms inbox | ✓ [^ms-inbox] | ✗ [^em-gh] | ? [^sc-docs] | ✗ [^sb-price] | ✗ [^pr-price] | ✗ [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ✗ [^st-price] | ? [^wp-lic] | ✓ <sub>Core: one form</sub> [^sm-price] |
-| WordPress import | ◐ <sub>Reusable blocks and old contact messages from a WordPress export or dump; posts and media through the JSON import</sub> [^ms-library] [^ms-deploy] [^ms-import] | ✓ <sub>Import wizard</sub> [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ◐ <sub>A general Migration API</sub> [^pr-price] | ? [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ◐ <sub>General data import</sub> [^st-price] | – | ? [^sm-price] |
+| Feature | **Markstage** | WordPress | Ghost | Prismic | EmDash | StudioCMS | Storyblok | Sanity | Contentful | Builder.io | Payload | Strapi | Statamic |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Roles | ✓ <sub>Five built in, plus custom roles</sub> [^ms-roles] | ✓ <sub>Six roles</sub> [^wp-roles] | ✓ <sub>Contributor, Author, Editor, Administrator, Owner</sub> [^go-roles] [^go-price] | ◐ <sub>From Medium ($150); custom on Enterprise</sub> [^pr-price] | ✓ <sub>Administrator, Editor, Author, Contributor</sub> [^em-gh] | ? [^sc-docs] | ◐ <sub>Custom roles on Premium and Elite</sub> [^sb-price] | ✓ <sub>2 roles free, 5 on Growth, custom on Enterprise</sub> [^sa-price] | ? [^cf-price] | ◐ <sub>Admin only on Free and Pro; four roles on Team; custom roles and RBAC on Enterprise</sub> [^bu-price] | ✓ <sub>Granular access control</sub> [^pa-gh] | ✓ <sub>Role-based access in the free edition</sub> [^st-price] | ◐ <sub>Core: one admin; Pro: unlimited users and roles</sub> [^sm-price] |
+| Single sign-on | ✓ <sub>OpenID Connect, included</sub> [^ms-sso] | ? [^wp-lic] | ◐ <sub>Custom plan on Ghost(Pro)</sub> [^go-price] | ◐ <sub>Enterprise</sub> [^pr-price] | ✗ <sub>Passkeys, OAuth and magic links; no single sign-on listed</sub> [^em-gh] | ? [^sc-docs] | ◐ <sub>Premium and Elite</sub> [^sb-price] | ◐ <sub>SAML on Enterprise</sub> [^sa-price] | ? [^cf-price] | ◐ <sub>Enterprise</sub> [^bu-price] | ◐ <sub>Enterprise feature</sub> [^pa-visual] | ◐ <sub>$150/mo add-on</sub> [^st-price] | ? [^sm-price] |
+| Environments or staging | ✓ <sub>Local, staging, production; free</sub> [^ms-env] | ? [^wp-lic] | ? [^go-price] | ◐ <sub>Paid option on Platinum ($675); 2 on Enterprise</sub> [^pr-price] | ? [^em-gh] | ? [^sc-docs] | ◐ <sub>Premium and Elite</sub> [^sb-price] | ◐ <sub>2 datasets; more at $999 each a month</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-visual] | ? [^st-price] | ? [^sm-price] |
+| Releases (publish many changes at once) | ✓ <sub>With a preview and share links</sub> [^ms-releases] | ? [^wp-lic] | ? [^go-feat] | ✓ [^pr-pb] | ? [^em-gh] | ? [^sc-docs] | ◐ <sub>Premium and Elite</sub> [^sb-price] | ◐ <sub>Content Releases on Enterprise</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-visual] | ◐ <sub>Growth and up</sub> [^st-preview] | ? [^sm-price] |
+| Real-time collaboration | ✗ <sub>Locks and a three-way merge</sub> [^ms-readme] | ? [^wp-lic] | ? [^go-feat] | ? [^pr-price] | ? [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ✓ <sub>Real-time content database; comments and tasks on Growth</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ? [^st-price] | ? [^sm-price] |
+| MCP server for AI agents | ✓ [^ms-mcp] | ? [^wp-lic] | ? [^go-feat] | ✓ <sub>Claude and ChatGPT plugins</sub> [^pr-price] | ✓ [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ✓ [^sa-price] | ? [^cf-price] | ◐ <sub>Built-in MCP servers from Pro; custom ones on Team</sub> [^bu-price] | ? [^pa-gh] | ? [^st-price] | ? [^sm-price] |
+| Forms inbox | ✓ [^ms-inbox] | ? [^wp-lic] | ? [^go-feat] | ✗ [^pr-price] | ✗ [^em-gh] | ? [^sc-docs] | ✗ [^sb-price] | ✗ [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ✗ [^st-price] | ✓ <sub>Core: one form</sub> [^sm-price] |
+| WordPress import | ◐ <sub>Reusable blocks and old contact messages from a WordPress export or dump; posts and media through the JSON import</sub> [^ms-library] [^ms-deploy] [^ms-import] | – | ✓ <sub>Built-in importer for a WordPress XML export</sub> [^go-wp] | ◐ <sub>A general Migration API</sub> [^pr-price] | ✓ <sub>Import wizard</sub> [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ? [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ◐ <sub>General data import</sub> [^st-price] | ? [^sm-price] |
 
 ### Hosting, price and licence
 
-| Feature | **Markstage** | EmDash | StudioCMS | Storyblok | Prismic | Sanity | Contentful | Builder.io | Payload | Strapi | WordPress | Statamic |
-| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Self-host | ✓ [^ms-deploy] | ✓ [^em-gh] | ✓ [^sc-docs] | ✗ [^sb-price] | ✗ [^pr-price] | ✗ <sub>Content is hosted</sub> [^sa-price] | ✗ [^cf-astro] | ✗ [^bu-price] | ✓ [^pa-gh] | ✓ [^st-price] | ✓ [^wp-astro] | ✓ [^sm-price] |
-| Price to start | Free [^ms-readme] | Free [^em-gh] | Free [^sc-gh] | Free Starter; Growth $99/mo [^sb-price] | Free; Starter $10/mo per repository, yearly [^pr-price] | Free; Growth $15 per seat/mo [^sa-price] | ? <sub>Its pricing page refused our checks (HTTP 429)</sub> [^cf-price] | Free; Pro $24 per user/mo [^bu-price] | Free [^pa-gh] | Free; Growth $45/mo [^st-price] | Free software; you pay for hosting [^wp-lic] | Core free; Pro $349 per site, then $99 a year [^sm-price] |
-| Licence | Elastic License 2.0 <sub>Source-available</sub> [^ms-licence] | MIT [^em-gh] | MIT [^sc-gh] | Closed, hosted service [^sb-price] | Closed, hosted service [^pr-price] | Studio: MIT; Content Lake hosted [^sa-gh] | Closed, hosted service [^cf-astro] | SDKs: MIT; service closed [^bu-gh] | MIT [^pa-gh] | Community Edition: MIT; Enterprise paid [^st-lic] | GPLv2 or later [^wp-lic] | Commercial licence; Core free [^sm-price] |
+| Feature | **Markstage** | WordPress | Ghost | Prismic | EmDash | StudioCMS | Storyblok | Sanity | Contentful | Builder.io | Payload | Strapi | Statamic |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Self-host | ✓ [^ms-deploy] | ✓ [^wp-astro] | ✓ <sub>Ubuntu with Ghost-CLI, or Docker (preview)</sub> [^go-install] | ✗ [^pr-price] | ✓ [^em-gh] | ✓ [^sc-docs] | ✗ [^sb-price] | ✗ <sub>Content is hosted</sub> [^sa-price] | ✗ [^cf-astro] | ✗ [^bu-price] | ✓ [^pa-gh] | ✓ [^st-price] | ✓ [^sm-price] |
+| Price to start | Free [^ms-readme] | Free software; you pay for hosting [^wp-lic] | Free software; Ghost(Pro) Starter $18/mo ($15 yearly) [^go-price] | Free; Starter $10/mo per repository, yearly [^pr-price] | Free [^em-gh] | Free [^sc-gh] | Free Starter; Growth $99/mo [^sb-price] | Free; Growth $15 per seat/mo [^sa-price] | ? <sub>Its pricing page refused our checks (HTTP 429)</sub> [^cf-price] | Free; Pro $24 per user/mo [^bu-price] | Free [^pa-gh] | Free; Growth $45/mo [^st-price] | Core free; Pro $349 per site, then $99 a year [^sm-price] |
+| Licence | Elastic License 2.0 <sub>Source-available</sub> [^ms-licence] | GPLv2 or later [^wp-lic] | MIT [^go-gh] | Closed, hosted service [^pr-price] | MIT [^em-gh] | MIT [^sc-gh] | Closed, hosted service [^sb-price] | Studio: MIT; Content Lake hosted [^sa-gh] | Closed, hosted service [^cf-astro] | SDKs: MIT; service closed [^bu-gh] | MIT [^pa-gh] | Community Edition: MIT; Enterprise paid [^st-lic] | Commercial licence; Core free [^sm-price] |
 
 Licences are as each project's GitHub repository states them; the licence of Markstage itself is the Elastic
 License 2.0 (source-available).
 
 ## Where Markstage leads
 
-Each line names the capability and which of the 20 products above have it, as checked on 2026-11-03.
+Each line names the capability and which of the 21 products above have it, as checked on 2026-11-03 (Ghost on
+2026-11-04).
 
-1. **Editing on the site's own design, from your own server, with no database server.** Of the 20 products, those
+1. **Editing on the site's own design, from your own server, with no database server.** Of the 21 products, those
    that edit on the real page are TinaCMS, CloudCannon, Storyblok, Sanity and Builder.io; Decap CMS, Sveltia CMS,
    Front Matter, Prismic, Payload, Strapi, Statamic and EmDash do it partly (a preview beside a form, or on some
    plans). Of those, CloudCannon, Storyblok, Sanity and Builder.io are hosted
@@ -171,15 +209,18 @@ Each line names the capability and which of the 20 products above have it, as ch
 ## Where others go further
 
 - **Hosted, nothing to run.** CloudCannon, TinaCloud, Storyblok, Prismic, Sanity, Contentful and Builder.io run
-  everything for you. Markstage needs a server you look after.
+  everything for you, and Ghost(Pro) hosts Ghost [^go-price]. Markstage needs a server you look after.
+- **Newsletters and paid memberships.** Ghost has newsletters, memberships and paid subscriptions built in
+  [^go-feat]. Markstage has none of these.
 - **No server at all.** Decap CMS and Sveltia CMS are a single page that talks to your git host; Front Matter
   runs inside VS Code. Markstage needs Node and git on a server.
 - **MDX.** TinaCMS, Keystatic and Outstatic edit MDX. Markstage edits Markdown and JSON only.
 - **Live co-editing.** Sanity's real-time content database and Sitepins' live cursors let people edit together.
   Markstage uses locks and a three-way merge.
-- **Size and age.** Strapi (73.4k GitHub stars), Payload (45.6k), Decap CMS (19.4k), EmDash (14.1k) and TinaCMS
-  (13.9k) have large communities [^gh-api]. WordPress, Contentful and Sanity have big partner and plugin ecosystems. Markstage is
-  pre-release.
+- **Size and age.** WordPress and Ghost are mature publishing platforms used by very many sites. Strapi (73.4k
+  GitHub stars), Ghost (55.7k), Payload (45.6k), Decap CMS (19.4k), EmDash (14.1k) and TinaCMS (13.9k) have large
+  communities [^gh-api]. WordPress, Contentful and Sanity have big partner and plugin ecosystems, and Ghost has a
+  theme marketplace [^go-price]. Markstage is pre-release.
 - **Other frameworks.** Most products here also serve Next.js, Hugo, Eleventy and others. Markstage's first and only
   adapter today is Astro.
 
@@ -188,6 +229,9 @@ Each line names the capability and which of the 20 products above have it, as ch
 | If you want | Look at |
 | --- | --- |
 | Writers editing on your Astro site's real design, content in git, run on your own server for free | Markstage |
+| A familiar admin with a very large plugin and theme ecosystem, read by Astro as a headless CMS | WordPress |
+| A publication with newsletters, memberships and paid subscriptions built in | Ghost |
+| A hosted page builder with sections your developers make, nothing to run | Prismic |
 | The same idea, fully hosted, with hosting and a CDN included | CloudCannon |
 | Click-to-edit on Astro pages with MDX, hosted or self-hosted | TinaCMS |
 | No server at all: a single admin page over your git host | Sveltia CMS, Decap CMS |
@@ -199,8 +243,7 @@ Each line names the capability and which of the 20 products above have it, as ch
 ## Also checked, not in the tables
 
 Astro's CMS list names 45 products [^as-cms]. Most of the rest (ButterCMS, Caisy, Cosmic, DatoCMS, Directus,
-Hygraph, Kontent.ai and others) are hosted or database CMSs that compare to Markstage as Contentful does. Ghost is a
-publishing platform with its own editor and themes. Crafter CMS is git-based but is not in Astro's list.
+Hygraph, Kontent.ai and others) are hosted or database CMSs that compare to Markstage as Contentful does. Crafter CMS is git-based but is not in Astro's list.
 
 ## Sources
 
@@ -294,7 +337,17 @@ publishing platform with its own editor and themes. Crafter CMS is git-based but
 [^wp-lic]: **WordPress**: [licence](https://wordpress.org/about/license/)
 [^wp-roles]: **WordPress**: [roles and capabilities](https://wordpress.org/documentation/article/roles-and-capabilities/)
 [^wp-astro]: **Astro**: [Headless WordPress and Astro](https://docs.astro.build/en/guides/cms/wordpress/)
+[^wp-req]: **WordPress**: [requirements](https://wordpress.org/about/requirements/) ("MariaDB version 10.11 or greater OR MySQL version 8.0 or greater"), checked 2026-11-04
+[^go-gh]: **Ghost**: [GitHub repository](https://github.com/TryGhost/Ghost) ("Released under the MIT license"), checked 2026-11-04
+[^go-price]: **Ghost**: [Ghost(Pro) pricing](https://ghost.org/pricing/) (plans, staff roles, single sign-on on Custom), checked 2026-11-04
+[^go-feat]: **Ghost**: [features](https://ghost.org/features/), checked 2026-11-04
+[^go-roles]: **Ghost**: [managing your team](https://ghost.org/help/managing-your-team/), checked 2026-11-04
+[^go-install]: **Ghost**: [install options](https://docs.ghost.org/install/), checked 2026-11-04
+[^go-ubuntu]: **Ghost**: [Ubuntu install guide](https://docs.ghost.org/install/ubuntu/) (MySQL 8.0 or 8.4 "as the production database"), checked 2026-11-04
+[^go-content]: **Ghost**: [Content API](https://docs.ghost.org/content-api/) (read-only), checked 2026-11-04
+[^go-wp]: **Ghost**: [migrating from WordPress](https://docs.ghost.org/migration/wordpress/), checked 2026-11-04
+[^go-astro]: **Astro**: [Ghost and Astro](https://docs.astro.build/en/guides/cms/ghost/), checked 2026-11-04
 [^sm-price]: **Statamic**: [pricing](https://statamic.com/pricing)
 [^sm-feat]: **Statamic**: [features](https://statamic.com/features)
 [^sm-astro]: **Astro**: [Statamic and Astro](https://docs.astro.build/en/guides/cms/statamic/)
-[^gh-api]: **GitHub**: star counts read from each repository's GitHub page on 2026-11-03
+[^gh-api]: **GitHub**: star counts read from each repository's GitHub page on 2026-11-03 (Ghost's on 2026-11-04)

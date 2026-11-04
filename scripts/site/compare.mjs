@@ -8,6 +8,18 @@ import { button } from './pages.mjs';
 
 export const COMPARE_HEADING = '## How Markstage compares';
 
+/** The products people weigh most often: their alternative pages come first, in this order, then the rest by slug. */
+export const LEAD_ALTERNATIVES = ['wordpress', 'ghost', 'prismic'];
+
+/** Sort order for alternatives `{slug}`: LEAD_ALTERNATIVES first, then by slug. */
+export function leadFirst(a, b) {
+  const rank = (slug) => {
+    const i = LEAD_ALTERNATIVES.indexOf(slug);
+    return i < 0 ? LEAD_ALTERNATIVES.length : i;
+  };
+  return rank(a.slug) - rank(b.slug) || (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0);
+}
+
 /** The README section's Markdown, without its own heading; null when the README has none yet. */
 export function compareSection(readme) {
   const start = readme.indexOf(`${COMPARE_HEADING}\n`);
@@ -47,7 +59,7 @@ export function comparePage({ readme, alternatives, renderSection, hasComparison
   const body = `    <main id="main" class="wrap doc wide">
       ${breadcrumbs(trail, root)}
       <h1>Which is the best CMS for Astro? Markstage compared</h1>
-      <p class="lead left">The best CMS for Astro depends on your team: who edits, where content lives and what you want to run. Here is where Markstage, a visual editor that keeps content in git, fits next to hosted and git-based CMSs, and where each one leads. Markstage is not affiliated with any of them.</p>
+      <p class="lead left">The best CMS for Astro depends on your team: who edits, where content lives and what you want to run. Here is where Markstage, a visual editor that keeps content in git, fits next to WordPress, Ghost, Prismic and other hosted and git-based CMSs, and where each one leads. Markstage is not affiliated with any of them.</p>
       <section aria-labelledby="facts-title">
         <h2 id="facts-title">Markstage in one table</h2>
         <div class="table-wrap"><table><thead><tr><th scope="col">Question</th><th scope="col">Markstage</th></tr></thead><tbody>
@@ -97,7 +109,7 @@ export function alternativesIndex({ alternatives }) {
   const body = `    <main id="main" class="wrap doc wide">
       ${breadcrumbs(trail, root)}
       <h1>Markstage as an alternative to other content editors</h1>
-      <p class="lead left">One page per tool: what it does well, where Markstage differs, and which one fits your team. Every fact about another product comes from its own website and is dated.</p>
+      <p class="lead left">One page per tool, starting with the three people weigh most often: WordPress, Ghost and Prismic. Each says what the tool does well, where Markstage differs, and which one fits your team. Every fact about another product comes from its own website and is dated.</p>
 ${alternatives.length ? `        <ul class="cards two">\n${cards}\n        </ul>` : '      <p>The tool-by-tool pages are on their way. Until then, <a href="../compare/">the comparison page</a> has the overview.</p>'}
       <p class="cta-row left">${button('../compare/', 'The comparison in one page', 'secondary', ICONS.arrow)}</p>
     </main>`;

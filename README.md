@@ -1,18 +1,20 @@
 <p align="center">
-  <img src="assets/brand/markstage-512.png" alt="Markstage logo: a white M standing on a pale stage line, on an indigo rounded square" width="88" height="88">
-</p>
-
-<h1 align="center">Markstage</h1>
-
-<p align="center">
-  <strong>Edit your Markdown on the real stage.</strong><br>
-  A visual editor for Astro sites: writers change Markdown and JSON content on the site's own design,<br>
-  not in grey form fields, and every save is a clean git diff of exactly what they changed.<br>
-  No database for content, no MDX, no cloud. Source-available and free to self-host.
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/markstage-logo-dark.png">
+    <img src="assets/brand/markstage-logo.png" alt="Markstage: the mark, a crimson stage arch with a cream M standing in a pool of brass footlight, beside the word Markstage" width="300">
+  </picture>
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img alt="Licence: Elastic License 2.0" src="https://img.shields.io/badge/licence-ELv2-4f46e5"></a>
+  <strong>Edit the real page. Keep the content in git.</strong><br>
+  A visual editor for Astro sites. We built it when we moved our own site off WordPress:<br>
+  writers change Markdown and JSON content on the site's own design, not in form fields,<br>
+  and every save is a clean git diff of exactly what they changed.<br>
+  No content database, no subscription, no MDX. Source-available and free to self-host.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="Licence: Elastic License 2.0" src="https://img.shields.io/badge/licence-ELv2-9e1b3f"></a>
   <img alt="Node.js 22.13 or newer; CI on Node 22.13 and 24" src="https://img.shields.io/badge/node-22.13%2B-339933">
   <img alt="For Astro 7" src="https://img.shields.io/badge/for-Astro%207-ff5d01">
   <a href="https://github.com/spcaeo/markstage/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/spcaeo/markstage/actions/workflows/ci.yml/badge.svg"></a>
@@ -21,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="https://spcaeo.github.io/markstage/"><img alt="Website: features, docs and the comparison" src="https://img.shields.io/badge/website-features,_docs,_comparison-4f46e5?style=for-the-badge"></a>
+  <a href="https://spcaeo.github.io/markstage/"><img alt="Website: features, docs and the comparison" src="https://img.shields.io/badge/website-features,_docs,_comparison-9e1b3f?style=for-the-badge"></a>
   <a href="#quick-start"><img alt="Quick start: the example blog in three commands" src="https://img.shields.io/badge/quick_start-3_commands-2b8a3e?style=for-the-badge"></a>
 </p>
 
@@ -45,6 +47,26 @@
     <img src="docs/screenshots/hero.png" alt="The Markstage editor open on a post of the example blog, Plan a content calendar your whole team keeps: the post is drawn inside the blog's own page, with its serif headline, its cover picture of a calendar with Draft, Review and Live notes, the date and author Sam Lee, the list of contents and the first paragraph; above it the editor's bar with Visual and Source, Outline, SEO, the Saved and Not live yet marks, undo, redo, Preview page and Save; on the left the editor's rail of icons" width="960">
   </picture>
 </p>
+
+## Why we built it
+
+In October 2026, Space-O Technologies moved its own site, taskrhino.ca, off WordPress to a fast, static Astro
+site. Our writers still needed to change pages on the real design, without a content database, a subscription or
+MDX, and from our own server. We compared 21 other editors: none of them lets writers edit on the real page from
+your own server with no database server ([the comparison](https://spcaeo.github.io/markstage/compare/)). So we
+built Markstage, and now give it away to self-host. The whole story:
+[Why we built Markstage](https://spcaeo.github.io/markstage/why/).
+
+## Built with Markstage: taskrhino.ca
+
+<p align="center">
+  <a href="https://spcaeo.github.io/markstage/showcase/"><img src="docs/screenshots/showcase-before-after.png" alt="The taskrhino.ca home page before, on WordPress, and after, on Astro and edited with Markstage: the same heading and text, the new page with a side rail, theme switch and a cover picture" width="900"></a>
+</p>
+
+[taskrhino.ca](https://www.taskrhino.ca/) moved 158 posts, 20 pages and 2,414 images and files from WordPress,
+with every address kept. On a phone its home page went from a Lighthouse speed score of 71 to 99 (measured on 28 and
+29 October 2026, the new site from its build before launch). Its writers now edit it with Markstage.
+[See the before and after](https://spcaeo.github.io/markstage/showcase/).
 
 ---
 
@@ -302,36 +324,45 @@ Only what the code has today, each with its own doc.
 
 ## How Markstage compares
 
-Facts about other products come from each vendor's own website, pricing page, docs or code repository, checked on
-2026-11-03. The full matrix, with a source for every cell and 14 more products (Sveltia CMS, Pages CMS, Front Matter
-CMS, Outstatic, Sitepins, EmDash, StudioCMS, Sanity, Contentful, Builder.io, Payload, Strapi, WordPress and
-Statamic), is in **[docs/COMPARISON.md](docs/COMPARISON.md)**.
+WordPress, Ghost and Prismic come first: they are the three people weigh most often. Facts about other products
+come from each vendor's own website, pricing page, docs or code repository, checked on 2026-11-03 (Ghost's on
+2026-11-04). The full matrix, with a source for every cell and 13 more products (Sveltia CMS, Pages CMS, Front
+Matter CMS, Outstatic, Sitepins, EmDash, StudioCMS, Sanity, Contentful, Builder.io, Payload, Strapi and Statamic),
+is in **[docs/COMPARISON.md](docs/COMPARISON.md)**.
 
 ✓ yes · ◐ partly, or on some plans · ✗ no, or not found in its docs · ? not confirmed on the vendor's pages
 
-|                                         |      **Markstage**       |       TinaCMS        |     CloudCannon      |      Decap CMS       |    Keystatic    |      Storyblok       |       Prismic        |
-| --------------------------------------- | :----------------------: | :------------------: | :------------------: | :------------------: | :-------------: | :------------------: | :------------------: |
-| **Editing**                             |                          |                      |                      |                      |                 |                      |                      |
-| Edits on the site's own design          |            ✓             |          ✓           |          ✓           |   ◐ preview pane     |        ✗        |          ✓           |  ◐ live preview      |
-| MDX                                     |            ✗             |          ✓           |          ?           |          ?           |        ✓        |          –           |          –           |
-| **Content and git**                     |                          |                      |                      |                      |                 |                      |                      |
-| Content as files in git                 |            ✓             |          ✓           |          ✓           |          ✓           |        ✓        |          ✗           |          ✗           |
-| Database to run                         |  None for content ¹      |  ◐ when self-hosted  |       Hosted         |         None         |      None       |        Hosted        |        Hosted        |
-| Live Astro site can stay static         |            ✓             |   ◐ needs islands    |          ✓           |          ◐           | ◐ admin routes  |          ◐           |          ?           |
-| **Team and workflow**                   |                          |                      |                      |                      |                 |                      |                      |
-| Roles and custom roles                  |       ✓ included         |   ◐ custom: Enterprise |  ◐ custom: Team    |   ◐ custom: add-on   |        ✗        | ◐ custom: Premium    | ◐ custom: Enterprise |
-| Single sign-on                          |   ✓ OpenID Connect       |    ◐ Enterprise      |    ◐ Enterprise      |          ✗           |        ✗        |      ◐ Premium       |    ◐ Enterprise      |
-| Staging and production                  |       ✓ included         |     ◐ branches       |     ◐ Team plan      |  ◐ editorial workflow |        ?        |      ◐ Premium       |   ◐ Platinum add-on  |
-| Forms inbox                             |            ✓             |          ✗           |          ✓           |          ✗           |        ✗        |          ✗           |          ✗           |
-| **Hosting and price**                   |                          |                      |                      |                      |                 |                      |                      |
-| Self-host                               |            ✓             |          ✓           |          ✗           |          ✓           |        ✓        |          ✗           |          ✗           |
-| Hosted plan                             |            ✗             |          ✓           |          ✓           |      ◐ Turbo         |   ◐ Cloud       |          ✓           |          ✓           |
-| Price to start (monthly)                |    Free to self-host     |   Free; Team $29     |   $55 ($49 yearly)   |  Free; Turbo €19     | Free; Cloud $10 |   Free; Growth $99   | Free; Starter $10 ²  |
-| Licence                                 |   Source-available ³     |      Apache 2.0      |        Closed        |  OSI, permissive     | OSI, permissive |        Closed        |        Closed        |
+|                                 |   **Markstage**    |       WordPress       |      Ghost      |       Prismic        |       TinaCMS        |   CloudCannon    |      Decap CMS       |    Keystatic    |     Storyblok     |
+| ------------------------------- | :----------------: | :-------------------: | :-------------: | :------------------: | :------------------: | :--------------: | :------------------: | :-------------: | :---------------: |
+| **Editing**                     |                    |                       |                 |                      |                      |                  |                      |                 |                   |
+| Edits on the site's own design  |         ✓          |      ✗ headless       |   ✗ headless    |    ◐ live preview    |          ✓           |        ✓         |    ◐ preview pane    |        ✗        |         ✓         |
+| MDX                             |         ✗          |           –           |        –        |          –           |          ✓           |        ?         |          ?           |        ✓        |         –         |
+| **Content and git**             |                    |                       |                 |                      |                      |                  |                      |                 |                   |
+| Content as files in git         |         ✓          |           ✗           |        ✗        |          ✗           |          ✓           |        ✓         |          ✓           |        ✓        |         ✗         |
+| Database to run                 | None for content ¹ |   MySQL or MariaDB    |     MySQL 8     |        Hosted        |  ◐ when self-hosted  |      Hosted      |         None         |      None       |      Hosted       |
+| Live Astro site can stay static |         ✓          |           ?           |        ?        |          ?           |   ◐ needs islands    |        ✓         |          ◐           | ◐ admin routes  |         ◐         |
+| **Team and workflow**           |                    |                       |                 |                      |                      |                  |                      |                 |                   |
+| Roles and custom roles          |     ✓ included     |      ✓ six roles      |  ✓ five roles   | ◐ custom: Enterprise | ◐ custom: Enterprise |  ◐ custom: Team  |   ◐ custom: add-on   |        ✗        | ◐ custom: Premium |
+| Single sign-on                  |  ✓ OpenID Connect  |           ?           |  ◐ Custom plan  |     ◐ Enterprise     |     ◐ Enterprise     |   ◐ Enterprise   |          ✗           |        ✗        |     ◐ Premium     |
+| Staging and production          |     ✓ included     |           ?           |        ?        |  ◐ Platinum add-on   |      ◐ branches      |   ◐ Team plan    | ◐ editorial workflow |        ?        |     ◐ Premium     |
+| Forms inbox                     |         ✓          |           ?           |        ?        |          ✗           |          ✗           |        ✓         |          ✗           |        ✗        |         ✗         |
+| **Hosting and price**           |                    |                       |                 |                      |                      |                  |                      |                 |                   |
+| Self-host                       |         ✓          |           ✓           |        ✓        |          ✗           |          ✓           |        ✗         |          ✓           |        ✓        |         ✗         |
+| Hosted plan                     |         ✗          |           ?           |  ✓ Ghost(Pro)   |          ✓           |          ✓           |        ✓         |       ◐ Turbo        |     ◐ Cloud     |         ✓         |
+| Price to start (monthly)        | Free to self-host  | Free; you pay hosting | Free; Pro $18 ⁴ | Free; Starter $10 ²  |    Free; Team $29    | $55 ($49 yearly) |   Free; Turbo €19    | Free; Cloud $10 | Free; Growth $99  |
+| Licence                         | Source-available ³ |    GPLv2 or later     | OSI, permissive |        Closed        |      Apache 2.0      |      Closed      |   OSI, permissive    | OSI, permissive |      Closed       |
 
 ¹ Content lives in git. One SQLite file holds people, sessions, the inbox, drafts in progress, trash, releases, the
 media index and the audit log, so there is no database server to run. ² Per repository, paid yearly. ³ Elastic License 2.0: free to use and self-host, including for
-clients; not to be offered to others as a hosted service. Prices are list prices on 2026-11-03 and change often.
+clients; not to be offered to others as a hosted service. ⁴ Ghost(Pro) Starter, billed monthly ($15 a month billed
+yearly); Ghost itself is free to self-host. Prices are list prices on 2026-11-03 (Ghost's on 2026-11-04) and change
+often.
+
+**WordPress and Ghost** are mature publishing platforms with large communities. With Astro, both are used headless:
+writers work in their own admin and Astro reads the content by API. Ghost also has newsletters, memberships and
+paid subscriptions built in, which Markstage does not. **Prismic** is a hosted page builder: nothing to run, and
+your developers build the sections. Markstage differs from all three in where writers work (on the Astro site's
+own design) and where content lives (files in your git repository).
 
 Astro gives content collections (Markdown, MDX, JSON and YAML with a schema) but no editor of its own; its docs
 send you to a CMS. Markstage is that editor for teams who want writers to work on the site's real design, every
@@ -347,7 +378,10 @@ forms rather than editing the page itself. Markstage is pre-release; most produc
   Keystatic or Outstatic better today.
 - **No server at all.** Decap CMS and Sveltia CMS run in the browser against your git host. Markstage needs Node.js
   for a team (sign-in, publishing, the inbox); alone on your computer it runs inside `astro dev`.
-- **A hosted service.** CloudCannon, TinaCloud, Storyblok and Prismic run it for you. Markstage is self-hosted only.
+- **A hosted service.** Prismic, Ghost(Pro), CloudCannon, TinaCloud and Storyblok run it for you. Markstage is
+  self-hosted only.
+- **Publishing and memberships.** Ghost has newsletters and paid subscriptions built in; WordPress has a very large
+  ecosystem of themes and plugins.
 - **Years of use.** Most of these products have been in production for years, with bigger communities and plugin
   ecosystems. Markstage is pre-release.
 - **Frameworks other than Astro.** Markstage's core has no framework in it, but Astro is the only adapter so far.

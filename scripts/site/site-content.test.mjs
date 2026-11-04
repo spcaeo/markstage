@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, test } from 'node:test';
 import { buildSite, REPO_ROOT } from './build-site.mjs';
+import { compareSection, LEAD_ALTERNATIVES } from './compare.mjs';
 import { parseFrontMatter } from './markdown.mjs';
 
 const CONTENT = path.join(REPO_ROOT, 'site-content');
@@ -44,7 +45,27 @@ describe('site-content/ on the site', { skip: !fs.existsSync(CONTENT) && 'no sit
     assert.ok(page('compare/full/index.html'));
   });
 
-  describe('keywords.md', { skip: !fs.existsSync(path.join(CONTENT, 'keywords.md')) && 'no keywords.md' }, () => {
+  test('WordPress, Ghost and Prismic lead every list of products a reader starts from', () => {
+    const lead = LEAD_ALTERNATIVES.map((slug) => `alternatives/${slug}/`);
+    for (const slug of LEAD_ALTERNATIVES) assert.ok(page(`alternatives/${slug}/index.html`), `${slug} has no page`);
+    // the first links to alternative pages on these pages, in order (the index links "wordpress/", the compare
+    // page "../alternatives/wordpress/")
+    const isAlternative = (h) => h !== 'alternatives/' && Boolean(page(`${h}index.html`));
+    for (const file of ['alternatives/index.html', 'compare/index.html']) {
+      const hrefs = [...page(file).matchAll(/href="(?:\.\.\/)?(?:alternatives\/)?([a-z0-9-]+\/)"/g)].map((m) => `alternatives/${m[1]}`);
+      assert.deepEqual([...new Set(hrefs.filter(isAlternative))].slice(0, lead.length), lead, file);
+    }
+    // the README section (/compare/) and docs/COMPARISON.md name the three first
+    const readme = fs.readFileSync(path.join(REPO_ROOT, 'README.md'), 'utf8');
+    const head = /^\|[^\n]*\*\*Markstage\*\*[^\n]*$/m.exec(compareSection(readme))[0].split('|').map((c) => c.trim()).filter(Boolean);
+    assert.deepEqual(head.slice(0, 4), ['**Markstage**', 'WordPress', 'Ghost', 'Prismic']);
+    const comparison = fs.readFileSync(path.join(REPO_ROOT, 'docs', 'COMPARISON.md'), 'utf8');
+    const sections = [...comparison.matchAll(/^## (.+)$/gm)].map((m) => m[1]);
+    assert.equal(sections[1], 'Markstage vs WordPress, Ghost and Prismic');
+    for (const row of comparison.matchAll(/^\| Feature \| \*\*Markstage\*\* \| (EmDash|WordPress)[^\n]*$/gm)) assert.match(row[0], /\| WordPress \| Ghost \| Prismic \|/);
+  });
+
+  describe('keywords.md',{ skip: !fs.existsSync(path.join(CONTENT, 'keywords.md')) && 'no keywords.md' }, () => {
     const source = read('keywords.md');
     const { meta, body } = parseFrontMatter(source);
     // "## Home page" / "## /compare/ ..." with "- Main: **phrase**", and a table of alternative pages
@@ -78,4 +99,15 @@ describe('site-content/ on the site', { skip: !fs.existsSync(CONTENT) && 'no sit
       }
     });
   });
+});
+
+test('every "we compared N other editors" line matches the products in COMPARISON.md', () => {
+  const read = (f) => fs.readFileSync(path.join(REPO_ROOT, f), "utf8");
+  const n = /\n1\. \*\*Editing on the site's own design, from your own server, with no database server\.\*\* Of the (\d+) products/.exec(read('docs/COMPARISON.md'))?.[1];
+  assert.ok(n, 'COMPARISON.md "Where Markstage leads" names how many products it compares');
+  for (const f of ['README.md', 'site-content/why.md']) {
+    const said = [...read(f).matchAll(/(?:compared|with) (\d+) other editors/g)].map((m) => m[1]);
+    assert.ok(said.length, `${f} says how many editors were compared`);
+    for (const s of said) assert.equal(s, n, `${f} says ${s} other editors; COMPARISON.md compares ${n}`);
+  }
 });

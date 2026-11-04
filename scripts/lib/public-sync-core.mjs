@@ -51,6 +51,11 @@ export function normaliseConfig(raw) {
     requiredFiles: list(raw.requiredFiles, ['LICENSE', 'NOTICE', 'README.md', 'SECURITY.md']),
     privateSubjectWords: list(raw.privateSubjectWords).filter(Boolean),
     privateText: list(raw.privateText).filter(Boolean).map((source) => new RegExp(source, 'i')),
+    privateTextAllow: list(raw.privateTextAllow).map((a) => ({
+      paths: list(a.paths).map(globToRegExp),
+      text: new RegExp(a.text, 'gi'),
+      why: a.why ?? '',
+    })),
     checks: list(raw.checks),
     include: include.map(rule),
     exclude: list(raw.exclude).map(rule),
@@ -205,17 +210,21 @@ export function missingRequired(paths, config) {
 
 /**
  * Lines of exported text that name something private (config "privateText": the first site, its folders, a
- * home folder path). `files` text is null for binaries.
+ * home folder path). `files` text is null for binaries. `allow` (config "privateTextAllow") takes one exact form
+ * out of the lines of the paths it names before they are checked: the first site's public address, as the showcase.
  * @param {{ path: string, text: string | null }[]} files
  * @param {RegExp[]} patterns
+ * @param {{ paths: RegExp[], text: RegExp }[]} [allow]
  */
-export function privateTextProblems(files, patterns) {
+export function privateTextProblems(files, patterns, allow = []) {
   const problems = [];
   if (patterns.length === 0) return problems;
   for (const { path: p, text } of files) {
     if (text === null) continue;
+    const allowed = allow.filter((a) => a.paths.some((re) => re.test(p)));
     text.split('\n').forEach((line, i) => {
-      const re = patterns.find((x) => x.test(line));
+      const checked = allowed.reduce((l, a) => l.replace(a.text, ''), line);
+      const re = patterns.find((x) => x.test(checked));
       if (re) problems.push(`${p}:${i + 1}: names something private (${re.source})`);
     });
   }

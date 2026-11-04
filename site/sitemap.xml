@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://spcaeo.github.io/markstage/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/why/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/showcase/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/writing/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/config/</loc></url>
@@ -29,6 +31,9 @@
   <url><loc>https://spcaeo.github.io/markstage/compare/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/compare/full/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/alternatives/wordpress/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/alternatives/ghost/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/alternatives/prismic/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/builder-io/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/cloudcannon/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/contentful/</loc></url>
@@ -39,7 +44,6 @@
   <url><loc>https://spcaeo.github.io/markstage/alternatives/outstatic/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/pages-cms/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/payload/</loc></url>
-  <url><loc>https://spcaeo.github.io/markstage/alternatives/prismic/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/sanity/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/sitepins/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/statamic/</loc></url>
@@ -48,7 +52,6 @@
   <url><loc>https://spcaeo.github.io/markstage/alternatives/studiocms/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/sveltia-cms/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/alternatives/tinacms/</loc></url>
-  <url><loc>https://spcaeo.github.io/markstage/alternatives/wordpress/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/faq/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/glossary/</loc></url>
 </urlset>

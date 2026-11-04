@@ -28,6 +28,14 @@ offer Markstage to others as a hosted or managed service.
 It is not open source in the OSI sense. Markstage is source-available under the Elastic License 2.0: the code is
 public, and you may run and change it for free, with the one limit above.
 
+## How does Markstage compare with WordPress, Ghost and Prismic?
+
+WordPress and Ghost are mature publishing platforms with large communities; with Astro, both are used headless, so
+writers work in their own admin and Astro reads the content by API. Ghost also has newsletters and paid memberships
+built in. Prismic is a hosted page builder. Markstage lets writers edit on the Astro site's own design, keeps
+content as files in git and runs on your own server. The [comparison](/compare/) puts the four side by side, with
+sources.
+
 ## How is Markstage different from a headless CMS?
 
 A headless CMS keeps your content in its own database, usually hosted, and your site reads it through an API.

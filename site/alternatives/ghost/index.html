@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ghost alternative for Astro sites: Markstage</title>
+    <meta name="description" content="Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/alternatives/ghost/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Ghost alternative for Astro sites: Markstage" />
+    <meta property="og:description" content="Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/alternatives/ghost/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-04" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ghost alternative for Astro sites: Markstage" />
+    <meta name="twitter:description" content="Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/compare.png" />
+    <meta name="twitter:image:alt" content="Markstage compared with other content editors for Astro and static sites." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Alternatives",
+          "item": "https://spcaeo.github.io/markstage/alternatives/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Ghost",
+          "item": "https://spcaeo.github.io/markstage/alternatives/ghost/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "A Ghost alternative for Astro sites",
+      "description": "Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026.",
+      "url": "https://spcaeo.github.io/markstage/alternatives/ghost/",
+      "dateModified": "2026-11-04",
+      "about": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Markstage",
+          "url": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "Thing",
+          "name": "Ghost"
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I use Ghost with Astro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, as a headless CMS. Astro's docs have a \"Ghost & Astro\" guide that reads posts through Ghost's Content API with the @tryghost/content-api client. Writers keep using Ghost's own editor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best Ghost alternative for an Astro site?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on what you use Ghost for. If it is newsletters and paid memberships, Ghost does them well and Markstage does not. If it is the writing and editing, Markstage gives writers an editor on the Astro site itself, with content in git. The two other products people weigh most often have pages too: WordPress and Prismic, and the comparison puts all four side by side."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Markstage need MySQL like Ghost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Content stays as files in git. One SQLite file, built into Node.js, holds people, sessions, the inbox, drafts in progress and the audit log, so there is no database server to run."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Markstage free like Ghost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Both are free to self-host. Markstage is source-available under the Elastic License 2.0: you may not offer it to others as a hosted service without a commercial licence."
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../#features">Features</a>
+          <a href="../../docs/">Docs</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../alternatives/" aria-current="page">Alternatives</a>
+          <a href="../../faq/">FAQ</a>
+          <a href="../../why/">Why we built it</a>
+          <a href="../../showcase/">Showcase</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc wide">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../alternatives/">Alternatives</a></li><li aria-current="page">Ghost</li></ol></nav>
+      <h1>A Ghost alternative for Astro sites</h1>
+      <p class="lead left">Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026.</p>
+      <p class="small muted">Facts about Ghost checked on <time datetime="2026-11-04">2026-11-04</time>, from its own website. Markstage is not affiliated with it.</p>
+      <div class="prose">
+<p>Ghost is a mature publishing platform with its own editor, themes, newsletters and paid memberships. Many Astro
+sites use it headless: writers work in Ghost's admin, and Astro reads the posts through Ghost's Content API.
+Markstage takes the other road: writers edit on the Astro site itself, and the content stays as Markdown and JSON
+files in your git repository.</p>
+<h2 id="who-each-one-is-for">Who each one is for</h2>
+<p><strong>Ghost</strong> suits publications: a blog or a magazine that wants newsletters, memberships and paid subscriptions built
+in, with its own themes, run on your own server or on Ghost(Pro). It has many years of production use and a large
+community (55.7k stars on GitHub on 4 November 2026).</p>
+<p><strong>Markstage</strong> suits Astro sites whose writers should edit on the site's real design, where content belongs in git
+next to the code, and where staging, roles and single sign-on should come included. Markstage is pre-release.</p>
+<h2 id="side-by-side">Side by side</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Ghost (headless, with Astro)</th></tr></thead><tbody><tr><td>Editing</td><td>On the Astro site's real design</td><td>In Ghost's own editor; Astro draws the pages</td></tr><tr><td>Where content lives</td><td>Markdown and JSON in git</td><td>A MySQL database, read through the Content API</td></tr><tr><td>What you run</td><td>A Node server next to your static site</td><td>A Ghost server (Node.js and MySQL 8), or Ghost(Pro)</td></tr><tr><td>Astro</td><td><code>@markstage/astro</code> integration</td><td>A guide in Astro's docs, with the <code>@tryghost/content-api</code> client</td></tr><tr><td>Roles</td><td>Owner, Administrator, Editor, Author, Contributor, plus custom roles</td><td>Owner, Administrator, Editor, Author, Contributor</td></tr><tr><td>Single sign-on</td><td>OpenID Connect, included</td><td>On the Ghost(Pro) Custom plan</td></tr><tr><td>Staging and production</td><td>Included</td><td>? (not confirmed on the pages we checked)</td></tr><tr><td>Newsletters and paid memberships</td><td>No</td><td>Built in</td></tr><tr><td>Hosted plan</td><td>No: self-host only</td><td>Ghost(Pro), from $18 a month ($15 a month billed yearly)</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>MIT</td></tr></tbody></table></div>
+<h2 id="where-ghost-is-stronger">Where Ghost is stronger</h2>
+<ul><li><strong>Newsletters, memberships and paid subscriptions</strong> in the same tool as the posts.</li><li><strong>A hosted service.</strong> Ghost(Pro) runs it for you; Markstage needs a server you look after.</li><li><strong>Years of use and a large community,</strong> with a theme marketplace and many integrations.</li><li><strong>A permissive licence.</strong> Ghost's code is under the MIT licence.</li></ul>
+<h2 id="moving-from-ghost-to-markstage">Moving from Ghost to Markstage</h2>
+<p>Ghost exports posts, pages, tags, tiers and settings as one JSON file (Settings, then Advanced, then
+Import/Export), and members as a CSV file. Markstage has no Ghost importer yet. Its import API takes entries and
+media as JSON: a dry run first, then the run, as drafts, and running it again only updates what changed (it
+remembers each source id, such as the Ghost post id). Turn each Ghost post into the import's shape, with its body
+as Markdown, and the pictures come in through the same import.</p>
+<p>Writers then find familiar ideas: author profiles with co-authors, drafts, scheduled publishing, a check before a
+post goes live, roles with the same names, a media library and revisions. Newsletters and paid memberships have no
+Markstage equivalent; keep Ghost or another tool for those.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<h3 id="can-i-use-ghost-with-astro">Can I use Ghost with Astro?</h3>
+<p>Yes, as a headless CMS. Astro's docs have a &quot;Ghost &amp; Astro&quot; guide that reads posts through Ghost's Content API with
+the <code>@tryghost/content-api</code> client. Writers keep using Ghost's own editor.</p>
+<h3 id="what-is-the-best-ghost-alternative-for-an-astro-site">What is the best Ghost alternative for an Astro site?</h3>
+<p>It depends on what you use Ghost for. If it is newsletters and paid memberships, Ghost does them well and Markstage
+does not. If it is the writing and editing, Markstage gives writers an editor on the Astro site itself, with content
+in git. The two other products people weigh most often have pages too: <a href="../../alternatives/wordpress/">WordPress</a> and
+<a href="../../alternatives/prismic/">Prismic</a>, and the <a href="../../compare/">comparison</a> puts all four side by side.</p>
+<h3 id="does-markstage-need-mysql-like-ghost">Does Markstage need MySQL like Ghost?</h3>
+<p>No. Content stays as files in git. One SQLite file, built into Node.js, holds people, sessions, the inbox, drafts in
+progress and the audit log, so there is no database server to run.</p>
+<h3 id="is-markstage-free-like-ghost">Is Markstage free like Ghost?</h3>
+<p>Both are free to self-host. Markstage is source-available under the Elastic License 2.0: you may not offer it to
+others as a hosted service without a commercial licence.</p>
+<h2 id="sources">Sources</h2>
+<p>Checked on 2026-11-04: <a href="https://ghost.org/pricing/" rel="noopener">Ghost(Pro) pricing</a> ·
+<a href="https://ghost.org/features/" rel="noopener">Ghost features</a> ·
+<a href="https://github.com/TryGhost/Ghost" rel="noopener">Ghost on GitHub</a> ·
+<a href="https://ghost.org/help/managing-your-team/" rel="noopener">Ghost staff roles</a> ·
+<a href="https://docs.ghost.org/install/ubuntu/" rel="noopener">Ghost on Ubuntu</a> ·
+<a href="https://docs.ghost.org/content-api/" rel="noopener">Ghost Content API</a> ·
+<a href="https://ghost.org/help/exports/" rel="noopener">Ghost exports</a> ·
+<a href="https://docs.astro.build/en/guides/cms/ghost/" rel="noopener">Astro: Ghost guide</a>. Markstage facts: the
+<a href="../../compare/full/">full comparison</a>,
+<a href="https://github.com/spcaeo/markstage/blob/main/docs/API-AUTHORS.md" rel="noopener">authors</a>,
+<a href="https://github.com/spcaeo/markstage/blob/main/docs/API-IMPORT.md" rel="noopener">import API</a> and
+<a href="https://github.com/spcaeo/markstage/blob/main/docs/API-SSO.md" rel="noopener">single sign-on</a>.</p>
+      </div>
+      <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a><a class="btn btn-secondary" href="../../compare/"><span>All comparisons</span></a><a class="btn btn-text" href="../../docs/"><span>Read the docs</span></a></p>
+      <section aria-labelledby="more-alt">
+        <h2 id="more-alt">More comparisons</h2>
+        <ul class="link-list"><li><a href="../../alternatives/wordpress/">A WordPress alternative for Astro sites</a></li><li><a href="../../alternatives/prismic/">A Prismic alternative for Astro sites</a></li><li><a href="../../alternatives/builder-io/">A Builder.io alternative for Astro sites</a></li><li><a href="../../alternatives/cloudcannon/">A self-hosted CloudCannon alternative for Astro</a></li><li><a href="../../alternatives/contentful/">A Contentful alternative for Astro sites</a></li><li><a href="../../alternatives/decap-cms/">A Decap CMS alternative for Astro sites</a></li><li><a href="../../alternatives/emdash/">EmDash vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/front-matter-cms/">A Front Matter CMS alternative for Astro teams</a></li><li><a href="../../alternatives/keystatic/">A Keystatic alternative for Astro sites</a></li><li><a href="../../alternatives/outstatic/">An Outstatic alternative for Astro sites</a></li><li><a href="../../alternatives/pages-cms/">A Pages CMS alternative for Astro sites</a></li><li><a href="../../alternatives/payload/">A Payload alternative for Astro content sites</a></li><li><a href="../../alternatives/sanity/">A Sanity alternative for Astro sites</a></li><li><a href="../../alternatives/sitepins/">A Sitepins alternative for Astro sites</a></li><li><a href="../../alternatives/statamic/">A Statamic alternative for Astro sites</a></li><li><a href="../../alternatives/storyblok/">A Storyblok alternative for Astro sites</a></li><li><a href="../../alternatives/strapi/">A Strapi alternative for Astro content sites</a></li><li><a href="../../alternatives/studiocms/">StudioCMS vs Markstage: which fits your Astro site?</a></li><li><a href="../../alternatives/sveltia-cms/">A Sveltia CMS alternative for Astro sites</a></li><li><a href="../../alternatives/tinacms/">A TinaCMS alternative for Astro sites</a></li></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../#features">Features</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

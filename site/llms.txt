@@ -11,8 +11,10 @@ Edit your Markdown on the real stage. Status: pre-release, in active development
 ## Pages
 
 - [Markstage: Visual Editor for Astro, Edit on the Real Page](https://spcaeo.github.io/markstage/)
-- [Best CMS for Astro? Markstage Compared With 20 Others](https://spcaeo.github.io/markstage/compare/)
-- [Astro CMS Comparison: Markstage and 20 CMSs, Sourced](https://spcaeo.github.io/markstage/compare/full/)
+- [Why We Built Markstage: The Editor Our Own Site Needed](https://spcaeo.github.io/markstage/why/)
+- [taskrhino.ca: WordPress to Astro, Edited with Markstage](https://spcaeo.github.io/markstage/showcase/)
+- [Best CMS for Astro? Markstage Compared With 21 Others](https://spcaeo.github.io/markstage/compare/)
+- [Astro CMS Comparison: Markstage and 21 CMSs, Sourced](https://spcaeo.github.io/markstage/compare/full/)
 - [Markstage FAQ: the visual editor for Astro sites](https://spcaeo.github.io/markstage/faq/)
 - [Glossary: Astro, git-based CMS and visual editing terms](https://spcaeo.github.io/markstage/glossary/)
 
@@ -45,6 +47,9 @@ Edit your Markdown on the real stage. Status: pre-release, in active development
 
 ## Alternatives
 
+- [A WordPress alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/wordpress/): Moving from WordPress to Astro? Markstage gives writers a WordPress-style editor on your Astro site's real design, with content in git. Checked 3 Nov 2026.
+- [A Ghost alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/ghost/): Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026.
+- [A Prismic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/prismic/): Markstage vs Prismic: page building, releases and share links with your content in git, self-hosted, no per-repository fees. Facts checked 3 Nov 2026.
 - [A Builder.io alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/builder-io/): Markstage vs Builder.io for Astro: page editing on your site's real design with content in git, self-hosted, no per-user fees. Facts checked 3 Nov 2026.
 - [A self-hosted CloudCannon alternative for Astro](https://spcaeo.github.io/markstage/alternatives/cloudcannon/): Markstage vs CloudCannon: both git-based with on-page editing for Astro. Markstage runs on your own server for free. Facts checked 3 Nov 2026.
 - [A Contentful alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/contentful/): Markstage vs Contentful for Astro sites: content as files in your own git repository, edited on the real design, self-hosted for free. Checked 3 Nov 2026.
@@ -55,7 +60,6 @@ Edit your Markdown on the real stage. Status: pre-release, in active development
 - [An Outstatic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/outstatic/): Markstage vs Outstatic: both git-based and free to self-host. Markstage edits on your Astro site's real design and includes roles. Checked 3 Nov 2026.
 - [A Pages CMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/pages-cms/): Markstage vs Pages CMS: both edit files in git. Markstage edits on your Astro site's real design and adds roles, staging and forms. Checked 3 Nov 2026.
 - [A Payload alternative for Astro content sites](https://spcaeo.github.io/markstage/alternatives/payload/): Markstage vs Payload for an Astro site: editing on the real page with content in git, instead of a Next.js backend and database. Checked 3 Nov 2026.
-- [A Prismic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/prismic/): Markstage vs Prismic: page building, releases and share links with your content in git, self-hosted, no per-repository fees. Facts checked 3 Nov 2026.
 - [A Sanity alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/sanity/): Markstage vs Sanity for Astro: visual editing with content as files in your own git repository, self-hosted, no seat fees. Facts checked 3 Nov 2026.
 - [A Sitepins alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/sitepins/): Markstage vs Sitepins: both commit every save to git. Markstage edits on your Astro site's real design and runs on your server free. Checked 3 Nov 2026.
 - [A Statamic alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/statamic/): Markstage vs Statamic: both keep content as files in git. Markstage edits on your Astro site's design with no PHP and no licence fee. Checked 3 Nov 2026.
@@ -64,7 +68,6 @@ Edit your Markdown on the real stage. Status: pre-release, in active development
 - [StudioCMS vs Markstage: which fits your Astro site?](https://spcaeo.github.io/markstage/alternatives/studiocms/): StudioCMS is a server-rendered Astro CMS with a database; Markstage keeps content in git and edits on the real page. Facts checked 3 Nov 2026.
 - [A Sveltia CMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/sveltia-cms/): Markstage vs Sveltia CMS: both keep content in git. Markstage edits on your Astro site's real design and adds staging and roles. Checked 3 Nov 2026.
 - [A TinaCMS alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/tinacms/): Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026.
-- [A WordPress alternative for Astro sites](https://spcaeo.github.io/markstage/alternatives/wordpress/): Moving from WordPress to Astro? Markstage gives writers a WordPress-style editor on your Astro site's real design, with content in git. Checked 3 Nov 2026.
 
 ## Optional
 

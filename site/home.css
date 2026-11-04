@@ -1,0 +1,443 @@
+/* The home page, /why/ and /showcase/ (after styles.css, whose tokens it uses). The one bold thing is the stage: the
+   editor shown under a proscenium arch, lit from above, on a brass floor line, with the story told behind it. */
+
+/* Hero: what it is, why it matters, and the proof, left-aligned; then the stage */
+.hero {
+  padding: 60px 0 0;
+}
+
+/* wide windows: the lead and the proof side by side under the headline */
+.hero > .wrap:first-child {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  column-gap: 56px;
+  align-items: start;
+}
+
+.hero > .wrap:first-child > * {
+  grid-column: 1 / -1;
+}
+
+.hero > .wrap:first-child > .lead {
+  grid-column: 1;
+}
+
+.hero > .wrap:first-child > .hero-claim {
+  grid-column: 2;
+  margin-top: 6px;
+}
+
+/* the H1 names what it is (small) and says why it matters (large), one sentence a line */
+.hero h1 {
+  margin: 0 0 28px;
+}
+
+.hero-title > span {
+  display: block;
+}
+
+.hero .eyebrow {
+  display: block;
+  margin: 0 0 16px;
+  color: var(--brand-ink);
+  font-family: var(--font);
+  font-weight: 650;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.hero-title {
+  display: block;
+  font-size: clamp(54px, 7.4vw, 100px);
+  line-height: 0.92;
+}
+
+.hero .lead {
+  margin: 0 0 18px;
+  max-width: 700px;
+}
+
+.hero-claim {
+  max-width: 660px;
+  margin: 0 0 8px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink-2);
+  font-size: 16px;
+}
+
+.hero .cta-row {
+  justify-content: flex-start;
+  margin: 26px 0 18px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pills li {
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+}
+
+.stage {
+  margin-top: 56px;
+  padding-top: 64px;
+  background: radial-gradient(38% 80% at 50% 0%, rgb(242 179 61 / 24%), transparent 72%), var(--stage);
+  border-radius: 50% 50% 0 0 / 80px 80px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--logo-pool) 40%, transparent);
+}
+
+.stage .shot {
+  margin: 0;
+}
+
+.stage .shot img {
+  margin: 0 auto;
+  border: 0;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -12px 70px rgb(242 179 61 / 20%);
+}
+
+/* the footlights: a brass floor line under the editor */
+.stage::after {
+  content: '';
+  display: block;
+  width: min(1240px, 94%);
+  height: 4px;
+  margin: 0 auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, transparent, var(--logo-pool) 10%, var(--logo-pool) 90%, transparent);
+}
+
+/* The story, told on the stage's own floor */
+.story-band {
+  background: var(--stage);
+  color: var(--stage-ink);
+  padding: 56px 0 64px;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 24px 56px;
+  align-items: start;
+}
+
+.story-band h2 {
+  margin: 0;
+  color: var(--stage-ink);
+  font-size: clamp(36px, 4.6vw, 58px);
+}
+
+.story-text p {
+  margin: 0 0 16px;
+  color: var(--stage-ink-2);
+  font-size: 18px;
+  max-width: 64ch;
+}
+
+.story-band .btn-secondary {
+  background: transparent;
+  color: var(--stage-ink);
+  border-color: rgb(255 255 255 / 34%);
+}
+
+.story-band .btn-secondary:hover {
+  color: var(--stage);
+  background: var(--logo-pool);
+  border-color: var(--logo-pool);
+}
+
+/* Sections */
+.band {
+  background: var(--bg-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0 40px;
+  margin: 0 0 48px;
+}
+
+.section-lead {
+  color: var(--ink-2);
+  font-size: 19px;
+  max-width: 760px;
+}
+
+.feature {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 40px;
+  align-items: center;
+  margin: 56px 0;
+}
+
+.feature.flip {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.feature.flip .feature-text {
+  order: 2;
+}
+
+.feature h3 {
+  font-size: 24px;
+}
+
+.feature p {
+  color: var(--ink-2);
+}
+
+.sub {
+  margin-top: 48px;
+}
+
+.ticks {
+  list-style: none;
+  padding: 0;
+}
+
+.ticks li {
+  position: relative;
+  padding-left: 28px;
+  margin: 10px 0;
+}
+
+.ticks li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0.45em;
+  width: 12px;
+  height: 7px;
+  border-left: 2px solid var(--ok);
+  border-bottom: 2px solid var(--ok);
+  transform: rotate(-45deg);
+}
+
+.ticks.two {
+  columns: 2;
+  column-gap: 40px;
+}
+
+.ticks.two li {
+  break-inside: avoid;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  counter-reset: step;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 8px 32px;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  min-width: 0;
+}
+
+.step h3 {
+  margin-top: 0;
+}
+
+.step h3::before {
+  counter-increment: step;
+  content: counter(step) '. ';
+  color: var(--brand-ink);
+}
+
+.step-text p {
+  margin: 0 0 8px;
+  color: var(--ink-2);
+}
+
+.cta-end {
+  text-align: center;
+  padding-bottom: 32px;
+}
+
+/* Built with Markstage: before and after, and the numbers that moved */
+.built-with {
+  padding-bottom: 16px;
+}
+
+.before-after {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.before-after .shot,
+.gallery .shot {
+  margin: 0;
+}
+
+.before-after figcaption,
+.gallery figcaption {
+  font-weight: 650;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+
+.before-after.big {
+  gap: 32px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2.6fr);
+  gap: 24px;
+  align-items: start;
+  margin: 32px 0;
+}
+
+.deltas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.delta {
+  border-top: 3px solid var(--accent);
+  padding-top: 10px;
+}
+
+.delta dt {
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+
+.delta dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.delta .was {
+  color: var(--ink-3);
+  font-size: 18px;
+}
+
+.delta .to::before {
+  content: '→';
+  color: var(--ink-3);
+}
+
+.delta .now {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--brand-ink);
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.visit {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.visit .copyable-value {
+  color: var(--brand-ink);
+}
+
+/* /why/: a reading column, signed */
+.story .byline {
+  color: var(--ink-3);
+  font-size: 15px;
+  margin: -4px 0 24px;
+}
+
+.story .prose > p:first-of-type {
+  font-size: 19px;
+  color: var(--ink-2);
+}
+
+.story .prose h2,
+.showcase .prose h2 {
+  font-family: var(--display);
+  font-size: 34px;
+}
+
+@media (max-width: 900px) {
+  .hero > .wrap:first-child {
+    display: block;
+  }
+
+  .story-grid,
+  .before-after,
+  .gallery,
+  .feature,
+  .feature.flip,
+  .step,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feature.flip .feature-text {
+    order: 0;
+  }
+
+  .deltas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stage {
+    margin-top: 40px;
+    padding-top: 36px;
+    border-radius: 50% 50% 0 0 / 36px 36px 0 0;
+  }
+
+  .hero {
+    padding-top: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ticks.two {
+    columns: 1;
+  }
+
+  .hero-title {
+    font-size: 50px;
+  }
+
+  .delta .now {
+    font-size: 32px;
+  }
+}

@@ -1,5 +1,5 @@
 // The Markstage site's only script (the pages work without it): the shared copy action (a green tick for 1.5 s),
-// a copy icon on each code block, and the menu button on narrow windows.
+// a copy icon on each code block, the star count on the GitHub button, and the menu button on narrow windows.
 (function () {
   var TICK = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
@@ -42,6 +42,35 @@
     wrap.appendChild(pre);
     wrap.appendChild(copyButton(pre.textContent.replace(/\n$/, ''), 'code'));
   });
+
+  // the star count on the GitHub button, from GitHub's public API, kept for an hour; nothing shows when it fails
+  var count = document.querySelector('.gh-count[data-repo]');
+  if (count && window.fetch) {
+    var key = 'markstage-stars';
+    var show = function (n) {
+      if (typeof n !== 'number' || n < 1) return;
+      count.textContent = n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n);
+      count.parentNode.setAttribute('aria-label', 'Star Markstage on GitHub (' + n + ' stars)');
+    };
+    var kept = null;
+    try {
+      kept = JSON.parse(sessionStorage.getItem(key) || 'null');
+    } catch (e) {}
+    if (kept && Date.now() - kept.at < 3600000) show(kept.n);
+    else
+      fetch('https://api.github.com/repos/' + count.getAttribute('data-repo'))
+        .then(function (r) {
+          return r.ok ? r.json() : null;
+        })
+        .then(function (repo) {
+          if (!repo) return;
+          show(repo.stargazers_count);
+          try {
+            sessionStorage.setItem(key, JSON.stringify({ n: repo.stargazers_count, at: Date.now() }));
+          } catch (e) {}
+        })
+        .catch(function () {});
+  }
 
   var menu = document.querySelector('.menu-btn');
   var nav = document.getElementById('main-nav');

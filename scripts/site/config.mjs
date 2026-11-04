@@ -24,10 +24,12 @@ export const UPDATED = '2026-11-03';
 
 /** Share images (1200 x 630), one per kind of page, made by `npm run site:og`. */
 export const OG_IMAGES = {
-  home: { path: 'og/home.png', alt: 'Markstage: the visual editor for Astro. Edit Markdown on the real page.' },
+  home: { path: 'og/home.png', alt: 'Markstage, a visual editor for Astro: edit the real page, keep the content in git.' },
   docs: { path: 'og/docs.png', alt: 'Markstage documentation: set up, write, deploy and run the editor.' },
   compare: { path: 'og/compare.png', alt: 'Markstage compared with other content editors for Astro and static sites.' },
   learn: { path: 'og/learn.png', alt: 'Markstage: answers and words for editing Markdown sites visually.' },
+  story: { path: 'og/story.png', alt: 'Why we built Markstage: our own site moved off WordPress, and writers still needed the real page.' },
+  showcase: { path: 'og/showcase.png', alt: 'Built with Markstage: a WordPress site moved to Astro, edited on the real page.' },
 };
 export const OG_SIZE = { width: 1200, height: 630 };
 

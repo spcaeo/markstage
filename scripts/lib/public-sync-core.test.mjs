@@ -21,6 +21,7 @@ import {
   strayPaths,
 } from './public-sync-core.mjs';
 import { maskSecret, scanDiff, scanLine, scanText } from './secret-scan.mjs';
+import { SHOWCASE_ADDRESS, SHOWCASE_PATHS } from './showcase.mjs';
 
 const CONFIG = new URL('../../public-sync.config.json', import.meta.url);
 // a Mac home folder path, in pieces: the export refuses any file that holds one (config privateText)
@@ -121,6 +122,21 @@ describe('selectFiles with the real config', { skip: !existsSync(CONFIG) && 'pub
     assert.ok(config.privateText.some((re) => re.test(`${HOME_DIR}someone/Desktop`)));
     assert.ok(!config.privateText.some((re) => re.test('Welcome to the editor, a warm welcome')));
   });
+  test('the one exception is the showcase address, in the same paths as scripts/lib/showcase.mjs, and nothing else', () => {
+    assert.equal(config.privateTextAllow.length, 1);
+    const [allow] = config.privateTextAllow;
+    assert.equal(allow.text.source, SHOWCASE_ADDRESS.source);
+    for (const p of SHOWCASE_PATHS) assert.ok(allow.paths.some((re) => re.test(p)), p);
+    for (const p of ['packages/server/src/app.mjs', 'docs/API.md', 'scripts/site/pages.mjs', 'examples/blog/README.md', 'site/docs/index.html']) {
+      assert.ok(!allow.paths.some((re) => re.test(p)), p);
+    }
+    const first = 'task' + 'rhino';
+    const check = (text) => privateTextProblems([{ path: 'README.md', text }], config.privateText, config.privateTextAllow);
+    assert.deepEqual(check(`Built with Markstage: https://www.${first}.ca/ (${first}.ca)`), []);
+    for (const text of [`wp.${first}.ca`, `cms.${first}.ca`, `sales@${first}.ca`, `${first}-site`, `${first}.ca and ${'rhino'} move`, `${'board'}bridge`, `the ${'Hal'}den demo`]) {
+      assert.equal(check(text).length, 1, text);
+    }
+  });
 });
 
 describe('selectFiles rules', () => {
@@ -218,6 +234,26 @@ describe('export checks', () => {
     assert.deepEqual(privateTextProblems(files, config.privateText), [
       'docs/a.md:2: names something private (example[\\s-]?corp)',
       'b.mjs:1: names something private (\\/Users\\/[A-Za-z])',
+    ]);
+  });
+  test('privateTextAllow takes out one exact form, only in the paths it names', () => {
+    const allowConfig = normaliseConfig({
+      include: ['**'],
+      privateText: ['example[\\s-]?corp', 'secret[\\s-]?app'],
+      privateTextAllow: [{ paths: ['README.md', 'site/show/**'], text: '(?<![\\w.@-])(?:https://(?:www\\.)?|www\\.)?examplecorp\\.ca\\b(?!\\.?[\\w@-])' }],
+    });
+    const files = [
+      { path: 'README.md', text: 'Built with it: https://www.examplecorp.ca/ and examplecorp.ca.\n' },
+      { path: 'site/show/index.html', text: '<a href="https://examplecorp.ca/x/">www.examplecorp.ca</a>\n' },
+      { path: 'docs/a.md', text: 'see examplecorp.ca\n' },
+      { path: 'README.md', text: 'old host wp.examplecorp.ca\nmail sales@examplecorp.ca\nthe Example Corp team\nexamplecorp.ca and secret app\n' },
+    ];
+    assert.deepEqual(privateTextProblems(files, allowConfig.privateText, allowConfig.privateTextAllow), [
+      'docs/a.md:1: names something private (example[\\s-]?corp)',
+      'README.md:1: names something private (example[\\s-]?corp)',
+      'README.md:2: names something private (example[\\s-]?corp)',
+      'README.md:3: names something private (example[\\s-]?corp)',
+      'README.md:4: names something private (secret[\\s-]?app)',
     ]);
   });
   test('every path a package.json points at is in the export', () => {

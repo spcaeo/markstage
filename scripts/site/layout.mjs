@@ -1,8 +1,11 @@
 // The shared page shell of site/: <head> with search and share tags, the top bar, breadcrumbs and the footer, plus
 // the one copy/open helper every shown value goes through. Plain HTML pages, no framework; site/enhance.js only adds
-// the copy action and the menu toggle.
-import { AUTHOR, CONTACT_EMAIL, LICENSE_URL, NAME, OG_IMAGES, OG_SIZE, PUBLISHER, REPO_URL, SITE_URL, repoFile } from './config.mjs';
+// the copy action, the GitHub star count and the menu toggle.
+import { LOGO } from './brand.mjs';
+import { AUTHOR, CONTACT_EMAIL, LICENSE_URL, NAME, OG_IMAGES, OG_SIZE, PUBLISHER, REPO, REPO_URL, SITE_URL, repoFile } from './config.mjs';
 import { escapeHtml as e } from './markdown.mjs';
+
+export { LOGO };
 
 /** The absolute address of a site path such as `docs/deploy/`. */
 export const absolute = (path = '') => `${SITE_URL}${path}`;
@@ -51,8 +54,6 @@ export const ICONS = {
   menu: svg(line('M4 7h16M4 12h16M4 17h16')),
 };
 
-/** The Markstage mark: a stage (rounded square) with an M on its floor line. */
-export const LOGO = `<svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#4f46e5"/><path d="M8 22V10l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 26h20" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/></svg>`;
 
 /**
  * A value someone may want to paste elsewhere (a command, an address, an email), with the shared copy icon and, for
@@ -82,13 +83,18 @@ const NAV = [
   ['', 'compare/', 'Compare', 'compare'],
   ['', 'alternatives/', 'Alternatives', 'alternatives'],
   ['', 'faq/', 'FAQ', 'faq'],
+  ['', 'why/', 'Why we built it', 'why'],
+  ['', 'showcase/', 'Showcase', 'showcase'],
 ];
+
+/** The GitHub button of the top bar: the mark, "Star on GitHub", and the star count enhance.js fills in. */
+const githubButton = `<a class="gh-btn" href="${REPO_URL}" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub">${ICONS.github}<span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="${REPO}"></span></a>`;
 
 /**
  * One full page. `path` is the page's site path ('' for home, 'docs/deploy/'). `root` is how links reach the site
  * root from this page ('../../'), or the absolute address for the 404 page, which GitHub Pages serves at any depth.
  */
-export function page({ path, root, title, description, body, data = [], og = 'home', type = 'website', noindex = false, current = '', modified = null }) {
+export function page({ path, root, title, description, body, data = [], og = 'home', type = 'website', noindex = false, current = '', modified = null, styles = [] }) {
   const r = root;
   const image = OG_IMAGES[og];
   const link = ([, target, label, key]) => `<a href="${target.startsWith('#') ? `${r}${target}` : `${r}${target}`}"${current === key ? ' aria-current="page"' : ''}>${label}</a>`;
@@ -101,7 +107,7 @@ export function page({ path, root, title, description, body, data = [], og = 'ho
     <meta name="description" content="${e(description)}" />
 ${noindex ? '    <meta name="robots" content="noindex" />\n' : `    <link rel="canonical" href="${absolute(path)}" />\n`}    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0e1020" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="${type}" />
     <meta property="og:site_name" content="${NAME}" />
     <meta property="og:title" content="${e(title)}" />
@@ -117,9 +123,13 @@ ${modified ? `    <meta property="article:modified_time" content="${modified}" /
     <meta name="twitter:description" content="${e(description)}" />
     <meta name="twitter:image" content="${absolute(image.path)}" />
     <meta name="twitter:image:alt" content="${e(image.alt)}" />
+    <link rel="icon" href="${r}favicon.ico" sizes="32x32" />
     <link rel="icon" href="${r}icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="${r}apple-touch-icon.png" />
     <link rel="alternate" type="text/plain" title="${NAME} for AI assistants" href="${r}llms.txt" />
+    <link rel="preload" href="${r}fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="${r}styles.css" />
+${styles.map((s) => `    <link rel="stylesheet" href="${r}${s}" />\n`).join('')}
     <script src="${r}enhance.js" defer></script>
 ${data.map((d) => indent(jsonLd(d), 4)).join('\n')}
   </head>
@@ -128,11 +138,13 @@ ${data.map((d) => indent(jsonLd(d), 4)).join('\n')}
     <header class="topbar">
       <div class="wrap topbar-row">
         <a class="brand" href="${r}">${LOGO}<span>${NAME}</span></a>
-        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu">${ICONS.menu}</button>
         <nav id="main-nav" class="main-nav" aria-label="Main">
           ${NAV.map(link).join('\n          ')}
-          <a class="nav-gh" href="${REPO_URL}" target="_blank" rel="noopener">${ICONS.github}<span>GitHub</span></a>
         </nav>
+        <div class="topbar-end">
+          ${githubButton}
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu">${ICONS.menu}</button>
+        </div>
       </div>
     </header>
 
@@ -142,7 +154,7 @@ ${body}
       <div class="wrap footer-grid">
         <div>
           <p class="footer-brand"><a class="brand" href="${r}">${LOGO}<span>${NAME}</span></a></p>
-          <p class="muted">A visual editor for Astro: edit Markdown and JSON content on the real page, save clean git diffs, host it yourself.</p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by ${PUBLISHER.name} for its own site, free to self-host.</p>
           <p class="muted small">Contact: ${copyable(CONTACT_EMAIL, { href: `mailto:${CONTACT_EMAIL}`, code: false, what: 'email address' })}</p>
         </div>
         <nav aria-label="Footer" class="footer-cols">
@@ -154,6 +166,8 @@ ${body}
             <a href="${r}alternatives/">Alternatives</a>
             <a href="${r}faq/">FAQ</a>
             <a href="${r}glossary/">Glossary</a>
+            <a href="${r}why/">Why we built it</a>
+            <a href="${r}showcase/">Showcase</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

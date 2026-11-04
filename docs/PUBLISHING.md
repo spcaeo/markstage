@@ -94,6 +94,9 @@ shows a smaller number than one from the private repo for the same code. The ver
   matching exclude wins; `!glob` puts a path back.
 - **privateText**: regular expressions for names that must never go out (the first site and its folders, home
   folder paths, a private email). An exported line that matches one stops the sync.
+- **privateTextAllow**: narrow exceptions to privateText, each `{ paths, text, why }`: in the listed paths only,
+  matches of `text` are removed before the privateText check. Used for the showcase site's public address on the
+  story and showcase pages; everything else about that site stays blocked.
 - **privateSubjectWords**: a commit subject holding one of these words is published as "Private change".
 - **commitAuthor**: `Name <email>` for the public commits. Empty uses your git identity, which puts your git email
   in the public history: set it to your GitHub noreply address (`Name <id+user@users.noreply.github.com>`, from

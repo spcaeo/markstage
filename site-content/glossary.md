@@ -38,7 +38,7 @@ settings.
 ## Headless CMS
 
 A content system with no front end of its own. It stores content, usually in a database, and your site reads it
-through an API.
+through an API. Prismic is one; WordPress and Ghost can also be used this way with Astro.
 
 ## Git-based CMS
 

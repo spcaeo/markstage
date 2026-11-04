@@ -40,6 +40,10 @@ and MPL-2.0 (lightningcss, used unmodified), plus libvips under LGPL-3.0-or-late
 loaded as a separate prebuilt library by sharp. The editor is built on TipTap and
 ProseMirror (MIT) and CodeMirror (MIT). `npm ls --omit=dev --all` lists them.
 
+The public site (site/) and the wordmark use Big Shoulders Display, copyright
+2019 The Big Shoulders Project Authors, under the SIL Open Font License 1.1:
+a Latin subset is in site/fonts/, with the licence in site/fonts/OFL.txt.
+
 Product and company names mentioned in the documentation (Astro, Keystatic,
 Ghost, WordPress, Gutenberg, Tina, Notion, monday.com, Google, LinkedIn,
 Facebook, X, Cloudflare, Slack, GitHub and others) are trademarks of their

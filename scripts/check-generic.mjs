@@ -3,11 +3,13 @@
 // - packages/ (code, styles, JSON; tests aside): none of the site words below;
 // - every tracked file of the repo (docs, tests, fixtures, scripts, deploy, LICENSE and NOTICE too): none of the names
 //   of the business Markstage was first built for. Tests and docs use an example site (Example Co, example.com).
+//   One exception: that site's public address, as the showcase, in the files scripts/lib/showcase.mjs lists.
 // Exits 1 and lists the hits.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { withoutShowcase } from './lib/showcase.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // written in pieces so that this file does not hold the words it looks for
@@ -47,7 +49,8 @@ for (const rel of tracked) {
   fs.readFileSync(file, 'utf8')
     .split('\n')
     .forEach((line, i) => {
-      if (OWN_NAMES.test(line)) own.push(`${rel}:${i + 1}: ${line.trim().slice(0, 120)}`);
+      // the first site's public address is allowed as the showcase, in the showcase files only (lib/showcase.mjs)
+      if (OWN_NAMES.test(withoutShowcase(rel, line))) own.push(`${rel}:${i + 1}: ${line.trim().slice(0, 120)}`);
     });
 }
 

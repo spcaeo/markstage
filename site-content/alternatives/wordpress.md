@@ -60,7 +60,9 @@ site has.
 ### What is the best WordPress alternative for an Astro site?
 
 It depends on what you miss most. If it is the editor, Markstage gives writers a WordPress-style journey on the
-Astro site itself, with content in git. If it is plugins, headless WordPress keeps them.
+Astro site itself, with content in git. If it is plugins, headless WordPress keeps them. If you are also weighing
+Ghost or Prismic, see [Markstage vs Ghost](/alternatives/ghost/), [Markstage vs Prismic](/alternatives/prismic/)
+and the [comparison of all four](/compare/).
 
 ### Is Markstage free like WordPress?
 

@@ -195,7 +195,7 @@ function main() {
   const problems = [
     ...strayPaths(filesOnDisk(target), kept, config),
     ...missingRequired(kept, config),
-    ...privateTextProblems(files, config.privateText),
+    ...privateTextProblems(files, config.privateText, config.privateTextAllow),
     ...manifestProblems(files),
     ...missingImports(files, new Set(tree.keys())),
     ...(security ? [supportedVersionsProblem(security, pkg.version)].filter(Boolean) : []),
