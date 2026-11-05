@@ -154,7 +154,7 @@ yield to the event loop every twenty entries, so other people's requests are ans
 ## Ports (local)
 
 Dev editor on the site's own dev server and port. Markstage production server locally: 18231. Example blog
-dev: 18233. Spare: 18235, 18237.
+dev: 18233. Starter site dev: 18237. Compose site (nginx): 18235.
 
 ## Status
 

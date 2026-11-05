@@ -38,6 +38,20 @@ export const DOC_GROUPS = [
         summary: 'Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.',
       },
       {
+        id: 'docker',
+        file: 'DOCKER.md',
+        title: 'Markstage with Docker',
+        seo: 'Run Markstage with Docker: One docker run',
+        summary: 'Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests.',
+      },
+      {
+        id: 'starter',
+        file: 'STARTER.md',
+        title: 'The starter site',
+        seo: 'Start a New Astro Blog with Markstage',
+        summary: 'Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone.',
+      },
+      {
         id: 'environments',
         file: 'ENVIRONMENTS.md',
         title: 'Environments: local, staging, production',
@@ -98,8 +112,8 @@ export const INSTALL = [
   },
   {
     title: 'Run the server for your team',
-    text: 'Self-host the Markstage server with Docker compose, or with systemd and nginx, next to your static site. Sign-in, roles, releases and backups come with it.',
-    doc: 'deploy',
+    text: 'Self-host the Markstage server next to your static site: one docker run with the server image, Docker compose, or systemd and nginx. Sign-in, roles, releases and backups come with it.',
+    doc: 'docker',
   },
 ];
 

@@ -9,5 +9,7 @@
 !packages/editor/package.json
 !packages/astro/package.json
 !examples/blog/package.json
+!examples/starter/package.json
+!deploy/docker/start.mjs
 **/node_modules
 **/test

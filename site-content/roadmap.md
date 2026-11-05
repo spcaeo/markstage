@@ -1,6 +1,6 @@
 ---
 title: "Markstage Roadmap: What Is Coming in 0.4.0 and Later"
-description: "What the Markstage team is building now for 0.4.0, and what is planned later: MDX editing, imports, a server image, AI writing help and more."
+description: "What the Markstage team is building now for 0.4.0, and what is planned later: imports from WordPress, Ghost and Prismic, AI writing help and more."
 h1: "Markstage roadmap"
 # One source of truth for every "coming" badge on the site and the README's Roadmap section (compare.test.mjs
 # checks both). status: in-progress (being built for 0.4.0), planned (later) or shipped (no badge any more).
@@ -19,12 +19,12 @@ items:
   - id: server-image
     title: A ready server image
     what: A Docker image of the Markstage server, built and tested by CI.
-    status: in-progress
+    status: shipped
     rows: []
   - id: starter-site
     title: A starter site
     what: An Astro blog with Markstage already set up, to start a new site from.
-    status: in-progress
+    status: shipped
     rows: []
   - id: live-demo
     title: A live demo

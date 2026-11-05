@@ -273,6 +273,21 @@ starts from a clone of this repository.
 
 **Just looking?** The [live demo](https://spcaeo.github.io/markstage/demo/) runs the editor on the example blog in your browser, nothing to install.
 
+### Option 0: start a new site from the starter
+
+Not one command yet (the packages are not on npm), but three:
+
+```sh
+git clone https://github.com/spcaeo/markstage.git
+node markstage/scripts/create-site.mjs my-blog
+cd my-blog && npm run dev
+```
+
+Open **http://127.0.0.1:18237/markstage/**. The new folder is a small Astro blog with Markstage set up: Markdown
+posts, an MDX guide, a light and dark look, and its own git repository. The script copies `examples/starter`, puts
+this clone's packages in the site's `vendor/` folder, installs and commits. Step by step:
+[docs/STARTER.md](docs/STARTER.md).
+
 ### Option 1: try the example blog (one minute)
 
 ```sh
@@ -320,22 +335,24 @@ locales, forms, the editor's CSS and canvas): [docs/CONFIG.md](docs/CONFIG.md).
 ### Option 3: run the server for your team
 
 The Markstage server adds sign-in, roles, the Library, releases, environments, forms and history, and builds and
-deploys your static site. It runs next to the site on your own server, with **Docker compose** or with **systemd
-and nginx**. First make a data dir with a `config.json` (where the site repo is, its build and deploy commands; a
-starting point is `deploy/config.example.json`), then, from the clone:
+deploys your static site. It runs next to the site on your own server. With Docker, it is one `docker run` from the
+folder that holds your site's git repository (`my-blog`, from Option 0 or your own):
 
 ```sh
-export SITE_REPO=/abs/path/to/site MARKSTAGE_DATA=/abs/data MARKSTAGE_UID=$(id -u) MARKSTAGE_GID=$(id -g)
-docker compose -f deploy/compose.yaml build
-docker compose -f deploy/compose.yaml run --rm -w /srv/content markstage npm ci   # the site's own dependencies
-docker compose -f deploy/compose.yaml up -d
-docker compose -f deploy/compose.yaml exec markstage markstage-server setup-code
+docker run -d --name markstage -p 127.0.0.1:18231:18231 \
+  -v "$PWD/my-blog:/srv/content" -v markstage-modules:/srv/content/node_modules \
+  -v markstage-data:/srv/data -v markstage-site:/srv/site \
+  ghcr.io/spcaeo/markstage:latest
+docker exec markstage markstage-server setup-code
 ```
 
 Then open `http://127.0.0.1:18231/markstage/#/setup`, enter the one-time code and make the owner. There is no
-default password: the first owner needs that code. The config, HTTPS in front, the editor's production build and
-the systemd way are step by step in **[docs/DEPLOY.md](docs/DEPLOY.md)**. The image is built from this repo on your
-machine; no image is published yet, and a full `docker build` is not yet part of CI (DEPLOY.md, "What was proven").
+default password: the first owner needs that code. On its first start the image writes a config, installs the
+site's packages and builds its editor; **Publish site** then builds and deploys the site inside the container. The
+image is published to the GitHub Container Registry from the 0.4.0 release on (amd64 and arm64); until then, build
+it from the clone with `docker build -f deploy/Dockerfile -t markstage-server .` and use that name. CI builds and
+smoke-tests it on every push. Settings, secrets, compose with nginx and updates: **[docs/DOCKER.md](docs/DOCKER.md)**;
+HTTPS in front, previews, backups and the systemd way without Docker: **[docs/DEPLOY.md](docs/DEPLOY.md)**.
 
 ## Integrations
 
@@ -454,7 +471,7 @@ The same comparison on the website, with one page per alternative:
 | Astro (`@markstage/astro`) | An Astro integration: the editor and a dev API inside `astro dev` (127.0.0.1 only), `markstage build-editor` for production. |
 | Server (`@markstage/server`) | Node's own `http`, no web framework; one runtime dependency (`@markstage/core`), and `sharp` (optional) to re-encode images. |
 | Content | Your site's Markdown and JSON files; every save and publish is a git commit. |
-| Deploy | A Dockerfile and compose file, nginx recipes, systemd, and `markstage-deploy`, which switches releases atomically and rolls back. |
+| Deploy | A server image (built and smoke-tested by CI, published to the GitHub Container Registry with each release), a compose file, nginx recipes, systemd, and `markstage-deploy`, which switches releases atomically and rolls back. A starter site to begin from. |
 | Security | scrypt password hashes, TOTP two-factor codes, HttpOnly + Secure + SameSite=Strict sessions, CSRF tokens, a strict CSP. |
 | Tests | `node:test` in every package, Playwright browser tests for the server and editor, a dependency audit and a gitleaks secrets scan in CI. |
 
@@ -566,14 +583,14 @@ AI that ships today: an MCP server, so an AI agent drafts as the person whose to
 drafts and the promotion summary, which a person reads, changes and saves ([docs/API-AI.md](docs/API-AI.md)).
 
 New since 0.3.0, on main: MDX editing, with the words typed on the page and the code kept as written
-([docs/MDX.md](docs/MDX.md)), and a [live demo](https://spcaeo.github.io/markstage/demo/) of the editor on a sample blog,
-with no sign-up.
+([docs/MDX.md](docs/MDX.md)); a [live demo](https://spcaeo.github.io/markstage/demo/) of the editor on a sample blog,
+with no sign-up; a ready server image, built and smoke-tested by CI and published to the GitHub Container Registry
+with each release ([docs/DOCKER.md](docs/DOCKER.md)); and a starter site, an Astro blog with Markstage set up, to start
+a new site from ([docs/STARTER.md](docs/STARTER.md)).
 
 Being built now, for 0.4.0:
 
 - **Import from WordPress, Ghost and Prismic.** Posts, pages, media, authors and redirects.
-- **A ready server image.** A Docker image of the Markstage server, built and tested by CI.
-- **A starter site.** An Astro blog with Markstage already set up.
 - **AI writing help on the page.** Rewrite, shorten or fix the grammar of a selection; the writer accepts or
   rejects each change, and nothing saves by itself.
 - **More AI providers.** Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.

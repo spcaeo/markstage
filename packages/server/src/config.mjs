@@ -2,7 +2,7 @@
 // content repo; the server keeps its own state in the data dir, which must sit outside the content repo.
 //
 // Environment: MARKSTAGE_DATA_DIR (required), MARKSTAGE_CONTENT_ROOT, MARKSTAGE_PUBLIC_ORIGIN, MARKSTAGE_HOST,
-// MARKSTAGE_PORT, MARKSTAGE_DEV_NO_AUTH=1, NODE_ENV.
+// MARKSTAGE_PORT, MARKSTAGE_EDITOR_DIR (the built editor, editorDir), MARKSTAGE_DEV_NO_AUTH=1, NODE_ENV.
 import fs from 'node:fs';
 import path from 'node:path';
 import { formsOf } from './forms/config.mjs';
@@ -399,6 +399,8 @@ export function loadConfig({ env = process.env, overrides = {} } = {}) {
   if (env.MARKSTAGE_PUBLIC_ORIGIN) raw.publicOrigin = env.MARKSTAGE_PUBLIC_ORIGIN;
   if (env.MARKSTAGE_HOST) raw.host = env.MARKSTAGE_HOST;
   if (env.MARKSTAGE_PORT) raw.port = Number(env.MARKSTAGE_PORT);
+  // the Docker image builds the site's editor at start and names the folder here (docs/DOCKER.md)
+  if (env.MARKSTAGE_EDITOR_DIR) raw.editorDir = env.MARKSTAGE_EDITOR_DIR;
   if (env.MARKSTAGE_DEV_NO_AUTH === '1') raw.devNoAuth = true;
   const production = env.NODE_ENV === 'production';
 

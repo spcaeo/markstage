@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Run Markstage with Docker: One docker run</title>
+    <meta name="description" content="Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/docker/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Run Markstage with Docker: One docker run" />
+    <meta property="og:description" content="Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/docker/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Run Markstage with Docker: One docker run" />
+    <meta name="twitter:description" content="Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Markstage with Docker",
+          "item": "https://spcaeo.github.io/markstage/docs/docker/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Run Markstage with Docker: One docker run",
+      "description": "Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests.",
+      "url": "https://spcaeo.github.io/markstage/docs/docker/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/docker/" aria-current="page">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Markstage with Docker</li></ol></nav>
+        <h1>Markstage with Docker</h1>
+        <p class="lead left">Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#try-it-one-command">Try it: one command</a></li><li><a href="#what-happens-at-start">What happens at start</a></li><li><a href="#folders">Folders</a></li><li><a href="#settings-from-the-environment">Settings from the environment</a></li><li><a href="#with-the-site-and-nginx-compose">With the site and nginx: compose</a></li><li><a href="#updating">Updating</a></li><li><a href="#what-the-image-is">What the image is</a></li><li><a href="#how-it-is-tested">How it is tested</a></li><li><a href="#limits">Limits</a></li></ul></nav>
+        <div class="prose">
+<p>The Markstage server image runs the editor, sign-in and publishing next to your site, from one <code>docker run</code>. It
+carries Node and git; your site stays a git folder on the host, mounted into the container. Markstage is
+pre-release: try it on a copy of your site first.</p>
+<ul><li><strong>Where it comes from.</strong> <code>ghcr.io/spcaeo/markstage:&lt;version&gt;</code> and <code>:latest</code>, for amd64 and arm64, published by
+GitHub Actions when a release is tagged in the public repo (from 0.4.0 on; <code>.github/workflows/image.yml</code>). Until
+that release is out, build it from a clone: <code>docker build -f deploy/Dockerfile -t markstage-server .</code>, and use
+<code>markstage-server</code> wherever this page says <code>ghcr.io/spcaeo/markstage:latest</code>.</li><li><strong>What it needs from the site.</strong> A git working copy of an Astro site with Markstage set up: the
+<a href="../starter/">starter</a>, or your own site (<a href="../config/">CONFIG.md</a>). Since the <code>@markstage/*</code> packages are not on
+npm yet, the site carries them in <code>vendor/</code> (the starter does that for you).</li><li>The full deploy guide (nginx, https, previews, backups, alerts) is <a href="../deploy/">DEPLOY.md</a>; this page is the image.</li></ul>
+<h2 id="try-it-one-command">Try it: one command</h2>
+<p>From the folder that holds your site (<code>my-blog</code> here):</p>
+<pre data-lang="sh"><code class="language-sh">docker run -d --name markstage \
+  -p 127.0.0.1:18231:18231 \
+  -v &quot;$PWD/my-blog:/srv/content&quot; \
+  -v markstage-modules:/srv/content/node_modules \
+  -v markstage-data:/srv/data \
+  -v markstage-site:/srv/site \
+  ghcr.io/spcaeo/markstage:latest</code></pre>
+<p>The first start takes a minute or two (<code>docker logs -f markstage</code> shows it): the image installs the site's packages
+and builds the site's editor. When <code>docker ps</code> says <code>healthy</code>, make the owner:</p>
+<pre data-lang="sh"><code class="language-sh">docker exec markstage markstage-server setup-code</code></pre>
+<p>Open <strong><a href="http://127.0.0.1:18231/markstage/#/setup" rel="noopener">http://127.0.0.1:18231/markstage/#/setup</a></strong>, enter the code, create the owner and turn on two-step sign-in.
+There is no default password. Press <strong>Publish site</strong> once: the site is built inside the container and the release
+lands in the <code>markstage-site</code> volume (<code>/srv/site/current/public</code>). The compose file below serves it.</p>
+<p>Stop and remove it with <code>docker rm -f markstage</code>; <code>docker volume rm markstage-modules markstage-data markstage-site</code>
+removes its data too (the data volume holds the accounts).</p>
+<h2 id="what-happens-at-start">What happens at start</h2>
+<p>The image's entrypoint (<code>deploy/docker/start.mjs</code>) does four things, in order:</p>
+<ol><li><strong>A config on the first start.</strong> With no <code>config.json</code> in <code>/srv/data</code>, it writes one: the site at
+<code>/srv/content</code>, its build <code>npm run build</code>, deploys with <code>markstage-deploy</code> to <code>/srv/site</code> (keeping the last 5
+releases, so <strong>Roll back</strong> works), <code>verify.public: &quot;dist&quot;</code>, and <code>MARKSTAGE_CMS_URL</code> for the build (the starter's
+&quot;Edit this page&quot; button points at this server). It is written once and never again: change it freely
+(<a href="../deploy/">DEPLOY.md</a> explains every key).</li><li><strong>The site's packages.</strong> When <code>/srv/content/node_modules</code> has no finished install, <code>npm ci</code> (or <code>npm install</code>
+without a lockfile) runs in the site. The site's tools (Astro, esbuild) are built per system, so a <code>node_modules</code>
+made on a Mac cannot run in the Linux container: that is why the command mounts a volume over it. The volume
+keeps the install between starts; delete it to install again.</li><li><strong>The site's editor.</strong> <code>markstage build-editor</code> builds the editor with the site's CSS and config into
+<code>/srv/editor/app</code> (about 2 s), at every start, so it always matches the site's code; the server is told with
+<code>MARKSTAGE_EDITOR_DIR</code>. Restart the container after you change the site's <code>markstage.config.mjs</code> or its CSS.</li><li><strong>The server</strong>, <code>markstage-server serve</code>, as the image's <code>node</code> user (uid 1000), with <code>tini</code> as PID 1.</li></ol>
+<p><code>MARKSTAGE_SITE_SETUP=off</code> skips steps 2 and 3, for an operator who installs and builds the editor themselves.
+A failed install stops the container with the npm error in the log; a failed editor build is logged and the
+server starts with its placeholder page.</p>
+<p>Other commands: a server command runs that command (<code>docker run --rm … ghcr.io/spcaeo/markstage:latest check</code>,
+<code>… backup</code>, <code>… reset-password &lt;email&gt;</code>), <code>prepare</code> runs steps 1 to 3 and stops, and anything else runs as it is
+(<code>… npm ci</code>, <code>… sh</code>).</p>
+<h2 id="folders">Folders</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">In the container</th><th scope="col">What</th><th scope="col">Mount</th></tr></thead><tbody><tr><td><code>/srv/content</code></td><td>the site's git working copy: Markstage commits here and runs the build here</td><td>a bind mount of your site folder</td></tr><tr><td><code>/srv/content/node_modules</code></td><td>the site's packages, installed for Linux</td><td>a named volume</td></tr><tr><td><code>/srv/data</code></td><td><code>config.json</code>, the SQLite database (accounts, sessions, audit), job logs: mode 0700, <strong>back it up</strong></td><td>a named volume or a host folder</td></tr><tr><td><code>/srv/site</code></td><td>releases: <code>current</code> is the live one, read by the web server</td><td>a named volume shared with nginx</td></tr><tr><td><code>/srv/editor</code></td><td>the site's editor, rebuilt at every start</td><td>none needed</td></tr></tbody></table></div>
+<p>The container user (uid 1000) must be able to write the site folder. On Linux, if your user is not uid 1000, run
+the container as you (<code>--user &quot;$(id -u):$(id -g)&quot;</code>, or <code>MARKSTAGE_UID</code>/<code>MARKSTAGE_GID</code> with compose) and give the
+volumes to that user once: <code>docker run --rm -u root -v markstage-modules:/m -v markstage-data:/d -v markstage-site:/s
+ghcr.io/spcaeo/markstage:latest chown -R &quot;$(id -u):$(id -g)&quot; /m /d /s</code>. As another user, npm's cache and the editor
+build go to a temporary folder in the container.</p>
+<h2 id="settings-from-the-environment">Settings from the environment</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Variable</th><th scope="col">What</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>MARKSTAGE_PUBLIC_ORIGIN</code></td><td>the address people open, e.g. <code>https://cms.example.com</code>; it must match the address in the browser</td><td><code>http://127.0.0.1:18231</code></td></tr><tr><td><code>NODE_ENV</code></td><td><code>production</code> on every server people reach over a network: an https <code>MARKSTAGE_PUBLIC_ORIGIN</code> is then required</td><td>unset</td></tr><tr><td><code>MARKSTAGE_PORT</code></td><td>the port inside the container</td><td><code>18231</code></td></tr><tr><td><code>MARKSTAGE_TIME_ZONE</code></td><td>the zone of the release line in the footer (docs/RELEASES.md), e.g. <code>America/Toronto</code></td><td>the container's (UTC)</td></tr><tr><td><code>MARKSTAGE_SITE_SETUP</code></td><td><code>off</code>: no install and no editor build at start</td><td>on</td></tr><tr><td><code>MARKSTAGE_DATA_DIR</code>, <code>MARKSTAGE_CONTENT_ROOT</code>, <code>MARKSTAGE_HOST</code>, <code>MARKSTAGE_EDITOR_DIR</code></td><td>set by the image; change them only with the mounts</td><td><code>/srv/data</code>, <code>/srv/content</code>, <code>0.0.0.0</code>, the built editor</td></tr></tbody></table></div>
+<p>Everything else is in <code>/srv/data/config.json</code> (<a href="../deploy/">DEPLOY.md</a>, <a href="../config/">CONFIG.md</a>).</p>
+<p><strong>Secrets never go in the image, the site repo or config.json.</strong> Each one comes from an environment variable or
+from a file, as <code>deploy/config.example.json</code> lists under <code>$secrets</code>: <code>MARKSTAGE_SMTP_USER</code> and
+<code>MARKSTAGE_SMTP_PASSWORD</code> (or <code>notify.email.passwordFile</code>), <code>MARKSTAGE_SLACK_WEBHOOK</code> (or <code>notify.slack.webhookFile</code>),
+<code>MARKSTAGE_AI_KEY</code> (or <code>ai.keyFile</code>), <code>MARKSTAGE_SSO_&lt;ID&gt;_SECRET</code> (or the provider's <code>clientSecretFile</code>), and the
+others there. With compose, prefer files: a <code>secrets:</code> entry is mounted read-only at <code>/run/secrets/&lt;name&gt;</code>, and
+config.json names that path (<code>&quot;passwordFile&quot;: &quot;/run/secrets/smtp-password&quot;</code>). Environment variables go in an
+<code>env_file:</code> kept out of the repo, never on the command line.</p>
+<h2 id="with-the-site-and-nginx-compose">With the site and nginx: compose</h2>
+<p><code>deploy/compose.yaml</code> runs the image with nginx serving the releases (and protected pages and forms through
+Markstage), every port on 127.0.0.1. It builds the image from the clone by default; to use the published one,
+set <code>MARKSTAGE_IMAGE</code>:</p>
+<pre data-lang="sh"><code class="language-sh">export SITE_REPO=/abs/path/to/my-blog MARKSTAGE_DATA=/abs/path/to/markstage-data
+export MARKSTAGE_UID=$(id -u) MARKSTAGE_GID=$(id -g)
+export NODE_ENV=development   # a copy on this machine (http on 127.0.0.1); leave it out on a server, see below
+mkdir -m 700 -p &quot;$MARKSTAGE_DATA&quot;
+MARKSTAGE_IMAGE=ghcr.io/spcaeo/markstage:latest docker compose -f deploy/compose.yaml up -d --no-build
+docker compose -f deploy/compose.yaml exec markstage markstage-server setup-code</code></pre>
+<p>Then <strong><a href="http://127.0.0.1:18231/markstage/#/setup" rel="noopener">http://127.0.0.1:18231/markstage/#/setup</a></strong> for the editor and, after the first <strong>Publish site</strong>,
+<strong><a href="http://127.0.0.1:18235/" rel="noopener">http://127.0.0.1:18235/</a></strong> for the site. In short, the file is:</p>
+<pre data-lang="yaml"><code class="language-yaml">services:
+  markstage:
+    image: ${MARKSTAGE_IMAGE:-markstage-server:local}
+    restart: unless-stopped
+    user: &quot;${MARKSTAGE_UID:-1000}:${MARKSTAGE_GID:-1000}&quot;
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      MARKSTAGE_PUBLIC_ORIGIN: ${MARKSTAGE_PUBLIC_ORIGIN:-}   # empty: config.json's publicOrigin (http://127.0.0.1:18231 by default)
+    volumes:
+      - ${MARKSTAGE_DATA}:/srv/data
+      - ${SITE_REPO}:/srv/content
+      - site-modules:/srv/content/node_modules
+      - site-releases:/srv/site
+    ports: [&quot;127.0.0.1:18231:18231&quot;, &quot;127.0.0.1:18245:18245&quot;, &quot;127.0.0.1:18251:18251&quot;]
+  site:
+    image: nginx:1.29-alpine
+    volumes:
+      - site-releases:/srv/site:ro
+      - ./nginx/site.conf:/etc/nginx/conf.d/default.conf:ro
+    ports: [&quot;127.0.0.1:18235:80&quot;]
+volumes:
+  site-modules:
+  site-releases:</code></pre>
+<p><code>NODE_ENV</code> is <code>production</code> in the file unless you set it: then an https <code>MARKSTAGE_PUBLIC_ORIGIN</code> is required (even
+on 127.0.0.1), which is why the commands above set <code>development</code> for a copy on this machine. For a public server, put nginx with TLS in front (<a href="../deploy/">DEPLOY.md</a>, Option 2, &quot;nginx, in short&quot;) and
+set <code>MARKSTAGE_PUBLIC_ORIGIN=https://cms.example.com</code>. A config written before you set the origin keeps the old
+<code>MARKSTAGE_CMS_URL</code> in <code>commands.env</code>: change it there too.</p>
+<h2 id="updating">Updating</h2>
+<p>Pull the new tag and start again: <code>docker pull ghcr.io/spcaeo/markstage:0.4.1</code>, then <code>docker rm -f markstage</code> and
+the same <code>docker run</code> with the new tag (with compose, <code>MARKSTAGE_IMAGE=…:0.4.1 docker compose up -d</code>). Back up
+<code>/srv/data</code> first (<code>docker exec markstage markstage-server backup</code> with <code>backup</code> set in config.json, or a copy of
+the volume while the container is stopped). Migrations run at start and only add tables and columns, so the
+previous tag still runs on the newer database.</p>
+<p>Keep the site's Markstage packages at the image's version: in a clone at that tag,
+<code>node scripts/create-site.mjs --update /path/to/my-blog</code>, then commit <code>vendor/</code>, <code>package.json</code> and
+<code>package-lock.json</code>, and delete the <code>node_modules</code> volume so the next start installs them.</p>
+<h2 id="what-the-image-is">What the image is</h2>
+<ul><li>Two stages: the server's runtime packages are installed with <code>npm ci --omit=dev</code> from the lockfile in the first;
+the image copies only them, <code>packages/core</code>, the server's <code>bin</code> and <code>src</code>, and the entrypoint. <code>node:24-slim</code>
+with git, ssh (pushes to a shared remote, docs/ENVIRONMENTS.md), CA certificates and tini.</li><li>Runs as <code>node</code> (uid 1000), never root. A health check asks the server for <code>/markstage/</code> every 30 s (any answer
+counts, even a 421 for a host name it does not serve), with five minutes for the first start.</li><li>The release line (docs/RELEASES.md): the build passes <code>MARKSTAGE_COMMIT</code>, <code>MARKSTAGE_BUILD</code> and
+<code>MARKSTAGE_BUILT_AT</code>, since an image has no <code>.git</code>. The published image is labelled with its version and commit,
+and carries an SBOM and build provenance: <code>docker buildx imagetools inspect ghcr.io/spcaeo/markstage:latest
+--format '{{json .SBOM}}'</code>.</li></ul>
+<h2 id="how-it-is-tested">How it is tested</h2>
+<ul><li><strong>Every push and pull request</strong> (<code>.github/workflows/ci.yml</code>, job &quot;Server image&quot;): the image is built for amd64,
+then <code>scripts/docker/smoke.mjs</code> makes a new site from the starter, starts the image on it as above, waits for
+<code>healthy</code>, and checks that <code>/markstage/</code> is the site's built editor (not the placeholder), that a new server asks
+for setup, that <code>/markstage/api/release</code> answers, that <code>markstage-server setup-code</code> gives a code that makes the
+owner, that the signed-in API lists the starter's posts and its MDX guide, and that <strong>Publish site</strong> builds and
+deploys the site inside the container. Then it removes the container and its volumes.</li><li><strong>A release tag</strong> (<code>.github/workflows/image.yml</code>, only in spcaeo/markstage): the same smoke test, then the
+amd64 and arm64 build is pushed. Nothing is pushed when the tag and <code>package.json</code> disagree.</li><li>Run the smoke test yourself: <code>docker build -f deploy/Dockerfile -t markstage-server:local .</code> then
+<code>node scripts/docker/smoke.mjs --image markstage-server:local</code> (it labels what it makes <code>markstage-docker-starter=1</code>
+and removes it; <code>--keep</code> leaves it running, <code>--port</code> picks the host port, 37433 by default).</li></ul>
+<h2 id="limits">Limits</h2>
+<ul><li>One server process per data dir (docs/SECURITY.md, &quot;Known limits&quot;): do not run two containers on one volume.</li><li>The built editor draws an article as a sheet with the site's CSS; drawing it inside the real page works in
+<code>astro dev</code> only for now (docs/CANVAS-FIDELITY.md).</li><li>Previews (the real page with unsaved changes) and share links need their own host names and <code>preview</code> and
+<code>share</code> in config.json (DEPLOY.md); they are off in the config the image writes.</li></ul>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/DOCKER.md" target="_blank" rel="noopener">docs/DOCKER.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../deploy/"><span class="small muted">Previous</span>Deploying Markstage</a>
+          <a class="next" href="../starter/"><span class="small muted">Next</span>The starter site</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

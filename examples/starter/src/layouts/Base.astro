@@ -1,0 +1,32 @@
+---
+import '../styles/site.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'A blog made with Astro and edited with Markstage.' } = Astro.props;
+const SITE = 'My blog';
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title === SITE ? SITE : `${title} · ${SITE}`}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site">
+      <a class="site__name" href="/">{SITE}</a>
+      <nav aria-label="Main"><a href="/">Posts</a></nav>
+    </header>
+    <main><slot /></main>
+    <footer class="site-foot">
+      <p>Made with <a href="https://astro.build/">Astro</a>, edited with <a href="https://github.com/spcaeo/markstage">Markstage</a>.</p>
+    </footer>
+  </body>
+</html>

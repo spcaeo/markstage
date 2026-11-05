@@ -1,0 +1,25 @@
+---
+// A guide: an MDX file (src/content/guides/*.mdx) drawn with the post page's markup, so the editor's canvas fits it
+// the same way (markstage.config.mjs, collection `guides`).
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { isLive, longDate } from '../../lib/live';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', isLive);
+  return guides.map((guide) => ({ params: { id: guide.id }, props: { guide } }));
+}
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+---
+<Base title={guide.data.title} description={guide.data.description}>
+  <article class="post">
+    <header class="post__head">
+      <time datetime={guide.data.date.toISOString().slice(0, 10)}>{longDate(guide.data.date)}</time>
+      <h1>{guide.data.title}</h1>
+      {guide.data.description && <p class="post__lead">{guide.data.description}</p>}
+    </header>
+    <div class="post__body"><Content /></div>
+  </article>
+  <p class="back"><a href="/">← Home</a></p>
+</Base>

@@ -1,0 +1,279 @@
+/* The starter's look: one column, a system font for the frame and a serif for reading, light and dark. The editor
+   draws posts with this file too (markstage.config.mjs `editor.css`), so what a writer sees is the page. */
+:root {
+  --bg: #fbfaf7;
+  --surface: #fff;
+  --text: #1c1d21;
+  --muted: #61646b;
+  --line: #e6e3dc;
+  --accent: #2856c9;
+  --code-bg: #f2f0ea;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --serif: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+/* dark: the visitor's setting, unless the page says light; data-theme="dark" (the editor's dark check) always */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #141518;
+    --surface: #1c1e22;
+    --text: #e8e7e3;
+    --muted: #a3a6ad;
+    --line: #2e3036;
+    --accent: #8aa9ff;
+    --code-bg: #23252a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #141518;
+  --surface: #1c1e22;
+  --text: #e8e7e3;
+  --muted: #a3a6ad;
+  --line: #2e3036;
+  --accent: #8aa9ff;
+  --code-bg: #23252a;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  background: var(--bg);
+}
+body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px;
+  background: var(--bg);
+  color: var(--text);
+  font: 18px/1.7 var(--serif);
+}
+a {
+  color: var(--accent);
+  text-underline-offset: 0.18em;
+}
+
+/* the frame */
+.site {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+  font: 500 15px/1.4 var(--sans);
+}
+.site a {
+  color: var(--text);
+  text-decoration: none;
+}
+.site__name {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.site nav a {
+  color: var(--muted);
+}
+.site nav a:hover {
+  color: var(--text);
+}
+main {
+  padding: 40px 0 24px;
+}
+.site-foot {
+  padding: 24px 0 40px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: 14px/1.5 var(--sans);
+}
+.site-foot a {
+  color: inherit;
+}
+
+/* the home page */
+.intro h1 {
+  margin: 0 0 8px;
+  font: 700 2.4rem/1.15 var(--sans);
+  letter-spacing: -0.02em;
+}
+.intro p {
+  margin: 0 0 32px;
+  color: var(--muted);
+}
+.cards {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.card a {
+  display: block;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.card a:hover,
+.card a:focus-visible {
+  border-color: var(--accent);
+}
+.card time,
+.post__head time {
+  color: var(--muted);
+  font: 14px/1.4 var(--sans);
+}
+.group + .group {
+  margin-top: 40px;
+}
+.group__title {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font: 600 13px/1.4 var(--sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.card h3 {
+  margin: 4px 0 6px;
+  font: 650 1.3rem/1.3 var(--sans);
+}
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+/* a post */
+.post__head {
+  margin-bottom: 28px;
+}
+.post h1 {
+  margin: 6px 0 10px;
+  font: 700 2.3rem/1.15 var(--sans);
+  letter-spacing: -0.02em;
+}
+.post__lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font: 13px/1 var(--sans);
+}
+.tags li {
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+}
+.post__body h2 {
+  margin: 1.8em 0 0.4em;
+  font: 650 1.45rem/1.3 var(--sans);
+}
+.post__body h3 {
+  margin: 1.5em 0 0.3em;
+  font: 650 1.15rem/1.35 var(--sans);
+}
+.post__body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.post__body figure {
+  margin: 1.6em 0;
+}
+.post__body figcaption {
+  margin-top: 0.5em;
+  color: var(--muted);
+  font: 14px/1.5 var(--sans);
+  text-align: center;
+}
+.post__body blockquote {
+  margin: 1.4em 0;
+  padding: 2px 0 2px 18px;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+.post__body code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--code-bg);
+  font: 0.85em var(--mono);
+}
+.post__body pre {
+  padding: 14px 16px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--code-bg);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.post__body pre code {
+  padding: 0;
+  background: none;
+}
+.post__body table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 15px/1.5 var(--sans);
+}
+.post__body :is(th, td) {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+.post__body hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+/* a boxed note in a guide (src/components/Callout.astro) */
+.callout {
+  margin: 1.6em 0;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.callout--tip {
+  border-left-color: #2f9e62;
+}
+.callout--warn {
+  border-left-color: #d98a1c;
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+.callout__title {
+  font: 650 15px/1.4 var(--sans);
+}
+.back {
+  margin: 40px 0 0;
+  font: 15px var(--sans);
+}
+
+@media (max-width: 560px) {
+  body {
+    font-size: 17px;
+  }
+  .intro h1,
+  .post h1 {
+    font-size: 1.9rem;
+  }
+}

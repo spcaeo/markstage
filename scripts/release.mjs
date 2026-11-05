@@ -15,7 +15,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const run = (args, opts = {}) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', ...opts }).trim();
 const PACKAGES = ['packages/core', 'packages/server', 'packages/editor', 'packages/astro'];
 // workspaces that only depend on the packages: their @markstage/* ranges follow, their own version stays
-const USERS = ['examples/blog'];
+const USERS = ['examples/blog', 'examples/starter'];
 
 const want = process.argv[2];
 const security = path.join(root, 'SECURITY.md');

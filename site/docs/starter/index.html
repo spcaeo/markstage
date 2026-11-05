@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Start a New Astro Blog with Markstage</title>
+    <meta name="description" content="Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/starter/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Start a New Astro Blog with Markstage" />
+    <meta property="og:description" content="Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/starter/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Start a New Astro Blog with Markstage" />
+    <meta name="twitter:description" content="Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "The starter site",
+          "item": "https://spcaeo.github.io/markstage/docs/starter/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Start a New Astro Blog with Markstage",
+      "description": "Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone.",
+      "url": "https://spcaeo.github.io/markstage/docs/starter/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/" aria-current="page">The starter site</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">The starter site</li></ol></nav>
+        <h1>The starter site</h1>
+        <p class="lead left">Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#start-a-new-site">Start a new site</a></li><li><a href="#what-is-in-it">What is in it</a></li><li><a href="#make-it-yours">Make it yours</a></li><li><a href="#for-a-team-the-markstage-server">For a team: the Markstage server</a></li><li><a href="#updating-markstage-in-a-site">Updating Markstage in a site</a></li><li><a href="#how-it-is-tested">How it is tested</a></li></ul></nav>
+        <div class="prose">
+<p>A small Astro blog with Markstage already set up, to start a new site from. It lives in <code>examples/starter/</code>; a
+script copies it to a folder of your own, ready to write in. Markstage is pre-release: a minor version may still
+change how things work.</p>
+<h2 id="start-a-new-site">Start a new site</h2>
+<p>You need <strong>Node.js 22.13 or newer</strong> and <strong>git</strong>. Three commands:</p>
+<pre data-lang="sh"><code class="language-sh">git clone https://github.com/spcaeo/markstage.git
+node markstage/scripts/create-site.mjs my-blog
+cd my-blog &amp;&amp; npm run dev</code></pre>
+<p>Open <strong><a href="http://127.0.0.1:18237/markstage/" rel="noopener">http://127.0.0.1:18237/markstage/</a></strong> and write. The blog itself is at <a href="http://127.0.0.1:18237/" rel="noopener">http://127.0.0.1:18237/</a>. This is
+<code>astro dev</code> with the editor in it: no sign-in, on 127.0.0.1 only. Saves go to the Markdown and MDX files in
+<code>src/content/</code>, so <code>git diff</code> shows exactly what changed.</p>
+<p><code>create-site.mjs</code> copies the starter, packs this clone's Markstage packages into the new site's <code>vendor/</code>, runs
+<code>npm install</code> and makes the first git commit. <code>--no-install</code> and <code>--no-git</code> skip those two steps. From inside the
+clone, <code>npm run create-site -- ../my-blog</code> does the same.</p>
+<p><strong>Why a clone, and <code>vendor/</code>?</strong> The <code>@markstage/*</code> packages are not on npm yet. Until they are, the new site takes
+them from tarballs in its own <code>vendor/</code> folder (about 1 MB), so it installs on its own, on any machine and in the
+Docker image, with no path back to the clone. Once the packages are on npm, the starter will install them from
+there and <code>vendor/</code> goes away. There is no one-command <code>npm create</code> yet for the same reason.</p>
+<p>To try the starter without making a site, run it inside the clone: <code>npm install</code>, then <code>npm run dev -w
+examples/starter</code>.</p>
+<h2 id="what-is-in-it">What is in it</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Path</th><th scope="col">What</th></tr></thead><tbody><tr><td><code>src/content/posts/*.md</code></td><td>Posts, in Markdown: three live and one draft</td></tr><tr><td><code>src/content/guides/*.mdx</code></td><td>Guides, in MDX: one, using the <code>Callout</code> component (<a href="../mdx/">MDX.md</a>)</td></tr><tr><td><code>src/content.config.ts</code></td><td>The two content collections and their fields (<code>draft</code>, <code>publishAt</code> for Markstage's status)</td></tr><tr><td><code>markstage.config.mjs</code></td><td>What Markstage edits: the two collections, their settings fields, the media folder, the editor's CSS and canvas, the dark theme and the &quot;Edit this page&quot; button (<a href="../config/">CONFIG.md</a>)</td></tr><tr><td><code>src/pages/</code></td><td>The home page (posts and guides), a post page, a guide page and the 404 page</td></tr><tr><td><code>src/layouts/Base.astro</code>, <code>src/styles/site.css</code></td><td>The look: one column, light and dark, a system font for the frame and a serif for reading</td></tr><tr><td><code>src/lib/live.ts</code></td><td>Which entries are built: not drafts, and not scheduled for later (<code>MARKSTAGE_BUILD_TIME</code>)</td></tr><tr><td><code>src/components/Callout.astro</code></td><td>A boxed note for guides; in the editor, a card whose type and title change in the side panel</td></tr><tr><td><code>public/uploads/</code></td><td>Pictures added in the editor (made on the first upload)</td></tr><tr><td><code>vendor/</code></td><td>Markstage's packages, in a site made by <code>create-site.mjs</code></td></tr><tr><td><code>test/starter.test.mjs</code></td><td><code>npm test</code>: the site builds (the draft left out), and in <code>astro dev</code> the editor and its API answer</td></tr></tbody></table></div>
+<p>One collection holds one format, so the <code>.md</code> posts and the <code>.mdx</code> guides are two collections.</p>
+<p><code>markstage.config.mjs</code> is a plain object with no <code>import</code>: a Markstage server reads it when it starts, before the
+site's packages may be installed. The type comment at its top still gives an editor's autocomplete.</p>
+<h2 id="make-it-yours">Make it yours</h2>
+<ul><li>The name: <code>src/layouts/Base.astro</code> (<code>SITE</code>), <code>src/pages/index.astro</code> and <code>siteName</code> in <code>markstage.config.mjs</code>.</li><li>The address: <code>site</code> in <code>astro.config.mjs</code> (canonical links).</li><li>The look: <code>src/styles/site.css</code>. The editor draws pages with the same file, so what writers see is the page.</li><li>The content: delete the sample posts and guide, or keep them as notes. A new collection is a folder, a
+collection in <code>src/content.config.ts</code> and one in <code>markstage.config.mjs</code>.</li></ul>
+<h2 id="for-a-team-the-markstage-server">For a team: the Markstage server</h2>
+<p><code>npm run dev</code> is one person on one machine. For sign-in, roles, history, scheduled posts and <strong>Publish</strong> (commit,
+build, deploy), run the server image next to the site (<a href="../docker/">DOCKER.md</a>):</p>
+<pre data-lang="sh"><code class="language-sh">docker run -d --name markstage -p 127.0.0.1:18231:18231 \
+  -v &quot;$PWD/my-blog:/srv/content&quot; -v markstage-modules:/srv/content/node_modules \
+  -v markstage-data:/srv/data -v markstage-site:/srv/site \
+  ghcr.io/spcaeo/markstage:latest
+docker exec markstage markstage-server setup-code</code></pre>
+<p>Then open <a href="http://127.0.0.1:18231/markstage/#/setup" rel="noopener">http://127.0.0.1:18231/markstage/#/setup</a>. On first start the image installs the site's packages, builds
+its editor and writes a config whose build is <code>npm run build</code>. The image is published from the 0.4.0 release on;
+before that, build it from the clone (<code>docker build -f deploy/Dockerfile -t markstage-server .</code>).</p>
+<p><strong>&quot;Edit this page&quot;.</strong> With <code>MARKSTAGE_CMS_URL</code> set when the site is built (the image sets it to its own address),
+every page gets a small inline script that shows an &quot;Edit this page&quot; link to people signed in to that server
+(<a href="../api-edit/">API-EDIT.md</a>). Without it the build has no script at all.</p>
+<h2 id="updating-markstage-in-a-site">Updating Markstage in a site</h2>
+<p>Pull the clone (or check out a release tag), then:</p>
+<pre data-lang="sh"><code class="language-sh">node markstage/scripts/create-site.mjs --update my-blog</code></pre>
+<p>It packs the clone's packages into <code>my-blog/vendor/</code> again (the old tarballs removed) and runs <code>npm install</code>.
+Commit <code>vendor/</code>, <code>package.json</code> and <code>package-lock.json</code>. With the image, keep the site's packages at the image's
+version and delete the <code>node_modules</code> volume so the next start installs them.</p>
+<h2 id="how-it-is-tested">How it is tested</h2>
+<ul><li><code>npm test -w examples/starter</code> (CI, every push): the starter builds with its live posts and the MDX guide and
+without the draft; with an edit button every page gains exactly one inline script; and in <code>astro dev</code> the editor
+page answers at <code>/markstage/</code>, the API lists the four posts and the guide, and the MDX guide opens for editing.</li><li><code>npm run test:scripts</code> covers <code>create-site.mjs</code> (the copy, the tarballs, <code>--update</code>).</li><li>CI's image job makes a real site with <code>create-site.mjs</code>, installed and committed, and runs the Docker image on it
+(<a href="../docker/">DOCKER.md</a>, &quot;How it is tested&quot;).</li></ul>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/STARTER.md" target="_blank" rel="noopener">docs/STARTER.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../docker/"><span class="small muted">Previous</span>Markstage with Docker</a>
+          <a class="next" href="../environments/"><span class="small muted">Next</span>Environments: local, staging, production</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

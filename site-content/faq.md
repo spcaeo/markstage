@@ -58,7 +58,8 @@ database server to install.
 
 ## What do I need to self-host it?
 
-Node.js 22.13 or newer and git, on a server next to your site. The deploy guide covers Docker Compose, or systemd
+Node.js 22.13 or newer and git, on a server next to your site, or Docker: the server image runs it with one
+`docker run` next to your site's git folder (docs/DOCKER.md). The deploy guide covers Docker Compose, or systemd
 and nginx without Docker.
 
 ## Does my Astro site have to use server rendering?

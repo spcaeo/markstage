@@ -1,0 +1,22 @@
+---
+title: Using components in a guide
+description: Guides are MDX. You write the words; the components stay as the code wrote them.
+date: 2026-10-30
+---
+import Callout from '../../components/Callout.astro';
+
+This guide is an MDX file: Markdown that can also hold the site's components. Markstage opens it like any post.
+You type the words on the page, and the parts that are code stay exactly as they are written.
+
+<Callout type="tip" title="Try it">
+  Click this box in the editor. Its settings open on the side: change the type to **warn** and save.
+</Callout>
+
+## What stays as written
+
+The `import` line at the top is code. A save never touches it: it writes back only the words and settings you
+changed. Change code in Source mode.
+
+## Add your own
+
+Put a component in `src/components/`, import it at the top of a guide, and use it like an HTML tag.

@@ -1,6 +1,6 @@
 # Every push to main and every pull request into it: the repo's checks, every workspace's tests, the runtime tests
-# again on the oldest supported Node (22.13), the server's browser tests, an audit of the runtime dependencies and a
-# secrets scan. CONTRIBUTING.md says what each one guards.
+# again on the oldest supported Node (22.13), the server's browser tests, the server image (built and smoke-tested
+# on a site made from the starter), an audit of the runtime dependencies and a secrets scan. CONTRIBUTING.md says what each one guards.
 name: CI
 
 on:
@@ -61,6 +61,8 @@ jobs:
         run: npm run test:unit -w packages/server
       - name: Tests, example blog
         run: npm test -w examples/blog
+      - name: Tests, starter site (builds; the editor and its API answer in astro dev)
+        run: npm test -w examples/starter
       - name: Audit of the runtime dependencies
         run: npm audit --omit=dev --audit-level=high
 
@@ -122,6 +124,50 @@ jobs:
         run: npm run test:e2e -w packages/server
         env:
           MARKSTAGE_E2E_REQUIRED: "1"
+
+  # The server image (deploy/Dockerfile) on every push and pull request: built for amd64, then started on a new site
+  # from the starter, the way docs/DOCKER.md says (health, the editor, sign-in setup, the API, a publish inside the
+  # container). Nothing is pushed here; .github/workflows/image.yml publishes on a v* tag in the public repo.
+  docker:
+    name: Server image (build and smoke test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0  # the image's release line counts commits for the build number
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Release facts for the image (docs/RELEASES.md)
+        id: facts
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "build=$(git rev-list --count HEAD)" >> "$GITHUB_OUTPUT"
+          echo "built_at=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Build the image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: deploy/Dockerfile
+          load: true
+          push: false
+          tags: markstage-server:ci
+          build-args: |
+            MARKSTAGE_VERSION=${{ steps.facts.outputs.version }}
+            MARKSTAGE_COMMIT=${{ steps.facts.outputs.commit }}
+            MARKSTAGE_BUILD=${{ steps.facts.outputs.build }}
+            MARKSTAGE_BUILT_AT=${{ steps.facts.outputs.built_at }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Git identity for the new site's first commit
+        run: |
+          git config --global user.name "Markstage CI"
+          git config --global user.email "ci@example.com"
+      - name: Smoke test (a new site from the starter, run with the image)
+        run: node scripts/docker/smoke.mjs --image markstage-server:ci
 
   secrets:
     name: Secrets scan (gitleaks)

@@ -68,7 +68,9 @@ Shipped with the server package. Point `commands.deploy` at it; it runs in the s
 ## Option 1: Docker compose (one server, or local)
 
 `deploy/compose.yaml` runs two containers: `markstage` (this repo's image; Node 24 + git) and `site`
-(`nginx:1.29-alpine` with `deploy/nginx/site.conf`). They share the `site-releases` volume.
+(`nginx:1.29-alpine` with `deploy/nginx/site.conf`). They share the `site-releases` volume. The image itself (one
+`docker run`, what it does at start, its settings and the published `ghcr.io/spcaeo/markstage` tags) is in
+[DOCKER.md](DOCKER.md); with no `config.json` in the data dir it writes a first one, so step 1 is optional there.
 
 1. Make a data dir and a config. Paths are the container's:
 
@@ -100,9 +102,8 @@ Shipped with the server package. Point `commands.deploy` at it; it runs in the s
 
    ```sh
    export SITE_REPO=/abs/path/to/site MARKSTAGE_DATA=/abs/data MARKSTAGE_UID=$(id -u) MARKSTAGE_GID=$(id -g)
-   docker compose -f deploy/compose.yaml build
-   # the site's build runs inside the container: install its dependencies there once (Linux binaries)
-   docker compose -f deploy/compose.yaml run --rm -w /srv/content markstage npm ci
+   docker compose -f deploy/compose.yaml build      # or MARKSTAGE_IMAGE=ghcr.io/spcaeo/markstage:<version>, then up --no-build
+   # at start the image installs the site's packages (Linux binaries, in the site-modules volume) and builds its editor
    docker compose -f deploy/compose.yaml up -d
    docker compose -f deploy/compose.yaml exec markstage markstage-server setup-code
    ```
@@ -123,8 +124,9 @@ Notes:
   docs/SECURITY.md "Known limits"). Run one `markstage-server serve` per data dir; do not scale it to several
   processes behind one address.
 - The site's own redirects/headers: add them to `deploy/nginx/site.conf` (it is mounted read-only).
-- The editor itself: build it once with `markstage build-editor` and set `editorDir` (see
-  [The editor in production](#the-editor-in-production)); until then `/markstage/` shows a placeholder page.
+- The editor itself: the image builds it at every start from the site's `node_modules/@markstage/astro` and names it
+  with `MARKSTAGE_EDITOR_DIR` (DOCKER.md). Without Docker, build it with `markstage build-editor` and set `editorDir`
+  (see [The editor in production](#the-editor-in-production)); until then `/markstage/` shows a placeholder page.
 
 ## The editor in production
 
@@ -583,10 +585,6 @@ All local (2026-10-28), on a scratch clone of the pilot site (231 pages), never 
 | `compose.yaml` with the share port 18251 (2026-10-28) | `docker compose config` valid |
 | The redacted log format (2026-10-28) | nginx 1.29 ran a copy of `production.conf` (odd local ports, a stub share listener, a throwaway certificate). `GET /share/<token>` on the share host, with that link as the referrer, and the same on the http redirect: the access log says `"GET /share/[link] HTTP/2.0" 303 … "https://share.example.com/share/[link]"` and `"GET /share/[link] HTTP/1.1" 301`; the token is in neither the access log nor the error log. A page path is logged as it is |
 
-Not run here, because each needs the network:
+| The image, built and run (2026-11-04, Docker 29 on an arm64 Mac, the amd64 image under emulation) | `docker build -f deploy/Dockerfile` 136 MB. `scripts/docker/smoke.mjs` on a new site from the starter: healthy after 26 s (`npm ci` of the site in a volume, the editor built), `/markstage/` the site's editor, setup asked for, the release line, `setup-code` made the owner, the API listed 4 posts and 1 MDX guide, **Publish site** built and deployed inside the container. CI runs the same on every push (DOCKER.md) |
 
-- `docker build`: it installs git from Debian and npm packages.
-- The nginx container: `nginx:1.29-alpine` is not in the local image cache.
-
-The Dockerfile's steps were exercised piecewise as listed above. The first `docker build` on a machine with
-network access is the remaining check.
+Not run here: the arm64 image (CI builds it for a release, with QEMU) and the nginx container of `compose.yaml`.

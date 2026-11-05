@@ -28,8 +28,10 @@ pieces. `MARKSTAGE_SKIP_HOOKS=1 npm ci` leaves it off.
 
 Markstage keeps its own data in `node:sqlite`, which is why it needs Node 22.13 or newer.
 
-`examples/blog` is a small Astro site to try the editor on. docs/ARCHITECTURE.md explains the parts; docs/API.md
-and docs/CONFIG.md describe the server routes and the site config.
+`examples/blog` is a small Astro site to try the editor on; `examples/starter` is the site people start from
+(docs/STARTER.md), so keep it plain. docs/ARCHITECTURE.md explains the parts; docs/API.md and docs/CONFIG.md
+describe the server routes and the site config. The server image (deploy/Dockerfile) has its own smoke test:
+`node scripts/docker/smoke.mjs --image <image>` (docs/DOCKER.md).
 
 ## The house rules
 

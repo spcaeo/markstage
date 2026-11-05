@@ -128,7 +128,7 @@
           "name": "What do I need to self-host it?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Node.js 22.13 or newer and git, on a server next to your site. The deploy guide covers Docker Compose, or systemd and nginx without Docker."
+            "text": "Node.js 22.13 or newer and git, on a server next to your site, or Docker: the server image runs it with one docker run next to your site's git folder (docs/DOCKER.md). The deploy guide covers Docker Compose, or systemd and nginx without Docker."
           }
         },
         {
@@ -259,7 +259,8 @@ sources.</p></div>
         <div class="qa" id="do-i-need-a-database"><h3>Do I need a database?</h3><p>Not for content: that stays as files in git. One SQLite file on the server (the SQLite built into Node) holds
 people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log. There is no
 database server to install.</p></div>
-        <div class="qa" id="what-do-i-need-to-self-host-it"><h3>What do I need to self-host it?</h3><p>Node.js 22.13 or newer and git, on a server next to your site. The deploy guide covers Docker Compose, or systemd
+        <div class="qa" id="what-do-i-need-to-self-host-it"><h3>What do I need to self-host it?</h3><p>Node.js 22.13 or newer and git, on a server next to your site, or Docker: the server image runs it with one
+<code>docker run</code> next to your site's git folder (docs/DOCKER.md). The deploy guide covers Docker Compose, or systemd
 and nginx without Docker.</p></div>
         <div class="qa" id="does-my-astro-site-have-to-use-server-rendering"><h3>Does my Astro site have to use server rendering?</h3><p>No. Markstage's editing markup appears only in editor mode, so your production build stays exactly as it is and
 can stay fully static.</p></div>

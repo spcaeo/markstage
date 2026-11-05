@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-private/
+.astro/
+.markstage/
+*.log
+.env*
+.DS_Store

@@ -126,7 +126,7 @@ These keep content as files in a git repository, like Markstage.
 
 | Feature | **Markstage** | TinaCMS | CloudCannon | Decap CMS | Sveltia CMS | Keystatic | Pages CMS | Front Matter CMS | Outstatic | Sitepins |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Self-host | ✓ <sub>Docker Compose, or systemd and nginx</sub> [^ms-deploy] | ✓ <sub>"Some features are not available"</sub> [^ti-self] | ✗ <sub>No self-hosted version listed</sub> [^cc-price] | ✓ [^de-turbo] | ✓ <sub>A single-page app; no server</sub> [^sv-feat] | ✓ [^ks-home] | ✓ [^pc-gh] | – <sub>Runs in your editor</sub> [^fm-home] | ✓ [^os-price] | ✓ [^sp-gh] |
+| Self-host | ✓ <sub>One docker run with the server image, Docker Compose, or systemd and nginx</sub> [^ms-docker] [^ms-deploy] | ✓ <sub>"Some features are not available"</sub> [^ti-self] | ✗ <sub>No self-hosted version listed</sub> [^cc-price] | ✓ [^de-turbo] | ✓ <sub>A single-page app; no server</sub> [^sv-feat] | ✓ [^ks-home] | ✓ [^pc-gh] | – <sub>Runs in your editor</sub> [^fm-home] | ✓ [^os-price] | ✓ [^sp-gh] |
 | Hosted plan | ✗ <sub>Self-host only</sub> [^ms-readme] | ✓ <sub>TinaCloud</sub> [^ti-price] | ✓ <sub>Hosted only</sub> [^cc-price] | ◐ <sub>Decap Turbo hosts auth and a proxy</sub> [^de-turbo] | – [^sv-feat] | ◐ <sub>Keystatic Cloud for sign-in and images</sub> [^ks-cloud] | ✓ <sub>app.pagescms.org</sub> [^pc-gh] | – [^fm-home] | ✓ <sub>Pro</sub> [^os-price] | ✓ <sub>Sitepins Cloud</sub> [^sp-price] |
 | Price to start | Free to self-host [^ms-readme] | Free (2 users); Team $29/mo [^ti-price] | Standard $55/mo ($49 yearly), 3 users [^cc-price] | Free; Turbo Pro €19/mo [^de-turbo] | Free [^sv-gh] | Free; Cloud Pro from $10/mo [^ks-cloud] | Free [^pc-home] | Free [^fm-home] | Free self-hosted; Pro $9.99/user/mo [^os-price] | Free self-hosted; Cloud $12/mo [^sp-price] |
 | Per-seat or per-user fees | None [^ms-readme] | $9 to $18 per extra user [^ti-price] | $10 per extra user [^cc-price] | Turbo €6 per extra seat [^de-turbo] | None [^sv-gh] | Cloud: $5 per user beyond 3 [^ks-cloud] | None [^pc-home] | None [^fm-home] | Pro is per user [^os-price] | Users per plan [^sp-price] |
@@ -257,6 +257,7 @@ Hygraph, Kontent.ai and others) are hosted or database CMSs that compare to Mark
 [^ms-api]: **Markstage**: [API contract](API.md)
 [^ms-env]: **Markstage**: [Environments](ENVIRONMENTS.md)
 [^ms-deploy]: **Markstage**: [Deploying](DEPLOY.md)
+[^ms-docker]: **Markstage**: [Docker](DOCKER.md)
 [^ms-seo]: **Markstage**: [SEO checks](SEO.md)
 [^ms-roles]: **Markstage**: [Custom roles](API-ROLES.md)
 [^ms-sso]: **Markstage**: [Single sign-on](API-SSO.md)

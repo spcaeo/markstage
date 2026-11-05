@@ -1,5 +1,8 @@
-# Markstage + the static site, local or on one server.
+# Markstage + the static site, local or on one server (docs/DOCKER.md).
 #   SITE_REPO=/abs/path/to/site-repo MARKSTAGE_DATA=/abs/path/to/data docker compose -f deploy/compose.yaml up -d
+# It builds the image from this clone; MARKSTAGE_IMAGE=ghcr.io/spcaeo/markstage:<version> with `up -d --no-build`
+# runs the published one. At start the image writes a first config.json if there is none, installs the site's
+# packages into the site-modules volume and builds the site's editor (deploy/docker/start.mjs).
 # Ports are bound to 127.0.0.1: put the TLS proxy (docs/DEPLOY.md) in front for anything public.
 #   18231  Markstage (editor + API), publicOrigin in config.json
 #   18235  the site (nginx), with protected pages checked through Markstage (auth_request)
@@ -12,15 +15,17 @@ services:
     build:
       context: ..
       dockerfile: deploy/Dockerfile
-    image: markstage-server:local
-    init: true                       # reaps build/deploy child processes
-    restart: unless-stopped
+    image: ${MARKSTAGE_IMAGE:-markstage-server:local}
+    restart: unless-stopped            # the image runs tini as PID 1: it reaps build and deploy child processes
     user: "${MARKSTAGE_UID:-1000}:${MARKSTAGE_GID:-1000}"   # the host user that owns the site repo and data dir
     environment:
       NODE_ENV: ${NODE_ENV:-production}   # production: an https publicOrigin is required and dev mode (no sign-in) refuses to start
+      MARKSTAGE_PUBLIC_ORIGIN: ${MARKSTAGE_PUBLIC_ORIGIN:-}   # empty: config.json's publicOrigin (http://127.0.0.1:18231 by default)
     volumes:
       - ${MARKSTAGE_DATA:?set MARKSTAGE_DATA to the data dir}:/srv/data
       - ${SITE_REPO:?set SITE_REPO to the site git repo}:/srv/content
+      # the site's packages for Linux, apart from any node_modules made on the host
+      - site-modules:/srv/content/node_modules
       - site-releases:/srv/site
     ports:
       - "127.0.0.1:18231:18231"
@@ -38,4 +43,5 @@ services:
       - "127.0.0.1:18235:80"
 
 volumes:
+  site-modules:
   site-releases:

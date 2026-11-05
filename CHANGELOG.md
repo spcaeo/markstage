@@ -13,6 +13,25 @@ docs/RELEASES.md says how a release is made.
   stay in the browser tab, and Reset demo clears them. Publishing, users, settings and the other changes answer
   "Not in the demo" with a link to the install steps. docs/DEMO.md says how it is built and recorded.
 
+### A ready server image and a starter site
+
+- A ready server image: `ghcr.io/spcaeo/markstage`, for amd64 and arm64, published by GitHub Actions when a
+  release is tagged in the public repo, with an SBOM and build provenance. Until the first such release, build it
+  from a clone (`docker build -f deploy/Dockerfile -t markstage-server .`). docs/DOCKER.md.
+- One `docker run` next to a site's git folder runs Markstage: on its first start the image writes a config, installs
+  the site's packages for Linux and builds the site's editor; it rebuilds the editor at every start. Secrets come from
+  the environment or from files, never from the image. The Dockerfile now has two stages, runs as `node` with tini,
+  and carries ssh for pushes to a shared remote.
+- CI builds the image on every push and pull request and smoke-tests it on a new site: health, the site's editor, the
+  sign-in setup, the API, and a publish that builds and deploys inside the container.
+- A starter site (`examples/starter`): a small Astro blog with Markstage set up, Markdown posts, an MDX guide with a
+  component, light and dark, and the "Edit this page" button. `node scripts/create-site.mjs my-blog` copies it to a
+  folder of its own with Markstage's packages in `vendor/` (they are not on npm yet), installs it and makes the first
+  commit; `--update` brings a site's packages up to the clone's. docs/STARTER.md.
+- The server takes the built editor's folder from `MARKSTAGE_EDITOR_DIR` too.
+- `deploy/compose.yaml` runs a published image with `MARKSTAGE_IMAGE`, keeps the site's Linux packages in a volume,
+  and takes the address from `MARKSTAGE_PUBLIC_ORIGIN` when it is set.
+
 ### Fixed
 
 - With the drawer folded to its rail, the top bar at 1280 to 1440 pixels wide with unsaved changes no longer

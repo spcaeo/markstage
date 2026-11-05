@@ -5,7 +5,8 @@ What is here, for running the Markstage server on your own machine. docs/DEPLOY.
 | File | What it is |
 | --- | --- |
 | `config.example.json` | A starting `config.json` for a public server. Copy it to `<data dir>/config.json`, then change the hosts and paths. |
-| `compose.yaml`, `Dockerfile` | The Docker set-up: Markstage and nginx, the data dir and the site repo mounted from the host. |
+| `Dockerfile`, `docker/start.mjs` | The server image (docs/DOCKER.md): two stages, runs as `node`; at start it writes a first config, installs the site's packages and builds its editor. CI builds and smoke-tests it; a release tag publishes it as `ghcr.io/spcaeo/markstage`. |
+| `compose.yaml` | The image with nginx: the data dir and the site repo mounted from the host, the releases in a shared volume. |
 | `nginx/` | nginx recipes for the editor's host and the site's host (security headers, protected pages, uploads). |
 | `recipes/publish-gate.mjs` | An optional check that runs between the build and the deploy step. |
 

@@ -238,6 +238,11 @@ describe('config validation', () => {
     const ok = load(fx, { NODE_ENV: 'production', MARKSTAGE_PUBLIC_ORIGIN: 'https://cms.example.com' });
     assert.equal(ok.secure, true);
   });
+  test('MARKSTAGE_EDITOR_DIR names the built editor (the Docker image sets it)', () => {
+    const fx = base();
+    assert.equal(load(fx, {}).editorDir, null);
+    assert.equal(load(fx, { MARKSTAGE_EDITOR_DIR: '/srv/editor' }).editorDir, '/srv/editor');
+  });
   test('the data dir must be outside the content repo; collection dirs inside it', () => {
     const fx = base();
     const inside = path.join(fx.site, '.markstage-data');
