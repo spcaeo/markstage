@@ -148,6 +148,25 @@ describe('the site import: WordPress', () => {
     assert.deepEqual([bad.status, bad.json.field], [422, 'types.post']);
   });
 
+  test('the report accounts for everything the plan left out: each item with its reason, and the kinds left out', async () => {
+    const taken = wxr.replace('<wp:post_name><![CDATA[second-post]]></wp:post_name>', '<wp:post_name><![CDATA[hello-world]]></wp:post_name>').split('<wp:post_id>13</wp:post_id>').join('<wp:post_id>1013</wp:post_id>');
+    const { plan, done } = await planAndRun(srv, ed, { source: 'wordpress', mapping: { onCollision: 'skip', types: { page: null } } }, { name: 'x.xml', data: taken });
+    assert.equal(done.run.status, 'done');
+    const skipped = plan.items.filter((i) => i.action === 'skip');
+    assert.ok(skipped.some((i) => i.sourceId === 'post-1013'), JSON.stringify(plan.items));
+    assert.equal(plan.counts.left.page, 1);
+    // every item the plan listed is in the report; each one it left out, with the same reason
+    assert.equal(done.result.entries.length, plan.items.length);
+    for (const i of skipped) {
+      const r = done.result.entries.find((x) => x.sourceId === i.sourceId);
+      assert.deepEqual([r?.action, r?.problem], ['skip', i.problem], i.sourceId);
+    }
+    assert.equal(Object.values(done.result.counts.entries).reduce((a, b) => a + b, 0), plan.items.length);
+    // and the kinds it left out before any item was made
+    assert.deepEqual([done.result.counts.left, done.result.counts.other], [plan.counts.left, plan.counts.other]);
+    assert.equal(done.result.media.length, plan.media.length);
+  });
+
   test('wrong files and wrong people are refused in words', async () => {
     const send = async (who, fields, f) => {
       const b = form(fields, f);

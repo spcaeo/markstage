@@ -792,6 +792,11 @@ system's JSON, idempotent on the source's ids, through the editor's own create a
 `GET translations` (filters: locale, status, collection, q) and `GET collections/:c/entries/:id/translations`:
 whether each entry's words for each locale are missing, outdated or done, read from git: docs/API-TRANSLATIONS.md.
 
+`GET/POST translate`, `GET translate/:rid`, `POST translate/:rid/run|pause|resume|cancel`, `GET translate/drafts/:c/:id`,
+`DELETE translate/drafts/:c/:id/:locale`: an AI draft of every entry's title and description in one locale, a plan
+first, kept for review and never published (editors and up, a session only): docs/API-TRANSLATIONS.md "AI drafts of a
+whole site".
+
 ## Webhooks (owner, administrator)
 
 `GET/POST webhooks`, `PATCH/DELETE webhooks/:wid`, its secret, test and deliveries: signed POSTs to another system

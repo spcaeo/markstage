@@ -105,7 +105,7 @@ export interface SiteResult {
   authors: SitePlan['authors'];
   redirects: { paths: number; ids: number; hook: boolean; file: string | null; commit: string | null } | null;
   review: ReviewItem[];
-  counts: { entries: Partial<Record<Action, number>>; media: Partial<Record<Action, number>>; authors: Partial<Record<Action, number>>; review: Record<string, number>; redirects: number; ids: number; commits: number };
+  counts: { entries: Partial<Record<Action, number>>; media: Partial<Record<Action, number>>; authors: Partial<Record<Action, number>>; review: Record<string, number>; redirects: number; ids: number; commits: number; left?: Record<string, number>; other?: Record<string, number> };
 }
 
 export interface RunState {

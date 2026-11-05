@@ -105,6 +105,9 @@ export async function importCommand(app, args, { out = console.log, env = proces
   const r = JSON.parse(done.result);
   const k = (o, x) => o?.[x] ?? 0;
   out(`Done in ${plural(r.commits.length, 'commit')}: ${k(r.counts.entries, 'create')} created, ${k(r.counts.entries, 'update')} updated, ${k(r.counts.entries, 'unchanged')} unchanged, ${k(r.counts.entries, 'skip')} left out; ${k(r.counts.media, 'fetch')} media files brought in.`);
+  // what the plan left out before any item was made, said again so the report accounts for it
+  for (const [t, k] of Object.entries(r.counts.left ?? {})) out(`${plural(k, t)} left out: no collection is chosen for them.`);
+  for (const [t, k] of Object.entries(r.counts.other ?? {})) out(`${plural(k, t.replace(/_/g, ' '))} not brought over (menus, forms and the like belong to the old site).`);
   if (r.review.length) out(`${plural(r.review.length, 'thing')} to review: #/import/${run.id}?show=review`);
   return 0;
 }

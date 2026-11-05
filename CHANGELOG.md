@@ -21,6 +21,25 @@ docs/RELEASES.md says how a release is made.
 - Each new state has its URL (`?s=1&suggest=links`, `?side=seo&suggest=fix&fix=<id>`); Back and Forward walk them.
   With AI off the buttons are not there, and a link that asks anyway says why. API: the `links` and `fix` kinds, and
   `problem` on the `seo` kind (docs/API-AI.md).
+- Translate the site with AI (Languages › Translate the site with AI, `#/translate`): an AI draft of every entry's
+  title and description in one region, in one run. The plan comes first and writes nothing: how many entries, about
+  how many characters and tokens, how long under the person's AI limits, and which are skipped and why (translated
+  already, a draft waiting, the role cannot write that region's words). The run goes on on the server (leave the page
+  and it carries on), waits for the minute's limit, pauses at the day's, and can be paused, resumed and cancelled.
+  The report lists what was drafted, skipped and failed, in plain words, with a To review list.
+- The drafts are kept beside the site in `markstage/translations/<code>.json`, 25 to a commit in the name of the
+  person who ran it, never in a page: nothing is published and nobody's words are replaced. Post settings shows a
+  waiting draft first ("Review the AI draft"): Accept puts it in the fields and ⌘S saves it as any change; Discard
+  drops it. A draft whose field someone has written since is done with.
+- Editors and up may run it, or a custom role that writes that region's words; a token or an agent may not. Each ask
+  is audited as `ai.suggest`, the run as `translate.*`. On the server: `markstage-server translate --to <locale>
+  [--only <collections>] [--include-translated] [--dry] --as <email>` (docs/API-TRANSLATIONS.md).
+
+### Fixed
+
+- An import's report now says what its plan left out before any item was made: a kind with no collection chosen
+  ("4 products left out") and things not brought over (menus and the like), in the Import screen and on the command
+  line, as the plan did (`counts.left` and `counts.other` in the result).
 
 ## 0.4.0 (4 November 2026)
 

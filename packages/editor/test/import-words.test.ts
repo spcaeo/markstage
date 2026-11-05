@@ -24,6 +24,9 @@ test('what it would do, and what it did, line by line', () => {
   assert.ok(lines.some((l) => /7 nav menu items not brought over/.test(l)));
   const done = resultLines({ counts: { entries: { create: 3, unchanged: 1 }, media: { fetch: 2 }, authors: { create: 1 }, review: {}, redirects: 4, ids: 2, commits: 4 } } as never, 'ghost');
   assert.deepEqual(done, ['3 entries created, 0 updated, 1 unchanged, 0 left out.', '2 images and files brought in.', '1 author added.', '6 old addresses now point to the new pages; they go live with the next publish.', '4 changes in the site’s history, by you, from Ghost.']);
+  // what the plan left out before any item was made is in the report too, in the same words
+  const left = resultLines({ counts: { entries: { create: 3 }, media: {}, authors: {}, review: {}, redirects: 0, ids: 0, commits: 1, left: { product: 4 }, other: { nav_menu_item: 7 } } } as never, 'wordpress');
+  assert.deepEqual(left.slice(-2), lines.filter((l) => / left out: | not brought over /.test(l)));
   assert.equal(reviewKind('alt'), 'Needs alt text');
   assert.equal(reviewKind('something-new'), 'Check this');
   assert.equal(count(1, 'entry', 'entries'), '1 entry');

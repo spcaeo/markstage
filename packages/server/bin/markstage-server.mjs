@@ -20,6 +20,8 @@
 //   markstage-server media index [--dry]    the files already under the media folder, listed in place
 //   markstage-server import wordpress|ghost|prismic <export | --url … | --repo …> [--dry] --as <email>
 //                                           a whole site, as the Import screen does it (src/import/cli.mjs)
+//   markstage-server translate --to <locale> [--only <collection,…>] [--include-translated] [--dry] --as <email>
+//                                           AI drafts of every entry in one region (src/translate/cli.mjs)
 //   markstage-server update [--check | --to vX.Y.Z | --rollback [--with-data]] [--remote origin]
 //                                           update this git checkout of Markstage (src/update.mjs)
 import fs from 'node:fs';
@@ -129,8 +131,11 @@ async function main() {
     } else if (cmd === 'import') {
       const { importCommand } = await import('../src/import/cli.mjs');
       process.exitCode = await importCommand(app, args);
+    } else if (cmd === 'translate') {
+      const { translateCommand } = await import('../src/translate/cli.mjs');
+      process.exitCode = await translateCommand(app, args);
     } else {
-      throw new Error(`Unknown command "${cmd}". Commands: serve, init, setup-code, reset-password, backup, forms import-wordpress, geoip update, env, library, media import, media index, import.`);
+      throw new Error(`Unknown command "${cmd}". Commands: serve, init, setup-code, reset-password, backup, forms import-wordpress, geoip update, env, library, media import, media index, import, translate.`);
     }
   } finally {
     await app.close();

@@ -4,11 +4,11 @@
 // drawer (item=) shows each field's source next to its translation (copy icons), and opens the entry's Post settings
 // at that region to translate it (or with the AI's draft, when the server has AI). Every view is its URL; Back undoes
 // a filter. Read-only: a translation is saved like any other change to the entry.
-import { aiInfo } from '../ai/api';
+import { aiInfo, offTrouble, type AiInfo } from '../ai/api';
 import { ApiError, request } from '../api';
 import type { ScreenCtx } from '../host';
 import { collection, config } from '../runtime';
-import { button, drawer, el, failure, facts, icon, link, page, state, value, when } from '../admin/ui';
+import { button, drawer, el, failure, facts, icon, link, page, state, value, when, whoami } from '../admin/ui';
 import { PER_PAGE, translations, type Sort, type StatusFilter, type TField, type TItem, type TList, type TLocale, type TStatus } from './api';
 
 const NUM = new Intl.NumberFormat();
@@ -31,6 +31,8 @@ export function mountTranslations(host: HTMLElement, ctx: ScreenCtx) {
   let alive = true;
   let typing = 0;
   let ai = false;
+  let aiState: AiInfo | null = null;
+  let mayRun = false;
   /** the open row, read from the entry's own route (it may be on another page of the list) */
   let open: { key: string; item: TItem | null; locale: TLocale | null; error?: unknown; pending?: boolean } | null = null;
   /** the row whose drawer last took the focus (a redraw for a filter leaves the focus where it is) */
@@ -58,10 +60,13 @@ export function mountTranslations(host: HTMLElement, ctx: ScreenCtx) {
     if (key !== loadedFor) {
       if (!list) p.body.replaceChildren(state('loading', 'Reading the translations…'));
       try {
-        const [r, info] = await Promise.all([translations(q), aiInfo().catch(() => null)]);
+        const [r, info, me] = await Promise.all([translations(q), aiInfo().catch(() => null), whoami().catch(() => null)]);
         if (!alive) return;
         list = r;
         ai = !!info?.on && info.kinds.includes('translate');
+        aiState = info;
+        // the server decides; the button is for those it may say yes to (editors and up, a role of its own)
+        mayRun = ['owner', 'administrator', 'editor'].includes(me?.user?.role ?? '') || !!me?.user?.customRole;
         loadedFor = key;
       } catch (e) {
         if (!alive) return;
@@ -78,9 +83,17 @@ export function mountTranslations(host: HTMLElement, ctx: ScreenCtx) {
         state('empty', 'No region to translate', 'Every page uses the same words in every region. A region whose config lists title or description in its `overrides` gets its own, and shows here.'),
       );
     }
+    siteAction();
     filters(q, list!);
     table(q, list!);
     await item();
+  }
+
+  /** Translate the site with AI (#/translate): there while AI is on; while it is off, the reason instead. */
+  function siteAction(): void {
+    if (!mayRun) return void p.actions.replaceChildren();
+    if (ai) return void p.actions.replaceChildren(button('Translate the site with AI', () => ctx.open('#/translate', true), { icon: 'sparkle' }));
+    p.actions.replaceChildren(aiState && !aiState.on ? el('p.ms-adm-sub.ms-tr-aioff', `Translating the site with AI is off. ${offTrouble(aiState).words}`) : '');
   }
 
   function filters(q: ReturnType<typeof query>, r: TList): void {

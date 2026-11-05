@@ -322,8 +322,9 @@ describe('site/ is built from its sources', () => {
     const ai = built.files.find((x) => x.file === 'ai/index.html').content;
     const { items } = readRoadmap(path.join(REPO_ROOT, 'site-content'), (md) => md);
     const want = items.filter((i) => isAiItem(i) && i.status !== 'shipped');
-    assert.ok(want.length, 'roadmap.md has AI items');
     const coming = /<section class="sec" id="coming"[\s\S]*?<\/section>/.exec(ai)?.[0] ?? '';
+    // every AI item shipped: no "coming" section at all, rather than an empty one
+    if (!want.length) return assert.equal(coming, '', 'no AI item is coming, so /ai/ has no coming section');
     for (const i of want) assert.ok(coming.includes(`<h3>${i.title.replace(/&/g, '&amp;')}</h3>`), i.id);
     assert.equal((coming.match(/<h3>/g) ?? []).length, want.length);
   });

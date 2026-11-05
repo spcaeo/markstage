@@ -117,7 +117,9 @@ Editors and up.
 
 The run's job has the steps `media`, `authors`, `entries` and `redirects`. Its `result`: `{commits, entries, media,
 authors, redirects: {paths, ids, hook, file, commit}, review, counts}`; in `review` each `entry` is
-`{sourceId, collection, id, title}` and each `media` `{sourceId, id}` (the media library's id), to link to.
+`{sourceId, collection, id, title}` and each `media` `{sourceId, id}` (the media library's id), to link to. The report
+accounts for everything the plan did: `entries` and `media` list every item of the plan (one it left out as `skip`,
+with its `problem`), and `counts.left` and `counts.other` repeat the kinds the plan left out before any item was made.
 
 Errors: `422` with `field` for a wrong source, address, key or mapping key (`types.post`, `fields.posts.excerpt`,
 `onCollision`…); `422 source-refused` when the source did not let us in (the credential is never repeated);

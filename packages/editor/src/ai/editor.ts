@@ -24,6 +24,7 @@ import { aiInfo, type AiInfo, type AiKind, type SuggestBody } from './api';
 import { fixKind, fixSpec, type SeoNow } from './fixes';
 import { linksCard } from './links';
 import { rewriteHelp } from './rewrite';
+import { discardDraft, waitingDrafts } from '../translations/site-api';
 
 export interface AiEditorDeps {
   getEditor(): Editor | null;
@@ -359,11 +360,38 @@ export function aiEditor(d: AiEditorDeps) {
       const s: router.Suggest = { kind: 'translate', loc: locale.code };
       return {
         ask: () => router.go({ suggest: s }, true),
+        /** whether the site translation left a draft for this region, waiting for review */
+        waiting: async () => {
+          const w = where();
+          return !!w && (await waitingDrafts(w.collection, w.id).catch(() => ({ drafts: [] }))).drafts.some((x) => x.locale === locale.code);
+        },
         card: () =>
           slot(s, () => ({
             title: `Draft translation for ${locale.label}`,
             fields: fields.map((f) => ({ name: f.name, label: f.label, now: () => String(d.edits.get(f.key) ?? ''), multiline: f.name === 'description', empty: 'Empty: the same as everywhere' })),
             body: (): SuggestBody => ({ kind: 'translate', ...where()!, locale: locale.code, fields: Object.fromEntries(fields.map((f) => [f.name, f.from()])) }),
+            // a draft the site translation left for this region waits here first (translations/site.ts)
+            kept: async () => {
+              const w = where();
+              if (!w) return null;
+              const k = (await waitingDrafts(w.collection, w.id)).drafts.find((x) => x.locale === locale.code);
+              if (!k) return null;
+              const day = k.at ? new Date(k.at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null;
+              return {
+                suggestion: k.fields,
+                model: k.model,
+                words: `Drafted by AI${k.model ? ` (${k.model})` : ''} when ${k.by ?? 'someone'} translated the site${day ? ` on ${day}` : ''}: read it before you accept. Nothing changes until you do.`,
+                discard: async () => {
+                  try {
+                    await discardDraft(w.collection, w.id, locale.code);
+                    toast(`The ${locale.label} draft is discarded.`, 'ok');
+                    return null;
+                  } catch (e) {
+                    return e instanceof Error ? e.message : String(e);
+                  }
+                },
+              };
+            },
             accept: (v) =>
               acceptEdits(
                 fields.filter((f) => typeof v[f.name] === 'string').map((f) => [f.key, v[f.name]]),

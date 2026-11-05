@@ -186,6 +186,9 @@ search title or description is the `seo` kind with its `problem`; missing alt te
 - **The site's spelling.** The answer goes through the locale's `spelling` module, the same text → text function the
   build and the editor's Region switch use, so an `en-CA` draft says "colour" whatever the model wrote. A module that
   does not load is `500 spelling`, said before the model is asked, so it costs nothing.
+- **A whole site at once.** Translate the site drafts every entry of a region with this kind in one run, within the
+  person's limits, and keeps the drafts for review instead of putting them in the fields: docs/API-TRANSLATIONS.md
+  "AI drafts of a whole site". Each of its asks is an `ai.suggest` row like any other.
 
 ## Who sees what
 

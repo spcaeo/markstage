@@ -273,6 +273,18 @@ export const TOPICS: HelpTopic[] = [
     ],
   },
   {
+    id: 'translate-site',
+    title: 'Translate the whole site with AI',
+    words: 'translate site whole all pages region language locale ai draft batch run pause resume cancel review',
+    steps: [
+      'In Languages, press Translate the site with AI. Choose the region, what to include, and whether to skip pages that have their own words there already (the usual choice).',
+      'Plan it: the plan says how many pages get a draft, about how long that takes, and which are skipped and why. Nothing is asked of the AI or written yet.',
+      'Run it. It goes on on the server, so you can leave the page; Pause, Resume and Cancel are at the top. When the day’s AI limit is used it pauses and says when to resume.',
+      'The report lists what was drafted, skipped and failed. To review opens each page in Post settings at its region, with the draft shown first: Accept puts it in the fields and ⌘S saves it; Discard drops it.',
+      'A draft is never published and never replaces anyone’s words: it waits beside the page until someone saves that region’s words.',
+    ],
+  },
+  {
     id: 'ai',
     title: 'Get a suggestion from the AI',
     words: 'ai suggest suggestion alt text seo title description translate translation draft summary summarize promotion improve rewrite shorten spelling grammar tone links internal link fix heading click here',

@@ -32,6 +32,7 @@ to it opens it.
 - [Change a table](#table)
 - [Describe, crop or replace an image](#image)
 - [See what still needs translating](#translations)
+- [Translate the whole site with AI](#translate-site)
 - [Get a suggestion from the AI](#ai)
 
 <a id="shortcuts"></a>
@@ -286,6 +287,16 @@ to it opens it.
 1. More → Translations lists each page’s title and description per region: missing, outdated (the original changed after it) or done. Needs work shows first, newest change first.
 2. Pick a region or a status, or search a title; the address keeps the view, so a link shares it.
 3. Details shows the original beside the translation. Translate in Post settings opens the page at its regions; ⌘S saves it, and it leaves the list.
+
+<a id="translate-site"></a>
+
+## Translate the whole site with AI
+
+1. In Languages, press Translate the site with AI. Choose the region, what to include, and whether to skip pages that have their own words there already (the usual choice).
+2. Plan it: the plan says how many pages get a draft, about how long that takes, and which are skipped and why. Nothing is asked of the AI or written yet.
+3. Run it. It goes on on the server, so you can leave the page; Pause, Resume and Cancel are at the top. When the day’s AI limit is used it pauses and says when to resume.
+4. The report lists what was drafted, skipped and failed. To review opens each page in Post settings at its region, with the draft shown first: Accept puts it in the fields and ⌘S saves it; Discard drops it.
+5. A draft is never published and never replaces anyone’s words: it waits beside the page until someone saves that region’s words.
 
 <a id="ai"></a>
 

@@ -39,6 +39,11 @@ export interface CardSpec {
   shape?(raw: Record<string, unknown>): Suggestion;
   /** a line under the suggestion (what accepting keeps and what it does not) */
   note?: string;
+  /**
+   * A suggestion kept already (a site translation's draft): shown first, without asking the AI. null: none, so the
+   * AI is asked. `words` replaces the "Written by AI" line; `discard` adds Discard, which drops the kept one.
+   */
+  kept?(): Promise<{ suggestion: Suggestion; model: string | null; words: string; discard(): Promise<string | null> } | null>;
 }
 
 export interface Card {
@@ -108,6 +113,8 @@ export function suggestCard(spec: CardSpec): Card {
   let asked = 0;
   let got: Suggestion | null = null;
   let model: string | null = null;
+  /** the kept suggestion on show (until Suggest again asks the AI) */
+  let keptNow: { words: string; discard(): Promise<string | null> } | null = null;
   let editing = false;
   let waitTimer = 0;
   const nows = new Map<string, HTMLElement>();
@@ -132,6 +139,17 @@ export function suggestCard(spec: CardSpec): Card {
     busy.setAttribute('role', 'status');
     body.setAttribute('aria-busy', 'true');
     body.replaceChildren(busy);
+    keptNow = null;
+    if (n === 1 && spec.kept) {
+      const k = await spec.kept().catch(() => null);
+      if (!alive || n !== asked) return;
+      if (k) {
+        got = k.suggestion;
+        model = k.model;
+        keptNow = k;
+        return void draw();
+      }
+    }
     const info = await aiInfo();
     if (!alive || n !== asked) return;
     if (!info.on) return void drawTrouble(offTrouble(info));
@@ -242,9 +260,22 @@ export function suggestCard(spec: CardSpec): Card {
         }),
       );
     }
-    acts.append(mk('span', 'ms-ai__grow'), btn('ms-btn--quiet', 'Suggest again', 'aiRetry', () => void ask()), btn('ms-btn--quiet', spec.diff ? 'Reject' : 'Dismiss', 'aiDismiss', () => spec.close()));
+    acts.append(mk('span', 'ms-ai__grow'), btn('ms-btn--quiet', 'Suggest again', 'aiRetry', () => void ask()));
+    const k = keptNow;
+    if (k)
+      acts.append(
+        btn('ms-btn--quiet', 'Discard', 'aiDiscard', () =>
+          void k.discard().then((refused) => {
+            if (!alive) return;
+            if (!refused) return spec.close();
+            why.textContent = refused;
+            why.hidden = false;
+          }),
+        ),
+      );
+    acts.append(btn('ms-btn--quiet', spec.diff ? 'Reject' : 'Dismiss', 'aiDismiss', () => spec.close()));
     if (spec.note) out.push(mk('p', 'ms-ai__note', spec.note));
-    out.push(why, acts, mk('p', 'ms-ai__note', `Written by AI${model ? ` (${model})` : ''}: read it before you accept. Nothing changes until you do.`));
+    out.push(why, acts, mk('p', 'ms-ai__note', k ? k.words : `Written by AI${model ? ` (${model})` : ''}: read it before you accept. Nothing changes until you do.`));
     shownNow = nowsOf();
     body.replaceChildren(...out);
   }

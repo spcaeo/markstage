@@ -57,6 +57,22 @@ export function createAi(app, deps = {}) {
     return { n: r.n + (busy.get(userId) ?? 0), oldest: r.oldest ? Date.parse(r.oldest) : app.clock() };
   }
 
+  /**
+   * Room for one more ask by this person now: null, or {window, wait (seconds), max} when the minute's or the day's
+   * asks are used up. The site translation (translate/run.mjs) paces itself by it, so its asks never hit the 429.
+   */
+  function room(userId) {
+    for (const [window, ms, max] of [['minute', MINUTE, provider.limits.perMinute], ['day', DAY, provider.limits.perDay]]) {
+      const u = used(userId, ms);
+      if (u.n < max) continue;
+      return { window, max, wait: Math.max(1, Math.ceil((u.oldest + ms - app.clock()) / 1000)) };
+    }
+    return null;
+  }
+
+  /** How many asks this person has left today (the plan of a site translation says so). */
+  const leftToday = (userId) => Math.max(0, provider.limits.perDay - used(userId, DAY).n);
+
   /** 429 when this person has had their asks for the minute or the day; logged at most once a minute. */
   function checkLimits(ctx) {
     for (const [window, ms, max] of [['minute', MINUTE, provider.limits.perMinute], ['day', DAY, provider.limits.perDay]]) {
@@ -114,5 +130,11 @@ export function createAi(app, deps = {}) {
     api.add('POST', '/ai/suggest', suggest);
   }
 
-  return { routes, info, provider };
+  /**
+   * One ask as `ctx`'s person, from the server itself (the site translation): the same kinds, rights, limits, scrubber
+   * and audit row as POST /ai/suggest.
+   */
+  const ask = (ctx, body) => suggest({ ...ctx, body });
+
+  return { routes, info, provider, room, leftToday, ask };
 }

@@ -246,7 +246,7 @@ links to the doc that explains it. Every operational task end to end: [docs/OPER
 - **Team, releases and publishing** (13, [on the site](https://spcaeo.github.io/markstage/features/#team)): A publish sheet that checks; Releases; Share links; Local, staging, production; “Edit this page” on the live site; Every save is a commit in your name; Roles, as WordPress names them; Custom roles; Single sign-on and two-factor; Locks; See who else is editing; Forms in your own inbox; Webhooks and imports.
 - **SEO and site health** (8, [on the site](https://spcaeo.github.io/markstage/features/#seo)): Search checks while you write; Search and social previews; See it on a phone or a tablet; Link suggestions both ways; Link health; Topics and a topic map; Redirects that follow a move; Site check-up.
 - **Safety and history** (7, [on the site](https://spcaeo.github.io/markstage/features/#safety)): A save is a clean diff; Never lose typing; A three-way merge; History of every save; Trash, backups and rollback; An audit log; Previews kept apart.
-- **AI and MCP** (11, [on the site](https://spcaeo.github.io/markstage/features/#ai)): An MCP server for AI agents; The markstage mcp relay; Publishing by an agent, only if you allow it; Writing help on a selection; Alt text suggestions; Search title and description; Link suggestions to your own pages; Fixes for search problems; Translation drafts; A promotion summary; Your choice of AI provider.
+- **AI and MCP** (12, [on the site](https://spcaeo.github.io/markstage/features/#ai)): An MCP server for AI agents; The markstage mcp relay; Publishing by an agent, only if you allow it; Writing help on a selection; Alt text suggestions; Search title and description; Link suggestions to your own pages; Fixes for search problems; Translation drafts; Translate the whole site; A promotion summary; Your choice of AI provider.
 
 ## See it
 
@@ -613,6 +613,11 @@ Shipped since 0.4.0, on main:
   link, each checked on the server before a writer sees it; Suggest a fix in the SEO check offers a fix for a long or
   short title or description, a heading out of order, vague link words or missing alt text, as a diff to accept, edit
   or reject ([docs/API-AI.md](docs/API-AI.md), [docs/SEO.md](docs/SEO.md)).
+- **AI translation of a whole site.** Translate the site (from Languages) drafts every page's title and description
+  in one region in one run: a dry run first (how many, about how many tokens, how long under the AI limits, what is
+  skipped and why), then a run on the server that can be paused, resumed and cancelled. Each draft waits beside its
+  page for a person to review in Post settings; none is published, and none replaces anyone's words. Also
+  `markstage-server translate --to <locale> [--dry]` ([docs/API-TRANSLATIONS.md](docs/API-TRANSLATIONS.md)).
 
 Being built now, for 0.5.0:
 
@@ -627,7 +632,6 @@ Planned, later:
   server runs one process per data dir ([docs/SECURITY.md](docs/SECURITY.md), "Known limits").
 - **Adapters beyond Astro.** The core has no framework in it; Astro is the first adapter.
 - **Live co-editing**, with live cursors, beside today's locks and three-way merge.
-- **AI translation of a whole site** in one run, for people to review.
 - **A stable 1.0**, after deeper quality, security and performance work.
 
 Have a need that is not here? [Open a feature request](https://github.com/spcaeo/markstage/issues/new/choose).

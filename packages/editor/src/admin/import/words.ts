@@ -41,9 +41,15 @@ export function planLines(plan: SitePlan): string[] {
   ];
   if (c.published) lines.push(`Everything comes in as a draft: ${count(c.published, 'entry that was published', 'entries that were published')} on ${PRODUCT[plan.product]} ${c.published === 1 ? 'is' : 'are'} ready to publish once checked.`);
   if (c.embeds) lines.push(`${count(c.embeds, 'embed')} (videos, maps) ${c.embeds === 1 ? 'is a link' : 'are links'} now.`);
-  for (const [t, k] of Object.entries(c.left)) lines.push(`${kindWord(t, k)} left out: no collection is chosen for ${k === 1 ? 'it' : 'them'}.`);
-  for (const [t, k] of Object.entries(c.other)) lines.push(`${kindWord(t, k)} not brought over (menus, forms and the like belong to the old site).`);
-  return lines;
+  return [...lines, ...leftLines(c)];
+}
+
+/** What the plan left out before any item was made: the plan says it, and the report says it again. */
+function leftLines(c: { left?: Record<string, number>; other?: Record<string, number> }): string[] {
+  return [
+    ...Object.entries(c.left ?? {}).map(([t, k]) => `${kindWord(t, k)} left out: no collection is chosen for ${k === 1 ? 'it' : 'them'}.`),
+    ...Object.entries(c.other ?? {}).map(([t, k]) => `${kindWord(t, k)} not brought over (menus, forms and the like belong to the old site).`),
+  ];
 }
 
 /** What the run did, line by line. */
@@ -56,7 +62,7 @@ export function resultLines(r: SiteResult, product: Product): string[] {
     `${count(c.redirects + c.ids, 'old address', 'old addresses')} now ${c.redirects + c.ids === 1 ? 'points' : 'point'} to the new pages; they go live with the next publish.`,
     `${count(c.commits, 'change')} in the site’s history, by you, from ${PRODUCT[product]}.`,
   ];
-  return lines;
+  return [...lines, ...leftLines(c)];
 }
 
 /** The review list's kinds, in the words the screen shows. */

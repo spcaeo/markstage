@@ -65,6 +65,7 @@ import { createPreview } from './preview/routes.mjs';
 import { createReleases } from './releases/index.mjs';
 import { createMcp } from './mcp/index.mjs';
 import { createAi } from './ai/index.mjs';
+import { createTranslate } from './translate/index.mjs';
 import { createTranslations } from './content/translations.mjs';
 import { createImport } from './import/index.mjs';
 import { createIntegrations } from './integrations/index.mjs';
@@ -85,7 +86,8 @@ const STATIC_TYPES = { ...SITE_FILE_TYPES, '.html': 'text/html; charset=utf-8', 
 
 /**
  * Build the server. `deps` lets tests swap the converter core, the image codec and the clock:
- * { core: module|null, codec: object|null, clock: () => ms, outbound: {lookup, allow} (library/fetch.mjs), ai: {fetch, env} (ai/) }.
+ * { core: module|null, codec: object|null, clock: () => ms, outbound: {lookup, allow} (library/fetch.mjs), ai: {fetch, env} (ai/),
+ *   translate: {sleep} (translate/run.mjs: how a run waits for the AI limits) }.
  */
 export async function createMarkstage(config, deps = {}) {
   const clock = deps.clock ?? (() => Date.now());
@@ -199,6 +201,9 @@ export async function createMarkstage(config, deps = {}) {
   // translation status per entry and locale, from git (content/translations.mjs)
   app.translations = createTranslations(app);
   app.translations.routes(api);
+  // AI drafts of a whole site in one region, for people to review: a plan, its run, its report (translate/)
+  app.translate = createTranslate(app, entries, deps.translate);
+  app.translate.routes(api);
   // entries and media from another system's JSON: a plan, then its run (import/)
   app.imports = createImport(app, entries);
   app.imports.routes(api);
@@ -446,6 +451,8 @@ export async function createMarkstage(config, deps = {}) {
       await app.preview.close();
       await app.releases.share.close();
       await app.jobs.idle();
+      // a site translation that is going stops between two asks, paused (Resume carries on after a restart)
+      await app.translate.stop();
       if (server) await new Promise((r) => server.close(() => r()));
       db.close();
     },

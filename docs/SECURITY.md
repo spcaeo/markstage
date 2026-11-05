@@ -242,6 +242,7 @@ docs/API-AI.md. Tests: `ai.test.mjs`, `ai-provider.test.mjs`.
 | Cost | Size caps (context 2,000, text 20,000, a field 1,000: `413`); `perMinute` and `perDay` asks per person, rolling, from the audit plus the asks running (`429` with `Retry-After`; `ai.limited` once a minute) | `ai.test.mjs`: "sizes are capped…", "per minute, then per day…" |
 | Audit | `ai.suggest`: who, kind, target, provider, model, token counts; `ok: false` with the code on failure; never the prompt or the answer | `ai.test.mjs`: "the audit says who…" (a marker in the prompt is in no audit row) |
 | Content is data | Each prompt says the page's words are data, never instructions; each answer is checked for its shape (`502` otherwise); a summary stating numbers the plan does not have is dropped | `ai-provider.test.mjs`: "a model answer in another shape…"; `env-safety.test.mjs`: "the summary" |
+| Translate the site | Each ask goes through the same suggest path (rights, limits, scrubber, `ai.suggest` row); the run paces itself under the person's limits. Its drafts are committed to `markstage/translations/<code>.json` only, which the site never reads: no entry changes and nothing is published. A session only (tokens and agents `403`), editors and up or a role that writes the region's words; audited as `translate.*` (docs/API-TRANSLATIONS.md) | `translate.test.mjs`: "the run: drafts beside the site…", "rights: …", "the limits: …"; `translate-site.e2e.mjs` |
 
 ### Importing
 

@@ -117,7 +117,7 @@
         <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Translation status</li></ol></nav>
         <h1>Translation status</h1>
         <p class="lead left">For a site with several locales: whether each entry’s words are missing, outdated or done in each language, and the list of what still needs translating.</p>
-        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#what-is-tracked">What is tracked</a></li><li><a href="#status">Status</a></li><li><a href="#routes">Routes</a></li><li><a href="#how-it-is-read">How it is read</a></li></ul></nav>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#what-is-tracked">What is tracked</a></li><li><a href="#status">Status</a></li><li><a href="#routes">Routes</a></li><li><a href="#ai-drafts-of-a-whole-site">AI drafts of a whole site</a></li><li><a href="#from-the-command-line">From the command line</a></li><li><a href="#how-it-is-read">How it is read</a></li></ul></nav>
         <div class="prose">
 <p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). For a site with <code>locales</code>
 (docs/CONFIG.md &quot;Locales and hreflang&quot;), whether each entry's words for each locale are missing, outdated or done,
@@ -167,6 +167,55 @@ tracked locale answers <code>{locales: [], counts: {}, items: [], total: 0, …}
 <p><code>GET collections/:c/entries/:id/translations</code> → <code>{locales: [{code, label, sameLanguage, status, fields,
 sourceChangedAt, translatedAt}], can: {edit}}</code>, one per tracked locale (<code>locales: []</code> on a site with none). No such
 entry: <code>404</code>.</p>
+<h2 id="ai-drafts-of-a-whole-site">AI drafts of a whole site</h2>
+<p>Translate the site (Languages › Translate the site with AI, <code>#/translate</code>) drafts every entry's title and description
+in one region with the <a href="../api-ai/#translate-a-draft-for-another-locale"><code>translate</code> AI kind</a>, for people to review.
+The drafts are never published and never replace anyone's words.</p>
+<p><strong>What it covers.</strong> Markdown collections with pages (the ones Post settings shows regions for), and only the fields
+the region takes as its own (its <code>overrides</code>). Other collections are listed with why they cannot be included.</p>
+<p><strong>The plan first.</strong> <code>POST translate</code> with <code>{locale, collections?: [id…] | null, skipExisting?: true}</code> → <code>201
+{run, plan}</code>, writing nothing and asking the AI nothing. The plan lists every entry with <code>action: 'draft' | 'skip'</code>
+and, for a skip, <code>reason</code> and <code>why</code> in plain words:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col"><code>reason</code></th><th scope="col"><code>why</code></th></tr></thead><tbody><tr><td><code>translated</code></td><td>It has its own words in that region already (only with <code>skipExisting</code>, the default).</td></tr><tr><td><code>nothing</code></td><td>It has no title or description to translate.</td></tr><tr><td><code>waiting</code></td><td>An AI draft is already waiting for review.</td></tr><tr><td><code>rights</code></td><td>This person's role cannot change its words in that region.</td></tr><tr><td><code>too-long</code></td><td>A field is over 1,000 characters, more than the AI translates at once.</td></tr></tbody></table></div>
+<p><code>plan.counts</code> has the entries, drafts, skips, characters and an estimate of the tokens in and out; <code>plan.time</code> says
+how many asks of the AI that is, how long under this person's <code>perMinute</code> limit, and how many asks are left today.
+<code>plan.lines</code> is the plan in plain words, as the command line prints it. A plan is kept for an hour for its person to
+run as it is; after that it is <code>expired</code> and running it is <code>410 expired</code>.</p>
+<p><strong>The run.</strong> <code>POST translate/:rid/run</code> → <code>202</code>. It goes on in the server, not in the browser: leaving the page does
+not stop it. Each entry is one ask through the same path as the editor's Draft translation (rights, limits, the
+scrubber and an <code>ai.suggest</code> audit row). It waits when this person's minute limit is reached, and pauses when the
+day's is used, saying when to resume; it never gets an <code>ai-rate</code> refusal of its own making. Before each ask the entry
+is checked again: words written since the plan (<code>changed</code>) or an entry removed (<code>gone</code>) are skipped. A provider
+failure fails that entry only, with words in <code>why</code>; AI turned off stops the run, paused.</p>
+<p><code>POST translate/:rid/pause</code>, <code>resume</code> and <code>cancel</code> act between two asks; drafts already made are kept. One run goes at
+a time (<code>409 busy</code>). A server restart pauses a run that was going, with a reason; its person resumes it.</p>
+<p><strong>The drafts</strong> go in <code>markstage/translations/&lt;code&gt;.json</code> in the content repo, in batches of 25 entries, each batch
+one commit in the name of the person who ran it (&quot;Draft 25 Français (Canada) translations with AI (batch 1 of 3)&quot;).
+The site never reads that file, so no page changes and nothing goes live. Each draft keeps the source words and the
+region's words as they were, so it is done with as soon as someone writes that region's words: the next run's
+<code>waiting</code> check and the review list read only open drafts.</p>
+<p><strong>The report.</strong> <code>GET translate/:rid</code> → <code>{run, plan, result}</code>. <code>result.items</code> lists each entry with <code>action:
+'created' | 'skipped' | 'failed'</code>, <code>why</code> and, for a draft, <code>open</code> (still waiting). It starts with the entries the plan
+skipped, with their reasons, so once a run is done created + skipped + failed is every entry the plan considered.
+<code>run.progress</code> counts them as it goes (<code>done</code> of <code>total</code>, the plan's entries). A notice tells the person when it stops.</p>
+<p><strong>Review.</strong> <code>GET translate/drafts/:c/:id</code> → <code>{drafts: [{locale, label, fields, source, before, by, at, run, model}]}</code>,
+the open drafts of an entry. Post settings shows a waiting draft first (&quot;Review the AI draft&quot;): Accept puts it in the
+fields, and saving them is an ordinary entry save. <code>DELETE translate/drafts/:c/:id/:locale</code> discards one, as a
+commit, for someone who may change that region's words.</p>
+<p><strong>Who.</strong> A person in the editor: editors and up, or a custom role that may write the region's words (each entry is
+then checked as its save would be). Never a token or an agent (<code>403</code>). A run is its person's to start, resume, pause
+and cancel; an administrator may pause or cancel it. While AI is off, <code>503 ai-off</code> with the same <code>why</code> as
+<code>GET ai</code>, and the editor shows the reason instead of the button. Audited: <code>translate.plan</code>, <code>translate.start</code>,
+<code>translate.resume</code>, <code>translate.pause</code>, <code>translate.cancel</code>, <code>translate.run</code> (the counts at the end) and
+<code>translate.discard</code>.</p>
+<h2 id="from-the-command-line">From the command line</h2>
+<pre data-lang="sh"><code class="language-sh">markstage-server translate --to fr-CA --dry --as editor@example.com
+markstage-server translate --to fr-CA --as editor@example.com</code></pre>
+<p>The same plan and run, as the person named by <code>--as</code>, with the same rights, limits and audit. <code>--dry</code> prints the plan
+and writes nothing; <code>--only posts,guides</code> limits the collections; <code>--include-translated</code> also drafts entries that
+have their own words (the draft waits beside them; it never replaces them). The run prints its counts and each skip
+or failure with why, then the editor address of its review list. Exit code 0 when done, 1 when it stopped before the end (paused or cancelled).</p>
+<p>Tests: <code>translate.test.mjs</code> (server), <code>translate-site.e2e.mjs</code> (browser).</p>
 <h2 id="how-it-is-read">How it is read</h2>
 <p>From git, in a few processes per request whatever the number of entries: one <code>git log --raw</code> over the collections'
 folders (every change to every file, with its blob ids), then <code>git cat-file --batch</code> for the versions needed, one

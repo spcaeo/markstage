@@ -2,7 +2,8 @@
 // open, and the hreflang links its pages emit (each locale, then x-default; the same set on every copy, so search
 // engines pair them). Read-only: one source file serves every locale. A locale may allow its own title, description
 // or slug (`overrides` in the config); those fields write <overridesKey>.<code>.<field> in the frontmatter, and
-// "Draft translation" asks the AI for that region's title and description (ai/editor.ts, ?suggest=translate&loc=).
+// "Draft translation" asks the AI for that region's title and description (ai/editor.ts, ?suggest=translate&loc=);
+// it says "Review the AI draft" when the site translation left one there, which its card then shows first.
 import { alternates, emitsHreflang, localePath } from '@markstage/core';
 import { suggestButton } from '../ai/card';
 import { copyable, siteUrl } from '../copy';
@@ -50,6 +51,13 @@ export function localesField(locales: LocalesConfig, ctx: FieldCtx, status: () =
     slot.dataset.locale = l.code;
     const ask = suggestButton('Draft translation', ai.ask, 'ms-btn--sm');
     ask.setAttribute('aria-label', `Draft translation for ${l.label}`);
+    // a draft the site translation left here (translations/site.ts) waits for review: the button opens it
+    void ai.waiting().then((yes) => {
+      if (!yes) return;
+      ask.querySelector('span')!.textContent = 'Review the AI draft';
+      ask.setAttribute('aria-label', `Review the AI draft for ${l.label}`);
+      ask.dataset.waiting = '';
+    });
     box.append(ask, slot);
     drafts.push({ slot, card: ai.card });
   }

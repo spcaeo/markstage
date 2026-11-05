@@ -588,6 +588,10 @@ system's JSON, idempotent on the source's ids, through the editor's own create a
 <h2 id="translation-status">Translation status</h2>
 <p><code>GET translations</code> (filters: locale, status, collection, q) and <code>GET collections/:c/entries/:id/translations</code>:
 whether each entry's words for each locale are missing, outdated or done, read from git: docs/API-TRANSLATIONS.md.</p>
+<p><code>GET/POST translate</code>, <code>GET translate/:rid</code>, <code>POST translate/:rid/run|pause|resume|cancel</code>, <code>GET translate/drafts/:c/:id</code>,
+<code>DELETE translate/drafts/:c/:id/:locale</code>: an AI draft of every entry's title and description in one locale, a plan
+first, kept for review and never published (editors and up, a session only): docs/API-TRANSLATIONS.md &quot;AI drafts of a
+whole site&quot;.</p>
 <h2 id="webhooks-owner-administrator">Webhooks (owner, administrator)</h2>
 <p><code>GET/POST webhooks</code>, <code>PATCH/DELETE webhooks/:wid</code>, its secret, test and deliveries: signed POSTs to another system
 when an entry, a media file or the site changes, tried again with backoff and logged: docs/API-WEBHOOKS.md.</p>

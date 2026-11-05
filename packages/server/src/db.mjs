@@ -616,6 +616,23 @@ export const MIGRATIONS = [
   CREATE INDEX IF NOT EXISTS media_uses_path ON media_uses (path);
   CREATE INDEX IF NOT EXISTS media_uses_entry ON media_uses (collection, entry_id);
   `,
+  // 23: the site translation's runs (translate/): its plan, where it is, and what each entry came to
+  `
+  CREATE TABLE IF NOT EXISTS translate_runs (
+    id TEXT PRIMARY KEY,
+    locale TEXT NOT NULL,
+    created_by TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    plan TEXT NOT NULL,
+    status TEXT NOT NULL,
+    reason TEXT,
+    result TEXT,
+    started_at TEXT,
+    finished_at TEXT,
+    updated_at TEXT NOT NULL
+  );
+  `,
 ];
 
 /** Open (and create or upgrade) the database at `<dataDir>/markstage.db`, readable by the server user only. */

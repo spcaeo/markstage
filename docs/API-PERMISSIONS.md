@@ -41,6 +41,7 @@ first: a rule that denies takes a right away, one that allows gives a right the 
 | An AI assistant (MCP token) writes: drafts (`mcp:draft`), and changes into a release that is not scheduled | as above | as above | as above | as above | own drafts, no release |
 | AI suggestions (in the editor): alt text, search title and description, a translation draft, for the entries one may read | all | all | all | live + own drafts | live + own drafts |
 | AI suggestions: a promotion plan's summary | yes | yes | yes | no | no |
+| Translate the site with AI (plan, run, pause, resume, cancel: the person who planned it; an administrator may pause or cancel); a custom role that writes the region's words may too. Never a token or an agent | yes | yes | yes | no | no |
 | Import entries and media from JSON (plan, run) | yes | yes | yes | no | no |
 | Translation status and the "needs translation" list (read only; writing a translation is an entry save) | yes | yes | yes | yes | yes |
 | Webhooks: add, change, remove, new secret, test, read deliveries, retry | yes | yes | no | no | no |

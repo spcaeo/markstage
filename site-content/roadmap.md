@@ -75,7 +75,7 @@ items:
   - id: ai-translate
     title: AI translation of a whole site
     what: Draft every page of a site in another language in one run, for people to review.
-    status: planned
+    status: shipped
     rows: []
   - id: ai-seo
     title: AI link and SEO suggestions

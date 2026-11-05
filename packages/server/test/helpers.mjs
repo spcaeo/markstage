@@ -173,10 +173,10 @@ export const freePort = () =>
  * Start a server on the fixture. `clock` is a settable fake clock ({ now }) for timeout tests; `outbound` the web
  * fetch seam ({lookup, allow}) so a test may reach its own server on loopback; `ai` the AI suggestions' {fetch, env}.
  */
-export async function startServer(fx, { overrides = {}, env = {}, codec = fakeCodec, core = stubCore, clock, outbound, ai } = {}) {
+export async function startServer(fx, { overrides = {}, env = {}, codec = fakeCodec, core = stubCore, clock, outbound, ai, translate } = {}) {
   const port = await freePort();
   const config = loadConfig({ env: { MARKSTAGE_DATA_DIR: fx.data, NODE_ENV: 'test', ...env }, overrides: { port, ...overrides } });
-  const app = await createMarkstage(config, { core, codec, ...(clock ? { clock: () => clock.now } : {}), ...(outbound ? { outbound } : {}), ...(ai ? { ai } : {}) });
+  const app = await createMarkstage(config, { core, codec, ...(clock ? { clock: () => clock.now } : {}), ...(outbound ? { outbound } : {}), ...(ai ? { ai } : {}), ...(translate ? { translate } : {}) });
   await app.listen(port, '127.0.0.1');
   const base = `http://127.0.0.1:${port}`;
   return { app, config: app.config, base, port, close: () => app.close() };

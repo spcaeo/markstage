@@ -230,7 +230,9 @@ Edit then accept and Reject. Accepting is one change: ⌘Z takes it back, ⌘S s
 title and description. Only <code>title</code> and <code>description</code>, and only the ones the locale takes as its own (its
 <code>overrides</code>); another is <code>422 locale</code> with <code>fields</code>.</li><li>The model is told the source locale (the default one) and the target, with their <code>variety</code>.</li><li><strong>The site's spelling.</strong> The answer goes through the locale's <code>spelling</code> module, the same text → text function the
 build and the editor's Region switch use, so an <code>en-CA</code> draft says &quot;colour&quot; whatever the model wrote. A module that
-does not load is <code>500 spelling</code>, said before the model is asked, so it costs nothing.</li></ul>
+does not load is <code>500 spelling</code>, said before the model is asked, so it costs nothing.</li><li><strong>A whole site at once.</strong> Translate the site drafts every entry of a region with this kind in one run, within the
+person's limits, and keeps the drafts for review instead of putting them in the fields: docs/API-TRANSLATIONS.md
+&quot;AI drafts of a whole site&quot;. Each of its asks is an <code>ai.suggest</code> row like any other.</li></ul>
 <h2 id="who-sees-what">Who sees what</h2>
 <p>The same rule as the MCP server's reads (docs/API-MCP.md &quot;Reads follow the role&quot;): editors and up may ask about any
 entry; authors and contributors about live entries and their own drafts. Another entry's answer is

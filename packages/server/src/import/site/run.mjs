@@ -171,7 +171,9 @@ export function createSiteRun(app, entries, { mediaAt, remember }) {
       });
     for (const m of result.media.filter((x) => x.problem)) result.review.push({ kind: 'media', text: `${m.url.split('/').pop()}: ${m.problem}`, media: { sourceId: m.sourceId, id: null } });
     const count = (list, key) => list.reduce((o, x) => ((o[x[key]] = (o[x[key]] ?? 0) + 1), o), {});
-    result.counts = { entries: count(result.entries, 'action'), media: count(result.media, 'action'), authors: count(result.authors, 'action'), review: count(result.review, 'kind'), redirects: result.redirects?.paths ?? 0, ids: result.redirects?.ids ?? 0, commits: result.commits.length };
+    // what the plan left out before any item was made (a kind with no collection chosen, menus and the like) is in
+    // the report too, so it accounts for everything the plan did
+    result.counts = { entries: count(result.entries, 'action'), media: count(result.media, 'action'), authors: count(result.authors, 'action'), review: count(result.review, 'kind'), redirects: result.redirects?.paths ?? 0, ids: result.redirects?.ids ?? 0, commits: result.commits.length, left: { ...(last.counts.left ?? {}) }, other: { ...(last.counts.other ?? {}) } };
     return result;
   }
 
