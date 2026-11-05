@@ -143,16 +143,17 @@ export function partsOf(root) {
 
 /** Every image address in a node (absolute), in order. */
 export function imagesOf(node, base) {
-  const out = [];
+  // a Set: a page with very many images costs one pass, not one per image
+  const out = new Set();
   const walk = (n) => {
     if (n.tag === 'img') {
       const u = safeUrl(n.attrs.src, base);
-      if (u && /^https?:/.test(u) && !out.includes(u)) out.push(u);
+      if (u && /^https?:/.test(u)) out.add(u);
     }
     for (const c of els(n)) if (!DROP.has(c.tag)) walk(c);
   };
   walk(node);
-  return out;
+  return [...out];
 }
 
 /** A clean copy of a node as HTML, to show before importing. */

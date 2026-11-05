@@ -623,6 +623,11 @@ Shipped since 0.4.0, on main:
   jobs are shared, saves to the site repo take turns, and one process runs the timers and the preview and share
   listeners, with another taking over when it stops ([docs/SCALING.md](docs/SCALING.md),
   [docs/DEPLOY.md](docs/DEPLOY.md)).
+- **The real page on the server, too.** The built editor on a Markstage server draws each article inside its real
+  page, as `astro dev` does: the server hands over the entry's last build (the site's, or a share link's build of the
+  draft, whichever is newer) as data, and the editor removes its scripts and scopes its CSS as it does in dev. A
+  draft never built yet opens on the sheet of paper, with a note that says why. The fidelity guard passes on the
+  example blog served this way at 1440 and 390 ([docs/CANVAS-FIDELITY.md](docs/CANVAS-FIDELITY.md) "On a server").
 
 Being built now, for 0.5.0:
 
@@ -631,8 +636,6 @@ Nothing yet: the next items are picked from the list below, smallest first.
 Planned, later:
 
 - **Packages on npm**, so a site installs `@markstage/astro` without a clone.
-- **The real page on the server, too.** Drawing an article inside its real page works in `astro dev`; the built
-  editor on a server still draws it as a sheet with the site's CSS ([docs/CANVAS-FIDELITY.md](docs/CANVAS-FIDELITY.md)).
 - **Adapters beyond Astro.** The core has no framework in it; Astro is the first adapter.
 - **Live co-editing**, with live cursors, beside today's locks and three-way merge.
 - **A stable 1.0**, after deeper quality, security and performance work.

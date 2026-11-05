@@ -40,8 +40,12 @@ const cache = new Map<string, FirstPaint>();
 /**
  * <html>'s and <body>'s attributes after the page's head scripts, in a frame as wide as `width` (a script may read
  * the window). The page's own attributes when it has no such scripts, or when the frame has not answered in time.
+ *
+ * `runner`: the address of an empty frame page that writes the document it is sent (the Markstage server's
+ * /markstage/shell-frame, sandboxed by its own CSP header). A srcdoc frame takes on the editor page's CSP, and the
+ * server's allows no inline script, so on a server the head scripts run there instead; in astro dev, in a srcdoc.
  */
-export function firstPaint(doc: Document, width: number, height: number, timeout = 2000): Promise<FirstPaint> {
+export function firstPaint(doc: Document, width: number, height: number, timeout = 2000, runner?: string): Promise<FirstPaint> {
   const own: FirstPaint = { html: [...doc.documentElement.attributes].map((a) => [a.name, a.value]), body: [...doc.body.attributes].map((a) => [a.name, a.value]) };
   if (!headScripts(doc).length) return Promise.resolve(own);
   const nonce = crypto.randomUUID();
@@ -70,7 +74,11 @@ export function firstPaint(doc: Document, width: number, height: number, timeout
     };
     const timer = setTimeout(() => done(own), timeout);
     addEventListener('message', onMessage);
-    frame.srcdoc = html;
+    if (runner) {
+      // the frame has no origin of its own (sandbox): '*' is the only address a message to it can name
+      frame.addEventListener('load', () => frame.contentWindow?.postMessage({ ms: nonce, html }, '*'), { once: true });
+      frame.src = runner;
+    } else frame.srcdoc = html;
     document.body.append(frame);
   });
 }

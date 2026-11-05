@@ -11,7 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { atLeast } from '../roles.mjs';
 import { HttpError, badRequest, forbidden, invalid } from '../util.mjs';
-import { builtFile, isRedirectStub } from '../verify.mjs';
+import { builtFile, isRedirectStub, readHead } from '../verify.mjs';
 import { badFrom, badTo, checkRedirects, keyOf } from './check.mjs';
 
 const MAX_REMOVE = 500;
@@ -188,7 +188,7 @@ export function redirectsRoutes(router, app, entries) {
       if (seen.has(at)) return { hops, verdict: 'loop', text: `A loop: it comes back to ${at}.` };
       seen.add(at);
       const f = builtFile(dir, at);
-      const next = f && isRedirectStub(f) ? stubTarget(fs.readFileSync(f, 'utf8')) : null;
+      const next = f && isRedirectStub(f) ? stubTarget(readHead(f)) : null;
       const status = f ? 200 : 404;
       hops.push({ url: at, status, location: next, via: next ? 'page' : null });
       if (!next) {
@@ -216,7 +216,7 @@ export function redirectsRoutes(router, app, entries) {
     if (b) {
       const f = builtFile(buildDir(), from);
       const kind = b(from);
-      build = { kind, to: kind === 'redirect' ? stubTarget(fs.readFileSync(f, 'utf8')) : null };
+      build = { kind, to: kind === 'redirect' ? stubTarget(readHead(f)) : null };
     }
     return { from, build, live: walk(from) };
   });

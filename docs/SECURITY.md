@@ -200,6 +200,22 @@ only hints. The table is docs/API-PERMISSIONS.md.
 | Framing | Proxied answers get `frame-ancestors <CMS origin>`; the site's `X-Frame-Options` is dropped; `noindex`, `no-store` | asserted in the autosave test |
 | Lifetime | Started on demand on an odd loopback port, stopped when idle, stopped with the server | "stopped when idle, started again on the next request"; the real-site run checks the port is free after shutdown |
 
+### The page around the canvas (on a server)
+
+The built editor draws an entry inside its last built page (docs/CANVAS-FIDELITY.md "On a server"). The server
+reads that page from disk and sends it as data; the site's code never runs where the editor's session is.
+
+| Control | How | Proof (`shell-page.test.mjs`, `canvas-server.e2e.mjs`) |
+|---|---|---|
+| No site script on the CMS origin | `GET preview/:c/:id/shell` answers JSON with the API's CSP and `nosniff`, never a page. The editor parses it (`DOMParser`: nothing runs or loads) and the same `sanitize` as in `astro dev` drops scripts, frames, `<base>`, `<meta>`, `<link>`, `<style>`, `on*` handlers and `javascript:` links before anything is in its document; the rest is inert. The page's first `<head>` scripts run only in `GET /markstage/shell-frame`, whose own header is `sandbox allow-scripts; default-src 'none'; frame-ancestors 'self'` (no origin, no cookies, nothing loaded) | "the frame the first <head> scripts run in…"; e2e "the page's scripts never run on the CMS origin…" |
+| Only the build folder | The page and its stylesheets go through `staticFileIn` (no `..`, encoded or not; real path inside the folder's real path, so a link out of a build is refused); `.html` and `.css` only; the entry's address must start with a single `/` | "never a file outside the build folder…", "an entry whose address leaves the site or the folder…" |
+| No SSRF | The server fetches nothing by address: a stylesheet on another host is left out; `@import` and `url()` are text. In the editor `@import` is dropped and the CMS's CSP keeps `url()` on its own origin | "no request leaves the server…" (a stand-in host gets no request); the e2e checks the browser asked it nothing either |
+| Only the web's addresses | `sanitize` keeps an address only when relative, `#…`, http(s), mailto or tel (an image's source also `data:image/…`), read as a browser reads it (ASCII whitespace and control characters out first: `java&#9;script:`, `&#1;javascript:`, a newline in `formaction` are dropped); SVG `set` and `animate*` dropped; no link, area or form button in the page around the canvas leaves the editor, no form is sent. This holds in `astro dev` too, where the editor has no CSP | `shell-sanitize.test.ts` (review of 5 Nov 2026) |
+| Size limits | The page's size from a stat first: over 4 MB it is never read (`413`), not even for the redirect-stub check, which reads a file's first 4,000 characters wherever it is made (`readHead`). A stylesheet 2 MB, 8 MB in all; links read up to the first 64 distinct `.css` files, in one pass (a Set) | `shell-review.test.mjs` 1, 2; "…size limits…" |
+| Memory and disk | Answers kept on the server: 32 and 64 MB at most. `Cache-Control: no-store`: a draft's or protected page's HTML never stays in the browser's disk cache; the editor keeps the last 4 in memory and asks with `If-None-Match` | `shell-review.test.mjs` 3; "a repeat is a 304…" |
+| Who | Signed in (`401` otherwise), any role: every signed-in role may read every entry (Known limits). An unknown collection or entry: `404` | "signed out: 401…", "…every role that may read it has it" |
+| Built fonts and images | `/_astro/…` images and fonts of `verify.public` on the CMS origin, signed-in people only, image and font types only, never a dot-folder or a link out of the folder | "the built site's fonts and images on the CMS origin…" |
+
 ### Environments
 
 | Control | How | Proof |

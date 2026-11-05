@@ -7,6 +7,8 @@
 //     [--sides ,outline] [--tolerance 2] [--shots <dir>] \
 //     [--part aside=.aside …] [--frame-part contents='.contents a' …]
 //
+// On a Markstage server (the built editor), `--base` is the server, `--page-base` the built site and
+// `--storage-state` a signed-in browser's Playwright state file (docs/CANVAS-FIDELITY.md "On a server"),
 // or from a test: `import { checkFidelity } from '@markstage/editor/fidelity'`. What it compares, per width, theme
 // (light, dark: the browser's colour scheme) and side panel (none, or one that narrows the canvas: the page is then
 // measured in a window as wide as the canvas):
@@ -36,6 +38,11 @@
 // whose build respells words, when a respelled word moves a line break. Both are measured with their images loaded,
 // and the page after scrolling through once (what slides in on scroll comes to rest). The browser is closed when it
 // is done, pass or fail.
+// And in every theme: each block of text on the canvas, the title and the head has a contrast of at least 4.5:1
+// against what is really behind it (canvas-contrast.mjs), so nothing is drawn light on light or dark on dark.
+
+import { contrastIn, judge } from './canvas-contrast.mjs';
+export { contrastIn, judge } from './canvas-contrast.mjs';
 
 const KINDS = [
   ['p', ':scope > p'],
@@ -178,10 +185,10 @@ async function imagesIn(page, ms = 10_000) {
  * `<collection>/<id>`, `pagePath` its page. `bodyClass`: the site's canvas.bodyClass (the page's text element).
  * `parts`: the site's own elements to measure too, `[name, selector]`. Returns {ok, failures, canvas, page}.
  */
-export async function compareOne(browser, { base, entry, pagePath, width, height = 900, theme = 'light', side = '', bodyClass, parts = [], frameParts = [], loose = [], tolerance = 2, topTolerance, shots }) {
+export async function compareOne(browser, { base, pageBase = base, storageState, entry, pagePath, width, height = 900, theme = 'light', side = '', bodyClass, parts = [], frameParts = [], loose = [], tolerance = 2, topTolerance, shots }) {
   const kinds = [...KINDS, ...parts];
   // reduced motion: transitions end at once (a site's own rule), so what is measured is what stays on screen
-  const ctx = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce', colorScheme: theme });
+  const ctx = await browser.newContext({ viewport: { width, height }, reducedMotion: 'reduce', colorScheme: theme, ...(storageState ? { storageState } : {}) });
   try {
     const bodySel = bodyClass
       .split(/\s+/)
@@ -214,11 +221,13 @@ export async function compareOne(browser, { base, entry, pagePath, width, height
     // the "click any text" hint and the like are the editor's, not the page's
     await ed.waitForTimeout(400);
     const canvas = await measure(ed, '.ms-canvas > .ProseMirror', '.ms-pg', kinds, frameParts, loose);
+    // readable in this theme: every block of text against what is behind it
+    const contrast = judge(await contrastIn(ed));
     // the page in a window as wide as the canvas (a side panel takes room from it)
     const pageWidth = side ? await ed.evaluate(() => document.querySelector('.ms-sheet').clientWidth) : width;
     const pg = await ctx.newPage();
     await pg.setViewportSize({ width: pageWidth, height });
-    await pg.goto(`${base}${pagePath}`);
+    await pg.goto(`${pageBase}${pagePath}`);
     await pg.waitForSelector(bodySel);
     await pg.evaluate(() => document.fonts.ready);
     // the page as a reader leaves it: scrolled through once, so what slides in on scroll has come to rest
@@ -242,9 +251,10 @@ export async function compareOne(browser, { base, entry, pagePath, width, height
       await ed.screenshot({ path: `${shots}/${name}-canvas.png` });
       await pg.screenshot({ path: `${shots}/${name}-page.png` });
     }
-    const failures = [];
+    const failures = [...contrast.failures];
+    if (!contrast.count) failures.push('contrast: no text found on the canvas to check');
     if (!shell) failures.push('the canvas is not drawn in the page shell (canvas.shell off, or the page could not be read)');
-    if (!canvas || !page) return { ok: false, failures: [...failures, !page ? 'the page has no text element' : 'the canvas has no text'], canvas, page };
+    if (!canvas || !page) return { ok: false, failures: [...failures, !page ? 'the page has no text element' : 'the canvas has no text'], canvas, page, contrast };
     for (const [k, v] of Object.entries(page.frame)) if (canvas.frame[k] !== v) failures.push(`frame: <html ${k}="${v}"> on the page, "${canvas.frame[k] ?? '(none)'}" on the canvas`);
     const topTol = topTolerance ?? tolerance;
     const near = (a, b, t) => a === b || (typeof a === 'number' && typeof b === 'number' && Math.abs(a - b) <= t);
@@ -270,7 +280,7 @@ export async function compareOne(browser, { base, entry, pagePath, width, height
       for (const [p, c] of pairs) cmp(`${kind} ${p.sig ?? ''}`.trim(), c, p, keys.filter((k) => !(k === 'height' && kind === 'frame' && p.beside) && !(p.loose && LOOK.includes(k))));
       rows[kind] = { page: ps.length, canvas: cs.length, worst: worst(pairs) };
     }
-    return { ok: failures.length === 0, failures, rows, canvas, page };
+    return { ok: failures.length === 0, failures, rows, canvas, page, contrast };
   } finally {
     await ctx.close();
   }
@@ -333,7 +343,7 @@ function worst(pairs) {
 }
 
 /** Every entry at every width; the browser is closed at the end, pass or fail. */
-export async function checkFidelity({ playwright, base, entries, widths = [1440, 390], themes = ['light'], sides = [''], bodyClass, parts, frameParts, loose, tolerance, topTolerance, shots }) {
+export async function checkFidelity({ playwright, base, pageBase, storageState, entries, widths = [1440, 390], themes = ['light'], sides = [''], bodyClass, parts, frameParts, loose, tolerance, topTolerance, shots }) {
   const pw = playwright ?? (await import('playwright'));
   const browser = await pw.chromium.launch();
   const results = [];
@@ -341,7 +351,7 @@ export async function checkFidelity({ playwright, base, entries, widths = [1440,
     for (const { entry, page: pagePath } of entries) {
       for (const width of widths) {
         for (const theme of themes) {
-          for (const side of sides) results.push({ entry, pagePath, width, theme, side, ...(await compareOne(browser, { base, entry, pagePath, width, theme, side, bodyClass, parts, frameParts, loose, tolerance, topTolerance, shots })) });
+          for (const side of sides) results.push({ entry, pagePath, width, theme, side, ...(await compareOne(browser, { base, pageBase, storageState, entry, pagePath, width, theme, side, bodyClass, parts, frameParts, loose, tolerance, topTolerance, shots })) });
         }
       }
     }
@@ -401,6 +411,7 @@ export function report(results) {
         lines.push(`      ${kind.padEnd(6)} page ${v.page}, canvas ${v.canvas}; worst: left ${w.left}, right ${w.right}, width ${w.width}, height ${w.height}, font ${w.fontSize}, top ${w.top}${w.look ? `, look differs on ${w.look}` : ''}`);
       }
     }
+    if (r.contrast) lines.push(`      contrast ${r.contrast.count} blocks; lowest: ${Object.entries(r.contrast.worst).map(([k, v]) => `${k} ${v}:1`).join(', ')}`);
     for (const f of r.failures.slice(0, 12)) lines.push(`      - ${f}`);
     if (r.failures.length > 12) lines.push(`      … and ${r.failures.length - 12} more`);
   }
@@ -426,11 +437,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
   const base = get('--base');
   if (!base || !entries.length) {
-    console.error('usage: canvas-fidelity.mjs --base <dev server> --entry <collection>/<id>=<page path> … [--widths 1440,390] [--themes light,dark] [--sides ,outline] [--body-class "prose post__body"] [--part <name>=<selector> …] [--frame-part <name>=<selector> …] [--tolerance 2] [--shots <dir>]');
+    console.error('usage: canvas-fidelity.mjs --base <dev server> --entry <collection>/<id>=<page path> … [--page-base <the built site>] [--storage-state <file>] [--widths 1440,390] [--themes light,dark] [--sides ,outline] [--body-class "prose post__body"] [--part <name>=<selector> …] [--frame-part <name>=<selector> …] [--tolerance 2] [--shots <dir>]');
     process.exit(2);
   }
   const results = await checkFidelity({
     base,
+    // the built editor on a Markstage server (docs/CANVAS-FIDELITY.md "On a server"): the real page is the built
+    // site's, served elsewhere; a signed-in browser state (Playwright's storageState file) opens the editor
+    pageBase: get('--page-base') ?? base,
+    storageState: get('--storage-state'),
     entries,
     widths: (get('--widths') ?? '1440,390').split(',').map(Number),
     themes: (get('--themes') ?? 'light').split(','),

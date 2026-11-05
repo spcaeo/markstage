@@ -9,13 +9,31 @@ export const classSelector = (classes: string) =>
     .map((c) => `.${CSS.escape(c)}`)
     .join('');
 
-const DROP = 'script, noscript, iframe, object, embed, frame, frameset, base, meta, link, style, template, astro-dev-toolbar';
+// SVG's set and animate* elements can write an attribute after the page is drawn (`<set attributeName=href
+// to="javascript:…">`): dropped with the scripts. SVG names are matched as written (case-sensitive).
+const DROP = 'script, noscript, iframe, object, embed, frame, frameset, base, meta, link, style, template, astro-dev-toolbar, set, animate, animateMotion, animateTransform';
 // a drawn block never needs a control: a form in it could only imitate the editor's own (a fake "sign in again" box)
 const DROP_CONTROLS = 'form, input, button, textarea, select, option, label, dialog';
-const URL_ATTRS = ['href', 'src', 'action', 'formaction', 'xlink:href', 'poster'];
+const URL_ATTRS = ['href', 'src', 'action', 'formaction', 'xlink:href', 'poster', 'background', 'cite', 'ping'];
+// an image's own data: address (an inline placeholder) is an image, never a page
+const MEDIA_ATTRS = ['src', 'poster'];
 
 /**
- * The page as the editor may draw it: no scripts or frames, no event handlers, no javascript: addresses, nothing
+ * A URL attribute the editor may keep: a relative address, a #fragment, or http(s), mailto or tel; for an image's
+ * source also a data:image address. Read as a browser reads it: ASCII whitespace and control characters taken out
+ * first (`java&#9;script:`, `&#1;javascript:`, a newline in a formaction all mean javascript: to a browser).
+ */
+export function safeUrl(name: string, value: string): boolean {
+  const v = value.replace(/[\u0000-\u0020\u007f]/g, '');
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(v)?.[1].toLowerCase();
+  if (!scheme) return true;
+  if (scheme === 'http' || scheme === 'https' || scheme === 'mailto' || scheme === 'tel') return true;
+  return scheme === 'data' && MEDIA_ATTRS.includes(name) && /^data:image\/(png|jpe?g|gif|webp|avif|svg\+xml)[;,]/i.test(v);
+}
+
+/**
+ * The page as the editor may draw it: no scripts or frames, no event handlers, no address but the web's (safeUrl:
+ * never javascript:, however it is spelled), no SVG animation that could write one later, nothing
  * that takes the focus on its own. The editor never runs the page's code (it is the site's, in the CMS's origin).
  * `controls: false` (a raw HTML block of an entry) also drops forms and form controls, and every `id` and `name`,
  * so the block cannot shadow a global the editor reads (DOM clobbering), and keeps it in its box (`contain`).
@@ -25,7 +43,7 @@ export function sanitize(root: Element | DocumentFragment, { controls = true, in
   for (const el of root.querySelectorAll('*')) {
     for (const a of [...el.attributes]) {
       const n = a.name.toLowerCase();
-      if (n.startsWith('on') || n === 'autofocus' || (!controls && (n === 'id' || n === 'name')) || (URL_ATTRS.includes(n) && /^\s*(javascript|vbscript|data:text\/html)/i.test(a.value))) el.removeAttribute(a.name);
+      if (n.startsWith('on') || n === 'autofocus' || (!controls && (n === 'id' || n === 'name')) || (URL_ATTRS.includes(n) && !safeUrl(n, a.value))) el.removeAttribute(a.name);
       else if (!controls && n === 'style') contain(el as HTMLElement, inline);
     }
   }

@@ -248,8 +248,9 @@ amd64 and arm64 build is pushed. Nothing is pushed when the tag and <code>packag
 and removes it; <code>--keep</code> leaves it running, <code>--port</code> picks the host port, 37433 by default).</li></ul>
 <h2 id="limits">Limits</h2>
 <ul><li>One container per data dir: two containers on one volume are not tested. Several server processes on one data
-dir are supported on one machine with systemd (DEPLOY.md, &quot;Several server processes&quot;; docs/SCALING.md).</li><li>The built editor draws an article as a sheet with the site's CSS; drawing it inside the real page works in
-<code>astro dev</code> only for now (docs/CANVAS-FIDELITY.md).</li><li>Previews (the real page with unsaved changes) and share links need their own host names and <code>preview</code> and
+dir are supported on one machine with systemd (DEPLOY.md, &quot;Several server processes&quot;; docs/SCALING.md).</li><li>The built editor draws an article inside its last built page (<code>verify.public</code>, set in the config the image
+writes); a draft never built yet is drawn as a sheet with the site's CSS until the next build
+(docs/CANVAS-FIDELITY.md &quot;On a server&quot;).</li><li>Previews (the real page with unsaved changes) and share links need their own host names and <code>preview</code> and
 <code>share</code> in config.json (DEPLOY.md); they are off in the config the image writes.</li></ul>
         </div>
         <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/DOCKER.md" target="_blank" rel="noopener">docs/DOCKER.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>

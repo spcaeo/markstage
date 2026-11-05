@@ -401,7 +401,7 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     plan,
     fallback,
     items,
-    media: plan.media.map((m) => ({ ...m, alt: Boolean(media.get(mediaList.find((x) => x.sourceId === m.sourceId)?.url)?.alt) })),
+    media: plan.media.map((m) => ({ ...m, alt: Boolean(media.get(fallback.get(m.sourceId))?.alt) })),
     authors: [...authors.values()].map(({ sourceId, slug, name, action }) => ({ sourceId, slug, name, action })),
     redirects: [...redirects.values()],
     ids,

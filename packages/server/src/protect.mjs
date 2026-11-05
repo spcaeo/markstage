@@ -212,7 +212,11 @@ export function createPageGate(app) {
       headers(res);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.end(fs.readFileSync(file));
+      // streamed, never read whole into memory (a page can be large)
+      if (req.method === 'HEAD') return res.end();
+      fs.createReadStream(file)
+        .on('error', () => res.destroy())
+        .pipe(res);
     } catch (err) {
       if (!(err instanceof HttpError)) console.error('[markstage] page gate:', err?.stack ?? err);
       headers(res);

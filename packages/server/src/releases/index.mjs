@@ -266,6 +266,8 @@ export function createReleases(app, entries) {
     /** Log a publish refused before it was asked of the rules (an agent's failed checks), as a refusal is logged. */
     refused: (ctx, rid, detail) => audit.log(ctx, 'release.publish', { target: rid, ok: false, detail }),
     share,
+    // the draft builds, for the page drawn around the canvas (preview/shell.mjs)
+    builds,
     start() {
       timer = setInterval(() => void pub.tick().then(sweep).catch((e) => console.error('[markstage] releases:', e.message)), config.scheduler.intervalSeconds * 1000);
       timer.unref();

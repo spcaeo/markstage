@@ -5,9 +5,10 @@
 //
 // Only GET and HEAD, only images and fonts: never HTML, scripts, styles or data, so nothing here can run on the CMS
 // origin. Read from the content repo: public/<path> first (served at the site root; the live site serves these to
-// anyone, and the editor page asks for its fonts before anyone has signed in), then <path> in the repo for
-// signed-in people only (a draft's images; dev mode: this machine). Never inside .git, node_modules or any
-// dot-folder, never through a link that leaves the folder. SVG goes out with a sandbox CSP.
+// anyone, and the editor page asks for its fonts before anyone has signed in); then, for signed-in people only, from
+// the site's last build (verify.public: the /_astro/… files of the page drawn around the canvas) and from <path> in
+// the repo (a draft's images; dev mode: this machine). Never inside .git, node_modules or any dot-folder, never
+// through a link that leaves the folder. SVG goes out with a sandbox CSP.
 import fs from 'node:fs';
 import path from 'node:path';
 import { COOKIE } from './auth/sessions.mjs';
@@ -34,13 +35,17 @@ export function createSiteFiles(config, sessions) {
   const root = config.contentRoot;
   const pub = path.join(root, 'public');
 
+  // the site's last build (verify.public): the images and fonts its pages and CSS name by their built address
+  // (/_astro/x.woff2), for the page drawn around the canvas (preview/shell.mjs)
+  const built = config.verify?.public ?? null;
+
   /** The file for a site path, or null: { abs, size, open } (open: in public/, for anyone). */
   function find(rel, signedIn) {
-    for (const base of signedIn ? [pub, root] : [pub]) {
+    for (const base of signedIn ? [pub, built, root].filter(Boolean) : [pub]) {
       const abs = path.resolve(base, rel);
       if (!isWithin(base, abs)) continue;
       // never git's own files, installed packages or hidden folders (.env, .astro, …)
-      if (path.relative(root, abs).split(path.sep).some((p) => p.startsWith('.') || p === 'node_modules')) continue;
+      if (path.relative(base === built ? built : root, abs).split(path.sep).some((p) => p.startsWith('.') || p === 'node_modules')) continue;
       try {
         const st = fs.statSync(abs);
         if (st.isFile() && st.size <= MAX_BYTES) return { abs, size: st.size, open: base === pub };

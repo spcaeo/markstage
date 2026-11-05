@@ -62,6 +62,7 @@ import { libraryItemRoutes } from './library/routes.mjs';
 import { loadSharpCodec } from './media/codec.mjs';
 import { mediaRoutes } from './media/routes.mjs';
 import { createPreview } from './preview/routes.mjs';
+import { createShellPage } from './preview/shell.mjs';
 import { createReleases } from './releases/index.mjs';
 import { createMcp } from './mcp/index.mjs';
 import { createAi } from './ai/index.mjs';
@@ -197,6 +198,9 @@ export async function createMarkstage(config, deps = {}) {
   libraryItemRoutes(api, app, app.library);
   app.preview = createPreview(app, entries);
   app.preview.apiRoutes(api);
+  // the entry's last built page, as data, for the canvas drawn inside it (preview/shell.mjs)
+  app.shellPage = createShellPage(app);
+  app.shellPage.routes(api);
   app.releases = createReleases(app, entries);
   app.releases.routes(api);
   // the MCP server: an AI agent with a token, through these same routes (mcp/index.mjs)
@@ -401,6 +405,7 @@ export async function createMarkstage(config, deps = {}) {
     if (p.startsWith(`${apiPrefix}/`)) return runApi(api, p.slice(apiPrefix.length), req, res, url);
     if (config.compat.collection && p.startsWith('/studio-api/')) return runApi(compat, p, req, res, url);
     if (url.pathname === `${config.basePath}/preview-auth`) return app.preview.authPage(req, res, url);
+    if (url.pathname === `${config.basePath}/shell-frame`) return app.shellPage.frame(req, res);
     if (url.pathname === `${config.basePath}/gate`) {
       const token = parseCookies(req.headers.cookie)[COOKIE];
       return app.environments.site.gatePage(req, res, url, token ? app.sessions.lookup(token) : null);

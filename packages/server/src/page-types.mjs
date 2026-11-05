@@ -10,6 +10,10 @@ import { atLeast } from './roles.mjs';
 import { HttpError, forbidden } from './util.mjs';
 import { internalLinks, pageKey } from './preflight.mjs';
 import { isWithin } from './config.mjs';
+import { readUpTo } from './verify.mjs';
+
+/** How much of a built page the type checks read (its JSON-LD is in its head, or near it). */
+const BUILT_LIMIT = 4 * 1024 * 1024;
 
 const off = { enabled: false, check: () => {}, lockRules: (c, fb, fa, rules) => rules, results: () => null, forCreate: () => null, routes: () => {} };
 
@@ -34,12 +38,12 @@ export async function createPageTypes(app, entries) {
   /** Every page's address -> {collection, id, title, data}, for the link checks: the preflight's known pages (kept by the content version). */
   const pages = () => app.preflight.knownPages();
 
-  /** The page's last built HTML (verify.public), or null. */
+  /** The page's last built HTML (verify.public), or null; its first 4 MB at most (a writer can make a page large). */
   function built(url) {
     const dir = config.verify?.public;
     if (!dir || !url || !fs.existsSync(dir)) return null;
     const rel = decodeURI(pageKey(url)).replace(/^\/+/, '');
-    for (const f of [path.join(dir, rel, 'index.html'), path.join(dir, `${rel}.html`)]) if (isWithin(dir, f) && fs.existsSync(f) && fs.statSync(f).isFile()) return fs.readFileSync(f, 'utf8');
+    for (const f of [path.join(dir, rel, 'index.html'), path.join(dir, `${rel}.html`)]) if (isWithin(dir, f) && fs.existsSync(f) && fs.statSync(f).isFile()) return readUpTo(f, BUILT_LIMIT);
     return null;
   }
 

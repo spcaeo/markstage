@@ -1,7 +1,7 @@
 // The Markstage API (docs/API.md) as the editor uses it: collections, entries, save with a version check, the raw
 // source, import. The dev integration and the production server answer the same routes.
 import type { JSONContent } from '@tiptap/core';
-import { config } from './runtime';
+import { config, onServer } from './runtime';
 
 export interface EntrySummary {
   id: string;
@@ -162,6 +162,50 @@ export const duplicateEntry = (c: string, id: string) => call<Entry>(`collection
 
 /** Moves an entry to the trash (its version as opened); `trashId` is where it waits to be restored. */
 export const trashEntry = (c: string, id: string, version: string) => call<{ ok: true; trashId: string; job: string | null }>(`collections/${enc(c)}/entries/${enc(id)}?version=${enc(version)}`, { method: 'DELETE' });
+
+/** The entry's last built page, as the Markstage server hands it over for the canvas (docs/CANVAS-FIDELITY.md). */
+export interface BuiltPage {
+  html: string;
+  /** the page's stylesheets (its <link rel=stylesheet> of the same build), by their path on the site */
+  sheets: { path: string; text: string }[];
+  /** the site's own build, or the draft's preview build: whichever is newer */
+  from: 'site' | 'draft';
+  builtAt: string;
+  /** the page's path on the site */
+  path: string;
+  /** the frame the page's first <head> scripts run in, sandboxed (first-paint.ts) */
+  frame: string;
+  /** the answer's version (its ETag): asked with If-None-Match, a 304 means the one kept here is still right */
+  etag: string;
+}
+
+// the last few pages the server handed over, in memory only: the server sends them `no-store` (a draft's or a
+// protected page's HTML never stays on the disk), so an open after a save reuses one on a 304 instead
+const builtKept = new Map<string, BuiltPage>();
+function keep(key: string, page: BuiltPage): BuiltPage {
+  builtKept.delete(key);
+  builtKept.set(key, page);
+  while (builtKept.size > 4) builtKept.delete(builtKept.keys().next().value!);
+  return page;
+}
+
+/**
+ * The entry's last built page from the server, or null where there is no such route (astro dev: the shell reads the
+ * dev server's page itself). A server that has no build of it yet answers 404 `not-built`: an ApiError. The live demo
+ * has the sample blog's build on its own origin (`demo.site`), so the shell reads that page as in astro dev.
+ */
+export async function builtPage(c: string, id: string): Promise<BuiltPage | null> {
+  if (config().demo) return null;
+  const key = `${c}/${id}`;
+  const known = builtKept.get(key);
+  try {
+    return keep(key, await call<BuiltPage>(`preview/${enc(c)}/${enc(id)}/shell`, known ? { headers: { 'If-None-Match': `"${known.etag}"` } } : undefined));
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 304 && known) return keep(key, known);
+    if (err instanceof ApiError && !onServer() && (err.status === 404 || err.status === 405) && err.code !== 'not-built') return null;
+    throw err;
+  }
+}
 
 /** Where the device frame shows the entry: the server's preview (`live`: it follows unsaved changes through the
  *  autosave), else the page as the site's dev server draws the saved file (no preview set up, or dev mode). */

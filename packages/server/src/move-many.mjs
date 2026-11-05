@@ -156,6 +156,8 @@ export function moveManyRoutes(router, app, entries) {
     }
     const moves = withParents(asked, problems);
     let urls = null;
+    // the entries this request moves, looked up by key (not a scan of the list for every address)
+    let moving = null;
     for (const m of moves) {
       const ref = { collection: String(m?.collection ?? ''), id: String(m?.id ?? '') };
       const fail = (message) => problems.push({ ...ref, message });
@@ -225,7 +227,8 @@ export function moveManyRoutes(router, app, entries) {
       // collection's entries under it would be left at addresses under a page that moved
       if (relocates && m._with === undefined) {
         urls ??= allUrls();
-        const stays = urls.filter((u) => !(u.c.id === c.id && m.parent !== undefined) && !(u.c.id === c.id && u.id === ref.id) && under(u.url, summary.url) && !moves.some((x) => x.collection === u.c.id && x.id === u.id));
+        moving ??= new Set(moves.map((x) => `${x.collection}\0${x.id}`));
+        const stays = urls.filter((u) => !(u.c.id === c.id && m.parent !== undefined) && !(u.c.id === c.id && u.id === ref.id) && under(u.url, summary.url) && !moving.has(`${u.c.id}\0${u.id}`));
         if (stays.length) {
           fail(livesUnder(stays, summary.url));
           continue;

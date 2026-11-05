@@ -88,6 +88,14 @@ export function createReleaseBuilds(app) {
     return job;
   }
 
+  /** The last finished build of a target, whatever it was built from: { dir, builtAt }, or null (the canvas's page). */
+  function lastBuilt(target) {
+    const r = row(target);
+    if (!r?.built_at || outRel === null) return null;
+    const dir = path.join(dirOf(target), outRel);
+    return fs.existsSync(dir) ? { dir, builtAt: r.built_at } : null;
+  }
+
   /** Forget a target's build and remove its folder (a release that went live, a link no longer shown). */
   async function remove(target) {
     await removeTree(dirOf(target));
@@ -100,5 +108,5 @@ export function createReleaseBuilds(app) {
     else for (const j of cut) db.prepare("UPDATE release_builds SET status = 'failed', error = 'The server process running the build stopped.' WHERE status = 'building' AND job_id = ?").run(j);
   });
 
-  return { state, outDir, ensure, remove, dirOf, servable: () => outRel !== null };
+  return { state, outDir, lastBuilt, ensure, remove, dirOf, servable: () => outRel !== null };
 }

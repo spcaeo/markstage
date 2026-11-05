@@ -72,6 +72,12 @@ export const TRANSLATE_SITE_PORT = PORT_BASE + 31;
 // two server processes on one data dir (two-process.e2e.mjs): A +32 and B +34, inside DEV_PORTS (the files run one at
 // a time)
 export const TWO_PROCESS_PORTS = [PORT_BASE + 32, PORT_BASE + 34];
+// the canvas drawn in its built page on a server (canvas-server.e2e.mjs): its server +36 and the built site +38, inside
+// DEV_PORTS (the files run one at a time)
+export const CANVAS_SERVER_PORTS = [PORT_BASE + 36, PORT_BASE + 38];
+// the starter's canvas in its page, light and dark (canvas-starter.e2e.mjs): its `astro dev` +40, inside DEV_PORTS (the
+// files run one at a time)
+export const CANVAS_STARTER_PORT = PORT_BASE + 40;
 export const SHOTS = process.env.MARKSTAGE_E2E_SHOTS ?? null;
 
 async function loadPlaywright() {
@@ -98,7 +104,7 @@ export const pw = await loadPlaywright();
 export const skip = !pw ? 'Playwright not found (npm install at the repo root, or set MARKSTAGE_PLAYWRIGHT)' : false;
 if (pw) {
   const taken = listening();
-  const ours = [PORT, PREVIEW_PORT, STOCK_PORT, REDIR_PORT, LIVE_PORT, ...Array.from({ length: DEV_PORTS[1] - DEV_PORTS[0] + 1 }, (_, i) => DEV_PORTS[0] + i), ...LIBRARY_PORTS, GROUPS_PORT, ENTRIES_PORT, SHARE_PORT, ...EDIT_BUTTON_PORTS, ...GALLERY_PORTS, ...INBOX_ODOO_PORTS, RELEASES_UI_PORT, TOKENS_PORT, ...AI_SUGGEST_PORTS, TRANSLATIONS_PORT, SSO_UI_PORT, ROLES_UI_PORT, FIELDS_UI_PORT, AUTHORS_PORT, ...PAGE_TYPES_PORTS, LINKS_PORT, CANVAS_SHELL_PORT, ...QA_PORTS, ...QA2_PORTS, DEMO_PORT, MDX_PORT, MCP_PUBLISH_PORT, ...IMPORT_PORTS, ...AI_SEO_PORTS, TRANSLATE_SITE_PORT, ...TWO_PROCESS_PORTS];
+  const ours = [PORT, PREVIEW_PORT, STOCK_PORT, REDIR_PORT, LIVE_PORT, ...Array.from({ length: DEV_PORTS[1] - DEV_PORTS[0] + 1 }, (_, i) => DEV_PORTS[0] + i), ...LIBRARY_PORTS, GROUPS_PORT, ENTRIES_PORT, SHARE_PORT, ...EDIT_BUTTON_PORTS, ...GALLERY_PORTS, ...INBOX_ODOO_PORTS, RELEASES_UI_PORT, TOKENS_PORT, ...AI_SUGGEST_PORTS, TRANSLATIONS_PORT, SSO_UI_PORT, ROLES_UI_PORT, FIELDS_UI_PORT, AUTHORS_PORT, ...PAGE_TYPES_PORTS, LINKS_PORT, CANVAS_SHELL_PORT, ...QA_PORTS, ...QA2_PORTS, DEMO_PORT, MDX_PORT, MCP_PUBLISH_PORT, ...IMPORT_PORTS, ...AI_SEO_PORTS, TRANSLATE_SITE_PORT, ...TWO_PROCESS_PORTS, ...CANVAS_SERVER_PORTS, CANVAS_STARTER_PORT];
   const busy = ours.filter((p) => taken.has(p));
   if (busy.length) {
     // never a quiet skip: a run that did not run must not look like a pass

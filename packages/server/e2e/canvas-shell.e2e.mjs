@@ -66,12 +66,15 @@ describe('the canvas in its page (canvas.shell)', { skip, timeout: 240_000 }, ()
     if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'canvas-shell-1440.png') });
   });
 
-  test('the canvas measures as the page does, at 1440 and at 390 (the fidelity guard)', async () => {
-    const results = await checkFidelity({ playwright: pw, base: BASE, entries: [{ entry: `posts/${ID}`, page: pagePath }], widths: [1440, 390], bodyClass: 'post__body', parts: [['aside', '.aside']], loose: ['pre.astro-code'], shots: SHOTS ?? undefined });
+  test('the canvas measures as the page does, at 1440 and at 390, light and dark, every run of text readable (the fidelity guard)', async () => {
+    const results = await checkFidelity({ playwright: pw, base: BASE, entries: [{ entry: `posts/${ID}`, page: pagePath }], widths: [1440, 390], themes: ['light', 'dark'], bodyClass: 'post__body', parts: [['aside', '.aside']], loose: ['pre.astro-code'], shots: SHOTS ?? undefined });
     assert.ok(
       results.every((r) => r.ok),
       report(results),
     );
+    // the example blog's dark colours are reached by an attribute nothing on its page sets: readers in a dark system get it
+    // light, so the canvas stays light in a dark editor, every run of text at least 4.5:1 (canvas-contrast.mjs)
+    for (const r of results) assert.ok(r.contrast.count >= 20 && !r.contrast.failures.length, `${r.width} ${r.theme}: ${r.contrast.failures.join('; ')}`);
   });
 
   test('a panel that narrows the canvas narrows the page: its breakpoints follow the canvas, not the window', async () => {

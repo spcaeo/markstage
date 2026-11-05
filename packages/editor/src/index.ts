@@ -9,7 +9,7 @@ import { Editor, type JSONContent } from '@tiptap/core';
 import type { Node as PMNode } from '@tiptap/pm/model';
 import { NodeSelection } from '@tiptap/pm/state';
 /// <reference types="vite/client" />
-import { ApiError, getEntry, getSource, listEntries, onUnauthorized, previewUrl, request, saveEntry, saveSource, type Entry } from './api';
+import { ApiError, builtPage, getEntry, getSource, listEntries, onUnauthorized, previewUrl, request, saveEntry, saveSource, type Entry } from './api';
 import { BoxBehaviors } from './behaviors';
 import { BlockMoves } from './blocks';
 import { BodyLock } from './body-lock';
@@ -185,7 +185,7 @@ export function start(opts: StartOptions): void {
     page: (selector): HTMLElement | null => shell.pageElement(selector),
   });
   // the canvas inside the entry's real page, when the site turns it on (canvas.shell, docs/CANVAS-FIDELITY.md)
-  const shell: PageShell = new PageShell({ sheet, article: $('.ms-sheet > article'), headSlot: $('.ms-headslot'), canvas, dirty: () => isDirty(), redrawHead: () => void post.drawHead(), editor: getEditor, frontmatter: () => post.edits.merged(), scroller, pageUrl: (e) => (e.url ? previewUrl(e.collection, e.id, e.url).then((r) => r.url) : Promise.resolve(null)) });
+  const shell: PageShell = new PageShell({ sheet, article: $('.ms-sheet > article'), headSlot: $('.ms-headslot'), canvas, dirty: () => isDirty(), redrawHead: () => void post.drawHead(), editor: getEditor, frontmatter: () => post.edits.merged(), scroller, pageUrl: (e) => (e.url ? previewUrl(e.collection, e.id, e.url).then((r) => r.url) : Promise.resolve(null)), builtPage: (e) => builtPage(e.collection, e.id) });
   // AI suggestions, each at its URL, next to the value it is for (ai/editor.ts)
   const ai = aiEditor({ getEditor, entry: () => entry, title: () => post.title(), edits: post.edits, canvas, redraw: () => (post.drawer.sync(), seo.refresh(), panel.update()) });
   // the writing help: "Improve with AI" at the end of the format bar (ai/rewrite.ts)

@@ -163,8 +163,9 @@ export function createSiteRun(app, entries, { mediaAt, remember }) {
       return { sourceId: m.sourceId, url: m.url, action: row ? (fetchedNow.has(m.sourceId) ? 'fetch' : 'reuse') : 'skip', ...(row ? { id: row.id, path: row.path, alt: Boolean(row.alt?.trim()) } : { problem: m.problem ?? 'It could not be brought in; its pages keep its old address.' }) };
     });
     const mediaIdOf = new Map(result.media.filter((m) => m.id).map((m) => [m.sourceId, m.id]));
+    const withAlt = new Set(result.media.filter((m) => m.alt).map((m) => m.sourceId));
     result.review = last.review
-      .filter((r) => r.kind !== 'alt' || !result.media.find((m) => m.sourceId === r.media)?.alt)
+      .filter((r) => r.kind !== 'alt' || !withAlt.has(r.media))
       .map((r) => {
         const e = r.entry ? where.get(r.entry) : null;
         return { ...r, ...(e ? { entry: { sourceId: e.sourceId, collection: e.collection, id: e.action === 'skip' ? null : e.id, title: e.title } } : {}), ...(r.media ? { media: { sourceId: r.media, id: mediaIdOf.get(r.media) ?? null } } : {}) };

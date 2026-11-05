@@ -101,7 +101,8 @@ export function createUrlImport(app, lib) {
     const images = [...new Set(chosen.flatMap((p) => imagesOf(p.node, page.url)))];
     if (images.length > MAX_IMAGES) problems.push(`${images.length} pictures; the first ${MAX_IMAGES} are brought in, the rest left out`);
     const fetched = images.slice(0, MAX_IMAGES);
-    if (dry) return { url: page.url, items: chosen.map((p) => ({ id: p.id, name: p.label, kind, images: imagesOf(p.node, page.url).filter((u) => fetched.includes(u)).length })), media: fetched.length, problems };
+    const brought = new Set(fetched);
+    if (dry) return { url: page.url, items: chosen.map((p) => ({ id: p.id, name: p.label, kind, images: imagesOf(p.node, page.url).filter((u) => brought.has(u)).length })), media: fetched.length, problems };
 
     // the pictures, through the upload pipeline (not committed yet: they go in the items' commit)
     const deadline = Date.now() + IMAGES_TIME;

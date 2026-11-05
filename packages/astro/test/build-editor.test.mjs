@@ -34,6 +34,10 @@ test('builds the page, its script and styles under the base path, and the previe
   const css = r.css.map((f) => fs.readFileSync(path.join(out, f), 'utf8')).join('\n');
   const selector = fs.readFileSync(path.join(blog, 'src/styles/blog.css'), 'utf8').match(/^\.[a-z][a-z0-9-]+/m)[0];
   assert.ok(css.includes(selector), `blog.css is in it (${selector})`);
+  // fenced out of the page drawn around the canvas, as astro dev does at run time (canvas-shell/fence.ts): every rule
+  // of the site's copy matches outside the shell only, and the editor's own rules are left as they are
+  assert.match(css, /\.post__body blockquote:where\(:not\(\.ms-pg, ?\.ms-pg \*\)\)\{/);
+  assert.doesNotMatch(css, /\.ms-sheet[^{]*:where\(:not\(\.ms-pg/, 'the editor’s own CSS is not fenced');
   const agent = fs.readFileSync(path.join(out, 'preview-agent.js'), 'utf8');
   assert.doesNotMatch(agent, /^\s*(import|export)\s/m, 'a classic script, not a module');
   const marker = JSON.parse(fs.readFileSync(path.join(out, MARKER), 'utf8'));

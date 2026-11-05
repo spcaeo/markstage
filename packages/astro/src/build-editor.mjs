@@ -41,21 +41,40 @@ async function importVite(root) {
   throw new Error('markstage build-editor needs Vite, which comes with Astro: run npm install in the site first.');
 }
 
-/** The site's pageData() result, run through Vite (the module may be TypeScript and import the site's code). */
+/** A module run through Vite (it may be TypeScript and import the site's code). */
+async function importThrough(vite, file, root) {
+  if (vite.runnerImport) return (await vite.runnerImport(file, { root, configFile: false, logLevel: 'warn' })).module;
+  const server = await vite.createServer({ root, configFile: false, logLevel: 'warn', appType: 'custom', server: { middlewareMode: true, hmr: false, ws: false } });
+  try {
+    return await server.ssrLoadModule(file);
+  } finally {
+    await server.close();
+  }
+}
+
+/** The site's pageData() result. */
 async function pageDataOf(vite, cfg, root) {
   if (!cfg.editor.pageData) return {};
-  let mod;
-  if (vite.runnerImport) {
-    mod = (await vite.runnerImport(cfg.editor.pageData, { root, configFile: false, logLevel: 'warn' })).module;
-  } else {
-    const server = await vite.createServer({ root, configFile: false, logLevel: 'warn', appType: 'custom', server: { middlewareMode: true, hmr: false, ws: false } });
-    try {
-      mod = await server.ssrLoadModule(cfg.editor.pageData);
-    } finally {
-      await server.close();
-    }
-  }
+  const mod = await importThrough(vite, cfg.editor.pageData, root);
   return (await mod.default?.()) ?? {};
+}
+
+/**
+ * The editor's own copy of the site's CSS (imported with `?ms-site`, client.mjs), fenced out of the page drawn around
+ * the canvas, as editor/src/canvas-shell/fence.ts does at run time in `astro dev` (docs/CANVAS-FIDELITY.md, step 10):
+ * every rule matches outside the shell only. A normal plugin runs after Vite's CSS compile (imports inlined) and
+ * before its CSS is bundled, so it gets each file's whole CSS.
+ */
+async function fencePlugin(vite, root) {
+  const editorRoot = path.dirname(path.dirname(fileURLToPath(import.meta.resolve('@markstage/editor'))));
+  const { fenceSheet } = await importThrough(vite, path.join(editorRoot, 'src/canvas-shell/css.ts'), root);
+  return {
+    name: 'markstage-fence-site-css',
+    transform(code, id) {
+      if (!/\?ms-site$/.test(id)) return undefined;
+      return { code: fenceSheet(code), map: null };
+    },
+  };
 }
 
 /** Vite's logger without the two expected notes: site paths left for the server, and dynamic imports kept in the bundle. */
@@ -145,7 +164,7 @@ export async function buildEditor({ root = process.cwd(), out, config, logLevel 
       logLevel,
       customLogger,
       mode: 'production',
-      plugins: [virtualPlugin(cfg)],
+      plugins: [virtualPlugin(cfg), await fencePlugin(vite, root)],
       build: {
         outDir: tmp,
         emptyOutDir: false,

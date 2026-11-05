@@ -195,7 +195,8 @@ Keep the site's Markstage packages at the image's version: in a clone at that ta
 
 - One container per data dir: two containers on one volume are not tested. Several server processes on one data
   dir are supported on one machine with systemd (DEPLOY.md, "Several server processes"; docs/SCALING.md).
-- The built editor draws an article as a sheet with the site's CSS; drawing it inside the real page works in
-  `astro dev` only for now (docs/CANVAS-FIDELITY.md).
+- The built editor draws an article inside its last built page (`verify.public`, set in the config the image
+  writes); a draft never built yet is drawn as a sheet with the site's CSS until the next build
+  (docs/CANVAS-FIDELITY.md "On a server").
 - Previews (the real page with unsaved changes) and share links need their own host names and `preview` and
   `share` in config.json (DEPLOY.md); they are off in the config the image writes.

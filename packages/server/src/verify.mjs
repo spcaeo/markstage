@@ -17,7 +17,25 @@ export function builtFile(dir, p) {
   return candidates.find((f) => isWithin(dir, f) && fs.existsSync(f) && fs.statSync(f).isFile()) ?? null;
 }
 
-export const isRedirectStub = (file) => /<meta[^>]+http-equiv=["']?refresh/i.test(fs.readFileSync(file, 'utf8').slice(0, 4000));
+/**
+ * The first characters of a built file (`chars`, 4000 by default), read from its first bytes only: a page a writer
+ * made very large is never read whole to look at its head (security review, 5 Nov 2026).
+ */
+export const readHead = (file, chars = 4000) => readUpTo(file, chars * 4).slice(0, chars);
+
+/** A file's text, from at most its first `bytes` bytes (a character cut at the end is dropped). */
+export function readUpTo(file, bytes) {
+  const fd = fs.openSync(file, 'r');
+  try {
+    const buf = Buffer.alloc(Math.min(bytes, fs.fstatSync(fd).size));
+    const n = fs.readSync(fd, buf, 0, buf.length, 0);
+    return buf.subarray(0, n).toString('utf8');
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+export const isRedirectStub = (file) => /<meta[^>]+http-equiv=["']?refresh/i.test(readHead(file));
 
 export function createVerify(app) {
   const { config, store } = app;

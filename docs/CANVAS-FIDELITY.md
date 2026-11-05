@@ -73,7 +73,8 @@ it" for what (a) cannot show (scripts, the build's last word); (c) is a subset o
 Code: `packages/editor/src/canvas-shell/` (`page.ts`, `css.ts`, `dom.ts`), styles in `styles/shell.css`.
 
 1. **Read the page.** When an entry opens (and again after a save), the editor fetches the entry's page from the dev
-   server: same origin only. It reads the page's `<link rel=stylesheet>` and `<style>` CSS too.
+   server: same origin only. It reads the page's `<link rel=stylesheet>` and `<style>` CSS too. On a server the
+   page and its stylesheets come from the server's last build of the entry, as data ("On a server", below).
 2. **Find the text.** The element with `canvas.bodyClass` is the text; the nearest `canvas.articleClass` around it is
    the article.
 3. **Make it safe.** Scripts, frames, objects, `<base>`, `<meta>`, `<link>`, `<style>`, `on*` attributes, `autofocus`
@@ -87,12 +88,12 @@ Code: `packages/editor/src/canvas-shell/` (`page.ts`, `css.ts`, `dom.ts`), style
    their own: `sandbox="allow-scripts"` (no origin: no access to the editor, its storage or cookies) and a content
    security policy that runs inline scripts and loads nothing (no analytics or tag manager starts from the editor).
    A last script reports `<html>`'s and `<body>`'s attributes; event-handler attributes are dropped. Without an answer
-   within 2 s the page's own attributes are used. The editor's theme then decides the theme attribute (config
-   `themes.dark`).
+   within 2 s the page's own attributes are used. Then the page's colours, as its readers get them ("Colours", below).
 5. **The canvas in place of the text.** The page's text element is replaced by the editor's canvas. The editor's
    head (title, byline, cover…) takes the place of the page's own: page elements before the text whose first class
-   the head also draws, and the page's first heading of the title's tag, are hidden (`ms-pg-covered`). The editor's
-   wrappers have no box of their own (`display: contents`), so the canvas's children are where the page's were.
+   the head also draws, and the page's first heading of the title's tag, are hidden (`ms-pg-covered`). A title inside
+   a header of the page's (the starter's `header.post__head > time + h1 + p`) is found there too, and the editor's
+   head goes in its place, between what the page draws around it. The editor's wrappers have no box of their own (`display: contents`), so the canvas's children are where the page's were.
 6. **Scope classes.** Frameworks that scope CSS per component mark elements with an empty attribute or a class
    (`data-astro-cid-…`, `svelte-…`). Those are copied from the page's text element and head onto the editor's, so
    the scoped rules reach them.
@@ -129,7 +130,8 @@ Code: `packages/editor/src/canvas-shell/` (`page.ts`, `css.ts`, `dom.ts`), style
     measure the browser's window, not the canvas. The integration imports each file with `?ms-site`; `fence.ts`
     rewrites those `<style>`s (and again whenever the dev server replaces one) so every rule matches outside the
     shell only: `.a > .b::before` becomes `.a > .b:where(:not(.ms-pg, .ms-pg *))::before`, no weight added. Inside
-    the shell only the scoped copy of the page's own CSS applies.
+    the shell only the scoped copy of the page's own CSS applies. The built editor (on a server) gets the same fence
+    when it is built (`markstage build-editor`).
 11. **Nothing of the editor's changes how a block looks.** The canvas's clearfix (`::after { display: table }`) kept
     the last block's bottom margin inside the text, where the page lets it run out: everything after the text (an
     author box, related posts, the footer) was that margin lower (48px on the pilot site). In the shell it is gone. The
@@ -155,6 +157,29 @@ that lets a post turn such a part off gives it a `switch` setting (`CONFIG.md`),
 pack reads the same key from `entry.frontmatter`. The example blog does this for its list of contents
 (`examples/blog/markstage/contents.ts`, "Show contents").
 
+### Colours: the page as readers see it
+
+The canvas shows the page as a reader whose system is in the editor's colour scheme sees it: never the editor's own
+colours, in light or dark (`canvas-shell/scheme.ts`).
+
+- **The site's dark colours** (config `themes.dark`) are turned on in a dark editor only when the page turns dark by
+  itself for a reader in a dark system: its CSS has a `prefers-color-scheme: dark` rule, or a script of its reads the
+  system's scheme. A site whose dark colours nothing on the page turns on (the example blog: `data-theme="dark"`,
+  which only the screen check sets) stays light in a dark editor, as its readers get it. One the page's own first
+  scripts turned on stays. The screen check's Light / Dark switch still shows the site's dark colours on demand.
+- **What the page leaves to the browser stays the browser's**: the text colour (`CanvasText`), the scheme of its
+  controls (light, or the page's `<meta name="color-scheme">`), its font, and the window's background (the page's
+  `<html>` background, else its `<body>`'s, else `Canvas`, as the browser paints it). Before, a page with no text
+  colour of its own took the editor's (light text in a dark editor), and the window around a narrow body was the
+  editor's dark grey.
+- **Code blocks take the page's code colours**: a highlighter gives the page's code blocks their colours inline
+  (Astro's Shiki: `pre.astro-code` with `background-color` and `color`); the canvas's code blocks are the editor's,
+  without them, so they get the same two colours, as an inline style weighs on the page. Before, a dark editor
+  drew the page's light code box with the page's light text colour (1.2:1).
+
+The guard checks it in both themes: every run of text on the canvas at least 4.5:1 against what is behind it ("The
+guard", below).
+
 ### What the build does to the text: "What readers see"
 
 A site's build may change the text between the file and the page. The canvas never changes the source to look like
@@ -170,13 +195,70 @@ the page: what is edited is what is saved. Two things show the difference instea
   (`HeadCtx.page`, a copy of the page's element, as last saved), so a byline row with what the site works out is
   the site's, with only the editable parts (author, date) replaced.
 
-### With the server (not built yet)
+## On a server
 
-The shell reads the page from the dev server on the same origin. With the editor served by `@markstage/server` and
-the site built elsewhere, the page is on another origin and cannot be read by the browser. The plan: a
-`GET /preview/:collection/:id/shell` on the CMS's origin that returns the preview's page HTML and its CSS (it
-already builds previews, `API-PREVIEW.md`), with the same checks as the preview (roles, draft rules). The editor then
-reads that instead of the page's own URL; everything after step 2 is the same.
+In `astro dev` the shell reads the entry's page from the dev server, on the editor's own origin. The built editor
+served by `@markstage/server` (`editorDir`, `markstage build-editor`) has no such page on its origin: the site is
+built by the publish job and served elsewhere, and the preview has an origin of its own, on purpose (`API-PREVIEW.md`:
+the site's scripts run there, never where the editor's session is). So the server hands the page over **as data**:
+
+```
+GET /markstage/api/preview/:collection/:id/shell      (signed in)
+→ { html, sheets: [{ path, text }], from: "site" | "draft", builtAt, path, frame }
+```
+
+and the shell treats it exactly as it treats the dev server's page: from step 2 on, nothing changes (find the text,
+remove scripts and handlers, make it inert, scope the CSS, put the canvas in place of the text).
+
+**For the writer.** On a server the canvas sits in the entry's real page too: the site's header, columns, frame
+and footer, at the page's widths and breakpoints, with "What readers see". The page around the text is **the last
+build** of it, not the last save: after a save the canvas still shows the new text, and the frame changes with the
+site's next build (a publish, or a share link's build of the draft). "What readers see" says so: "As the site's
+build of Nov 5, 10:42 has it: later changes are not in it." A draft no build has yet (a new post, a draft never
+shared) opens on the sheet of paper as before, with a quiet note at the bottom right: "The page around the text
+shows here after the site's next build."
+
+**Which build.** The newest of the ones that have the entry's page (its address, `/posts/hello/` →
+`posts/hello/index.html`):
+
+- the site's own output, `verify.public` in `config.json` (the folder the publish job builds into and checks); for a
+  protected page, `verify.private`. A redirect stub there (an entry that moved) is not its page;
+- the draft's preview build: the one a share link of the draft makes, "as if published"
+  (`API-RELEASES.md`, `<data dir>/releases/builds/e_<collection>_<id>`), once it has finished.
+
+No new setting: without `verify.public` the server says so in the note, and the canvas is the sheet of paper.
+
+**Its stylesheets.** The page's `<link rel=stylesheet>` to a `.css` file of the **same build folder** are read and
+sent with it, by path (`/_astro/post.css`); the editor finds each link's text by that path. A link to another host
+(`https://cdn…`, `//cdn…`, `file:`) is left out and never fetched. `<style>` blocks are in the HTML already. The
+fonts and images the page and its CSS name by their built address (`/_astro/x.woff2`) are answered on the CMS
+origin from `verify.public`, to signed-in people only, images and fonts only (`site-files.mjs`).
+
+**The first `<head>` scripts.** Step 4 runs them in a sandboxed frame. In `astro dev` that frame is a `srcdoc`; on a
+server it would take on the editor page's CSP, which allows no inline script, so the server has a frame page for it,
+`GET /markstage/shell-frame`: an empty page whose own header says `sandbox allow-scripts` (no origin: no cookies,
+no storage, no access to the editor, whatever loads it), `default-src 'none'` (nothing is loaded) and
+`frame-ancestors 'self'`. The editor sends it the head (`postMessage`); the frame writes it and reports
+`<html>`'s and `<body>`'s attributes, as the `srcdoc` does.
+
+**The editor's copy of the site's CSS (step 10)** is fenced at build time on a server: `markstage build-editor`
+runs the same `fenceSheet` on each `?ms-site` file after Vite has compiled it (imports inlined), so the bundled copy
+matches outside the shell only, as it does in `astro dev`.
+
+### Its safety rules
+
+| Rule | How | Proof |
+|---|---|---|
+| No site script runs on the CMS origin | The page comes as JSON (`Content-Type: application/json`, the API's `default-src 'none'` CSP, `nosniff`): never a page on the CMS origin. The editor parses it with `DOMParser` (nothing runs or loads), then the same `sanitize` as in dev removes every script, frame, `<base>`, `<meta>`, `<link>`, `<style>`, `on*` attribute and `javascript:` link before any of it is in the editor's document, and makes the rest inert. Head scripts run only in the sandboxed frame (`sandbox allow-scripts`, no `allow-same-origin`, by the frame's attribute and by its own header) | `shell-page.test.mjs` "the frame the first <head> scripts run in…"; `canvas-server.e2e.mjs` "the page's scripts never run on the CMS origin…" (a script, an `onerror` handler and a cookie read in the built page: none ran in the editor, the head script ran in the frame with no cookies) |
+| The same sanitising as in dev | One code path from the parsed document on (`page.ts` `open`): only where the HTML and CSS texts come from differs | the e2e above, and the fidelity guard on the server |
+| No file outside the build folder | The page and each stylesheet through `staticFileIn` (`static-file.mjs`): no `..` (also encoded), and the real path, links followed, inside the folder's real path. Stylesheets `.css` only, the page `.html` only; the entry's address must start with one `/` | `shell-page.test.mjs` "never a file outside the build folder…", "an entry whose address leaves the site or the folder…" |
+| No request leaves the server (no SSRF) | Nothing is fetched by address: a link to another host is left out; `@import` and `url()` in the CSS are text, never followed by the server. In the editor, `@import` is dropped (step 7) and the CMS's CSP (`img-src`, `font-src`, `connect-src 'self'`) keeps `url()` on its own origin | `shell-page.test.mjs` "no request leaves the server…" (a stand-in host counts zero requests); the e2e counts zero too |
+| Only the web's addresses | `sanitize` keeps an address only when it is relative, a `#fragment`, http(s), mailto or tel (an image's source also `data:image/…`), read as a browser reads it: ASCII whitespace and control characters taken out first, so `java&#9;script:`, `&#1;javascript:` and a newline in a `formaction` are dropped too. SVG `set` and `animate*` (which could write a `javascript:` address after the page is drawn) are dropped. In the page around the canvas no link, image-map area or form button leaves the editor, and no form is sent | `shell-sanitize.test.ts` (the review's payloads, in Chromium with no CSP, clicked: nothing runs, nothing navigates) |
+| Size limits | The page's size from a stat first: over 4 MB it is never read (`413 too-large`, the sheet of paper), not even to see whether it is a redirect stub; a stub check reads a file's first 4,000 characters only. Each stylesheet at most 2 MB, 8 MB in all; the page's links are read up to the first 64 distinct `.css` files (a Set, one pass: 60,000 links cost milliseconds) | `shell-review.test.mjs` 1 and 2; `shell-page.test.mjs` "a redirect stub is not the page; size limits…" |
+| Who | Signed in, any role: whoever may read the entry (every signed-in role reads every entry, `SECURITY.md` "Known limits"). Signed out: `401`. A collection that is not the site's, or an entry not in it: `404` | `shell-page.test.mjs` "signed out: 401…", "…every role that may read it has it" |
+| Kept, and where | On the server by the files' size and time: at most 32 answers and 64 MB. Never on the browser's disk (`Cache-Control: no-store`: a draft's or a protected page's HTML does not stay after sign-out); the editor keeps the last 4 in memory and asks with `If-None-Match` (the answer's `etag`), so an open or a save that finds the same build is a `304` | `shell-review.test.mjs` 3; `shell-page.test.mjs` "a repeat is a 304 (ETag)…" |
+
+Nothing new is written to the audit log: reading an entry is not audited either.
 
 ## What it does not do yet
 
@@ -193,6 +275,12 @@ reads that instead of the page's own URL; everything after step 2 is the same.
   the canvas. It has not mattered so far; a site can scope it.
 - **Not the build's last word.** The canvas is the page as last saved, with the edited text in place. What the build
   would make of the unsaved text shows after a save, in "What readers see".
+- **On a server, the last build.** The page around the text is the newest build that has the entry (above), so a
+  change to the site's layout shows after its next build, and a draft that was never built has no page around it.
+  The server does not start a build for the canvas.
+- **On a server, images on another host.** The CMS's CSP allows images from its own origin only, so an image whose
+  source is on another host (`![](https://…)`) takes no room on the canvas (with or without the shell); on the page
+  it does. The guard runs on posts whose images are the site's own.
 - **Later, maybe:** a snapshot `<iframe>` of the page for exact script-made states, side by side (option b).
 
 ## The guard
@@ -218,6 +306,12 @@ its real page at the same window width, measures both, and fails when they diffe
   the editor's own controls (`data-ms-ui`, a control of `ms-` classes only) are left out;
 - each of the site's `frameParts` found in the page around the text (`[name, selector]`, e.g. the items of a contents
   list in the side column): how many are shown, their edges, size and top.
+
+And in every run, **contrast** (`scripts/canvas-contrast.mjs`, `contrastIn`): every run of text on the canvas
+(paragraphs, headings, lists, quotations, code, tables, links) and in the article around it (the title, the head,
+what follows the text) must have a WCAG contrast of at least 4.5:1 against what is really behind it: the first
+background that is not transparent, walking up through the page shell to the editor, partly transparent ones laid
+over what is under them. Nothing light on light, nothing dark on dark. The report gives the lowest ratio per kind.
 
 Each run is one width, one theme (`themes`: `light`, `dark`, the browser's colour scheme, which the editor and the
 page both follow) and one side panel (`sides`: `''`, or `outline`, `seo`… which narrows the canvas; the page is then
@@ -248,8 +342,22 @@ const results = await checkFidelity({ base, entries: [{ entry: 'posts/hello', pa
 assert.ok(results.every((r) => r.ok), report(results));
 ```
 
-Run it after any layout change on the site. Markstage runs it on the example blog in
-`packages/server/e2e/canvas-shell.e2e.mjs`.
+On a server, `--base` is the Markstage server (the built editor), `--page-base` the built site as readers get it,
+and `--storage-state` a signed-in browser's state (Playwright's `storageState` file); from a test, `pageBase` and
+`storageState`:
+
+```
+node packages/editor/scripts/canvas-fidelity.mjs --base https://cms.example.com --page-base https://www.example.com \
+  --storage-state signed-in.json --entry posts/hello=/blog/hello/ --widths 1440,390 --body-class "post__body"
+```
+
+Run it after any layout change on the site. Markstage runs it at 1440 and 390, light and dark, on the example blog in
+`astro dev` (`packages/server/e2e/canvas-shell.e2e.mjs`) and on a server, the blog built by Astro and the editor by
+`markstage build-editor` (`packages/server/e2e/canvas-server.e2e.mjs`), and on the starter in `astro dev`
+(`canvas-starter.e2e.mjs`): every measure 0px off, every run of text at least 4.5:1. The blog's dark colours are
+reached by an attribute only, so it is light in both themes; the starter follows the reader's system, so it is dark
+in a dark editor: the two cases of "Colours" above. The live demo is checked the same way in both themes
+(`demo.e2e.mjs`).
 
 ### Before and after, on a real site (three long posts, 1440 and 390)
 

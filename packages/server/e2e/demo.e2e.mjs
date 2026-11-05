@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { after, before, describe, test } from 'node:test';
 import { buildDemo } from '../../../scripts/demo/build-demo.mjs';
 import { serveStatic } from '../../../scripts/demo/lib.mjs';
+import { contrastIn, judge } from '../../editor/scripts/canvas-contrast.mjs';
 import { DEMO_PORT, blank, pw, skip } from './support.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -86,6 +87,27 @@ describe('the live demo, built and served as static files', { skip, timeout: 300
       assert.equal(covered, false, `at ${width}: the top bar is not covered`);
     }
     await page.setViewportSize({ width: 1440, height: 900 });
+  });
+
+  test('in the editor’s light and dark themes, the post is drawn as its readers get it, every run of text readable', async () => {
+    // the sample blog's dark colours are reached by an attribute nothing on its page sets: light for every reader, so
+    // light on the canvas in a dark editor too (canvas-shell/scheme.ts), at least 4.5:1 (canvas-contrast.mjs)
+    const look = (q, body) => q.locator(body).evaluate((el) => [getComputedStyle(el.querySelector('p')).color, getComputedStyle(el.querySelector('pre')).backgroundColor]);
+    for (const colorScheme of ['light', 'dark']) {
+      const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme });
+      try {
+        const p = await ctx.newPage();
+        await p.goto(`${EDITOR}#/e/posts/${ID}`);
+        await p.locator('.ms-sheet.is-shell .ms-canvas > .ProseMirror').waitFor({ timeout: 60_000 });
+        const r = judge(await contrastIn(p));
+        assert.ok(r.count >= 20 && !r.failures.length, `${colorScheme}: ${r.failures.join('; ')}`);
+        const pg = await ctx.newPage();
+        await pg.goto(`http://127.0.0.1:${DEMO_PORT}${BASE_PATH}blog/posts/${ID}/`);
+        assert.deepEqual(await look(p, '.ms-canvas > .ProseMirror'), await look(pg, '.post__body'), `${colorScheme}: the text and code colours are the page's`);
+      } finally {
+        await ctx.close();
+      }
+    }
   });
 
   test('typing changes the canvas, and Save shows the git diff of exactly that change', async () => {

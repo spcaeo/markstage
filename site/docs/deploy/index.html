@@ -210,9 +210,13 @@ replace a folder that is not an earlier build (no <code>markstage-editor.json</c
 <code>packs</code> (absolute paths), or articles with the site's own boxes cannot be saved.</li><li>Fonts and images the canvas draws with keep their site paths (<code>url(/fonts/x.woff2)</code>, <code>/img/x.webp</code>,
 <code>../../assets/x.webp</code>). The server answers those on the CMS host: files under the repo's <code>public/</code> for anyone (the
 live site serves them anyway), other images in the repo for signed-in people only. Only image and font types,
-never from <code>.git</code>, <code>node_modules</code> or a dot-folder, never through a link out of the repo; an SVG gets a sandbox CSP.</li><li><code>editor.canvas.shell</code> (the canvas drawn inside the entry's real page) works in <code>astro dev</code> only for now. The built
-editor cannot read the page from the CMS host, so it draws the canvas as before, a sheet with the site's CSS
-(docs/CANVAS-FIDELITY.md &quot;With the server&quot;).</li><li>Pages are edited on the real page, which is the preview: set up the preview host (<code>preview.origin</code>, below). The
+never from <code>.git</code>, <code>node_modules</code> or a dot-folder, never through a link out of the repo; an SVG gets a sandbox CSP.</li><li><code>editor.canvas.shell</code> (the canvas drawn inside the entry's real page) works on the server too: the server hands
+the editor the entry's last built page as data, from <code>verify.public</code> (or <code>verify.private</code> for a protected page),
+or from a share link's build of the draft, whichever is newer (docs/CANVAS-FIDELITY.md &quot;On a server&quot;). Set
+<code>verify.public</code> to the folder the build writes, or the canvas stays a sheet with the site's CSS and says why. A
+draft that was never built has no page around it until the site's next build. The fonts and images that page names
+by their built address (<code>/_astro/…</code>) are answered from that folder too, to signed-in people only. The page is sent
+<code>no-store</code> (a draft's HTML never stays in a browser's disk cache); a proxy in front must not cache <code>/markstage/api/</code>.</li><li>Pages are edited on the real page, which is the preview: set up the preview host (<code>preview.origin</code>, below). The
 site's dev server runs there on a private clone, with the field bindings (<code>data-ms-*</code>). <code>node_modules</code> is copied
 into the clone; packages the site links from outside its folder (<code>file:../markstage/...</code>) are linked again by
 their absolute path. Its own Markstage addresses (<code>/markstage/*</code> other than the preview's) answer 404 there, and

@@ -8,6 +8,25 @@ docs/RELEASES.md says how a release is made.
 
 ### Added
 
+- The real page on the server, too: with `canvas.shell` on, the built editor on a Markstage server draws each
+  article inside its real page, as `astro dev` does (the site's header, columns and footer, its widths and
+  breakpoints, "What readers see"). The page is the entry's last build: the site's own (`verify.public`, or
+  `verify.private` for a protected page) or a share link's build of the draft, whichever is newer. A draft never
+  built yet opens on the sheet of paper with a quiet note, "The page around the text shows here after the site's
+  next build." API: `GET preview/:c/:id/shell` (signed in) answers the page's HTML and its own stylesheets of the
+  same build as JSON, with an ETag; `GET /markstage/shell-frame` is the sandboxed frame the page's first `<head>`
+  scripts run in (docs/CANVAS-FIDELITY.md "On a server").
+- Safety: no script of the page runs on the CMS origin (the same sanitising as in dev; head scripts only in a frame
+  with no origin), no file is read outside the build folder, nothing is fetched by address (a stylesheet or
+  `@import` on another host is left out), and the page (4 MB) and its stylesheets (2 MB each, 8 MB and 64 in all)
+  are capped. The built site's fonts and images (`/_astro/…`) are answered on the CMS origin to signed-in people.
+- `markstage build-editor` fences the editor's own copy of the site's CSS out of the page around the canvas, as
+  `astro dev` does at run time. The fidelity guard takes `--page-base` and `--storage-state` (`pageBase`,
+  `storageState`) to measure a server's canvas against the built site.
+- The fidelity guard checks contrast too, in every theme: every run of text on the canvas and in the article around
+  it at least 4.5:1 against what is really behind it (`canvas-contrast.mjs`). Markstage runs it at 1440 and 390,
+  light and dark, on the example blog in `astro dev` and on a server, on the starter, and on the live demo.
+
 - AI link suggestions (Post settings › Topic and links › Suggest links with AI, on a site that keeps topics): up to
   five pages of the site's own link index to link from the open article, each with the words to link and one line on
   why. The server checks every suggestion before a writer sees it: the page is there, live or a draft the writer may
@@ -57,6 +76,23 @@ docs/RELEASES.md says how a release is made.
 
 ### Fixed
 
+- The canvas in a dark editor drew the page in colours its readers never see: the site's dark colours turned on for
+  a page that nothing turns dark for readers (the example blog), and its code blocks as a light box with light text
+  (1.2:1). The canvas now shows the page as a reader in the editor's colour scheme gets it: the site's dark colours
+  only when the page follows the system's scheme itself, the browser's own text colour, scheme and window background
+  where the page sets none (never the editor's), and code blocks in the colours the site's highlighter gives the
+  page's (docs/CANVAS-FIDELITY.md "Colours: the page as readers see it"). The example blog's own dark colours now
+  cover its code blocks, rules and "More on this topic" too.
+- The canvas on the starter drew the title twice: a title inside a header of the page's (`header > time + h1`) is
+  now the editor's title, in its place.
+- Security review of the canvas's page route (5 Nov 2026): a page with tens of thousands of stylesheet links no
+  longer stalls the server (one pass, stopped at 64 `.css` files); a page over 4 MB is never read, and a redirect-stub
+  check reads a file's head only (also in Redirects and Environments, and the page-type checks read at most 4 MB of a
+  built page; a protected page is streamed); the answers kept in memory have a 64 MB budget; the answer is
+  `no-store` (the editor keeps it in memory); and the page around the canvas keeps only the web's addresses, read as
+  a browser reads them (`java&#9;script:` and the like are dropped), drops SVG `set`/`animate*`, and holds every
+  link, image-map area, form button and form. The same one-scan-per-item pattern was fixed in an imported page's
+  images, an import's review and plan, and moving many pages.
 - An import's report now says what its plan left out before any item was made: a kind with no collection chosen
   ("4 products left out") and things not brought over (menus and the like), in the Import screen and on the command
   line, as the plan did (`counts.left` and `counts.other` in the result).

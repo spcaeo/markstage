@@ -7,9 +7,18 @@
   margin: 0;
   padding: 0;
   border-radius: 0;
-  background: none;
+  /* the page's window: its background as the browser paints it for the page (page.ts theme(), scheme.ts) */
+  background: var(--ms-pg-window, none);
   box-shadow: none;
   container: ms-vp / inline-size;
+}
+/* what the page leaves to the browser is the browser's, as on the page, never the editor's (its dark text, its dark
+   controls, its sans-serif): the page's text colour, colour scheme and font where its CSS sets none. No weight: any
+   rule of the site's wins. */
+:where(.ms-sheet.is-shell) > :where(.ms-pg) {
+  color: CanvasText;
+  color-scheme: var(--ms-pg-scheme, light);
+  font: initial;
 }
 /* the editor's own article is empty while its parts are in the page */
 .ms-sheet.is-shell > article {
@@ -69,6 +78,10 @@
 }
 .ms-pg-bar [data-readers] {
   box-shadow: var(--ms-shadow);
+}
+/* on a server with no build of the entry yet: the note alone says why the page is not around the text */
+.ms-pg-bar [data-readers][hidden] {
+  display: none;
 }
 .ms-pg-bar [data-readers][aria-pressed='true'] {
   border-color: var(--ms-accent);

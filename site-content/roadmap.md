@@ -55,7 +55,7 @@ items:
   - id: server-canvas
     title: The real page on the server, too
     what: The built editor on a server draws each article inside its real page, as astro dev does today.
-    status: planned
+    status: shipped
     rows: []
   - id: adapters
     title: Adapters beyond Astro

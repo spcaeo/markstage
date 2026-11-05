@@ -153,9 +153,13 @@ node node_modules/@markstage/astro/bin/markstage.mjs build-editor --out /srv/mar
   `../../assets/x.webp`). The server answers those on the CMS host: files under the repo's `public/` for anyone (the
   live site serves them anyway), other images in the repo for signed-in people only. Only image and font types,
   never from `.git`, `node_modules` or a dot-folder, never through a link out of the repo; an SVG gets a sandbox CSP.
-- `editor.canvas.shell` (the canvas drawn inside the entry's real page) works in `astro dev` only for now. The built
-  editor cannot read the page from the CMS host, so it draws the canvas as before, a sheet with the site's CSS
-  (docs/CANVAS-FIDELITY.md "With the server").
+- `editor.canvas.shell` (the canvas drawn inside the entry's real page) works on the server too: the server hands
+  the editor the entry's last built page as data, from `verify.public` (or `verify.private` for a protected page),
+  or from a share link's build of the draft, whichever is newer (docs/CANVAS-FIDELITY.md "On a server"). Set
+  `verify.public` to the folder the build writes, or the canvas stays a sheet with the site's CSS and says why. A
+  draft that was never built has no page around it until the site's next build. The fonts and images that page names
+  by their built address (`/_astro/…`) are answered from that folder too, to signed-in people only. The page is sent
+  `no-store` (a draft's HTML never stays in a browser's disk cache); a proxy in front must not cache `/markstage/api/`.
 - Pages are edited on the real page, which is the preview: set up the preview host (`preview.origin`, below). The
   site's dev server runs there on a private clone, with the field bindings (`data-ms-*`). `node_modules` is copied
   into the clone; packages the site links from outside its folder (`file:../markstage/...`) are linked again by
