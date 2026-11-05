@@ -37,8 +37,8 @@ export const PRISMIC_CARDS = [
 
 /** The AI and MCP band: what ships today (the third card is the roadmap's AI items, read from site-content/roadmap.md). */
 export const AI_CARDS = [
-  { title: 'MCP server', text: 'An agent works with the same roles, locks and checks as the person whose token it holds, and only ever drafts.' },
-  { title: 'Suggestions where you work', text: 'Alt text for an image, a search title and description, a translation draft, a summary of a promotion.' },
+  { title: 'MCP server', text: 'An agent works with the same roles, locks and checks as the person whose token it holds. It drafts, and publishes only if an owner allows it.' },
+  { title: 'Suggestions where you work', text: 'Better words for a selection, links to your own pages, fixes for search problems, alt text, a search title and description, a translation draft.' },
 ];
 
 /** The chips under the hero's buttons. */

@@ -293,6 +293,19 @@ describe('site/ is built from its sources', () => {
     assert.match(features, new RegExp(`${ALL_FEATURES.length} features`));
   });
 
+  test('/ai/ shows every AI feature of the feature list, and names every provider', () => {
+    // its own hand-kept list once missed the link and fix suggestions, and said only Anthropic answered
+    const ai = built.files.find((x) => x.file === 'ai/index.html').content.replace(/&#39;|&rsquo;/g, '’');
+    const group = FEATURE_GROUPS.find((g) => g.id === 'ai');
+    for (const f of group.items.filter((x) => x.id.startsWith('ai-') && x.id !== 'ai-providers')) assert.ok(ai.includes(`<h3>${f.title}</h3>`), `/ai/ lacks ${f.title}`);
+    for (const p of ['Anthropic', 'OpenAI-compatible', 'Ollama']) assert.ok(ai.includes(p), `/ai/ does not name ${p}`);
+    assert.doesNotMatch(ai, /Anthropic’s models answer today/);
+    // the home page's AI band: no promise the agent "only ever drafts" (it may publish when an owner allows it)
+    const home = built.files.find((x) => x.file === 'index.html').content;
+    assert.doesNotMatch(home, /only ever drafts|never publishes/);
+    for (const w of ['Better words for a selection', 'links to your own pages', 'fixes for search problems']) assert.ok(home.includes(w), `home AI band lacks “${w}”`);
+  });
+
   test('the README lists every feature, grouped as on /features/, and keeps the new tagline', () => {
     const readme = fs.readFileSync(path.join(REPO_ROOT, 'README.md'), 'utf8');
     const section = /\n## Features\n([\s\S]*?)\n## /.exec(readme)?.[1] ?? '';

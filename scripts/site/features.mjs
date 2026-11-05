@@ -79,14 +79,14 @@ ${groups}
   };
 }
 
-/** Where each AI suggestion is, in the editor's own words (docs/WRITING.md "Get a suggestion from the AI"). */
-const SUGGESTIONS = [
-  ['Alt text', 'Suggest on an image’s Alt line, in an image’s settings, under a cover’s alt text, or under a picture’s alt text on a page.'],
-  ['Search title and description', 'Suggest title and description in the SEO check, next to the search result as Google shows it.'],
-  ['A translation draft', 'Draft translation under a region in Post settings, for a page in another of the site’s languages.'],
-  ['A promotion summary', 'Summarize changes beside a promotion’s reason: what moving staging to production changes, in plain words.'],
-  ['Better words for a selection', 'Select words on the page, then Improve with AI in the format bar: rewrite, shorten, fix the spelling and grammar, or change the tone. The change shows beside the words; accept, edit or reject it.'],
-];
+/**
+ * The editor's AI suggestions for /ai/, from the one feature list (features-content.mjs, the AI group): every `ai-…`
+ * item but the providers, which /ai/ states as a fact below. A hand-kept copy here missed the link and fix
+ * suggestions when they shipped (features.test in build-site.test.mjs keeps the two in step).
+ */
+export const AI_GROUP = FEATURE_GROUPS.find((g) => g.id === 'ai');
+export const SUGGESTIONS = AI_GROUP.items.filter((f) => f.id.startsWith('ai-') && f.id !== 'ai-providers').map((f) => [f.title, f.text]);
+const PROVIDERS = AI_GROUP.items.find((f) => f.id === 'ai-providers');
 
 const MCP_FACTS = [
   ['As a person, never more', 'An agent acts as the person whose token it holds: the same role, the same locks, the same checks and the site’s own rules. A token reads, or reads and drafts; it lasts 1 to 90 days.'],
@@ -144,7 +144,7 @@ export function aiPage({ media, roadmap }) {
           <div class="grid2">${SUGGESTIONS.map(([t, x]) => `<article class="f"><h3>${e(t)}</h3><p>${e(x)}</p></article>`).join('')}</div>
           <ul class="ticks">
             <li>Bring your own key: the person who runs the server sets <code>MARKSTAGE_AI_KEY</code> or a key file. Without one, everything else works and the editor says why suggestions are off.</li>
-            <li>Anthropic’s models answer today; the model and the limits per minute and per day are set on the server.</li>
+            <li>${e(PROVIDERS.text)} The model and the limits per minute and per day are set on the server.</li>
             <li>A suggestion writes no file and no commit. Accepting it goes through the editor’s normal save, with the same rights, locks and checks.</li>
           </ul>
           <p><a href="${root}docs/api-ai/">AI suggestions, in full</a></p>
