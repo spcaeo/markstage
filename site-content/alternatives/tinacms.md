@@ -25,8 +25,8 @@ pre-release.
 | Editing on the page | Text typed on the real page; other fields in a side panel | Click a region; its field opens in a sidebar form and the page updates live |
 | Setting up a page for editing | Each component marks its fields with a helper (the marks appear in editor mode only) | Each page gets a schema field, a data loader, and an island or a server route |
 | Astro output | The live site stays fully static | Visual editing wants `output: 'server'` and an adapter, or every region in `<TinaIsland>` |
-| Content | Markdown and JSON in git | Markdown, MDX, JSON, YAML in git |
-| MDX | No | Yes |
+| Content | Markdown, MDX and JSON in git | Markdown, MDX, JSON, YAML in git |
+| MDX | Partly: words and simple component settings; code kept as written; components shown as cards | Yes |
 | Self-hosting | Free; no database server (its working data, such as people, sessions, the inbox and drafts, in one SQLite file) | Free; needs a database adapter such as MongoDB or Postgres as a cache, and "some features are not available" |
 | Hosted plan | None | TinaCloud: Free (2 users), Team $29/mo, Business $299/mo |
 | Review before going live | Staging and production, promotion rules, included | Editorial workflow on protected branches and pull requests, on Team and up |
@@ -37,7 +37,8 @@ pre-release.
 
 ## Where TinaCMS is stronger
 
-- **MDX.** TinaCMS edits MDX; Markstage edits Markdown and JSON only.
+- **MDX.** TinaCMS has edited MDX for longer. Markstage's MDX support is new, and shows components as cards rather
+  than as the site renders them.
 - **A hosted option.** TinaCloud runs the backend for you. Markstage needs a server you look after.
 - **Many frameworks.** TinaCMS supports more than Astro. Markstage has one adapter today, Astro; adapters beyond Astro are planned ([roadmap](/roadmap/#adapters)).
 - **A large community.** TinaCMS has about 13.9k stars on GitHub and years of use.
@@ -46,7 +47,8 @@ pre-release.
 
 Your Markdown and JSON files stay where they are. List the same folders as collections in `markstage.config.mjs`,
 add the `@markstage/astro` integration, and mark the fields your components show so they can be edited on the page.
-MDX files are not edited by Markstage, so keep them in TinaCMS or convert them to Markdown first. When you are
+MDX files become collections with `format: 'mdx'`: their words and simple component settings are edited, their
+code is kept as written. When you are
 ready, remove the `tina()` integration and the island routes. Run the Markstage server with Docker Compose or
 systemd and nginx; see the deploy guide.
 
@@ -64,9 +66,9 @@ editing needs server output and an adapter, or every editable region wrapped in 
 
 ### Can Markstage edit MDX like TinaCMS?
 
-Not yet. Today Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS
-or Keystatic fits better. MDX editing is coming in 0.4.0, with the prose editable and the code locked
-([roadmap](/roadmap/#mdx)).
+Partly. Markstage edits MDX files' words and a component's simple settings, and keeps imports, expressions and code
+settings exactly as written. Components show as cards on the canvas, not as the site renders them. If writers need
+to see and change components as rendered, TinaCMS fits better.
 
 ### Do I need a database to self-host?
 

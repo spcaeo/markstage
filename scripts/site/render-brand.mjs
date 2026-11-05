@@ -3,9 +3,11 @@
 //   npm run site:brand
 //
 //   assets/brand/markstage.svg, markstage-dark.svg           the mark, for light and dark backgrounds
-//   assets/brand/markstage-logo.svg, markstage-logo-dark.svg  the mark and the wordmark (the README header)
+//   assets/brand/markstage-logo.svg, markstage-logo-dark.svg  the mark, the wordmark and the tagline (the README header)
 //   assets/brand/markstage-512.png, markstage-logo.png, markstage-logo-dark.png
-//   site/icon.svg (follows the browser's theme), site/favicon.ico (16, 32, 48), site/apple-touch-icon.png (180)
+//   site/icon.svg (the small mark, follows the browser's theme), site/favicon.ico (16, 32, 48: the small mark at 16
+//   and 32 px, so it stays crisp in a tab), site/apple-touch-icon.png (180)
+// Every file is still: the caret blinks only on the site, in CSS.
 //
 // PNGs are drawn by Chromium (Playwright) with a transparent background, then shrunk by sharp.
 import fs from 'node:fs';
@@ -74,12 +76,14 @@ async function main() {
     const [lw, lh] = /viewBox="0 0 (\d+) (\d+)"/.exec(svgs.logo).slice(1).map(Number);
     write(path.join(BRAND, 'markstage-logo.png'), await small(await big(svgs.logo, lw * 2, lh * 2)));
     write(path.join(BRAND, 'markstage-logo-dark.png'), await small(await big(svgs.logoDark, lw * 2, lh * 2)));
-    const favicon = markFile('light', { arch: false });
     const icons = [];
-    for (const size of [16, 32, 48]) icons.push({ size, data: await sharp(await png(favicon, size * 4, size * 4)).resize(size, size).png().toBuffer() });
+    for (const size of [16, 32, 48]) {
+      const favicon = markFile('light', { small: size <= 32 });
+      icons.push({ size, data: await sharp(await png(favicon, size * 4, size * 4)).resize(size, size, { kernel: 'lanczos3' }).png().toBuffer() });
+    }
     write(path.join(SITE, 'favicon.ico'), icoFile(icons));
-    // an Apple touch icon is square and opaque: the mark on the light page colour, with room around it
-    const touch = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 44 44" width="180" height="180"><rect x="-6" y="-6" width="44" height="44" fill="${PALETTE.light.page}"/>${markFile('light').replace(/^<svg[^>]*>|<\/svg>\n$/g, '')}</svg>`;
+    // an Apple touch icon is square and opaque (iOS rounds its corners): the slash and caret on ink, edge to edge
+    const touch = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 40 40" width="180" height="180"><rect x="-4" y="-4" width="40" height="40" fill="${PALETTE.light.tile}"/>${markFile('light').replace(/^<svg[^>]*>|<\/svg>\n$/g, '')}</svg>`;
     write(path.join(SITE, 'apple-touch-icon.png'), await small(await big(touch, 180, 180)));
   } finally {
     await browser.close();

@@ -3,6 +3,7 @@
 // a changed wrap block or list keeps the unchanged parts inside it. Only changed or new blocks use the printer.
 
 import { keepListsApart } from './lists.mjs';
+import { containerHead } from './mdx.mjs';
 
 // Longest common subsequence of two string lists -> matched index pairs, in order.
 function lcs(a, b) {
@@ -96,6 +97,11 @@ export function makeSurgical(reg, printer) {
 
   // A changed node that has an original counterpart of the same type: wraps and lists keep their unchanged insides.
   function emitChanged(node, e, body, printed) {
+    // an MDX container (the same component, its tags as written): its props written into its opening text, and
+    // its unchanged children kept as they are
+    if (node.type === 'mdxContainer' && e.kids?.length && node.content?.length && node.attrs?.open === e.node.attrs?.open && node.attrs?.close === e.node.attrs?.close) {
+      return containerHead(node.attrs) + emitBlocks(node.content, e.kids, body).text + node.attrs.close;
+    }
     if (reg.isWrap(node.type) && e.kids?.length && node.content?.length) {
       const head = reg.printOpen(node) === reg.printOpen(e.node) ? body.slice(e.start, e.inner[0]) : reg.printOpen(node) + '\n\n';
       const tail = reg.printClose(node) === reg.printClose(e.node) ? body.slice(e.inner[1], e.end) : '\n\n' + reg.printClose(node);

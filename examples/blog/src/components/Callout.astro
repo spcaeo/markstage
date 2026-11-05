@@ -1,0 +1,13 @@
+---
+// A boxed note in a guide (src/content/guides/*.mdx): `type` is note, tip or warn, `title` an optional heading.
+// In Markstage it is a component card whose type and title change in the side panel (docs/MDX.md).
+interface Props {
+  type?: 'note' | 'tip' | 'warn';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+---
+<aside class={`callout callout--${type}`} role="note">
+  {title && <p class="callout__title">{title}</p>}
+  <slot />
+</aside>

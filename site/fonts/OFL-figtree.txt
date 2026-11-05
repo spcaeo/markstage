@@ -1,11 +1,11 @@
-Big Shoulders Display (site/fonts/big-shoulders-display-800.woff2, a Latin subset of the ExtraBold weight,
-used for the Markstage wordmark and the site headings).
+Figtree (site/fonts/figtree.woff2, a Latin subset of the variable font, weights 400 to 700, used for the
+site text and the tagline).
 
-Copyright 2019 The Big Shoulders Project Authors (https://github.com/xotypeco/big_shoulders)
+Copyright 2022 The Figtree Project Authors (https://github.com/erikdkennedy/figtree)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
-https://openfontlicense.org
+http://scripts.sil.org/OFL
 
 
 -----------------------------------------------------------
@@ -21,7 +21,7 @@ with others.
 
 The OFL allows the licensed fonts to be used, studied, modified and
 redistributed freely as long as they are not sold by themselves. The
-fonts, including any derivative works, can be bundled, embedded,
+fonts, including any derivative works, can be bundled, embedded, 
 redistributed and/or sold with any software provided that any reserved
 names are not used by derivative works. The fonts and derivatives,
 however, cannot be released under any other type of license. The

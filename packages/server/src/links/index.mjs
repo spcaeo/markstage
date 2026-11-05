@@ -216,11 +216,11 @@ export async function createLinks(app, entries) {
     if (c.format !== 'md') throw new HttpError(422, 'no-quick-fix', 'Only Markdown pages can be changed from here. Open the page and change it there.');
     const out = await repoLock.run(async () => {
       const cur = store.read(c, id);
-      const doc = converter.mdToDoc(cur.text).doc;
+      const doc = converter.mdToDoc(cur.text, c).doc;
       const next = edit(doc);
       if (!next) throw new HttpError(409, 'suggestion-gone', 'The page changed since, so these words are not there any more. Look at the list again.');
       const summary = store.summarize(c, id, cur.text);
-      const h = { c, id, before: cur.text, after: app.many.stamped(c, cur.text, converter.docToMd(next, cur.text)), title: summary.title || id, status: summary.status ?? 'published' };
+      const h = { c, id, before: cur.text, after: app.many.stamped(c, cur.text, converter.docToMd(next, cur.text, c)), title: summary.title || id, status: summary.status ?? 'published' };
       const problem = await app.many.problemOf(ctx, h);
       if (problem) throw new HttpError(422, 'refused', `“${h.title}” cannot be changed: ${problem}`);
       if (!c.hasStatus || h.status === 'published') {

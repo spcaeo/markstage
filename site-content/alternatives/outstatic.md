@@ -23,7 +23,7 @@ tools included. Markstage is pre-release.
 | | Markstage | Outstatic |
 | --- | --- | --- |
 | Editing | On the real page | A dashboard editor with custom fields |
-| Formats | Markdown and JSON | Markdown and MDX |
+| Formats | Markdown, MDX and JSON | Markdown and MDX |
 | Git | A git repository on your own server | GitHub |
 | Sign-in without GitHub | Included: email and password, single sign-on | Pro: email magic link and Google |
 | Commit author | The person who saved | Edits through email or Google sign-in commit as the Outstatic Bot |
@@ -33,14 +33,15 @@ tools included. Markstage is pre-release.
 
 ## Where Outstatic is stronger
 
-- **MDX.** Outstatic edits MDX; Markstage does not yet (MDX editing is coming in 0.4.0, [roadmap](/roadmap/#mdx)).
+- **MDX.** Outstatic has edited MDX for longer. Markstage's MDX support is new: words and simple settings, code
+  kept as written.
 - **A hosted plan.** Outstatic Pro runs the dashboard for you.
 - **Setup speed.** Its site promises a CMS on your repo in about five minutes.
 
 ## Moving from Outstatic to Markstage
 
 Your Markdown files are in your repository already. Add their folders as collections in `markstage.config.mjs`
-and add the `@markstage/astro` integration. Keep MDX files where they are, or convert them to Markdown. Invite your
+and add the `@markstage/astro` integration; MDX folders become collections with `format: 'mdx'`. Invite your
 editors to Markstage; each save is then committed in their own name.
 
 ## Frequently asked questions

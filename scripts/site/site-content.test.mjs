@@ -73,6 +73,8 @@ describe('site-content/ on the site', { skip: !fs.existsSync(CONTENT) && 'no sit
     const targets = [
       ['index.html', mains['Home page']],
       ['compare/index.html', Object.entries(mains).find(([k]) => k.startsWith('/compare/'))?.[1]],
+      ['features/index.html', mains['/features/']],
+      ['ai/index.html', mains['/ai/']],
       ...[...body.matchAll(/^\| ([a-z0-9][a-z0-9-]*) \| ([^|]+?) \|/gm)].map((m) => [`alternatives/${m[1]}/index.html`, m[2]]),
     ];
 

@@ -2,7 +2,7 @@
 // the one copy/open helper every shown value goes through. Plain HTML pages, no framework; site/enhance.js only adds
 // the copy action, the GitHub star count and the menu toggle.
 import { LOGO } from './brand.mjs';
-import { AUTHOR, CONTACT_EMAIL, LICENSE_URL, NAME, OG_IMAGES, OG_SIZE, PUBLISHER, REPO, REPO_URL, SITE_URL, repoFile } from './config.mjs';
+import { AUTHOR, CONTACT_EMAIL, LICENSE_URL, NAME, OG_IMAGES, OG_SIZE, PUBLISHER, REPO, REPO_URL, SITE_URL, TAGLINE, repoFile } from './config.mjs';
 import { escapeHtml as e } from './markdown.mjs';
 
 export { LOGO };
@@ -52,6 +52,7 @@ export const ICONS = {
   github: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>',
   arrow: svg(line('M5 12h14M13 6l6 6-6 6')),
   menu: svg(line('M4 7h16M4 12h16M4 17h16')),
+  star: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>',
 };
 
 
@@ -77,18 +78,20 @@ export function breadcrumbs(trail, root) {
   return `<nav class="crumbs" aria-label="Breadcrumb"><ol>${items.join('')}</ol></nav>`;
 }
 
+// the top bar's links; Alternatives, FAQ, Why and Roadmap are in the footer
 const NAV = [
-  ['', '#features', 'Features', 'features'],
-  ['', 'docs/', 'Docs', 'docs'],
+  ['', 'features/', 'Features', 'features'],
+  ['', 'ai/', 'AI &amp; MCP', 'ai'],
   ['', 'compare/', 'Compare', 'compare'],
-  ['', 'alternatives/', 'Alternatives', 'alternatives'],
-  ['', 'faq/', 'FAQ', 'faq'],
-  ['', 'why/', 'Why we built it', 'why'],
   ['', 'showcase/', 'Showcase', 'showcase'],
+  ['', 'docs/', 'Docs', 'docs'],
 ];
 
-/** The GitHub button of the top bar: the mark, "Star on GitHub", and the star count enhance.js fills in. */
-const githubButton = `<a class="gh-btn" href="${REPO_URL}" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub">${ICONS.github}<span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="${REPO}"></span></a>`;
+/** The GitHub button of the top bar: the ink pill with a star, "Star on GitHub", and the count enhance.js fills in. */
+const githubButton = `<a class="gh-btn" href="${REPO_URL}" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub">${ICONS.star}<span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="${REPO}"></span></a>`;
+
+/** The mark, the name as the wordmark writes it, and the tagline under it. */
+const brand = (r) => `<a class="brand" href="${r}" aria-label="${NAME}, home">${LOGO}<span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">${TAGLINE}</span></span></a>`;
 
 /**
  * One full page. `path` is the page's site path ('' for home, 'docs/deploy/'). `root` is how links reach the site
@@ -107,7 +110,7 @@ export function page({ path, root, title, description, body, data = [], og = 'ho
     <meta name="description" content="${e(description)}" />
 ${noindex ? '    <meta name="robots" content="noindex" />\n' : `    <link rel="canonical" href="${absolute(path)}" />\n`}    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="${type}" />
     <meta property="og:site_name" content="${NAME}" />
     <meta property="og:title" content="${e(title)}" />
@@ -127,7 +130,8 @@ ${modified ? `    <meta property="article:modified_time" content="${modified}" /
     <link rel="icon" href="${r}icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="${r}apple-touch-icon.png" />
     <link rel="alternate" type="text/plain" title="${NAME} for AI assistants" href="${r}llms.txt" />
-    <link rel="preload" href="${r}fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="${r}fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="${r}fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="${r}styles.css" />
 ${styles.map((s) => `    <link rel="stylesheet" href="${r}${s}" />\n`).join('')}
     <script src="${r}enhance.js" defer></script>
@@ -137,7 +141,7 @@ ${scripts.map((s) => `    <script src="${r}${s}" defer></script>\n`).join('')}${
     <a class="skip" href="#main">Skip to content</a>
     <header class="topbar">
       <div class="wrap topbar-row">
-        <a class="brand" href="${r}">${LOGO}<span>${NAME}</span></a>
+        ${brand(r)}
         <nav id="main-nav" class="main-nav" aria-label="Main">
           ${NAV.map(link).join('\n          ')}
         </nav>
@@ -153,14 +157,16 @@ ${body}
     <footer class="footer">
       <div class="wrap footer-grid">
         <div>
-          <p class="footer-brand"><a class="brand" href="${r}">${LOGO}<span>${NAME}</span></a></p>
+          <p class="footer-brand">${brand(r)}</p>
           <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by ${PUBLISHER.name} for its own site, free to self-host.</p>
           <p class="muted small">Contact: ${copyable(CONTACT_EMAIL, { href: `mailto:${CONTACT_EMAIL}`, code: false, what: 'email address' })}</p>
         </div>
         <nav aria-label="Footer" class="footer-cols">
           <div>
             <p class="footer-head">Product</p>
-            <a href="${r}#features">Features</a>
+            <a href="${r}features/">Features</a>
+            <a href="${r}ai/">AI and MCP</a>
+            <a href="${r}demo/">Live demo</a>
             <a href="${r}#install">Install</a>
             <a href="${r}compare/">Compare</a>
             <a href="${r}alternatives/">Alternatives</a>
@@ -191,6 +197,7 @@ ${body}
       <div class="wrap footer-row small muted">
         <span><a href="${LICENSE_URL}" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
         <span>© 2026 <a href="${PUBLISHER.url}" target="_blank" rel="noopener">${PUBLISHER.name}</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; ${NAME} is not affiliated with them.</span>
       </div>
     </footer>
   </body>

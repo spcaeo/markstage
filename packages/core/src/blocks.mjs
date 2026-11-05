@@ -33,6 +33,7 @@ export function definePack(pack) {
 const CORE_TYPES = new Set([
   'doc', 'paragraph', 'heading', 'horizontalRule', 'codeBlock', 'blockquote', 'bulletList', 'orderedList', 'listItem',
   'table', 'tableRow', 'tableHeader', 'tableCell', 'image', 'text', 'hardBreak', 'rawHtml', 'rawInline',
+  'mdxCode', 'mdxComponent', 'mdxContainer', 'mdxInline',
 ]);
 
 /** The blocks of all packs, indexed for the converter. */

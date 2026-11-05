@@ -1,0 +1,125 @@
+/* The code parts of an MDX file on the canvas (mdx/views.ts): locked cards and lines. Tokens only, so both themes
+   apply; the site's CSS does not reach these (ms- classes). */
+.ms .ProseMirror .ms-mdx-card {
+  position: relative;
+  margin: 1.25em 0;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  overflow: hidden;
+}
+.ms .ProseMirror .ms-mdx-card.ProseMirror-selectednode,
+.ms .ProseMirror .ms-mdx-card.ms-active {
+  border-color: var(--ms-accent);
+  box-shadow: 0 0 0 1px var(--ms-accent);
+}
+.ms .ProseMirror .ms-mdx-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--ms-line);
+  background: var(--ms-head-bg);
+  font: 500 12.5px/1.4 var(--ms-sans);
+  cursor: pointer;
+  user-select: none;
+}
+.ms .ProseMirror .ms-mdx-card:not(.ms-mdx-card--holds):not(:has(.ms-mdx-card__src)) .ms-mdx-card__head {
+  border-bottom: 0;
+}
+.ms .ProseMirror .ms-mdx-card__icon {
+  display: inline-flex;
+  color: var(--ms-accent-text);
+}
+.ms .ProseMirror .ms-mdx-card__name {
+  font: 600 13px/1.4 var(--ms-mono);
+  color: var(--ms-ink);
+}
+.ms .ProseMirror .ms-mdx-card__props {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 12px/1.4 var(--ms-mono);
+  color: var(--ms-muted);
+}
+.ms .ProseMirror .ms-mdx-card__lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  color: var(--ms-muted);
+}
+.ms .ProseMirror .ms-mdx-card__body {
+  padding: 4px 16px;
+}
+.ms .ProseMirror .ms-mdx-card__src,
+.ms .ProseMirror .ms-mdx-code__src {
+  margin: 0;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--ms-muted);
+  font: 12.5px/1.5 var(--ms-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms .ProseMirror .ms-mdx-code {
+  margin: 0.75em 0;
+  padding: 4px 0;
+  border-left: 2px solid var(--ms-line);
+  padding-left: 10px;
+  color: var(--ms-muted);
+  user-select: none;
+}
+.ms .ProseMirror .ms-mdx-code.ProseMirror-selectednode {
+  border-left-color: var(--ms-accent);
+}
+.ms .ProseMirror .ms-mdx-code__words {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 12.5px/1.4 var(--ms-sans);
+}
+.ms .ProseMirror .ms-mdx-code__src {
+  padding: 2px 0 0;
+}
+.ms .ProseMirror .ms-mdx-inline {
+  padding: 0 4px;
+  border: 1px solid var(--ms-line);
+  border-radius: 4px;
+  background: var(--ms-head-bg);
+  color: var(--ms-ink);
+  font-size: 0.85em;
+  font-family: var(--ms-mono);
+  white-space: nowrap;
+}
+.ms .ProseMirror .ms-mdx-inline.ProseMirror-selectednode {
+  border-color: var(--ms-accent);
+}
+/* the side panel's read-only settings (blocks.ts) */
+.ms-mdx-prop {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 12px;
+}
+.ms-mdx-prop__label {
+  font: 600 12px/1.4 var(--ms-sans);
+  color: var(--ms-label);
+}
+.ms-mdx-prop__code {
+  font: 12.5px/1.5 var(--ms-mono);
+  color: var(--ms-ink);
+  overflow-wrap: anywhere;
+}
+.ms-mdx-prop__hint {
+  font: 12px/1.4 var(--ms-sans);
+  color: var(--ms-muted);
+}
+.ms-mdx-prop__name {
+  margin: 0 0 12px;
+  font: 600 13px/1.4 var(--ms-mono);
+  color: var(--ms-ink);
+}

@@ -3,6 +3,7 @@
 export { createConverter, rawHtmlOf } from './markdown/converter.mjs';
 export { splitFrontmatter } from './markdown/parse.mjs';
 export { markdownUrls } from './markdown/urls.mjs';
+export { MdxError, applyProps, importedNames, mdxCodeOf, LITERAL_KINDS, MDX_TYPES } from './markdown/mdx.mjs';
 export { definePack, registry } from './blocks.mjs';
 export { readFrontmatter, bodyOf, hasFrontmatter } from './frontmatter.mjs';
 export { decodeHtml, escHtml, escAttr, parseTag, attrOf, hasTags } from './html.mjs';

@@ -25,6 +25,10 @@ export interface Entry {
   id: string;
   collection: string;
   format: 'md' | 'json';
+  /** an MDX file (docs/MDX.md) */
+  mdx?: boolean;
+  /** an MDX file the reader could not read: why, and where (it opens read-only in Source mode, without a doc) */
+  unreadable?: { message: string; line: number | null; column: number | null };
   version: string;
   status?: string;
   /** when a scheduled entry goes live */

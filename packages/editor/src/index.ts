@@ -67,6 +67,8 @@ import { resizablePanels } from './resize';
 import * as router from './router';
 import { collection, editable, md, setEntryDir, setup, setViewer, viewerName, type ClientConfig, type MarkdownPack } from './runtime';
 import { extensions } from './schema';
+import { mdxUnreadable } from './mdx/entry';
+import { WHOLE_DOC } from './mdx/nodes';
 import { ask, Banner, buildShell, nothingOpen, STATUS_TEXT, type Status } from './shell';
 import { PageShell } from './canvas-shell/page';
 import { ScreenHost } from './screen-host';
@@ -238,7 +240,7 @@ export function start(opts: StartOptions): void {
     apply: (doc, fm) => {
       // the caret stays where the writer was (setContent alone puts it at the end and scrolls there)
       const at = editor?.state.selection;
-      if (doc && at) editor?.chain().setContent(doc, { emitUpdate: true }).setTextSelection({ from: at.from, to: at.to }).run();
+      if (doc && at) editor?.chain().setContent(doc, { emitUpdate: true }).setTextSelection({ from: at.from, to: at.to }).setMeta(WHOLE_DOC, true).run();
       for (const [p, v] of fm ? changedLeaves(post.edits.merged(), fm) : []) post.edits.set(p, v ?? null);
       onChange();
     },
@@ -386,7 +388,8 @@ export function start(opts: StartOptions): void {
     canvas.classList.toggle('ms-mark-nofollow', marked);
     seo.markNofollow(marked);
     $('[data-settings]').hidden = !post.available() || inSource() || screen || pageMode;
-    $<HTMLButtonElement>('[data-view="source"]').title = pageMode ? 'Edit the JSON file' : 'Edit the Markdown file';
+    $<HTMLButtonElement>('[data-view="source"]').title = pageMode ? 'Edit the JSON file' : entry?.mdx ? 'Edit the MDX file' : 'Edit the Markdown file';
+    $<HTMLButtonElement>('[data-view="visual"]').disabled = !!entry?.unreadable; // an MDX file the reader cannot read: Source only
     for (const sel of ['[data-undo]', '[data-redo]']) $(sel).hidden = screen;
     devicesBtn.hidden = !entry?.url || inSource();
     // with the server: the publish sheet of the open entry (its own screen)
@@ -554,13 +557,15 @@ export function start(opts: StartOptions): void {
       const r = router.route();
       if (r.collection !== c || r.id !== id) return; // the writer moved on meanwhile
       if (e.format === 'json') return openPage(e);
+      const unreadable = mdxUnreadable(e);
       if (e.format !== 'md' || !e.doc) throw new ApiError('This entry cannot be edited here.', 415);
       pageHost.close();
       if (r.mode !== 'e') router.go({ mode: 'e', extra: {} });
       entry = e;
       fileText = baseText = derivedText = null;
       canvasStale = false;
-      setEntryDir(collection(c)?.dir ?? '');
+      setEntryDir(collection(c)?.dir ?? '', !!(e.mdx || collection(c)?.mdx));
+      if (unreadable && !inSource()) router.go({ view: 'source' });
       post.load(e);
       check.reset();
       seo.reset();
@@ -581,7 +586,7 @@ export function start(opts: StartOptions): void {
       if (router.route().settings && !inSource()) post.open();
       if (router.route().lib && !inSource()) void post.drawer.library(router.route().lib!);
       ai.follow();
-      const note = e.can && !e.can.edit ? 'You can read this entry but not change it.' : limitNote(e.can);
+      const note = unreadable ?? (e.can && !e.can.edit ? 'You can read this entry but not change it.' : limitNote(e.can));
       if (note) banner.show('info', note);
       if (inSource()) source.focus();
       else if (keepBlock !== null && Panel.selectBlock(editor, keepBlock)) engage();
@@ -806,9 +811,9 @@ export function start(opts: StartOptions): void {
       } else {
         const text = source.text();
         if (text !== derivedText || canvasStale) {
-          const before = md().rawHtmlOf(toContract(editor.getJSON()) as never).length;
+          const before = md().rawHtmlOf(toContract(editor.getJSON()) as never, { mdx: false }).length;
           const doc = md().mdToDoc(text).doc;
-          const after = md().rawHtmlOf(doc).length;
+          const after = md().rawHtmlOf(doc, { mdx: false }).length;
           const clean = text === fileText;
           editor = createEditor(toEditor(doc as JSONContent));
           if (clean) savedDoc = editor.state.doc;

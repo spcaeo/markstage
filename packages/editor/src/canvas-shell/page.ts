@@ -120,8 +120,9 @@ export class PageShell {
     const article = body.closest<HTMLElement>(classSelector(articleClass)) ?? body.parentElement!;
     this.applyCss(sheets);
     sanitize(doc.body);
-    this.readersBody = body.cloneNode(true) as HTMLElement;
-    this.readersBody.classList.add('ms-pg-readers');
+    // made here, kept only after unmount() below (which forgets the last draw's copy): a draw after a save keeps it
+    const readersBody = body.cloneNode(true) as HTMLElement;
+    readersBody.classList.add('ms-pg-readers');
     this.bodyAttrs = [...body.attributes].filter((a) => a.value === '' && a.name.startsWith('data-')).map((a) => [a.name, a.value]);
     this.bodyClasses = [...body.classList];
     const root = document.createElement('div');
@@ -135,6 +136,7 @@ export class PageShell {
     // a link in a live part never leaves the editor (the pack handles its click)
     root.addEventListener('click', (e) => (e.target as Element).closest?.('a') && !(e.target as Element).closest('.ms-canvas, .ms-headslot') && e.preventDefault(), true);
     this.unmount();
+    this.readersBody = readersBody;
     this.root = root;
     this.entry = entry;
     this.pageArticle = article;

@@ -7,6 +7,8 @@ import path from 'node:path';
 import { after, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { buildEditor, editorHtml, MARKER } from '../src/build-editor.mjs';
+import { clientModule } from '../src/client.mjs';
+import { loadConfig } from '../src/config.mjs';
 
 const blog = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../examples/blog');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ms-build-editor-'));
@@ -62,4 +64,38 @@ test('editorHtml: escapes what the site config gives it', () => {
   assert.match(html, /&lt;b&gt;Site&lt;\/b&gt; · Markstage/);
   assert.match(html, /href="\/f.png&quot;"/);
   assert.doesNotMatch(html, /"<\/script>"/);
+});
+
+// what only the live demo's module holds (packages/editor/src/demo/): its storage key, its strip, its refusal
+const DEMO_MARKS = ['markstage.demo', 'ms-demo-bar', 'not-in-demo', 'Not in the demo'];
+const built = (out) =>
+  fs
+    .readdirSync(out, { recursive: true })
+    .filter((f) => /\.(js|css|html)$/.test(f))
+    .map((f) => fs.readFileSync(path.join(out, f), 'utf8'))
+    .join('\n');
+
+test('a normal build holds none of the live demo: no stand-in, no strip, no demo import in the client module', async () => {
+  const out = path.join(tmp, 'normal');
+  await buildEditor({ root: blog, out, logLevel: 'silent' });
+  const text = built(out);
+  for (const mark of DEMO_MARKS) assert.equal(text.includes(mark), false, `"${mark}" is not in a normal build`);
+  const cfg = (await loadConfig(blog)).config;
+  assert.doesNotMatch(clientModule(cfg), /demo/i);
+  assert.match(clientModule({ ...cfg, demo: { data: 'd', site: 's', install: 'https://example.com/' } }), /installDemo\(config\)/);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(out, MARKER), 'utf8')).demo, undefined);
+});
+
+test('a demo build: served under its own base path, with the stand-in and its addresses', async () => {
+  const out = path.join(tmp, 'demo');
+  const demo = { data: '/try/data/api.json', site: '/try/blog/', install: 'https://example.com/#install' };
+  const r = await buildEditor({ root: blog, out, logLevel: 'silent', basePath: '/try/editor', demo });
+  const html = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
+  assert.ok(html.includes(`src="/try/editor/${r.js}"`));
+  assert.doesNotMatch(html, /"\/markstage\//);
+  const text = built(out);
+  for (const mark of DEMO_MARKS) assert.ok(text.includes(mark), `"${mark}" is in the demo build`);
+  assert.ok(text.includes('/try/data/api.json') && text.includes('/try/editor/api/'));
+  assert.equal(JSON.parse(fs.readFileSync(path.join(out, MARKER), 'utf8')).demo, true);
+  await assert.rejects(buildEditor({ root: blog, out, logLevel: 'silent', basePath: 'try' }), /basePath must be a path/);
 });

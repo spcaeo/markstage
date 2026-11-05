@@ -147,7 +147,7 @@ function requiredKeys(c) {
 
 export function normalizeCollection(c, contentRoot) {
   if (!c || !COLLECTION_ID.test(c.id ?? '')) fail(`Collection id must match ${COLLECTION_ID}: ${JSON.stringify(c?.id)}`);
-  if (!['md', 'json'].includes(c.format)) fail(`Collection "${c.id}": format must be "md" or "json".`);
+  if (!['md', 'mdx', 'json'].includes(c.format)) fail(`Collection "${c.id}": format must be "md", "mdx" or "json".`);
   if (typeof c.dir !== 'string' || !c.dir || path.isAbsolute(c.dir)) fail(`Collection "${c.id}": dir must be repo-relative.`);
   const abs = path.resolve(contentRoot, c.dir);
   const realDir = real(abs);
@@ -167,10 +167,12 @@ export function normalizeCollection(c, contentRoot) {
   return {
     id: c.id,
     label: String(c.label ?? c.id),
-    format: c.format,
+    // an MDX collection is Markdown everywhere but for its files' reader (docs/MDX.md)
+    format: c.format === 'json' ? 'json' : 'md',
+    mdx: c.format === 'mdx',
     dir: path.relative(contentRoot, realDir),
     absDir: realDir,
-    ext: c.format === 'md' ? '.md' : '.json',
+    ext: c.format === 'json' ? '.json' : `.${c.format}`,
     hasStatus: Boolean(c.hasStatus),
     fields,
     // the roles the site named itself (the rest are defaults a collection may not have, e.g. a page's author)

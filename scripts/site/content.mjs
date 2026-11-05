@@ -1,5 +1,6 @@
-// The words of the public site that are not in a Markdown file: the home page's sections, the docs list (which
-// docs/*.md become /docs/<id>/, with their search titles), and the built-in FAQ. Every claim here is in the
+// The words of the public site that are not in a Markdown file: the docs list (which docs/*.md become
+// /docs/<id>/, with their search titles), the install steps and the built-in FAQ. The home page's cards are in
+// home-content.mjs and the feature list in features-content.mjs. Every claim here is in the
 // README or in docs/*.md; keep it that way.
 
 /**
@@ -56,6 +57,7 @@ export const DOC_GROUPS = [
     title: 'API and integrations',
     docs: [
       { id: 'api', file: 'API.md', title: 'Markstage API (contract)', seo: 'Markstage API Reference: Content, Media and Users', summary: 'The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes.' },
+      { id: 'mdx', file: 'MDX.md', title: 'Editing MDX', seo: 'Edit MDX in Markstage: Words on the Page, Code Kept', summary: 'How Markstage edits MDX: words typed on the page, components as cards with simple settings, and imports, exports and code kept as written.' },
       { id: 'api-mcp', file: 'API-MCP.md', title: 'The MCP server: AI agents', seo: 'Markstage MCP Server: Let AI Agents Draft Content', summary: 'Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes.' },
       { id: 'api-ai', file: 'API-AI.md', title: 'AI suggestions', seo: 'AI Suggestions in Markstage: Alt Text and SEO Titles', summary: 'Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales.' },
       { id: 'api-library', file: 'API-LIBRARY.md', title: 'The Library', seo: 'Markstage Library: Templates, Sections and Snippets', summary: 'One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page.' },
@@ -79,99 +81,6 @@ export const DOC_GROUPS = [
 ];
 
 export const DOCS = DOC_GROUPS.flatMap((g) => g.docs);
-
-/** The main features, each with its screenshot in site/media (scripts/site/capture-shots.mjs). */
-export const FEATURES = [
-  {
-    id: 'canvas',
-    title: 'Edit on the real page',
-    text: 'Writers change words, images, tables and links on the site’s own design: its components, its CSS, its column width. Alt text, captions and links are edited where they appear.',
-    image: 'canvas',
-    alt: 'The Markstage editor showing a blog post on the blog’s own design, with a numbered list and a table being edited',
-  },
-  {
-    id: 'outline',
-    title: 'Blocks you can see and move',
-    text: 'The outline lists every heading, list, table and quote. Drag a block, or press Alt and an arrow, to move it. Locked blocks stay where the site put them.',
-    image: 'outline',
-    alt: 'The outline panel listing the post’s headings, list, table and quote blocks beside the page',
-  },
-  {
-    id: 'history',
-    title: 'Clean git diffs, and every version kept',
-    text: 'Open and save changes nothing; only the blocks you change are rewritten. With the Markstage server, every save is a commit with your name, and the history compares any two versions side by side.',
-    image: 'history',
-    alt: 'The history screen comparing an older version of a post with the current text, changed words marked',
-  },
-  {
-    id: 'seo',
-    title: 'Search checks while you write',
-    text: 'See the search result as Google shows it, with the title and description measured in pixels, the headings in order, weak links and images without alt text.',
-    image: 'seo',
-    alt: 'The SEO panel with a search result preview, title and description length bars, headings and link checks',
-  },
-  {
-    id: 'library',
-    title: 'A Library of parts to use again',
-    text: 'Page templates, sections and snippets in folders. Drag one onto a page, or start a page from a template. A synced snippet is edited once and every page that uses it follows.',
-    image: 'library',
-    alt: 'The Library with snippets in folders such as Boxes and Calls to action, and a synced newsletter sign-up',
-  },
-  {
-    id: 'releases',
-    title: 'Go live together, now or later',
-    text: 'Put several changes into one release, preview it, have it approved, then publish it now or schedule it. Roll it back if you need to.',
-    image: 'releases',
-    alt: 'The Go live screen listing an open release called Friday posts with three pages in it',
-  },
-  {
-    id: 'environments',
-    title: 'Local, staging and production',
-    text: 'Each environment is a branch plus a server. Promote a branch to staging and then to production, with checks, screenshots and rules about who may do it.',
-    image: 'environments',
-    alt: 'The Staging and live screen showing this environment, its branch, the remote and the branches to promote',
-  },
-  {
-    id: 'inbox',
-    title: 'Your forms, in your own inbox',
-    text: 'The site’s forms post to Markstage on your own host. Messages land in the Inbox with spam checks and daily limits, and the team gets an email for each one.',
-    image: 'inbox',
-    alt: 'The Messages inbox with three contact form messages and one opened, showing name, email, topic and page',
-  },
-  {
-    id: 'media',
-    title: 'Images and files in one place',
-    text: 'Upload, find and reuse images, see which ones have no alt text or are not used, and crop or replace one everywhere it appears.',
-    image: 'media',
-    alt: 'The Images and files library with five uploaded pictures and filters for unused images and missing alt text',
-  },
-];
-
-/** More of what the editor does, in one line each (README and docs). */
-export const MORE_FEATURES = [
-  'Never lose typing: local recovery copies, offline retry, and a three-way merge when two people edit.',
-  'Menus, redirects, find and replace, bulk changes, trash, locks, backups, rollback and site health.',
-  'Roles and custom roles, two-factor sign-in and single sign-on with any OpenID Connect provider.',
-  'Topics and internal links: old pages learn about new ones, with link suggestions both ways.',
-  'Authors with profiles, page types with their own checks, and translation status for each locale.',
-  'An MCP server so an AI agent can draft changes for a person to review, and AI suggestions for alt text and search titles.',
-  'Webhooks, imports of entries and media, and WordPress imports for the Library and old form messages.',
-];
-
-/** How it works, in four steps. */
-export const HOW = [
-  { title: 'Your content stays in git', text: 'Posts are Markdown files and pages are JSON files in your site’s repo. Markstage adds no database for content and no MDX.' },
-  { title: 'The editor draws your site', text: 'In astro dev, the editor at /markstage/ draws each entry inside its real page, with your site’s CSS and components.' },
-  { title: 'A save is a surgical diff', text: 'Only the blocks you changed are written back. Moving a block and moving it back gives a byte-identical file.' },
-  { title: 'The server runs it for a team', text: 'A self-hosted Node server adds sign-in, roles, the Library, releases, environments, forms and history, and builds and deploys the site.' },
-];
-
-/** Who Markstage is for. */
-export const AUDIENCES = [
-  { title: 'Writers and editors', text: 'Write on the page readers will see, with plain words, a guide inside the editor and no Markdown to learn.' },
-  { title: 'Developers and agencies', text: 'Keep Astro, your components and your git workflow. Give clients a real editor without a hosted CMS or a content database.' },
-  { title: 'SEO and content teams', text: 'Search checks, internal link suggestions, page types, redirects and site health for every page, before it goes live.' },
-];
 
 /** Install in three steps. `cmd` lines get the shared copy icon. */
 export const INSTALL = [
@@ -198,7 +107,7 @@ export const INSTALL = [
 export const FAQ = [
   {
     q: 'What is Markstage?',
-    a: 'Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.',
+    a: 'Markstage is a visual editor for Markdown, MDX and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.',
   },
   {
     q: 'Is Markstage free?',

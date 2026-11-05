@@ -80,7 +80,7 @@ export async function applySiteConfig(config, mod) {
     }
     // the server's own checks on top of the loader's (real path inside the repo, not .git, no symlink escape)
     const collections = site.config.collections.map((c) => ({
-      ...normalizeCollection({ id: c.id, label: c.label, format: c.format, dir: c.dir, hasStatus: c.hasStatus, fields: c.fields, defaultAuthor: c.defaultAuthor }, config.contentRoot),
+      ...normalizeCollection({ id: c.id, label: c.label, format: c.mdx ? 'mdx' : c.format, dir: c.dir, hasStatus: c.hasStatus, fields: c.fields, defaultAuthor: c.defaultAuthor }, config.contentRoot),
       url: c.url,
       // what a new entry asks for and the site's defaults for it (core's newEntryFrontmatter applies them)
       newEntry: c.newEntry ?? null,

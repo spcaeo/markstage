@@ -9,7 +9,7 @@ items:
   - id: mdx
     title: MDX editing
     what: Edit the prose of MDX files on the page; code and components stay locked, shown as cards.
-    status: in-progress
+    status: shipped
     rows: [MDX]
   - id: import
     title: Import from WordPress, Ghost and Prismic
@@ -29,7 +29,7 @@ items:
   - id: live-demo
     title: A live demo
     what: Try the editor on a sample blog in your browser, with no sign-up.
-    status: in-progress
+    status: shipped
     rows: []
   - id: ai-writing
     title: AI writing help on the page

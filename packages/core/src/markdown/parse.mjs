@@ -6,14 +6,18 @@ import remarkGfm from 'remark-gfm';
 import { parseTag } from '../html.mjs';
 import { linkFromTag, normalizeInline } from '../inline.mjs';
 import { FIGURE_CLOSE, FIGURE_OPEN, unescapeCaption } from './figure.mjs';
+import { mdxBlockAt, mdxInlineAt } from './mdx-parse.mjs';
 
 export const parser = unified().use(remarkParse).use(remarkGfm);
 
+/** The frontmatter block (`---` lines, `\n` or Windows `\r\n` line ends) and the body after it. */
 export function splitFrontmatter(text) {
-  if (!text.startsWith('---\n')) return { frontmatter: '', body: text };
-  const end = text.indexOf('\n---\n', 3);
+  const nl = text.startsWith('---\n') ? '\n' : text.startsWith('---\r\n') ? '\r\n' : null;
+  if (!nl) return { frontmatter: '', body: text };
+  const close = `${nl}---${nl}`;
+  const end = text.indexOf(close, 3);
   if (end < 0) return { frontmatter: '', body: text };
-  return { frontmatter: text.slice(0, end + 5), body: text.slice(end + 5) };
+  return { frontmatter: text.slice(0, end + close.length), body: text.slice(end + close.length) };
 }
 
 const span = (n) => [n.position.start.offset, n.position.end.offset];
@@ -34,10 +38,13 @@ function htmlMark(tag) {
   return HTML_MARK[tag.name] && !tag.attrs.length ? { type: HTML_MARK[tag.name] } : null;
 }
 
-/** The Markdown reader for one set of block packs (see blocks.mjs). */
-export function makeParser(reg) {
+/** The Markdown reader for one set of block packs (see blocks.mjs); `mdx`: read MDX (mdx-parse.mjs). */
+export function makeParser(reg, { mdx = null } = {}) {
+  const reader = mdx ? mdx.parser : parser;
+  // how deep inside a list or a quotation the reader is (MDX code there is kept whole when it spans lines)
+  const inMd = { depth: 0 };
   function parseEntries(body) {
-    const tree = parser.parse(body);
+    const tree = reader.parse(body);
     return blockEntries(tree.children, body);
   }
 
@@ -57,6 +64,10 @@ export function makeParser(reg) {
   function blockAt(children, i, body, parent) {
     const n = children[i];
     const [start, end] = span(n);
+    if (mdx) {
+      const entry = mdxBlockAt(n, body, { blockEntries, inMd });
+      if (entry) return { entry, next: i + 1 };
+    }
     if (n.type === 'html') {
       const fig = figureAt(children, i, body);
       if (fig) return fig;
@@ -158,7 +169,9 @@ export function makeParser(reg) {
   const isLoose = (list) => !!list.spread || list.children.some((c) => c.spread);
 
   function listItemNode(item, body) {
+    inMd.depth++;
     const content = blockEntries(item.children, body).map((e) => e.node);
+    inMd.depth--;
     return { type: 'listItem', content: content.length ? content : [{ type: 'paragraph' }] };
   }
 
@@ -179,8 +192,12 @@ export function makeParser(reg) {
         const language = n.lang ? (n.meta ? `${n.lang} ${n.meta}` : n.lang) : null;
         return withInline({ type: 'codeBlock', attrs: { language } }, n.value ? [{ type: 'text', text: n.value }] : []);
       }
-      case 'blockquote':
-        return { type: 'blockquote', content: blockEntries(n.children, body).map((e) => e.node) };
+      case 'blockquote': {
+        inMd.depth++;
+        const content = blockEntries(n.children, body).map((e) => e.node);
+        inMd.depth--;
+        return { type: 'blockquote', content };
+      }
       case 'list': {
         if (n.children.some((c) => c.checked != null)) break;
         const attrs = n.ordered ? { start: n.start ?? 1, tight: !isLoose(n) } : { tight: !isLoose(n) };
@@ -250,6 +267,13 @@ export function makeParser(reg) {
           const attrs = { href: c.url, target: null, rel: null };
           if (wrapsWhole(c.children)) attrs.outer = true;
           out.push(...inlineNodes(c.children, body, [...cur, { type: 'link', attrs }]));
+          return;
+        }
+        case 'mdxJsxTextElement':
+        case 'mdxTextExpression': {
+          const r = mdxInlineAt(c, body, cur, add);
+          if (r.marks) out.push(...inlineNodes(c.children, body, r.marks));
+          else if (r.node) out.push(r.node);
           return;
         }
         case 'html': {

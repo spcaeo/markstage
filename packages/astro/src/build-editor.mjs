@@ -110,9 +110,11 @@ function replaceable(dir) {
 
 /**
  * Build the editor into `out`. `root`: the site (its markstage.config). `config`: a config object instead of the
- * file (tests). Returns { out, js, css, ms }.
+ * file (tests). `basePath`: where the editor is served instead of the config's (/markstage). `demo`: a live demo
+ * build (docs/DEMO.md, scripts/demo/build-demo.mjs): {data, site, install}; a normal build passes none.
+ * Returns { out, js, css, ms }.
  */
-export async function buildEditor({ root = process.cwd(), out, config, logLevel = 'warn' } = {}) {
+export async function buildEditor({ root = process.cwd(), out, config, logLevel = 'warn', basePath = null, demo = null } = {}) {
   if (!out) throw new Error('Say where the editor goes: markstage build-editor --out <folder> (then set editorDir to it).');
   root = path.resolve(root);
   out = path.resolve(out);
@@ -120,6 +122,11 @@ export async function buildEditor({ root = process.cwd(), out, config, logLevel 
   const started = Date.now();
   const cfg = config ? normalizeConfig(config, root) : (await loadConfig(root))?.config;
   if (!cfg) throw new Error(`No markstage.config at ${root}.`);
+  if (basePath !== null) {
+    if (typeof basePath !== 'string' || !/^\/[A-Za-z0-9._~/-]*$/.test(basePath)) throw new Error(`basePath must be a path such as /markstage, not ${basePath}.`);
+    cfg.basePath = basePath.replace(/\/+$/, '');
+  }
+  if (demo) cfg.demo = demo;
   const vite = await importVite(root);
   const base = `${cfg.basePath}/`;
   const tmp = `${out}.tmp-${process.pid}`;
@@ -169,7 +176,7 @@ export async function buildEditor({ root = process.cwd(), out, config, logLevel 
     });
     fs.writeFileSync(path.join(tmp, 'index.html'), editorHtml({ meta: metaOf(cfg), base, data, css, js }));
     const pkg = JSON.parse(fs.readFileSync(path.join(here, '..', 'package.json'), 'utf8'));
-    fs.writeFileSync(path.join(tmp, MARKER), `${JSON.stringify({ builtAt: new Date().toISOString(), basePath: cfg.basePath, markstage: pkg.version, release: release.line, site: cfg.siteName ?? null, js, css }, null, 2)}\n`);
+    fs.writeFileSync(path.join(tmp, MARKER), `${JSON.stringify({ builtAt: new Date().toISOString(), basePath: cfg.basePath, ...(cfg.demo ? { demo: true } : {}), markstage: pkg.version, release: release.line, site: cfg.siteName ?? null, js, css }, null, 2)}\n`);
     // swap: the old build out of the way, the new one in, the old one gone
     const old = `${out}.old-${process.pid}`;
     if (fs.existsSync(out)) fs.renameSync(out, old);

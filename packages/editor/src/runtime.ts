@@ -8,6 +8,8 @@ export interface CollectionInfo {
   id: string;
   label: string;
   format: 'md' | 'json';
+  /** its files are MDX (.mdx): read and written by the MDX converter (docs/MDX.md) */
+  mdx?: boolean;
   /** repo-relative folder of its files (images in them are relative to it) */
   dir: string;
   /** the entries have a page on the site (a URL) */
@@ -109,6 +111,18 @@ export interface ClientConfig {
   authors?: { url: string | null; coAuthors: string | null; collections: string[]; /** the profile fields the site keeps (name always) */ profile?: string[] } | null;
   /** the site's topics and its link map (config `topics`): which collections, the money pages, the outside-link lists */
   topics?: { collections: string[]; money: { pageTypes: string[]; paths: string[] }; follow: string[]; sponsored: string[]; enough: number } | null;
+  /** a live demo build only (docs/DEMO.md): the editor answers its own API calls in the browser (src/demo/) */
+  demo?: DemoConfig;
+}
+
+/** The live demo's addresses, relative to the editor page or absolute. */
+export interface DemoConfig {
+  /** the recorded answers (JSON) */
+  data: string;
+  /** the sample blog's build, the pages the canvas and the screen check draw */
+  site: string;
+  /** where "Install Markstage" goes */
+  install: string;
 }
 
 /** A frame: how the site lays a page out (full width, reading, plain…). */
@@ -180,6 +194,7 @@ let cfg: ClientConfig;
 let packs: EditorPack[] = [];
 let blocks = new Map<string, BlockUI>();
 let converter: ReturnType<typeof createConverter> | null = null;
+let mdxConverter: ReturnType<typeof createConverter> | null = null;
 let markdownPacks: MarkdownPack[] = [];
 
 export function setup(config: ClientConfig, editorPacks: EditorPack[], mdPacks: MarkdownPack[]): void {
@@ -209,19 +224,23 @@ export const isBox = (name: string) => blocks.has(name);
 export const boxes = () => [...blocks.keys()].map((name) => ({ name, label: blocks.get(name)?.label ?? name }));
 export const boxLabel = (name: string) => blocks.get(name)?.label ?? name;
 
-export const inserterEntries = (): InserterEntry[] => [...BUILTIN_INSERTER, ...packs.flatMap((p) => p.inserter ?? [])];
+// in an MDX entry the block menu offers the Markdown blocks only: a pack's boxes are HTML, which MDX reads as code
+export const inserterEntries = (): InserterEntry[] => [...BUILTIN_INSERTER, ...(entryMdx ? [] : packs.flatMap((p) => p.inserter ?? []))];
 
 export const collection = (id: string) => cfg.collections.find((c) => c.id === id);
 /** The collections whose entries open on the canvas (Markdown with a page). */
 export const editable = () => cfg.collections.filter((c) => c.format === 'md');
 
-/** The site's converter, in the browser (Source mode, Copy as Markdown). */
+/** The site's converter, in the browser (Source mode, Copy as Markdown); the MDX one for an MDX entry. */
 export function md() {
+  if (entryMdx) return (mdxConverter ??= createConverter({ packs: markdownPacks as never, mdx: true }));
   converter ??= createConverter({ packs: markdownPacks as never });
   return converter;
 }
 
-/** Where the current entry's file lives (relative images resolve from there). */
+/** Where the current entry's file lives (relative images resolve from there), and whether it is MDX (docs/MDX.md). */
 let entryDir = '';
-export const setEntryDir = (dir: string) => void (entryDir = dir);
+let entryMdx = false;
+export const setEntryDir = (dir: string, mdx = false) => void ((entryDir = dir), (entryMdx = mdx));
+export const entryIsMdx = () => entryMdx;
 export const currentEntryDir = () => entryDir;

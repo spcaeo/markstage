@@ -1,0 +1,25 @@
+---
+// A guide: an MDX file (src/content/guides/*.mdx) with the blog's components, drawn with the post page's markup so
+// Markstage's canvas fits it the same way (markstage.config.mjs, collection `guides`, docs/MDX.md).
+import { getCollection, render } from 'astro:content';
+import { getAuthor } from '@markstage/astro/authors';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', ({ data }) => !data.draft);
+  return guides.map((guide) => ({ params: { id: guide.id }, props: { guide } }));
+}
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const author = guide.data.author ? await getAuthor(guide.data.author) : null;
+---
+<Base title={guide.data.title} frame="reading">
+  <article class="post">
+    <h1>{guide.data.title}</h1>
+    <p class="post__date">
+      {guide.data.date.toISOString().slice(0, 10)}
+      {author && <> · by <a href={author.url ?? undefined}>{author.name}</a></>}
+    </p>
+    <div class="post__body"><Content /></div>
+  </article>
+</Base>

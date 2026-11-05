@@ -1,91 +1,109 @@
 /* The Markstage site. Plain CSS, no build step; light and dark follow the visitor's system setting.
-   Colours: "velvet curtain and brass" (scripts/site/brand.mjs). Every text colour pair passes WCAG AA (4.5:1), and the
-   mark 3:1 against the page, in both themes (scripts/site/brand.test.mjs checks). Headings and the wordmark use Big
-   Shoulders Display (site/fonts/OFL.txt), body text the system font. home.css adds the home, story and showcase parts. */
+   Look: "bold and fresh" (scripts/site/brand.mjs): volt lime on ink, a soft green-grey for surfaces, pink as the
+   second accent, 30px cards and pill buttons. Every text colour pair passes WCAG AA (4.5:1), and the mark 3:1
+   against the page, in both themes (scripts/site/brand.test.mjs checks). Text is sentence case everywhere: no
+   capitals-only headings, labels or buttons. Headings and the wordmark use Bricolage Grotesque, text Figtree (both
+   SIL Open Font License, site/fonts/). home.css adds the home, features, AI, story and showcase parts. */
 @font-face {
-  font-family: 'Big Shoulders Display';
-  src: url('fonts/big-shoulders-display-800.woff2') format('woff2');
+  font-family: 'Bricolage Grotesque';
+  src: url('fonts/bricolage-grotesque-800.woff2') format('woff2');
   font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('fonts/figtree.woff2') format('woff2');
+  font-weight: 400 700;
   font-display: swap;
 }
 
 :root {
   color-scheme: light;
   --bg: #ffffff;
-  --bg-2: #f8f4f5;
+  --bg-2: #f2f6e6;
   --surface: #ffffff;
-  --line: #ece2e5;
-  --line-2: #d9cbd0;
-  --ink: #1f1218;
-  --ink-2: #4a3a41;
-  --ink-3: #685860;
-  --brand: #9e1b3f;
-  --brand-hover: #82132f;
-  --brand-ink: #8c1838;
-  --on-brand: #ffffff;
-  --brand-soft: #fbeef1;
-  --accent: #f2b33d;
-  --on-accent: #2a1606;
-  --stage: #2a0f1b;
-  --stage-ink: #fbeef1;
-  --stage-ink-2: #e2c9d1;
-  --logo-tile: #9e1b3f;
-  --logo-letter: #fff6e8;
-  --logo-pool: #f2b33d;
-  --ok: #15803d;
-  --code-bg: #f6f0f2;
-  --yes-ink: #166534;
-  --yes-bg: #e6f4ea;
-  --part-ink: #7a4500;
-  --part-bg: #fdf0d5;
-  --no-ink: #a11d2a;
-  --no-bg: #fbe8ea;
-  --unk-ink: #4a3a41;
-  --unk-bg: #f1ecee;
-  --ms-col: #fdf4f6;
-  --shadow: 0 1px 2px rgb(42 15 27 / 6%), 0 8px 24px rgb(42 15 27 / 8%);
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  --display: 'Big Shoulders Display', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --line: #e3e8d6;
+  --line-2: #c9d1b8;
+  --ink: #0e1a0b;
+  --ink-2: #2f3a2a;
+  --ink-3: #4c5446;
+  --brand: #cdf75a;
+  --brand-hover: #bdea3c;
+  --brand-ink: #3a5f00;
+  --on-brand: #0e1a0b;
+  --on-brand-2: #2f3a2a;
+  --brand-soft: #f2f6e6;
+  --accent: #ffb4e4;
+  --on-accent: #0e1a0b;
+  --btn-ink: #0e1a0b;
+  --on-btn-ink: #ffffff;
+  --band: #0e1a0b;
+  --band-soft: #1c2a18;
+  --band-ink: #f4f8ea;
+  --band-ink-2: #c9d3bd;
+  --logo-tile: #0e1a0b;
+  --logo-glyph: #cdf75a;
+  --ok: #1a7f45;
+  --code-bg: #f2f6e6;
+  /* the comparison's mark badges (site/compare.css) and Markstage's highlighted column */
+  --yes-ink: #1d5c10;
+  --yes-bg: #e4f5c4;
+  --part-ink: #6b4500;
+  --part-bg: #fbefc9;
+  --no-ink: #9b1747;
+  --no-bg: #ffe6f4;
+  --unk-ink: #4c5446;
+  --unk-bg: #edf1e3;
+  --ms-col: #f5fbe2;
+  --shadow: 0 1px 2px rgb(14 26 11 / 6%), 0 18px 48px -18px rgb(14 26 11 / 26%);
+  --font: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --display: 'Bricolage Grotesque', 'Arial Black', system-ui, sans-serif;
   --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --radius: 12px;
+  --radius: 14px;
+  --radius-card: 30px;
+  --pill: 999px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --bg: #170d12;
-    --bg-2: #1e1218;
-    --surface: #24161d;
-    --line: #3a2630;
-    --line-2: #4e3541;
-    --ink: #f8eef1;
-    --ink-2: #d7c4cb;
-    --ink-3: #b8a2ab;
-    --brand: #f0718f;
-    --brand-hover: #f59ab0;
-    --brand-ink: #f59ab0;
-    --on-brand: #22060f;
-    --brand-soft: #2c1620;
-    --accent: #f5c04f;
-    --on-accent: #2a1606;
-    --stage: #0f070b;
-    --stage-ink: #fbeef1;
-    --stage-ink-2: #e2c9d1;
-    --logo-tile: #c42a52;
-    --logo-letter: #fff6e8;
-    --logo-pool: #f5c04f;
-    --ok: #4ade80;
-    --code-bg: #24161d;
-    --yes-ink: #86efac;
-    --yes-bg: #143322;
+    --bg: #0e1a0b;
+    --bg-2: #142211;
+    --surface: #1c2a18;
+    --line: #2c3b26;
+    --line-2: #46583c;
+    --ink: #f4f8ea;
+    --ink-2: #d3dcc8;
+    --ink-3: #b7c2ab;
+    --brand: #cdf75a;
+    --brand-hover: #dcfb85;
+    --brand-ink: #cdf75a;
+    --on-brand: #0e1a0b;
+    --on-brand-2: #2f3a2a;
+    --brand-soft: #22341a;
+    --accent: #ffb4e4;
+    --on-accent: #0e1a0b;
+    --btn-ink: #f4f8ea;
+    --on-btn-ink: #0e1a0b;
+    --band: #172612;
+    --band-soft: #22341a;
+    --band-ink: #f4f8ea;
+    --band-ink-2: #c9d3bd;
+    --logo-tile: #cdf75a;
+    --logo-glyph: #0e1a0b;
+    --ok: #86e0a0;
+    --code-bg: #1c2a18;
+    --yes-ink: #cdf75a;
+    --yes-bg: #24391a;
     --part-ink: #fcd38a;
-    --part-bg: #3b2a0e;
-    --no-ink: #fda4af;
-    --no-bg: #3d1820;
-    --unk-ink: #d7c4cb;
-    --unk-bg: #2e1d25;
-    --ms-col: #2a1720;
-    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 35%);
+    --part-bg: #3a2e0e;
+    --no-ink: #ffb4e4;
+    --no-bg: #3c1a30;
+    --unk-ink: #c9d3bd;
+    --unk-bg: #26331f;
+    --ms-col: #1d2f15;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 18px 48px -18px rgb(0 0 0 / 60%);
   }
 }
 
@@ -95,7 +113,8 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 76px;
+  /* the sticky top bar (76px) and a gap, so anchors and page changes clear it */
+  scroll-padding-top: 92px;
 }
 
 body {
@@ -111,11 +130,11 @@ a {
 }
 
 a:hover {
-  color: var(--brand-hover);
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--brand);
+  outline: 3px solid var(--ink);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -137,7 +156,7 @@ code {
 pre {
   background: var(--code-bg);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 14px;
   padding: 14px 16px;
   overflow-x: auto;
   font-size: 14px;
@@ -162,35 +181,46 @@ kbd {
 h1,
 h2,
 h3 {
+  font-family: var(--display);
+  font-weight: 800;
   line-height: 1.2;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
 h1,
 h2 {
-  font-family: var(--display);
-  font-weight: 800;
   line-height: 1.04;
-  letter-spacing: 0;
+  letter-spacing: -0.035em;
 }
 
 h1 {
-  font-size: clamp(38px, 5.2vw, 60px);
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
   margin: 0 0 16px;
 }
 
 h2 {
-  font-size: clamp(30px, 3.6vw, 42px);
+  font-size: clamp(1.8rem, 3.6vw, 2.9rem);
   margin: 48px 0 12px;
 }
 
 h3 {
-  font-size: 20px;
+  font-size: 1.22rem;
   margin: 24px 0 8px;
 }
 
+/* the lime highlight behind a few words of a heading */
+.mark {
+  background: var(--brand);
+  color: var(--on-brand);
+  border-radius: 0.18em;
+  padding: 0 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 .wrap {
-  max-width: 1120px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -220,12 +250,12 @@ h3 {
   padding: 8px 12px;
 }
 
-/* Top bar */
+/* Top bar: the mark, the name with the tagline under it, the links and the GitHub pill */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
@@ -234,24 +264,39 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 64px;
-  gap: 16px;
+  min-height: 76px;
+  gap: 16px 28px;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 12px;
   color: var(--ink);
   text-decoration: none;
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 27px;
-  line-height: 1;
 }
 
 .brand:hover {
   color: var(--ink);
+}
+
+.brand-text {
+  display: grid;
+  line-height: 1.05;
+}
+
+.brand-name {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+
+.brand-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
 }
 
 .logo {
@@ -262,35 +307,51 @@ h3 {
   fill: var(--logo-tile);
 }
 
-.logo .la,
-.logo .ll {
-  stroke: var(--logo-letter);
+.logo .ls {
+  stroke: var(--logo-glyph);
 }
 
-.logo .lp {
-  fill: var(--logo-pool);
+.logo .lc {
+  fill: var(--logo-glyph);
+}
+
+/* the caret blinks like a text cursor, only where the visitor allows motion; files and images stay still */
+@media (prefers-reduced-motion: no-preference) {
+  .logo .lc {
+    animation: caret-blink 1.1s steps(1) infinite;
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
 }
 
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
   margin-left: auto;
 }
 
 .main-nav a {
-  color: var(--ink-2);
+  color: var(--ink);
   text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 0.97rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .main-nav a:hover,
 .main-nav a[aria-current='page'] {
-  color: var(--brand-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
 }
 
-/* GitHub, always in view: a filled button with the mark, "Star on GitHub" and the live star count (enhance.js) */
+/* GitHub, always in view: the ink pill with a star, "Star on GitHub" and the live star count (enhance.js) */
 .topbar-end {
   display: flex;
   align-items: center;
@@ -302,27 +363,27 @@ h3 {
   align-items: center;
   gap: 8px;
   flex: none;
-  padding: 7px 8px 7px 13px;
-  border-radius: 10px;
-  background: var(--brand);
-  color: var(--on-brand);
-  font-size: 15px;
-  font-weight: 650;
+  padding: 9px 10px 9px 16px;
+  border-radius: var(--pill);
+  background: var(--btn-ink);
+  color: var(--on-btn-ink);
+  font-size: 0.94rem;
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .gh-btn:hover {
-  background: var(--brand-hover);
-  color: var(--on-brand);
+  color: var(--on-btn-ink);
+  box-shadow: 0 0 0 3px var(--brand);
 }
 
 .gh-count {
   min-width: 28px;
   padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--on-brand);
-  color: var(--brand-ink);
+  border-radius: var(--pill);
+  background: var(--brand);
+  color: var(--on-brand);
   font-size: 13px;
   font-weight: 700;
   text-align: center;
@@ -343,14 +404,14 @@ h3 {
   display: none;
   background: none;
   border: 1px solid var(--line-2);
-  border-radius: 8px;
+  border-radius: var(--pill);
   color: var(--ink);
-  padding: 6px;
+  padding: 8px;
 }
 
 .lead {
-  font-size: 20px;
-  color: var(--ink-2);
+  font-size: 1.18rem;
+  color: var(--ink-3);
   max-width: 760px;
   margin: 0 auto 28px;
 }
@@ -363,7 +424,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   margin: 24px 0;
 }
 
@@ -371,15 +432,19 @@ h3 {
   justify-content: flex-start;
 }
 
+/* Buttons: pills. Lime for the main action, ink for the second, a line for the rest */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  border-radius: 10px;
-  padding: 11px 20px;
-  font-weight: 600;
+  gap: 9px;
+  border-radius: var(--pill);
+  padding: 13px 22px;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
   text-decoration: none;
-  border: 1px solid transparent;
+  border: 0;
+  white-space: nowrap;
 }
 
 .btn-primary {
@@ -392,19 +457,31 @@ h3 {
   color: var(--on-brand);
 }
 
+.btn-ink {
+  background: var(--btn-ink);
+  color: var(--on-btn-ink);
+}
+
+.btn-ink:hover {
+  color: var(--on-btn-ink);
+  box-shadow: 0 0 0 3px var(--brand);
+}
+
 .btn-secondary {
-  border-color: var(--line-2);
   color: var(--ink);
   background: var(--surface);
+  box-shadow: inset 0 0 0 2px var(--line-2);
 }
 
 .btn-secondary:hover {
-  border-color: var(--brand);
-  color: var(--brand-ink);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 2px var(--ink);
 }
 
 .btn-text {
   color: var(--brand-ink);
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /* Screenshots: light frames in both themes, so the editor's light UI never sits dark on dark */
@@ -450,10 +527,10 @@ h3 {
 }
 
 .card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 20px;
+  background: var(--bg-2);
+  border: 0;
+  border-radius: var(--radius-card);
+  padding: 24px;
 }
 
 .card h2,
@@ -629,8 +706,6 @@ h3 {
 .docs-group-title {
   font-size: 13px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--ink-3);
   margin: 0 0 8px;
 }

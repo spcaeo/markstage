@@ -4,6 +4,41 @@ What changed in each Markstage release, in plain words. The newest is first. Ver
 [semantic versioning](https://semver.org); while Markstage is 0.x, a minor version may change how things work.
 docs/RELEASES.md says how a release is made.
 
+## Unreleased
+
+### Added
+
+- A live demo at https://spcaeo.github.io/markstage/demo/: the real editor on the example blog, in the browser
+  with no sign-up. A save runs the same Markdown writer as a server and shows the git diff it would commit; edits
+  stay in the browser tab, and Reset demo clears them. Publishing, users, settings and the other changes answer
+  "Not in the demo" with a link to the install steps. docs/DEMO.md says how it is built and recorded.
+
+### Fixed
+
+- With the drawer folded to its rail, the top bar at 1280 to 1440 pixels wide with unsaved changes no longer
+  pushes Publish, Save and the account button off the screen: its buttons give up their words first, as they do
+  with the drawer open.
+- Saving a page in the page view after its first save no longer writes "null" into the page or stops with an
+  error.
+
+### MDX
+
+- Markstage now edits MDX files. MDX too: code stays locked, prose is editable. A collection with
+  `format: 'mdx'` lists its `.mdx` files, and they open on the canvas like Markdown (docs/MDX.md).
+- The two promises hold for MDX: open and save with no edit leaves the file byte for byte the same, and an edit
+  changes only what was edited.
+- Imports, exports and `{expressions}` are kept exactly as written and shown as quiet locked lines ("Uses 2
+  components: Callout, Chart"). The editor will not delete or move them.
+- A component is a card with its name and settings. Text, number and on/off settings change in the side panel; the
+  save rewrites only that value and keeps its quote style. Settings that are code are shown read-only. The text
+  inside a component (a Callout's words) is typed in like any other text.
+- What the writer types never becomes code: `<`, `{` and a line starting with `import` or `export` are escaped.
+- A file the MDX reader cannot read opens read-only in Source mode with a plain message and its line, and the server
+  refuses a save over it.
+- A contributor may change words and simple settings in an MDX file, never the code.
+- The example blog has an MDX guide with a Callout and a Chart.
+- New dependency: `remark-mdx` 3.1.1 in `@markstage/core` (its licence is listed in NOTICE).
+
 ## 0.3.0 (3 November 2026)
 
 The first public release: the source is on GitHub under the Elastic License 2.0 (source-available, free to

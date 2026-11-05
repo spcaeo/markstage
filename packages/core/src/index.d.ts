@@ -42,22 +42,45 @@ export function definePack<T extends BlockPack>(pack: T): Readonly<T>;
 export function registry(packs?: BlockPack[]): unknown;
 
 export interface Converter {
-  /** Markdown file -> its raw frontmatter block and the document */
+  /** true for an MDX converter (createConverter({ mdx: true })) */
+  mdx: boolean;
+  /** Markdown file -> its raw frontmatter block and the document (MDX: throws an MdxError it cannot read or keep) */
   mdToDoc(text: string): { frontmatter: string; doc: DocNode };
   /** document -> the file text; surgical (only changed blocks rewritten) unless preserve is false */
   docToMd(doc: DocNode, originalText?: string, opts?: { preserve?: boolean }): string;
   changedBlocks(doc: DocNode, originalText: string): number;
   printBlock(node: DocNode, ctx?: unknown): string;
   printBlocks(nodes: DocNode[]): string;
-  rawHtmlOf(doc: DocNode): string[];
+  rawHtmlOf(doc: DocNode, opts?: { mdx?: boolean }): string[];
   splitFrontmatter(text: string): { frontmatter: string; body: string };
 }
 
-export function createConverter(opts?: { packs?: BlockPack[] }): Converter;
-export function rawHtmlOf(doc: DocNode): string[];
+/** packs: the site's block packs; mdx: read and write MDX (docs/MDX.md) */
+export function createConverter(opts?: { packs?: BlockPack[]; mdx?: boolean }): Converter;
+/** The raw HTML kept as written and (unless `mdx: false`) the MDX code, without its literal prop values. */
+export function rawHtmlOf(doc: DocNode, opts?: { mdx?: boolean }): string[];
 export function splitFrontmatter(text: string): { frontmatter: string; body: string };
-/** Every URL a CommonMark renderer builds from this Markdown (links, autolinks, images, definitions). */
-export function markdownUrls(text: string): string[];
+/** Every URL a CommonMark renderer builds from this Markdown (links, autolinks, images, definitions; MDX: JSX href/src too). */
+export function markdownUrls(text: string, opts?: { mdx?: boolean }): string[];
+
+/** A prop of an MDX component: string, number and boolean are literals a writer may change; the rest is code. */
+export interface MdxProp {
+  name: string | null;
+  kind: 'string' | 'number' | 'boolean' | 'expression' | 'spread';
+  value: string | number | boolean;
+}
+/** An MDX file the converter will not open for editing: `mdx.line` (1-based, in the whole file) when known. */
+export class MdxError extends Error {
+  mdx: { message: string; line: number | null; column: number | null };
+}
+/** `source` (a component's text) with the literal props that differ written in, in their own quote style. */
+export function applyProps(source: string, props: MdxProp[]): string;
+/** The component names an import line brings in. */
+export function importedNames(source: string): string[];
+/** The code of an MDX node without its literal values, or null. */
+export function mdxCodeOf(node: DocNode): string | null;
+export const LITERAL_KINDS: Set<string>;
+export const MDX_TYPES: string[];
 
 export function readFrontmatter(text: string): Record<string, any>;
 /**

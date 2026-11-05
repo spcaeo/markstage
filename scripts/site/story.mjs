@@ -1,5 +1,5 @@
 // /why/ ("Why we built Markstage") and /showcase/ (the first site built with it), from site-content/why.md and
-// site-content/showcase.md, plus their two sections on the home page. All the words, names and numbers are in those
+// site-content/showcase.md (home.mjs shows the showcase's numbers on the home page). All the words, names and numbers are in those
 // files; this module only lays them out, so no site's name lives in the code (scripts/check-generic.mjs).
 import { CONTACT_EMAIL, NAME, PUBLISHER, REPO_URL, SITE_URL } from './config.mjs';
 import { ICONS, ORGANIZATION, absolute, breadcrumbData, breadcrumbs, copyable, page } from './layout.mjs';
@@ -21,37 +21,6 @@ function shots(media, items, root, cls) {
 
 /** The site's address with the shared copy and open icons. */
 const siteLink = (meta) => (meta.site ? copyable(meta.site, { href: meta.site, label: meta.siteName ?? meta.site, code: false, what: 'site address' }) : '');
-
-/** The home page's two sections: `why` after the hero, `showcase` after the features. Empty without the files. */
-export function storySections({ why, showcase, media }) {
-  const root = './';
-  const w = why?.meta.home;
-  const s = showcase?.meta.home;
-  return {
-    why: w
-      ? `      <section class="story-band" id="why" aria-labelledby="why-title">
-        <div class="wrap story-grid">
-          <h2 id="why-title">${e(w.title)}</h2>
-          <div class="story-text">
-${list(w.text).map((t) => `            <p>${e(t)}</p>`).join('\n')}
-            <p>${button('why/', e(w.link ?? 'Read the story'), 'secondary', ICONS.arrow)}</p>
-          </div>
-        </div>
-      </section>
-`
-      : '',
-    showcase: s
-      ? `      <section class="wrap built-with" id="built-with" aria-labelledby="built-title">
-        <h2 id="built-title">${e(s.title)}</h2>
-        <p class="section-lead">${e(s.text)}</p>
-        ${shots(media, showcase.meta.shots, root, 'before-after')}
-        <dl class="deltas">${list(showcase.meta.stats).map(delta).join('')}</dl>
-${s.note ? `        <p class="small muted">${e(s.note)}</p>\n` : ''}        <p class="cta-row left">${button('showcase/', e(s.link ?? 'See the showcase'), 'secondary', ICONS.arrow)}<span class="visit">Visit ${siteLink(showcase.meta)}</span></p>
-      </section>
-`
-      : '',
-  };
-}
 
 function articleData({ meta, path, headline }) {
   return {

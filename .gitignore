@@ -18,3 +18,8 @@ markstage-backup-*/
 examples/*/public/uploads/
 # the public repo's working copy (scripts/public-sync.mjs, docs/PUBLISHING.md): its own git repo, never part of this one
 .public-export/
+# the live demo's editor, sample blog and recorded data: built by the Pages workflow (npm run demo:build), never committed
+site/demo/editor/
+site/demo/blog/
+site/demo/data/
+site/demo/.markstage-demo

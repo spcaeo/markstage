@@ -56,6 +56,10 @@ export const CANVAS_SHELL_PORT = PORT_BASE + 99;
 export const QA_PORTS = [PORT_BASE + 7, PORT_BASE + 9];
 // the second deep-QA pass (qa-round2.e2e.mjs): its server +11 and its preview +13 (its dev servers take DEV_PORTS)
 export const QA2_PORTS = [PORT_BASE + 11, PORT_BASE + 13];
+// the live demo's static server (demo.e2e.mjs)
+export const DEMO_PORT = PORT_BASE + 15;
+// an MDX guide in the editor (mdx.e2e.mjs): its server +17
+export const MDX_PORT = PORT_BASE + 17;
 export const SHOTS = process.env.MARKSTAGE_E2E_SHOTS ?? null;
 
 async function loadPlaywright() {
@@ -82,7 +86,7 @@ export const pw = await loadPlaywright();
 export const skip = !pw ? 'Playwright not found (npm install at the repo root, or set MARKSTAGE_PLAYWRIGHT)' : false;
 if (pw) {
   const taken = listening();
-  const ours = [PORT, PREVIEW_PORT, STOCK_PORT, REDIR_PORT, LIVE_PORT, ...Array.from({ length: DEV_PORTS[1] - DEV_PORTS[0] + 1 }, (_, i) => DEV_PORTS[0] + i), ...LIBRARY_PORTS, GROUPS_PORT, ENTRIES_PORT, SHARE_PORT, ...EDIT_BUTTON_PORTS, ...GALLERY_PORTS, ...INBOX_ODOO_PORTS, RELEASES_UI_PORT, TOKENS_PORT, ...AI_SUGGEST_PORTS, TRANSLATIONS_PORT, SSO_UI_PORT, ROLES_UI_PORT, FIELDS_UI_PORT, AUTHORS_PORT, ...PAGE_TYPES_PORTS, LINKS_PORT, CANVAS_SHELL_PORT, ...QA_PORTS, ...QA2_PORTS];
+  const ours = [PORT, PREVIEW_PORT, STOCK_PORT, REDIR_PORT, LIVE_PORT, ...Array.from({ length: DEV_PORTS[1] - DEV_PORTS[0] + 1 }, (_, i) => DEV_PORTS[0] + i), ...LIBRARY_PORTS, GROUPS_PORT, ENTRIES_PORT, SHARE_PORT, ...EDIT_BUTTON_PORTS, ...GALLERY_PORTS, ...INBOX_ODOO_PORTS, RELEASES_UI_PORT, TOKENS_PORT, ...AI_SUGGEST_PORTS, TRANSLATIONS_PORT, SSO_UI_PORT, ROLES_UI_PORT, FIELDS_UI_PORT, AUTHORS_PORT, ...PAGE_TYPES_PORTS, LINKS_PORT, CANVAS_SHELL_PORT, ...QA_PORTS, ...QA2_PORTS, DEMO_PORT, MDX_PORT];
   const busy = ours.filter((p) => taken.has(p));
   if (busy.length) {
     // never a quiet skip: a run that did not run must not look like a pass

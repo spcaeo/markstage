@@ -39,6 +39,11 @@ export function clientModule(cfg) {
     if (!l.spelling) return;
     lines.push(`import spelling${i} from ${js(l.spelling)};`, `config.locales.list[${i}].spell = spelling${i};`);
   });
+  // a live demo build only (cfg.demo, set by scripts/demo/build-demo.mjs): the editor answers its own API calls in
+  // the browser; a normal build never imports the demo module, so none of it is in the bundle
+  if (cfg.demo) {
+    lines.push(`import { installDemo } from ${js(path.join(editorDir, 'demo/index.ts'))};`, `config.demo = ${js(cfg.demo)};`, 'installDemo(config);');
+  }
   lines.push(`start({ config, packs: [${packs}], markdown: [${markdown}] });`);
   return lines.join('\n');
 }

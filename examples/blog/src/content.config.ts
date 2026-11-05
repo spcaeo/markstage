@@ -23,4 +23,16 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { posts };
+// guides are MDX: Markdown with the blog's components (src/components/Callout.astro, Chart.astro), docs/MDX.md
+const guides = defineCollection({
+  loader: glob({ pattern: '*.mdx', base: './src/content/guides' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.coerce.date(),
+    author: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { posts, guides };

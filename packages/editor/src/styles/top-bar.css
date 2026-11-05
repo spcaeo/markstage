@@ -137,3 +137,63 @@
     margin-right: 0;
   }
 }
+
+/* The drawer folded to its rail. The top bar runs over the drawer's column, so it is the editing column plus 80px
+   here and plus 272px with the drawer open: at the same column width it is 192px narrower, and the words of
+   chrome.css's 1180px and 1100px steps drop at a column 192px wider. Without this, a 1280, 1366 or 1440 screen with
+   the rail and unsaved changes pushed Publish, Save and the account button off the bar (the header needs 1483px with
+   its words). Same rules as those two steps, for the rail. The title's least widths weigh no more than chrome.css's
+   (:where), so a phone's 60px still wins: at 400px 220px pushed Save off the bar (qa-round1 F5). */
+@container ms-main (max-width: 1372px) {
+  .nav-folded .ms-head__new span,
+  .nav-folded .ms-head [data-sections] > span,
+  .nav-folded .ms-head [data-seo] > span,
+  .nav-folded .ms-head__search kbd,
+  .nav-folded .ms-devtag span,
+  .nav-folded .ms-head :is([data-sections], [data-seo], [data-library], [data-preview]) span,
+  .ms-app.nav-folded.has-entry:not(.is-screen) .ms-head__search > span {
+    display: none;
+  }
+  .nav-folded .ms-head .ms-status__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .nav-folded .ms-head .ms-status[data-status='loading']::after {
+    content: 'Opening…';
+    content: 'Opening…' / '';
+  }
+  .nav-folded .ms-head .ms-status[data-status='saved']::after {
+    content: 'Saved';
+    content: 'Saved' / '';
+  }
+  .nav-folded .ms-head .ms-status[data-status='dirty']::after {
+    content: 'Unsaved';
+    content: 'Unsaved' / '';
+  }
+  .nav-folded .ms-head .ms-status[data-status='saving']::after {
+    content: 'Saving…';
+    content: 'Saving…' / '';
+  }
+  .nav-folded .ms-head .ms-status[data-status='conflict']::after {
+    content: 'Conflict';
+    content: 'Conflict' / '';
+  }
+  .nav-folded .ms-head .ms-status[data-status='error']::after {
+    content: 'Not saved';
+    content: 'Not saved' / '';
+  }
+  :where(.nav-folded) .ms-head .ms-head__doc {
+    min-width: 320px;
+  }
+}
+@container ms-main (max-width: 1292px) {
+  .nav-folded .ms-head [data-publish] span {
+    display: none;
+  }
+  :where(.nav-folded) .ms-head .ms-head__doc {
+    min-width: 220px;
+  }
+}

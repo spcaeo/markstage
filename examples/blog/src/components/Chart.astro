@@ -1,0 +1,21 @@
+---
+// A small bar chart in a guide: `data` is a list of {label, value}, `height` its height in pixels, `unit` what the
+// numbers count. In Markstage the data is code (kept as written) and the height and unit are settings (docs/MDX.md).
+interface Props {
+  data: { label: string; value: number }[];
+  height?: number;
+  unit?: string;
+}
+const { data, height = 160, unit = '' } = Astro.props;
+const max = Math.max(1, ...data.map((d) => d.value));
+---
+<figure class="chart" style={`--chart-h: ${height}px`}>
+  <div class="chart__bars">
+    {data.map((d) => (
+      <div class="chart__bar" style={`height: ${(d.value / max) * 100}%`} title={`${d.label}: ${d.value}${unit ? ` ${unit}` : ''}`}>
+        <span>{d.value}</span>
+      </div>
+    ))}
+  </div>
+  <figcaption class="chart__labels">{data.map((d) => <span>{d.label}</span>)}</figcaption>
+</figure>

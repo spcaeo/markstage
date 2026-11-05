@@ -1,6 +1,6 @@
 # Contributing to Markstage
 
-Thank you for helping. Markstage has one promise, *edit your Markdown on the real stage*: what a writer sees in
+Thank you for helping. Markstage has one promise, *edit on the real page*: what a writer sees in
 the editor is the site's own page, and a save changes only what they changed. The rules below exist to keep it.
 Please read them before you open a pull request.
 
@@ -59,7 +59,7 @@ Fewer packages mean fewer ways in. What each package uses at run time today:
 | Package | Runtime dependencies |
 | --- | --- |
 | `@markstage/server` | `@markstage/core`; `sharp` (optional, for picture uploads). Everything else is Node's own (`node:http`, `node:crypto`, `node:sqlite`, `node:child_process`). |
-| `@markstage/core` | `yaml`, `unified`, `remark-parse`, `remark-gfm`, `decode-named-character-reference` |
+| `@markstage/core` | `yaml`, `unified`, `remark-parse`, `remark-gfm`, `remark-mdx` (MDX files, pinned to 3.1.1), `decode-named-character-reference` |
 | `@markstage/editor` | `@markstage/core`, TipTap 3 (pinned to one exact version), CodeMirror 6 and `@lezer/highlight`. It runs in the browser, built by `build-editor`. |
 | `@markstage/astro` | `@markstage/core`, `@markstage/editor`, `yaml`; Astro 7.4 or newer (`^7.4.4`) is the site's own (a peer dependency); uses the site's `sharp` when it has one. |
 

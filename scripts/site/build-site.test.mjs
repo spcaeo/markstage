@@ -7,10 +7,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, test } from 'node:test';
-import { buildSite, comparedCount, imageSize, REPO_ROOT } from './build-site.mjs';
+import { buildSite, builtByWorkflow, comparedCount, imageSize, REPO_ROOT } from './build-site.mjs';
 import { OG_IMAGES, OG_SIZE, SITE_URL } from './config.mjs';
+import { parseComparison } from './comparison-data.mjs';
 import { DOCS, FAQ } from './content.mjs';
+import { ALL_FEATURES, FEATURE_GROUPS } from './features-content.mjs';
+import { isAiItem, STRIP_ROWS } from './home-content.mjs';
 import { renderMarkdown } from './markdown.mjs';
+import { readRoadmap } from './roadmap.mjs';
 import { licenceHits } from '../lib/licence-words.mjs';
 import { withoutShowcase } from '../lib/showcase.mjs';
 
@@ -42,7 +46,8 @@ function checkSite(label, built) {
   const byFile = Object.fromEntries(pages.map((p) => [p.file, p.content]));
   const ids = Object.fromEntries(pages.map((p) => [p.file, new Set([...p.content.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]))]));
   // pages from this build; the stylesheet, script, icon, share images and screenshots are committed files
-  const exists = (rel) => byFile[rel] !== undefined || built.files.some((f) => f.file === rel) || (!rel.endsWith('.html') && fs.existsSync(path.join(SITE, rel)));
+  // the live demo's editor and sample blog are built by the Pages workflow (npm run demo:build), not committed
+  const exists = (rel) => byFile[rel] !== undefined || built.files.some((f) => f.file === rel) || (!rel.endsWith('.html') && fs.existsSync(path.join(SITE, rel))) || builtByWorkflow(rel);
 
   describe(`${label}: the whole site`, () => {
     test('every page has its own title and description', () => {
@@ -186,7 +191,7 @@ describe('site/ is built from its sources', () => {
   test('holds no page the build does not make', () => {
     const made = new Set(built.files.map((f) => f.file));
     const html = fs.readdirSync(SITE, { recursive: true }).filter((f) => f.endsWith('.html'));
-    assert.deepEqual(html.filter((f) => !made.has(f.split(path.sep).join('/'))), []);
+    assert.deepEqual(html.map((f) => f.split(path.sep).join('/')).filter((f) => !made.has(f) && !builtByWorkflow(f)), []);
   });
 
   test('two builds are byte-identical', () => {
@@ -226,18 +231,88 @@ describe('site/ is built from its sources', () => {
     for (const f of built.files.filter((x) => x.file.endsWith('.html'))) {
       const bar = /<header class="topbar">[\s\S]*?<\/header>/.exec(f.content)[0];
       assert.match(bar, /<a class="gh-btn" href="https:\/\/github\.com\/spcaeo\/markstage"[^>]*>.*Star<span class="gh-long"> on GitHub<\/span>/, f.file);
-      assert.match(bar, /<svg class="logo"[^>]*><path class="lt"/, f.file);
+      assert.match(bar, /<svg class="logo"[^>]*><rect class="lt"/, f.file);
+      assert.match(bar, /<span class="brand-tag">Type it\. Ship it\.<\/span>/, f.file);
       assert.match(f.content, /<link rel="icon" href="[^"]*favicon\.ico"/, f.file);
     }
-    for (const file of ['icon.svg', 'favicon.ico', 'apple-touch-icon.png', 'fonts/big-shoulders-display-800.woff2', 'fonts/OFL.txt', 'home.css']) assert.ok(fs.existsSync(path.join(SITE, file)), file);
+    for (const file of ['icon.svg', 'favicon.ico', 'apple-touch-icon.png', 'fonts/bricolage-grotesque-800.woff2', 'fonts/figtree.woff2', 'fonts/OFL-bricolage-grotesque.txt', 'fonts/OFL-figtree.txt', 'home.css']) assert.ok(fs.existsSync(path.join(SITE, file)), file);
   });
 
-  test('builds the story and the showcase from site-content/, and shows both on the home page', () => {
+  test('builds the story and the showcase from site-content/, and shows the showcase and the story link on the home page', () => {
     const home = built.files.find((f) => f.file === 'index.html').content;
     assert.ok(built.files.some((f) => f.file === 'why/index.html'));
     assert.ok(built.files.some((f) => f.file === 'showcase/index.html'));
-    assert.match(home, /<section class="story-band" id="why"/);
-    assert.match(home, /<section class="wrap built-with" id="built-with"/);
+    assert.match(home, /<section class="sec" id="built-with"/);
+    assert.match(home, /<a class="btn btn-text" href="why\/">/);
+  });
+
+  test('the home page has the look A sections in the approved order', () => {
+    const home = built.files.find((f) => f.file === 'index.html').content;
+    const ids = ['writing', 'ghost', 'prismic', 'ai', 'built-with', 'compare', 'install', 'faq'];
+    const at = ids.map((id) => home.indexOf(`id="${id}"`));
+    for (const [i, n] of at.entries()) assert.ok(n > 0, `no #${ids[i]}`);
+    assert.deepEqual([...at].sort((a, b) => a - b), at);
+    assert.match(home, /<h1><span class="kick">The visual editor for Astro sites[^<]*<\/span> <span class="h1-line">Edit your site on the <span class="mark">real page<\/span>\.<\/span><\/h1>/);
+    assert.match(home, /<figure class="shot win">[\s\S]*?media\/blocks\.webp/);
+  });
+
+  test('the compare strip quotes docs/COMPARISON.md, cell for cell', () => {
+    const home = built.files.find((f) => f.file === 'index.html').content;
+    const data = parseComparison(fs.readFileSync(path.join(REPO_ROOT, 'docs', 'COMPARISON.md'), 'utf8'));
+    const strip = /<table class="strip">[\s\S]*?<\/table>/.exec(home)?.[0];
+    assert.ok(strip, 'no compare strip');
+    assert.deepEqual([...strip.matchAll(/<thead>[\s\S]*?<\/thead>/g)][0][0].match(/<th scope="col"[^>]*>([^<]+)<\/th>/g).slice(1).map((t) => t.replace(/<[^>]+>/g, '')), data.lead.products);
+    for (const f of STRIP_ROWS) {
+      const row = data.lead.rows.find((r) => r.feature === f);
+      assert.ok(row, `COMPARISON.md's lead table has no row "${f}"`);
+      for (const p of data.lead.products) {
+        const c = row.cells[p];
+        if (c.value) assert.ok(strip.includes(c.value), `${f} / ${p}: "${c.value}" not in the strip`);
+        if (c.note) assert.ok(strip.includes(c.note), `${f} / ${p}: note not in the strip`);
+      }
+    }
+  });
+
+  test('/features/ and /ai/ are built, in the sitemap and llms.txt, and every feature links to a doc that exists', () => {
+    const file = (f) => built.files.find((x) => x.file === f)?.content;
+    const features = file('features/index.html');
+    const ai = file('ai/index.html');
+    assert.ok(features && ai);
+    for (const p of ['features/', 'ai/']) {
+      assert.match(file('sitemap.xml'), new RegExp(`<loc>[^<]*/${p}</loc>`));
+      assert.match(file('llms.txt'), new RegExp(`/${p}`));
+    }
+    for (const f of ALL_FEATURES) {
+      assert.match(features, new RegExp(`id="${f.id}"`), f.id);
+      const doc = /^docs\/([a-z0-9-]+)\/(?:#([a-z0-9-]+))?$/.exec(f.doc);
+      assert.ok(doc, `${f.id}: doc link ${f.doc}`);
+      const html = file(`docs/${doc[1]}/index.html`);
+      assert.ok(html, `${f.id}: docs/${doc[1]}/ is not built`);
+      if (doc[2]) assert.match(html, new RegExp(`id="${doc[2]}"`), `${f.id}: docs/${doc[1]}/ has no #${doc[2]}`);
+    }
+    assert.match(features, new RegExp(`${ALL_FEATURES.length} features`));
+  });
+
+  test('the README lists every feature, grouped as on /features/, and keeps the new tagline', () => {
+    const readme = fs.readFileSync(path.join(REPO_ROOT, 'README.md'), 'utf8');
+    const section = /\n## Features\n([\s\S]*?)\n## /.exec(readme)?.[1] ?? '';
+    for (const g of FEATURE_GROUPS) {
+      const line = section.split('\n').find((l) => l.startsWith(`- **${g.title}** (${g.items.length},`));
+      assert.ok(line, `README Features has no line for ${g.title} with ${g.items.length} features`);
+      for (const f of g.items) assert.ok(line.includes(f.title), `README ${g.title} lacks ${f.title}`);
+    }
+    assert.match(readme, /<strong>Type it\. Ship it\.<\/strong>/);
+    assert.match(readme, /docs\/screenshots\/blocks\.png/);
+  });
+
+  test("/ai/'s coming items are the roadmap's AI and MCP items that have not shipped", () => {
+    const ai = built.files.find((x) => x.file === 'ai/index.html').content;
+    const { items } = readRoadmap(path.join(REPO_ROOT, 'site-content'), (md) => md);
+    const want = items.filter((i) => isAiItem(i) && i.status !== 'shipped');
+    assert.ok(want.length, 'roadmap.md has AI items');
+    const coming = /<section class="sec" id="coming"[\s\S]*?<\/section>/.exec(ai)?.[0] ?? '';
+    for (const i of want) assert.ok(coming.includes(`<h3>${i.title.replace(/&/g, '&amp;')}</h3>`), i.id);
+    assert.equal((coming.match(/<h3>/g) ?? []).length, want.length);
   });
 
   checkSite('repo', built);
@@ -287,7 +362,7 @@ describe('site-content files render (fixtures)', () => {
     assert.equal((html.match(/<h3>Block<\/h3>/g) ?? []).length, 1);
   });
 
-  test('the story and showcase pages and their home sections come from the files', () => {
+  test('the story and showcase pages and the home page’s showcase section come from the files', () => {
     const why = page('why/index.html');
     assert.match(why, /<h1>Why the fixture exists<\/h1>/);
     assert.match(why, /By Sam Lee, Editor, Example Co\./);
@@ -301,7 +376,6 @@ describe('site-content files render (fixtures)', () => {
     assert.match(show, /<dt>Fixture speed score<\/dt><dd><span class="sr">from <\/span><span class="was">50<\/span>/);
     assert.match(show, /<td class="num">98<\/td>/);
     const home = page('index.html');
-    assert.match(home, /<h2 id="why-title">Fixture story title<\/h2>/);
     assert.match(home, /<h2 id="built-title">Built with Markstage: example\.com<\/h2>/);
   });
 

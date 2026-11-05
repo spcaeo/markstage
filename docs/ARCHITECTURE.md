@@ -1,7 +1,7 @@
 # Markstage: architecture
 
 Source-available (Elastic License 2.0, free to self-host; see LICENSE and NOTICE) visual editor for Markdown/JSON content sites. Write on the site's real design, save clean git
-diffs, no database, no MDX, no cloud. First adapter: Astro. It was first built for a real 460-page Astro business site with its own block pack, called "the pilot site" in these docs.
+diffs, no database, no cloud; MDX files with their code kept as written (MDX.md). First adapter: Astro. It was first built for a real 460-page Astro business site with its own block pack, called "the pilot site" in these docs.
 Goal: as close to Ghost and WordPress as a git-based editor can be, with a sign-in and a full editorial journey.
 
 ## Principles (non-negotiable)

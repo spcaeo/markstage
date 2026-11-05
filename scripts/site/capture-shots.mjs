@@ -11,7 +11,9 @@
 //    password is made here and never printed. Its Library, releases, environments, Inbox and history are captured.
 // 4. Writes each shot as WebP (sharp) under site/media/ and as PNG under docs/screenshots/ (for the README), then
 //    closes the browser and stops both servers by their process (never by name), and removes .wt-shots.
-//    hero-dark (the editor in its dark theme) goes to docs/screenshots/ only.
+//    hero-dark (the editor in its dark theme) goes to docs/screenshots/ only. blocks, handle and palette (the "/"
+//    block menu, a block's grip menu and ⌘K) are the Notion-style writing shots of the home page and /features/;
+//    publish and tokens (the publish sheet, a new AI assistant token) are server shots.
 // Ports: odd five-digit, checked free first (SHOTS_PORT_BASE, default 18421: dev +0, server +2).
 import { execFileSync, spawn } from 'node:child_process';
 import crypto from 'node:crypto';
@@ -203,6 +205,7 @@ async function devShots(browser) {
     await save(await page.screenshot({ type: 'png' }), 'hero-dark', { site: false });
     await page.context().close();
   }
+  await menuShots(browser, entry, canvasReady);
   const panels = [
     ['outline', '[data-sections]'],
     ['seo', '[data-seo]'],
@@ -216,6 +219,67 @@ async function devShots(browser) {
     await page.locator(button).first().click();
     await settle(page, 1800);
     await save(await page.screenshot({ type: 'png' }), name);
+    await page.context().close();
+  }
+}
+
+/** A clip of the page around a popup, `around` a box: at least `w` x `h` CSS pixels, kept inside the window. */
+function clipAround(box, { w = 820, h = 600, left = 300, top = 230 } = {}) {
+  const x = Math.max(0, Math.min(VIEW.width - w, box.x - left));
+  const y = Math.max(0, Math.min(VIEW.height - h, box.y - top));
+  return { x, y, width: w, height: h };
+}
+
+/** The Notion-style writing shots: the block menu (blocks), a block's grip menu (handle), ⌘K (palette). */
+async function menuShots(browser, entry, canvasReady) {
+  const open = async () => {
+    const page = await editorPage(browser, { scale: 2 });
+    await page.goto(entry);
+    await canvasReady(page);
+    await settle(page, 2000);
+    return page;
+  };
+  const para = (page) => page.locator('.ms-canvas > .ProseMirror > p').first();
+  if (want('blocks')) {
+    const page = await open();
+    // the "+" beside the first heading opens the same block menu as "/" on an empty line (inserter.ts)
+    const h2 = page.locator('.ms-canvas > .ProseMirror > h2').first();
+    // the heading near the top of the window, so the menu opens below it with the text beside
+    await h2.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+    await page.mouse.wheel(0, -220);
+    await settle(page, 800);
+    await h2.click();
+    await h2.hover();
+    const plus = page.locator('.ms-handle__btn:not(.ms-handle__grip)').first();
+    await plus.waitFor({ timeout: 10_000 });
+    await plus.click();
+    const menu = page.locator('.ms-insert');
+    await menu.waitFor({ timeout: 10_000 });
+    await settle(page, 800);
+    await save(await page.screenshot({ type: 'png', clip: clipAround(await menu.boundingBox(), { w: 900, h: 640, left: 240, top: 150 }) }), 'blocks');
+    await page.context().close();
+  }
+  if (want('handle')) {
+    const page = await open();
+    const p = para(page);
+    await p.click();
+    await p.hover();
+    const grip = page.locator('.ms-handle__grip');
+    await grip.waitFor({ timeout: 10_000 });
+    await grip.click();
+    const menu = page.locator('.ms-menu').first();
+    await menu.waitFor({ timeout: 10_000 });
+    await settle(page, 600);
+    await save(await page.screenshot({ type: 'png', clip: clipAround(await menu.boundingBox(), { left: 260, top: 120 }) }), 'handle');
+    await page.context().close();
+  }
+  if (want('palette')) {
+    const page = await open();
+    await para(page).click();
+    await page.keyboard.press('ControlOrMeta+k');
+    await page.keyboard.type('cal');
+    await settle(page, 1200);
+    await save(await page.screenshot({ type: 'png', scale: 'css' }), 'palette');
     await page.context().close();
   }
 }
@@ -343,6 +407,8 @@ const SERVER_SHOTS = [
   ['inbox', '#/inbox'],
   ['history', '#/revisions/posts/hello-markstage'],
   ['media', '#/media'],
+  ['publish', '#/publish/posts/content-calendar'],
+  ['tokens', '#/settings/tokens?new=mcp'],
 ];
 
 /** What each server shot does before it is taken. */

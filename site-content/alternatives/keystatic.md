@@ -23,7 +23,7 @@ sign-on, a forms inbox and SEO checks. Markstage is pre-release.
 | | Markstage | Keystatic |
 | --- | --- | --- |
 | Editing | On the real page; other fields in a side panel | Admin UI with fields and a WYSIWYG editor |
-| Formats | Markdown and JSON | Markdown, Markdoc, MDX, JSON, YAML |
+| Formats | Markdown, MDX and JSON | Markdown, Markdoc, MDX, JSON, YAML |
 | Astro output | The live site stays fully static | Pages stay static; the admin routes are rendered on demand, so an adapter is needed |
 | Storage | Git on your server | Local files or GitHub |
 | Roles | Five built in, plus custom roles | Keystatic Cloud: access per team; no roles described |
@@ -33,8 +33,8 @@ sign-on, a forms inbox and SEO checks. Markstage is pre-release.
 
 ## Where Keystatic is stronger
 
-- **MDX and Markdoc** fields. Markstage edits Markdown and JSON today; MDX editing is coming in 0.4.0
-  ([roadmap](/roadmap/#mdx)).
+- **MDX and Markdoc** fields. Markstage edits Markdown, MDX (words and simple settings; code kept as written) and
+  JSON, and not Markdoc.
 - **A typed reader API** for your Astro code, with TypeScript.
 - **No extra server.** Keystatic runs inside your Astro project (with an adapter).
 - **GitHub mode** with Keystatic Cloud handling sign-in.

@@ -35,7 +35,7 @@ export function createLinkMap(app, { core, cfg, files }) {
     try {
       const s = store.summarize(c, id, cur.text);
       const fields = store.fieldsOf(c, cur.text) ?? {};
-      const doc = c.format === 'md' ? converter.mdToDoc(cur.text).doc : null;
+      const doc = c.format === 'md' ? converter.mdToDoc(cur.text, c).doc : null;
       const { links, blocks } = core.map.entryText({ format: c.format, doc, data: fields });
       const type = config.pageTypes ? core.pageTypes.pageTypeOf({ pageTypes: config.pageTypes, collections: store.collections }, c, fields) : null;
       page = {

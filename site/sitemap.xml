@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://spcaeo.github.io/markstage/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/features/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/ai/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/demo/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/why/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/showcase/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/</loc></url>
@@ -10,6 +13,7 @@
   <url><loc>https://spcaeo.github.io/markstage/docs/environments/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/security/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/api/</loc></url>
+  <url><loc>https://spcaeo.github.io/markstage/docs/mdx/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/api-mcp/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/api-ai/</loc></url>
   <url><loc>https://spcaeo.github.io/markstage/docs/api-library/</loc></url>

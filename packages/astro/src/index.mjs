@@ -88,7 +88,8 @@ export default function markstage(options = {}) {
         const tools = async () => {
           const packs = [];
           for (const p of cfg.editor.packs) if (p.markdown) packs.push((await server.ssrLoadModule(p.markdown)).default);
-          return { md: createConverter({ packs }), readFrontmatter, setFrontmatter };
+          // an MDX collection's files go through the MDX converter (docs/MDX.md)
+          return { md: createConverter({ packs }), mdx: createConverter({ packs, mdx: true }), readFrontmatter, setFrontmatter };
         };
         const markstageRoot = path.resolve(here, '../../..');
         updateConfig({

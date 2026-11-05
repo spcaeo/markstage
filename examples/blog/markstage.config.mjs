@@ -1,4 +1,4 @@
-// Markstage for the example blog: one collection of Markdown posts, drawn with the blog's own CSS. It uses only
+// Markstage for the example blog: a collection of Markdown posts and one of MDX guides, drawn with the blog's own CSS. It uses only
 // the core blocks; its one editor pack keeps a reading post's list of contents live on the canvas
 // (markstage/contents.ts). Each post is a page type (a guide, an article, a legal page) with a frame the
 // post page follows (src/pages/posts/[id].astro, @markstage/astro/pages), and posts belong to topics (topics).
@@ -26,6 +26,20 @@ export default defineConfig({
         { type: 'text', key: 'author', label: 'Author' },
         // a reading post lists its h2s above the text (src/pages/posts/[id].astro); `contents: false` only when off
         { type: 'switch', key: 'contents', label: 'Show contents', default: true },
+      ],
+    },
+    {
+      // guides are MDX (docs/MDX.md): the words and the components' simple settings are edited, the code is kept
+      id: 'guides',
+      label: 'Guides',
+      format: 'mdx',
+      dir: 'src/content/guides',
+      fields: { excerpt: 'description' },
+      url: '/guides/{id}/',
+      settings: [
+        { type: 'textarea', key: 'description', label: 'Excerpt' },
+        { type: 'date', key: 'date', label: 'Publish date' },
+        { type: 'text', key: 'author', label: 'Author' },
       ],
     },
   ],

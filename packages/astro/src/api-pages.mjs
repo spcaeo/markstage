@@ -78,7 +78,13 @@ export function pageChecksOf(cfg, c, raw, { md, readFrontmatter }) {
   const type = pageTypeOf(site, c, raw.data);
   const frame = frameOf(site, c, raw.data);
   if (!type) return { type: null, frame, checks: [] };
-  const doc = c.format === 'md' ? md.mdToDoc(raw.text).doc : null;
+  let doc = null;
+  try {
+    doc = c.format === 'md' ? md.mdToDoc(raw.text).doc : null;
+  } catch (e) {
+    // an .mdx file the MDX reader cannot read has no blocks to check (it opens read-only)
+    if (!e?.mdx) throw e;
+  }
   const map = type.checks.some((k) => k.kind === 'linksTo') ? pagesOf(cfg, readFrontmatter) : null;
   const links = map ? pageLinks(doc, raw.data, cfg.siteUrl).map((href) => ({ href, target: map.get(pathKey(href)) ?? null })) : [];
   const checks = runPageChecks(site, type, { collection: c.id, format: c.format, data: raw.data, doc, links, built: null });

@@ -52,7 +52,13 @@ export async function createPageTypes(app, entries) {
     const type = typeOf(c, f);
     const frame = core.frameOf(site, c, f);
     if (!type) return { type: null, frame, checks: [] };
-    const doc = c.format === 'md' ? (parsed ?? entries.parse(c, text)).doc : null;
+    let doc = null;
+    try {
+      doc = c.format === 'md' ? (parsed ?? entries.parse(c, text)).doc : null;
+    } catch (e) {
+      // an .mdx file the MDX reader cannot read has no blocks to check (it opens read-only, docs/MDX.md)
+      if (e?.code !== 'invalid-mdx') throw e;
+    }
     const needLinks = type.checks.some((k) => k.kind === 'linksTo');
     const map = needLinks ? (known ?? pages()) : null;
     const links = needLinks ? internalLinks(doc, f, config.siteUrl).map((l) => ({ href: l.href, target: map.get(pageKey(l.href)) ?? null })) : [];

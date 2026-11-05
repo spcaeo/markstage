@@ -341,7 +341,7 @@ export function normalizeConfig(raw, root, { site = null } = {}) {
   if (!raw || typeof raw !== 'object') fail('the default export must be an object.');
   const collections = (raw.collections ?? []).map((c) => {
     if (!COLLECTION_ID.test(c?.id ?? '')) fail(`collection id must match ${COLLECTION_ID}: ${JSON.stringify(c?.id)}`);
-    if (!['md', 'json'].includes(c.format)) fail(`collection "${c.id}": format must be "md" or "json".`);
+    if (!['md', 'mdx', 'json'].includes(c.format)) fail(`collection "${c.id}": format must be "md", "mdx" or "json".`);
     if (typeof c.dir !== 'string' || !c.dir || path.isAbsolute(c.dir)) fail(`collection "${c.id}": dir must be relative to the project.`);
     const absDir = path.resolve(root, c.dir);
     if (!absDir.startsWith(root + path.sep)) fail(`collection "${c.id}": dir must be inside the project.`);
@@ -350,10 +350,12 @@ export function normalizeConfig(raw, root, { site = null } = {}) {
     return {
       id: c.id,
       label: String(c.label ?? c.id),
-      format: c.format,
+      // an MDX collection is Markdown everywhere (settings, checks, history) but for its files' reader (docs/MDX.md)
+      format: c.format === 'json' ? 'json' : 'md',
+      mdx: c.format === 'mdx',
       dir: path.relative(root, absDir),
       absDir,
-      ext: c.format === 'md' ? '.md' : '.json',
+      ext: c.format === 'json' ? '.json' : `.${c.format}`,
       hasStatus: Boolean(c.hasStatus),
       fields: { title: 'title', author: 'author', tags: 'tags', date: 'date', modified: 'modified', excerpt: 'excerpt', slug: null, url: null, ...(c.fields ?? {}) },
       url,
@@ -463,6 +465,7 @@ export function clientConfig(cfg) {
         id: c.id,
         label: c.label,
         format: c.format,
+        ...(c.mdx ? { mdx: true } : {}),
         dir: c.dir,
         hasUrl: c.url !== null,
         ...(addressKey ? { addressKey } : {}),

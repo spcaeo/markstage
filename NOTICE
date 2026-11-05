@@ -1,5 +1,5 @@
 Markstage
-Edit your Markdown on the real stage.
+Type it. Ship it.
 
 Copyright 2026 Space-O Technologies (https://www.spaceo.ca). All rights reserved.
 Author: Rakesh Patel (CEO, Space-O Technologies; CEO, LabsMedia).
@@ -18,7 +18,7 @@ public and free to use, with the one limit above.
 Trademarks
 ----------
 "Markstage" as the name of this software, the Markstage logo and the tagline
-"Edit your Markdown on the real stage." are trademarks of Space-O Technologies.
+"Type it. Ship it." are trademarks of Space-O Technologies.
 The Elastic License 2.0 does not grant any right to use them. You may say
 truthfully that your work is "based on Markstage" or "works with Markstage".
 You may not name a fork, product or service "Markstage", or use the logo, in a
@@ -38,11 +38,17 @@ is copied into this repository. At the time of writing the runtime packages are
 MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0, BlueOak-1.0.0, 0BSD, CC0-1.0
 and MPL-2.0 (lightningcss, used unmodified), plus libvips under LGPL-3.0-or-later,
 loaded as a separate prebuilt library by sharp. The editor is built on TipTap and
-ProseMirror (MIT) and CodeMirror (MIT). `npm ls --omit=dev --all` lists them.
+ProseMirror (MIT) and CodeMirror (MIT). MDX files are read with remark-mdx 3.1.1
+(MIT, pinned to that exact version) and the micromark, mdast and acorn packages it
+uses (MIT). `npm ls --omit=dev --all` lists them.
 
-The public site (site/) and the wordmark use Big Shoulders Display, copyright
-2019 The Big Shoulders Project Authors, under the SIL Open Font License 1.1:
-a Latin subset is in site/fonts/, with the licence in site/fonts/OFL.txt.
+The public site (site/), the wordmark and the tagline use two fonts under the
+SIL Open Font License 1.1, each as a Latin subset in site/fonts/ with its
+licence beside it:
+- Bricolage Grotesque, copyright 2022 The Bricolage Grotesque Project Authors
+  (site/fonts/OFL-bricolage-grotesque.txt), for the wordmark and headings;
+- Figtree, copyright 2022 The Figtree Project Authors (site/fonts/OFL-figtree.txt),
+  for the text and the tagline.
 
 Product and company names mentioned in the documentation (Astro, Keystatic,
 Ghost, WordPress, Gutenberg, Tina, Notion, monday.com, Google, LinkedIn,

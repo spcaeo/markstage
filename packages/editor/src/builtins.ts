@@ -7,7 +7,8 @@ import { TABLE_ACTIONS } from './toolbar';
 import { assetUrl, contentSrc } from './assets';
 import { imagePicker } from './image-picker';
 import { figureAttr, figureParts, type FigureParts } from './images';
-import { imagesConfig } from './runtime';
+import { entryIsMdx, imagesConfig } from './runtime';
+import { MDX_BLOCKS } from './mdx/blocks';
 
 /** Small drawings for the block menu (72x48), shared with packs through `svgPreview`. */
 export const PREVIEW_COLORS = { accent: '#6161ff', tint: '#e3e3fd', grey: '#c9cbd1', line: '#e7e8eb' };
@@ -162,19 +163,21 @@ export const BUILTIN_BLOCKS: BlockUI[] = [
         }),
         ctx.segmented('Decorative', [['no', 'No'], ['yes', 'Yes']], () => (parts().decorative ? 'yes' : 'no'), (v) => setParts({ decorative: v === 'yes' }, v === 'yes' ? { alt: '' } : {})),
       );
-      if (cfg.captions)
+      // in MDX a caption or a width would be written as a <figure> component, so they are left out there
+      if (cfg.captions && !entryIsMdx())
         ctx.add(
           ctx.input('Caption', () => ctx.node()?.attrs.caption ?? '', (v) => {
             const caption = v.trim() ? v : null;
             ctx.set({ caption, figure: figureAttr(parts(), caption) });
           }),
         );
-      if (cfg.widths.length > 1) ctx.add(ctx.segmented('Width', cfg.widths.map((w) => [w.id, w.label]), () => parts().width, (v) => setParts({ width: v })));
+      if (cfg.widths.length > 1 && !entryIsMdx()) ctx.add(ctx.segmented('Width', cfg.widths.map((w) => [w.id, w.label]), () => parts().width, (v) => setParts({ width: v })));
     },
     panelKey: () => 'image',
   },
   { name: 'blockquote', label: 'Quote' },
   { name: 'codeBlock', label: 'Code' },
+  ...MDX_BLOCKS,
 ];
 
 export type { JSONContent };

@@ -1,0 +1,57 @@
+---
+title: Getting started
+description: Install the package, then write your first page.
+sidebar:
+  order: 1
+---
+
+import { Callout, Tabs, Tab } from '../../components/docs';
+import Chart from '../../components/Chart.astro';
+export const versions = ['1.0', '1.1'];
+
+# Getting started
+
+Markstage edits the prose of an MDX page and keeps its code as written. This page uses {versions.length} versions.
+
+<Callout type="tip" title='Before you start'>
+  You need **Node 22.13** or newer.
+
+  Check it with `node -v`.
+</Callout>
+
+## Install
+
+<Tabs>
+  <Tab label="npm">
+    Run the install command.
+  </Tab>
+  <Tab label="pnpm">
+    Use pnpm instead.
+  </Tab>
+</Tabs>
+
+```jsx
+<Callout type="warn">This is code, not a component.</Callout>
+{notAnExpression}
+```
+
+<Chart data={[3, 5, 8]} height={240} animate />
+
+{/* Nobody sees this comment on the page. */}
+
+- One point with a <Badge text="new" /> badge
+- Another point with {versions[0]}
+
+> A quotation, with *emphasis*.
+
+| Option | What it does |
+| --- | --- |
+| `draft` | Keeps the page off the site<br />until it is ready |
+
+<>
+  A fragment holds this paragraph.
+</>
+
+<Note.Small {...props} />
+
+The end, with a [link](https://example.com/) and <a href="https://example.com/a" target="_blank">another</a>.

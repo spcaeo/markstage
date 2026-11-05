@@ -3,6 +3,12 @@
 # other copy the job is skipped. One-time setup there: Settings › Pages › Source: GitHub Actions.
 # The screenshots (site/media) and share images (site/og, .github/social-preview.png) are committed; this job
 # rebuilds the pages from docs/, site-content/ and the README, so the live site always matches them.
+#
+# The live demo (site/demo/, docs/DEMO.md) is built here too, after the pages are checked: the real editor bundle,
+# the example blog and the recorded server answers (scripts/demo/recorded/api.json). Its landing page,
+# site/demo/index.html, is an ordinary committed page; the editor and the blog under it (about 2.6 MB of bundles)
+# are not committed but rebuilt from source on each deploy, so the demo is always the editor of this commit, the
+# repo carries no second copy of the editor to review, and a stale bundle can never be served.
 name: Site
 
 on:
@@ -14,7 +20,13 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'package.json'
+      - 'package-lock.json'
       - 'scripts/site/**'
+      - 'scripts/demo/**'
+      - 'packages/core/**'
+      - 'packages/editor/**'
+      - 'packages/astro/**'
+      - 'examples/blog/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -48,6 +60,9 @@ jobs:
         run: npm run site:build
       - name: Check the pages (titles, descriptions, links, JSON-LD)
         run: npm run site:test
+      # static files only: no server, no browser; it keeps site/demo/index.html (the landing page) as it is
+      - name: Build the live demo
+        run: npm run demo:build -- site/demo --base /markstage/demo/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

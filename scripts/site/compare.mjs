@@ -47,7 +47,7 @@ export function compareProse(section) {
 
 /** What Markstage is and is not, for the compare page (README and docs facts only). */
 const MARKSTAGE_FACTS = [
-  ['Where content lives', 'Markdown and JSON files in your git repo'],
+  ['Where content lives', 'Markdown, MDX and JSON files in your git repo'],
   ['How writers edit', 'On the site’s real page design, in the browser'],
   ['What a save is', 'A clean git diff of only the blocks that changed; with the Markstage server, a commit by the person who saved'],
   ['Hosting', 'Self-hosted: your computer (astro dev) or your server'],

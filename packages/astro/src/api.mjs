@@ -124,7 +124,9 @@ export function devApi(cfg, tools, log = console, { forward = process.env.MARKST
   async function route(req, res, url) {
     const parts = url.pathname.slice(prefix.length).replace(/\/+$/, '').split('/').map(decodeURIComponent);
     const m = req.method;
-    const { md, readFrontmatter, setFrontmatter } = await tools();
+    const tooled = await tools();
+    const { readFrontmatter, setFrontmatter } = tooled;
+    let { md } = tooled;
 
     if (parts[0] === 'auth' && parts[1] === 'me' && m === 'GET') {
       return send(res, 200, { user: { id: 'u_dev', name: 'Dev mode', role: 'owner' }, devMode: true, csrfToken: null });
@@ -167,6 +169,8 @@ export function devApi(cfg, tools, log = console, { forward = process.env.MARKST
       );
     }
     const c = collectionOf(parts[1]);
+    // an MDX collection (docs/MDX.md): its files are read and written as MDX
+    if (c.mdx && tooled.mdx) md = tooled.mdx;
     // JSON entries (schema, structured saves): api-json.mjs, owned by the pages editor; true when it answered
     if (c.format === 'json' && (await jsonRoute({ c, parts, method: m, req, res, url, cfg, readBody, send, HttpError, checkVersion, writeText, entryFile }))) return;
 

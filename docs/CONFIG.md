@@ -3,6 +3,7 @@
 > **Not on npm yet: install from a clone.** The `@markstage/*` packages are not published to npm. Clone this
 > repository next to your site and link them, as the README's [quick start](../README.md#quick-start) shows
 > (Option 2). Your site needs Astro 7.4 or newer.
+> To see the editor first with nothing to install, try the [live demo](https://spcaeo.github.io/markstage/demo/).
 
 A site tells Markstage what it edits, and how to draw it, in one file at the project root:
 `markstage.config.mjs`, `.js` or `.ts` (the first found, in that order). Both sides read it with the same loader,
@@ -109,7 +110,7 @@ extension.
 | --- | --- | --- | --- |
 | `id` | `^[a-z][a-z0-9-]{0,39}$` | required | Used in the editor's URLs (`#/e/posts/<id>`) and the API's (`collections/posts/…`). |
 | `label` | string | the id | The name shown in the editor (e.g. Articles). |
-| `format` | `'md'` or `'json'` | required | `md` is Markdown with YAML frontmatter, edited on the canvas. `json` is a data file, edited with forms. |
+| `format` | `'md'`, `'mdx'` or `'json'` | required | `md` is Markdown with YAML frontmatter, edited on the canvas. `mdx` is MDX (`.mdx` files): the same, with the code kept as written and components shown as cards ([MDX.md](MDX.md)). `json` is a data file, edited with forms. |
 | `dir` | path | required | The folder, relative to the project and inside it. |
 | `hasStatus` | boolean | `false` | Entries can be drafts (`draft: true`) or scheduled (`publishAt` in the future). New entries start as drafts. Without it, every entry is live. |
 | `fields` | object | below | Which frontmatter keys hold the entry's basics. |

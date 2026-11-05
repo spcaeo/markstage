@@ -2,7 +2,7 @@
 // Tests use a flat stub module, and core may be missing on a server, so everything goes through
 // `createConverter(mod)`; the optional parts have small fallbacks here that are safe but less surgical than core.
 //
-// @markstage/core: createConverter({packs}) -> {mdToDoc, docToMd (surgical), changedBlocks, rawHtmlOf};
+// @markstage/core: createConverter({packs, mdx?}) -> {mdToDoc, docToMd (surgical), changedBlocks, rawHtmlOf};
 //                  markdownUrls(text) -> every URL a CommonMark renderer builds from it;
 //                  readFrontmatter(text) -> object; setFrontmatter(text, {key: value|null}) (surgical YAML).
 //                  @markstage/core/json: JsonEntry (surgical JSON edits).
@@ -138,23 +138,38 @@ export function createConverter(mod, { packs = [] } = {}) {
     return { available: false, mdToDoc: missing, docToMd: missing, parseFrontmatter: missing, setFrontmatter: missing, rawHtmlOf: defaultRawHtmlOf, markdownUrls: markdownUrlsFallback, changedBlocks: () => null, applyJsonChanges: fallbackJson };
   }
   const core = mod.core ?? mod;
-  const inst = typeof core.createConverter === 'function' ? core.createConverter({ packs }) : core;
+  const md = typeof core.createConverter === 'function' ? core.createConverter({ packs }) : core;
+  // an MDX collection's files (collection `mdx`, docs/MDX.md) go through core's MDX converter, made when first needed
+  let mdx = null;
+  const inst = (c) => {
+    if (!c?.mdx) return md;
+    if (typeof core.createConverter !== 'function') throw new HttpError(503, 'unavailable', 'Reading MDX needs @markstage/core, which is not installed on this server.');
+    return (mdx ??= core.createConverter({ packs, mdx: true }));
+  };
   const readFm = core.readFrontmatter ?? core.parseFrontmatter;
   const JsonEntry = mod.json?.JsonEntry;
+  // every Markdown call takes the collection last (`c`), so an .mdx file is read and written as MDX
   return {
     available: true,
-    mdToDoc: (text) => inst.mdToDoc(text),
-    docToMd: (doc, original) => {
-      const out = inst.docToMd(doc, original);
+    mdToDoc: (text, c) => inst(c).mdToDoc(text),
+    docToMd: (doc, original, c) => {
+      let out;
+      try {
+        out = inst(c).docToMd(doc, original);
+      } catch (e) {
+        // the file on disk is MDX the reader cannot read: nothing is written over it
+        if (e?.mdx) throw new HttpError(422, 'invalid-mdx', `This MDX cannot be read, so it cannot be saved: ${e.mdx.message}`, { mdx: e.mdx });
+        throw e;
+      }
       if (typeof out !== 'string') throw new Error('The converter returned no text.');
       return out;
     },
     parseFrontmatter: (text) => (readFm ? readFm(text) ?? {} : {}),
     setFrontmatter: typeof core.setFrontmatter === 'function' ? (text, changes) => core.setFrontmatter(text, changes) : missing,
-    rawHtmlOf: (doc) => (typeof inst.rawHtmlOf === 'function' ? inst.rawHtmlOf(doc) : defaultRawHtmlOf(doc)),
+    rawHtmlOf: (doc) => (typeof md.rawHtmlOf === 'function' ? md.rawHtmlOf(doc) : defaultRawHtmlOf(doc)),
     // the URLs the site's CommonMark renderer builds from the text (S1): core's reader, or a loose fallback
-    markdownUrls: typeof core.markdownUrls === 'function' ? (text) => core.markdownUrls(text) : markdownUrlsFallback,
-    changedBlocks: (doc, original) => (typeof inst.changedBlocks === 'function' ? Number(inst.changedBlocks(doc, original)) : null),
+    markdownUrls: typeof core.markdownUrls === 'function' ? (text, c) => core.markdownUrls(text, { mdx: !!c?.mdx }) : markdownUrlsFallback,
+    changedBlocks: (doc, original, c) => (typeof inst(c).changedBlocks === 'function' ? Number(inst(c).changedBlocks(doc, original)) : null),
     applyJsonChanges: JsonEntry ? jsonEntryChanges(JsonEntry) : fallbackJson,
   };
 }

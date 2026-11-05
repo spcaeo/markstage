@@ -1,0 +1,219 @@
+/* The live demo's strip above the editor and its dialogs (demo/ui.ts). Only in a demo build: the editor's own
+   screen moves down by the strip's height, so nothing of it is covered. */
+:root {
+  --ms-demo-h: 40px;
+}
+/* The strip's own tokens. Their defaults are the editor's; a demo build gives them the public site's brand
+   (scripts/demo/html.mjs brandCss, from site/styles.css), so a new brand reaches the strip with no change here. */
+.ms-demo-bar,
+.ms-demo-dialog {
+  --ms-demo-brand: var(--ms-accent-deep);
+  --ms-demo-brand-hover: var(--ms-accent-hover);
+  --ms-demo-brand-ink: var(--ms-accent-text);
+  --ms-demo-on-brand: #fff;
+  --ms-demo-brand-soft: var(--ms-accent-tint);
+  --ms-demo-accent: var(--ms-accent);
+  --ms-demo-line: var(--ms-line);
+}
+html.ms-demo .ms-app {
+  top: var(--ms-demo-h);
+}
+/* the parts the editor pins to the window's top edge: the drawer (under the 56px top bar) and the environment ribbon */
+html.ms-demo .ms-nav {
+  top: calc(56px + var(--ms-demo-h));
+}
+html.ms-demo .ms-envribbon {
+  top: var(--ms-demo-h);
+}
+.ms-demo-bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: var(--ms-demo-h);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px 0 16px;
+  background: var(--ms-demo-brand-soft);
+  color: var(--ms-text);
+  border-bottom: 1px solid var(--ms-demo-line);
+  /* the brass stage line of the logo, along the strip's left end */
+  box-shadow: inset 4px 0 0 var(--ms-demo-accent);
+  font: 13px/1.3 var(--ms-sans);
+}
+.ms-demo-bar__text {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms-demo-bar__text strong {
+  color: var(--ms-demo-brand-ink);
+}
+.ms-demo-bar__actions {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+.ms-demo-btn {
+  display: inline-flex;
+  align-items: center;
+  /* "Your changes" and its count are two flex items: the gap is the space between them */
+  gap: 0.3em;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--ms-line);
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  font: 500 13px/1 var(--ms-sans);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ms-demo-btn:hover {
+  background: var(--ms-hover);
+}
+.ms-demo-btn:focus-visible {
+  outline: 2px solid var(--ms-demo-brand);
+  outline-offset: 2px;
+}
+.ms-demo-btn--primary {
+  background: var(--ms-demo-brand);
+  border-color: var(--ms-demo-brand);
+  color: var(--ms-demo-on-brand);
+}
+.ms-demo-btn--primary:hover {
+  background: var(--ms-demo-brand-hover);
+  border-color: var(--ms-demo-brand-hover);
+}
+.ms-demo-btn--danger {
+  background: var(--ms-danger);
+  border-color: var(--ms-danger);
+  color: #fff;
+}
+.ms-demo-dialog {
+  width: min(860px, calc(100vw - 48px));
+  max-height: calc(100vh - 96px);
+  box-sizing: border-box;
+  padding: 20px 24px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--ms-paper);
+  color: var(--ms-text);
+  box-shadow: var(--ms-pop);
+  font: 14px/1.5 var(--ms-sans);
+  overflow: auto;
+}
+.ms-demo-dialog::backdrop {
+  background: rgb(11 16 21 / 0.35);
+}
+.ms-demo-dialog__title {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+.ms-demo-dialog p {
+  margin: 0 0 12px;
+}
+.ms-demo-muted {
+  color: var(--ms-muted);
+}
+.ms-demo-refusal {
+  font-weight: 600;
+}
+.ms-demo-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+.ms-demo-file {
+  margin: 12px 0 0;
+  border: 1px solid var(--ms-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ms-demo-file__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 !important;
+  padding: 6px 10px;
+  background: var(--ms-chrome);
+  border-bottom: 1px solid var(--ms-line);
+  font: 12px/1.4 var(--ms-mono);
+}
+.ms-demo-file__name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.ms-demo-stat__add {
+  color: var(--ms-ok-ink);
+}
+.ms-demo-stat__del {
+  color: var(--ms-danger);
+}
+.ms-demo-diff {
+  margin: 0;
+  padding: 8px 0;
+  max-height: 52vh;
+  overflow: auto;
+  font: 12.5px/1.55 var(--ms-mono);
+  white-space: pre;
+  tab-size: 2;
+}
+.ms-demo-diff > span {
+  display: inline-block;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;
+}
+.ms-demo-diff__file {
+  color: var(--ms-muted);
+  font-weight: 600;
+}
+.ms-demo-diff__hunk {
+  color: var(--ms-accent-text);
+  background: var(--ms-accent-tint);
+}
+.ms-demo-diff__add {
+  color: var(--ms-ok-ink);
+  background: var(--ms-ok-tint);
+}
+.ms-demo-diff__del {
+  color: var(--ms-danger);
+  background: var(--ms-danger-tint);
+}
+@media (max-width: 720px) {
+  /* the drawer is a full-height overlay there */
+  html.ms-demo .ms-nav {
+    top: var(--ms-demo-h);
+  }
+}
+@media (max-width: 900px) {
+  .ms-demo-bar__text {
+    white-space: normal;
+    font-size: 12px;
+  }
+}
+
+/* a phone: the strip keeps "Live demo" and its three buttons, the rest of the sentence folds away (the landing
+   page and the dialogs say it), and Install loses "Markstage"; the e2e checks it all fits at 390px */
+@media (max-width: 720px) {
+  .ms-demo-bar {
+    gap: 8px;
+    padding: 0 8px 0 12px;
+  }
+  .ms-demo-bar__more {
+    display: none;
+  }
+  .ms-demo-bar__actions {
+    gap: 4px;
+  }
+  .ms-demo-btn {
+    padding: 0 8px;
+  }
+}

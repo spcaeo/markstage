@@ -14,13 +14,17 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { alternativePage, alternativesIndex, checkedOn, comparePage, comparisonPage, leadFirst } from './compare.mjs';
 import { parseComparison } from './comparison-data.mjs';
-import { CLONE_URL, NAME, REPO_URL, SITE_URL, TAGLINE, repoFile } from './config.mjs';
-import { DOCS, FAQ, FEATURES } from './content.mjs';
+import { CLONE_URL, DEMO_BUILT, DEMO_PATH, NAME, REPO_URL, SITE_URL, TAGLINE, repoFile } from './config.mjs';
+import { DOCS, FAQ } from './content.mjs';
+import { aiPage, featuresPage } from './features.mjs';
+import { ALL_FEATURES, FEATURE_GROUPS } from './features-content.mjs';
+import { home } from './home.mjs';
 import { faqPage, glossaryPage } from './learn.mjs';
 import { parseFrontMatter, renderMarkdown } from './markdown.mjs';
-import { docPage, docsIndex, home, notFound } from './pages.mjs';
+import { demoPage } from './demo-page.mjs';
+import { docPage, docsIndex, notFound } from './pages.mjs';
 import { readRoadmap, roadmapPage } from './roadmap.mjs';
-import { showcasePage, storySections, whyPage } from './story.mjs';
+import { showcasePage, whyPage } from './story.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(here, '..', '..');
@@ -41,6 +45,12 @@ export function imageSize(buf) {
 }
 
 /** The screenshots in site/media, by name (`canvas` for canvas.webp). */
+/** The live demo's video is committed (site/media/demo.mp4, npm run demo:video). */
+export const hasDemoVideo = (root = REPO_ROOT) => fs.existsSync(path.join(root, 'site', 'media', 'demo.mp4'));
+
+/** A path under site/ that the Pages workflow builds (the live demo's editor, blog and data), never site:build. */
+export const builtByWorkflow = (rel) => DEMO_BUILT.some((part) => rel.startsWith(`${DEMO_PATH}${part}/`));
+
 export function findMedia(root = REPO_ROOT) {
   const dir = path.join(root, 'site', 'media');
   const media = {};
@@ -175,13 +185,13 @@ function llmsTxt({ pages, alternatives }) {
   const alts = alternatives.map((a) => `- [${a.meta.h1 ?? a.meta.title}](${SITE_URL}alternatives/${a.slug}/): ${a.meta.description}`).join('\n');
   return `# ${NAME}
 
-> ${NAME} is a self-hosted visual editor for Astro sites. Writers edit Markdown and JSON content on the site's real page design, and every save is a clean git diff of exactly what changed (with the Markstage server, a commit by the person who saved). No content database, no MDX, no cloud. Source-available under the Elastic License 2.0, free to self-host (not open source). Made by Space-O Technologies.
+> ${NAME} is a self-hosted visual editor for Astro sites. Writers edit Markdown, MDX and JSON content on the site's real page design, and every save is a clean git diff of exactly what changed (with the Markstage server, a commit by the person who saved). No content database, no cloud. Source-available under the Elastic License 2.0, free to self-host (not open source). Made by Space-O Technologies.
 
-${TAGLINE} Status: pre-release, in active development. Requires Node.js 22.13 or newer and git.
+Tagline: ${TAGLINE} Writers edit with Notion-style blocks ("/" for any block, drag by the grip, ⌘K); AI agents draft through an MCP server and never publish (${SITE_URL}ai/). Status: pre-release, in active development. Requires Node.js 22.13 or newer and git.
 
 - Source code: ${REPO_URL} (clone: ${CLONE_URL})
 - Licence: ${repoFile('LICENSE')}
-- Features: ${FEATURES.map((f) => f.title.toLowerCase()).join('; ')}.
+- Features (${ALL_FEATURES.length}, ${SITE_URL}features/): ${FEATURE_GROUPS.map((g) => `${g.title.toLowerCase()}: ${g.items.map((f) => f.title.replace(/[“”]/g, '"')).join('; ')}`).join('. ')}.
 
 ## Pages
 
@@ -214,8 +224,11 @@ export function buildSite(root = REPO_ROOT, { contentDir = path.join(root, 'site
   const why = readPage(contentDir, 'why');
   const showcase = readPage(contentDir, 'showcase');
   const roadmap = readRoadmap(contentDir, (md) => renderMarkdown(md, { link: siteContentLink('../') }));
-  const pages = [
-    home({ media, version, story: storySections({ why, showcase, media }), compared: comparedCount(root) }),
+  const video = hasDemoVideo(root);
+  const rest = [
+    featuresPage({ media }),
+    aiPage({ media, roadmap }),
+    demoPage({ media, video }),
     ...(why ? [whyPage({ why })] : []),
     ...(showcase ? [showcasePage({ showcase, media })] : []),
     docsIndex(),
@@ -229,6 +242,9 @@ export function buildSite(root = REPO_ROOT, { contentDir = path.join(root, 'site
     glossaryPage({ file: readEntries(path.join(contentDir, 'glossary.md'), siteContentLink('../')) }),
     notFound(),
   ];
+  // the hero's main button goes to the live demo when its page is built (demo-page.mjs), else to the install steps
+  const demo = rest.some((p) => p.path === DEMO_PATH);
+  const pages = [home({ media, version, compared: comparedCount(root), comparison: comparison?.data ?? null, roadmap, showcase, why, demo }), ...rest];
   const idsByPath = new Map(pages.map((p) => [p.path, new Set([...p.html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]))]));
   fixHashes(pages, idsByPath);
   for (const p of pages) p.title = /<title>([^<]*)<\/title>/.exec(p.html)[1].replace(/&amp;/g, '&');
@@ -274,7 +290,7 @@ function main() {
   // pages a source no longer makes (a doc left out, an alternative removed)
   const made = new Set(files.map((f) => f.file));
   for (const rel of fs.readdirSync(site, { recursive: true }).map((f) => f.split(path.sep).join('/'))) {
-    if (!rel.endsWith('.html') || made.has(rel)) continue;
+    if (!rel.endsWith('.html') || made.has(rel) || builtByWorkflow(rel)) continue;
     if (check) stale.push(`${rel} (no longer built)`);
     else fs.rmSync(path.join(site, rel));
   }
@@ -286,7 +302,7 @@ function main() {
     console.log(`site/ is up to date (${files.length} files)`);
     return;
   }
-  const missing = FEATURES.map((f) => f.image).filter((n) => !media[n]);
+  const missing = [...new Set(ALL_FEATURES.filter((f) => f.shot).map((f) => f.shot))].filter((n) => !media[n]);
   console.log(`Wrote ${files.length} files to site/ for ${SITE_URL}`);
   if (missing.length) console.log(`Screenshots not made yet (left out): ${missing.join(', ')} (node scripts/site/capture-shots.mjs)`);
 }

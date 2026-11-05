@@ -138,3 +138,57 @@ body.frame-plain {
 .more-topic span {
   color: #666;
 }
+/* the guides' components (src/components/Callout.astro, Chart.astro) */
+.callout {
+  margin: 1.5em 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--link);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--link) 8%, var(--bg));
+}
+.callout--tip {
+  border-color: #2e8b57;
+  background: color-mix(in srgb, #2e8b57 9%, var(--bg));
+}
+.callout--warn {
+  border-color: #d9822b;
+  background: color-mix(in srgb, #d9822b 10%, var(--bg));
+}
+.callout > :first-child {
+  margin-top: 0;
+}
+.callout > :last-child {
+  margin-bottom: 0;
+}
+.callout__title {
+  font: 600 15px system-ui, sans-serif;
+}
+.chart {
+  margin: 1.5em 0;
+}
+.chart__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: var(--chart-h, 160px);
+  border-bottom: 1px solid var(--muted);
+}
+.chart__bar {
+  flex: 1;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: var(--link);
+  color: var(--bg);
+  font: 600 12px system-ui, sans-serif;
+  text-align: center;
+}
+.chart__labels {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font: 13px system-ui, sans-serif;
+}
+.chart__labels span {
+  flex: 1;
+  text-align: center;
+}

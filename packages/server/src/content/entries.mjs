@@ -88,9 +88,11 @@ export function createEntries(app) {
       throw new HttpError(422, 'invalid', `The frontmatter is not valid YAML: ${e.message}`);
     }
     try {
-      return converter.mdToDoc(text);
+      return converter.mdToDoc(text, c);
     } catch (e) {
       if (e instanceof HttpError) throw e;
+      // an .mdx file the MDX reader cannot read (or cannot write back as it is): refused with its line, never saved
+      if (e?.mdx) throw new HttpError(422, 'invalid-mdx', `This MDX cannot be read, so it cannot be saved: ${e.mdx.message}`, { mdx: e.mdx });
       throw new HttpError(422, 'invalid', `The Markdown could not be read: ${e.message}`);
     }
   }
@@ -115,7 +117,7 @@ export function createEntries(app) {
     }
     // the document and fields, and for Markdown the text as the site's CommonMark renderer reads it (S1)
     // each address once: the editor's document and the Markdown reader often find the same one
-    const bad = [...new Set(c.format === 'md' ? [...unsafeUrls([after.doc, fa]), ...unsafeOf(converter.markdownUrls(afterText))] : unsafeUrls(after.data))];
+    const bad = [...new Set(c.format === 'md' ? [...unsafeUrls([after.doc, fa]), ...unsafeOf(converter.markdownUrls(afterText, c))] : unsafeUrls(after.data))];
     if (bad.length) throw new HttpError(422, 'invalid', `Links must start with http, https, mailto or tel, or be relative: ${bad[0]}`, { fields: { url: 'Unsafe link.' }, urls: bad });
     if (c.hasStatus && !allowStatus) {
       for (const k of STATUS_KEYS) {
@@ -141,7 +143,7 @@ export function createEntries(app) {
     const parsedBefore = beforeText === null || beforeText === afterText ? null : parse(c, beforeText);
     if (!can.rawHtml) {
       const before = parsedBefore ? rawOf(c, parsedBefore) : beforeText === null ? [] : rawOf(c, after);
-      if (addedRawHtml(before, rawOf(c, after)).length) throw forbidden('Your role cannot add or change raw HTML. Ask an editor.');
+      if (addedRawHtml(before, rawOf(c, after)).length) throw forbidden(c.mdx ? 'Your role cannot add or change code or raw HTML in an MDX file. Ask an editor.' : 'Your role cannot add or change raw HTML. Ask an editor.');
     }
     // synced Library copies (library/synced.mjs): changed only through their item, detached by dropping the marker
     const synced = beforeText === afterText ? null : app.library?.synced.check(ctx, c, beforeText, afterText, { fa, fb });
@@ -251,8 +253,8 @@ export function createEntries(app) {
     let changedBlocks = null;
     if (body.doc !== undefined) {
       if (!body.doc || body.doc.type !== 'doc') throw badRequest('No document in the request.');
-      text = converter.docToMd(body.doc, currentText);
-      changedBlocks = converter.changedBlocks(body.doc, currentText);
+      text = converter.docToMd(body.doc, currentText, c);
+      changedBlocks = converter.changedBlocks(body.doc, currentText, c);
     }
     if (body.frontmatter !== undefined) {
       if (!body.frontmatter || typeof body.frontmatter !== 'object' || Array.isArray(body.frontmatter)) throw badRequest('frontmatter must be an object.');
@@ -270,12 +272,24 @@ export function createEntries(app) {
   function view(ctx, c, id) {
     const file = store.read(c, id);
     const summary = store.summarize(c, id, file.text);
-    const parsed = parse(c, file.text);
+    // an .mdx file the MDX reader cannot read opens read-only, in Source mode, with the reader's words (docs/MDX.md)
+    let parsed;
+    let unreadable = null;
+    try {
+      parsed = parse(c, file.text);
+    } catch (e) {
+      if (!(c.mdx && e?.code === 'invalid-mdx')) throw e;
+      unreadable = e.extra?.mdx ?? { message: e.message, line: null, column: null };
+      parsed = { doc: null };
+    }
     const auto = db.prepare('SELECT saved_at, base_version FROM autosaves WHERE user_id = ? AND collection = ? AND entry_id = ?').get(ctx.user.id, c.id, id);
+    const can = permissions(ctx, c, summary);
     return {
       id,
       collection: c.id,
       format: c.format,
+      ...(c.mdx ? { mdx: true } : {}),
+      ...(unreadable ? { unreadable } : {}),
       version: file.version,
       status: summary.status,
       url: summary.url,
@@ -285,7 +299,7 @@ export function createEntries(app) {
       ...(summary.held ? { held: summary.held } : {}),
       ...(c.format === 'md' ? { frontmatter: store.fieldsOf(c, file.text), doc: parsed.doc } : { data: parsed.data }),
       autosave: auto ? { savedAt: auto.saved_at, baseVersion: auto.base_version } : null,
-      can: permissions(ctx, c, summary),
+      can: unreadable ? { ...can, edit: false } : can,
     };
   }
 
@@ -362,7 +376,7 @@ export function createEntries(app) {
         const fields = { ...fm, ...set };
         for (const k of Object.keys(fields)) if (fields[k] === null) delete fields[k];
         text = converter.setFrontmatter(EMPTY_MD, fields);
-        text = doc ? converter.docToMd(doc, text) : `${text}\n`;
+        text = doc ? converter.docToMd(doc, text, c) : `${text}\n`;
       }
       const checked = {};
       guard(ctx, c, null, text, { rawHtml: canRawHtml(ctx.user) }, { allowStatus: true, out: checked });

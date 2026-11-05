@@ -70,6 +70,10 @@ jobs:
     name: Runtime tests on Node 22.13 (core, Astro integration, server unit)
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # A zone far from UTC (the other jobs run in UTC), so a test that reads the machine's own time zone fails here
+    # instead of on a contributor's laptop (a sign-in alert test once passed only in the Toronto zone).
+    env:
+      TZ: Pacific/Auckland
     steps:
       - uses: actions/checkout@v7
         with:

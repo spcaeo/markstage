@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, test } from 'node:test';
-import { faviconFile, lockupFile, markFile, PALETTE } from './brand.mjs';
+import { faviconFile, lockupFile, LIME, markFile, PALETTE, TAGLINE_WORDS } from './brand.mjs';
+import { TAGLINE } from './config.mjs';
 import { REPO_ROOT } from './build-site.mjs';
 
 const css = fs.readFileSync(path.join(REPO_ROOT, 'site', 'styles.css'), 'utf8');
@@ -40,19 +41,23 @@ const PAIRS = [
     ['brand-ink', bg, 4.5],
   ]),
   ['brand-ink', 'brand-soft', 4.5], // chips, pills, step numbers
-  ['on-brand', 'brand', 4.5], // filled buttons, the GitHub button
-  ['brand-ink', 'on-brand', 4.5], // the star count on the GitHub button
+  ['ink', 'brand-soft', 4.5],
+  ['on-brand', 'brand', 4.5], // lime buttons, the lime band, the highlighted words, the star count
   ['on-brand', 'brand-hover', 4.5],
-  ['on-accent', 'accent', 4.5],
-  ['stage-ink', 'stage', 4.5], // the story told on the stage
-  ['stage-ink-2', 'stage', 4.5],
+  ['on-brand-2', 'brand', 4.5], // the lime band's leads
+  ['on-btn-ink', 'btn-ink', 4.5], // the ink pill: "Star on GitHub", "Get it on GitHub"
+  ['btn-ink', 'bg', 3], // the ink pill stands out from the page
+  ['on-accent', 'accent', 4.5], // pink chips and the "coming" badges
+  ['band-ink', 'band', 4.5], // the dark band (AI and MCP)
+  ['band-ink-2', 'band', 4.5],
+  ['band-ink', 'band-soft', 4.5],
+  ['band-ink-2', 'band-soft', 4.5],
+  ['brand', 'band', 3], // the lime marks on the dark band
   ['ok', 'bg', 3], // ticks
   ['ok', 'bg-2', 3],
   ['logo-tile', 'bg', 3], // the mark on the page, the top bar and the footer
   ['logo-tile', 'bg-2', 3],
-  ['logo-letter', 'logo-tile', 4.5],
-  ['brand', 'bg', 3], // a filled button stands out from the page
-  ['accent', 'stage', 3], // the brass floor line on the stage
+  ['logo-glyph', 'logo-tile', 4.5],
   // the comparison's mark badges (site/compare.css), and Markstage's highlighted column
   ['yes-ink', 'yes-bg', 4.5],
   ['part-ink', 'part-bg', 4.5],
@@ -62,8 +67,6 @@ const PAIRS = [
   ['ink-2', 'ms-col', 4.5],
   ['ink-3', 'ms-col', 4.5],
   ['brand-ink', 'ms-col', 4.5],
-  ['ink-3', 'bg-2', 4.5], // notes on a zebra row
-  ['ink', 'brand-soft', 4.5], // a product's monogram tile, Markstage's card
 ];
 
 describe('brand colours', () => {
@@ -81,12 +84,15 @@ describe('brand colours', () => {
     test(`${theme}: the CSS tokens and the brand files use the same colours`, () => {
       const p = PALETTE[theme];
       assert.equal(t['logo-tile'], p.tile);
-      assert.equal(t['logo-letter'], p.letter);
-      assert.equal(t['logo-pool'], p.pool);
+      assert.equal(t['logo-glyph'], p.glyph);
       assert.equal(t.bg, p.page);
       assert.equal(t.ink, p.ink);
+      assert.equal(t['ink-3'], p.muted);
+      assert.equal(t.brand, LIME);
       assert.ok(contrast(p.ink, p.page) >= 4.5, 'the wordmark on the page');
+      assert.ok(contrast(p.muted, p.page) >= 4.5, 'the tagline on the page');
       assert.ok(contrast(p.tile, p.page) >= 3, 'the mark on the page');
+      assert.ok(contrast(p.glyph, p.tile) >= 4.5, 'the slash and caret on the tile');
     });
   }
 
@@ -100,7 +106,20 @@ describe('brand colours', () => {
     for (const f of ['assets/brand/markstage-512.png', 'assets/brand/markstage-logo.png', 'assets/brand/markstage-logo-dark.png', 'site/apple-touch-icon.png', 'site/favicon.ico']) {
       assert.ok(fs.statSync(path.join(REPO_ROOT, f)).size > 0, f);
     }
-    // no trace of the old indigo mark
-    for (const f of ['site/styles.css', 'site/home.css', 'site/icon.svg', 'assets/brand/markstage.svg']) assert.doesNotMatch(read(f), /#4f46e5/i, f);
+    // no trace of the old marks: the indigo one, then the crimson stage
+    for (const f of ['site/styles.css', 'site/home.css', 'site/icon.svg', 'assets/brand/markstage.svg']) assert.doesNotMatch(read(f), /#4f46e5|#9e1b3f|#c42a52/i, f);
+    // the files are still: only the site's own CSS may make the caret blink
+    for (const f of ['site/icon.svg', 'assets/brand/markstage.svg', 'assets/brand/markstage-logo.svg']) assert.doesNotMatch(read(f), /animation|<animate/, f);
+  });
+
+  test('the tagline the outlines draw is the one the site says', () => {
+    assert.equal(TAGLINE, TAGLINE_WORDS);
+    assert.equal(fs.readFileSync(path.join(REPO_ROOT, 'TAGLINE'), 'utf8').trim(), TAGLINE_WORDS);
+  });
+
+  test('text is never set in capitals only (sentence case everywhere)', () => {
+    for (const f of fs.readdirSync(path.join(REPO_ROOT, 'site')).filter((x) => x.endsWith('.css'))) {
+      assert.doesNotMatch(fs.readFileSync(path.join(REPO_ROOT, 'site', f), 'utf8'), /text-transform:\s*uppercase|font-variant(-caps)?:\s*(all-)?small-caps/, f);
+    }
   });
 });

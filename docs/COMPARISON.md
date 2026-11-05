@@ -96,7 +96,7 @@ These keep content as files in a git repository, like Markstage.
 | Content as files in git | ✓ [^ms-readme] | ✓ [^ti-gh] | ✓ <sub>GitHub, GitLab, Bitbucket</sub> [^cc-price] | ✓ <sub>GitHub, GitLab, Bitbucket and more</sub> [^de-intro] | ✓ [^sv-gh] | ✓ <sub>Local or GitHub</sub> [^ks-home] | ✓ <sub>GitHub only</sub> [^pc-home] | ✓ <sub>Your local files</sub> [^fm-home] | ✓ <sub>GitHub</sub> [^os-price] | ✓ <sub>GitHub, GitLab</sub> [^sp-gh] |
 | A save is a commit by the person who saved | ✓ <sub>Only the changed blocks are rewritten; open and save with no edit changes nothing</sub> [^ms-api] | ✓ <sub>To GitHub, through TinaCloud or a self-hosted backend</sub> [^ti-astro-guide] | ✓ [^cc-price] | ✓ [^de-intro] | ✓ [^sv-gh] | ◐ <sub>In GitHub mode</sub> [^ks-install] | ✓ [^pc-home] | – <sub>You commit yourself</sub> [^fm-home] | ◐ <sub>Email or Google sign-ins commit as the Outstatic Bot</sub> [^os-price] | ✓ <sub>Through your connected git account</sub> [^sp-gh] |
 | Markdown with front matter | ✓ [^ms-arch] | ✓ [^ti-gh] | ✓ [^cc-astro] | ✓ [^de-astro] | ✓ [^sv-entries] | ✓ [^ks-home] | ✓ [^pc-home] | ✓ [^fm-home] | ✓ [^os-home] | ✓ [^sp-gh] |
-| MDX | ✗ <sub>Markdown and JSON only, by design</sub> [^ms-readme] | ✓ [^ti-gh] | ? <sub>Its docs have an article on MDX component snippets</sub> [^cc-visual] | ? [^de-intro] | ? <sub>Formats listed: Markdown, YAML, JSON, TOML</sub> [^sv-entries] | ✓ <sub>MDX and Markdoc fields</sub> [^ks-install] | ? [^pc-home] | ? [^fm-home] | ✓ [^os-price] | ? [^sp-gh] |
+| MDX | ◐ <sub>Words and simple component settings edited; code kept as written; components shown as cards, not rendered, on the canvas</sub> [^ms-mdx] | ✓ [^ti-gh] | ? <sub>Its docs have an article on MDX component snippets</sub> [^cc-visual] | ? [^de-intro] | ? <sub>Formats listed: Markdown, YAML, JSON, TOML</sub> [^sv-entries] | ✓ <sub>MDX and Markdoc fields</sub> [^ks-install] | ? [^pc-home] | ? [^fm-home] | ✓ [^os-price] | ? [^sp-gh] |
 | JSON and YAML data files | ✓ <sub>JSON pages edited on the page; reads and writes Keystatic's JSON with zero diff</sub> [^ms-api] | ✓ [^ti-gh] | ✓ <sub>Data editor</sub> [^cc-astro] | ? [^de-intro] | ✓ [^sv-entries] | ✓ [^ks-home] | ? [^pc-home] | ✓ <sub>Data dashboard</sub> [^fm-home] | ? [^os-home] | ? [^sp-gh] |
 | Database to run | No database server <sub>Content in git; one SQLite file holds people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log</sub> [^ms-readme] | ◐ <sub>Self-hosting needs a database adapter (e.g. MongoDB, Postgres) as a cache</sub> [^ti-self] | – <sub>Hosted for you</sub> [^cc-price] | None <sub>Decap Turbo adds a hosted store</sub> [^de-turbo] | None [^sv-feat] | None [^ks-home] | ◐ <sub>Self-hosting needs PostgreSQL</sub> [^pc-gh] | None [^fm-home] | None [^os-home] | None for content [^sp-gh] |
 
@@ -214,7 +214,9 @@ Each line names the capability and which of the 21 products above have it, as ch
   [^go-feat]. Markstage has none of these.
 - **No server at all.** Decap CMS and Sveltia CMS are a single page that talks to your git host; Front Matter
   runs inside VS Code. Markstage needs Node and git on a server.
-- **MDX.** TinaCMS, Keystatic and Outstatic edit MDX. Markstage edits Markdown and JSON only.
+- **MDX.** TinaCMS, Keystatic and Outstatic edit MDX and have done so for longer. Markstage's MDX support is new:
+  it edits the words and a component's simple settings, keeps the code as written, and shows components as cards
+  on the canvas rather than as the site renders them [^ms-mdx].
 - **Live co-editing.** Sanity's real-time content database and Sitepins' live cursors let people edit together.
   Markstage uses locks and a three-way merge.
 - **Size and age.** WordPress and Ghost are mature publishing platforms used by very many sites. Strapi (73.4k
@@ -251,6 +253,7 @@ Hygraph, Kontent.ai and others) are hosted or database CMSs that compare to Mark
 [^as-coll]: **Astro**: [Astro docs: Content collections](https://docs.astro.build/en/guides/content-collections/)
 [^ms-readme]: **Markstage**: [README](../README.md)
 [^ms-arch]: **Markstage**: [Architecture](ARCHITECTURE.md)
+[^ms-mdx]: **Markstage**: [MDX](MDX.md)
 [^ms-api]: **Markstage**: [API contract](API.md)
 [^ms-env]: **Markstage**: [Environments](ENVIRONMENTS.md)
 [^ms-deploy]: **Markstage**: [Deploying](DEPLOY.md)

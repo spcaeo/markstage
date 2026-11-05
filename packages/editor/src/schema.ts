@@ -11,6 +11,7 @@ import { RawHtmlView, RawInlineView } from './views/core';
 import { ImageView } from './views/image';
 import { ImageFiles } from './images';
 import { TableView } from './views/table';
+import { MDX_NODES } from './mdx/nodes';
 
 /** An atom (edited in the panel, selected as one thing) drawn by `View`. */
 export const atomNode = (name: string, attrs: Record<string, { default: unknown }>, View: any, inline = false) =>
@@ -87,6 +88,8 @@ export function extensions(): AnyExtension[] {
     RawInline,
     Image,
     ImageFiles,
+    // the code parts of an MDX file (mdx/nodes.ts): only ever in an MDX entry's document
+    ...MDX_NODES,
     ...packs.flatMap((p) => [...(p.nodes ?? []), ...(p.extensions ?? [])]),
     Placeholder.configure({
       showOnlyCurrent: true,

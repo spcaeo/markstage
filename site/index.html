@@ -3,32 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Markstage: Visual Editor for Astro, Edit on the Real Page</title>
-    <meta name="description" content="Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use." />
+    <title>Markstage: Visual Editor for Astro, Type It, Ship It</title>
+    <meta name="description" content="Markstage is a self-hosted visual editor for Astro: Notion-style blocks on your real page design, clean git commits, AI that drafts. Free to self-host." />
     <link rel="canonical" href="https://spcaeo.github.io/markstage/" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Markstage" />
-    <meta property="og:title" content="Markstage: Visual Editor for Astro, Edit on the Real Page" />
-    <meta property="og:description" content="Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use." />
+    <meta property="og:title" content="Markstage: Visual Editor for Astro, Type It, Ship It" />
+    <meta property="og:description" content="Markstage is a self-hosted visual editor for Astro: Notion-style blocks on your real page design, clean git commits, AI that drafts. Free to self-host." />
     <meta property="og:url" content="https://spcaeo.github.io/markstage/" />
     <meta property="og:image" content="https://spcaeo.github.io/markstage/og/home.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Markstage, a visual editor for Astro: edit the real page, keep the content in git." />
+    <meta property="og:image:alt" content="Markstage, type it, ship it: the visual editor for Astro sites, with the slash block menu open on a real page." />
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Markstage: Visual Editor for Astro, Edit on the Real Page" />
-    <meta name="twitter:description" content="Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use." />
+    <meta name="twitter:title" content="Markstage: Visual Editor for Astro, Type It, Ship It" />
+    <meta name="twitter:description" content="Markstage is a self-hosted visual editor for Astro: Notion-style blocks on your real page design, clean git commits, AI that drafts. Free to self-host." />
     <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/home.png" />
-    <meta name="twitter:image:alt" content="Markstage, a visual editor for Astro: edit the real page, keep the content in git." />
+    <meta name="twitter:image:alt" content="Markstage, type it, ship it: the visual editor for Astro sites, with the slash block menu open on a real page." />
     <link rel="icon" href="./favicon.ico" sizes="32x32" />
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="./llms.txt" />
-    <link rel="preload" href="./fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./home.css" />
 
@@ -39,7 +40,7 @@
       "@type": "SoftwareApplication",
       "name": "Markstage",
       "alternateName": "Markstage visual editor for Astro",
-      "description": "A self-hosted visual editor for Astro sites: writers edit Markdown and JSON content on the real page design, and every save is a clean git diff (with the Markstage server, a commit by the person who saved). Source-available, free to self-host.",
+      "description": "A self-hosted visual editor for Astro sites: writers edit Markdown, MDX and JSON content on the real page design with Notion-style blocks, and every save is a clean git diff (with the Markstage server, a commit by the person who saved). Source-available, free to self-host.",
       "url": "https://spcaeo.github.io/markstage/",
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Content management system",
@@ -47,7 +48,7 @@
       "softwareVersion": "0.3.0",
       "softwareRequirements": "Node.js 22.13 or newer, git, an Astro site",
       "image": "https://spcaeo.github.io/markstage/og/home.png",
-      "screenshot": "https://spcaeo.github.io/markstage/media/hero.webp",
+      "screenshot": "https://spcaeo.github.io/markstage/media/blocks.webp",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -76,7 +77,7 @@
           "name": "Rakesh Patel"
         }
       },
-      "keywords": "Astro CMS, visual editor for Astro, git-based CMS, Markdown editor, headless CMS alternative, self-hosted CMS"
+      "keywords": "visual editor for Astro, Astro CMS, Notion-style editor, git-based CMS, Markdown editor, MCP server, self-hosted CMS"
     }
     </script>
     <script type="application/ld+json">
@@ -89,7 +90,7 @@
           "name": "What is Markstage?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro."
+            "text": "Markstage is a visual editor for Markdown, MDX and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro."
           }
         },
         {
@@ -170,18 +171,16 @@
     <a class="skip" href="#main">Skip to content</a>
     <header class="topbar">
       <div class="wrap topbar-row">
-        <a class="brand" href="./"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a>
+        <a class="brand" href="./" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
         <nav id="main-nav" class="main-nav" aria-label="Main">
-          <a href="./#features">Features</a>
-          <a href="./docs/">Docs</a>
+          <a href="./features/">Features</a>
+          <a href="./ai/">AI &amp; MCP</a>
           <a href="./compare/">Compare</a>
-          <a href="./alternatives/">Alternatives</a>
-          <a href="./faq/">FAQ</a>
-          <a href="./why/">Why we built it</a>
           <a href="./showcase/">Showcase</a>
+          <a href="./docs/">Docs</a>
         </nav>
         <div class="topbar-end">
-          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
           <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         </div>
       </div>
@@ -189,117 +188,75 @@
 
     <main id="main">
       <section class="hero">
-        <div class="wrap">
-          <h1><span class="eyebrow">A visual editor for Astro sites, free to self-host<span class="sr">:</span></span> <span class="hero-title"><span>Edit the real page.</span> <span>Keep the content in git.</span></span></h1>
-          <p class="lead">We built Markstage when we moved our own site off WordPress. Writers click into the site’s own design and type; every save is a clean git diff of exactly what changed, committed in their name. No content database, no subscription, no MDX.</p>
-          <p class="hero-claim">We compared 21 other editors. None of them lets writers edit on the real page from your own server with no database server. <a href="compare/">See the comparison</a></p>
-
-          <p class="cta-row"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get it on GitHub</span></a><a class="btn btn-secondary" href="#install"><span>Install in 3 steps</span></a><a class="btn btn-text" href="docs/"><span>Read the docs</span></a></p>
-          <ul class="pills" aria-label="In short">
-            <li>Free to self-host</li>
-            <li>Content stays in git</li>
-            <li>Surgical, byte-safe saves</li>
-            <li>Roles, releases and staging</li>
-          </ul>
-        </div>
-        <div class="stage"><div class="wrap wide"><figure class="shot hero-shot"><a href="./media/hero.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit"><img src="./media/hero.webp" alt="The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit" width="1440" height="900" fetchpriority="high" decoding="async" /></a></figure></div></div>
-      </section>
-      <section class="story-band" id="why" aria-labelledby="why-title">
-        <div class="wrap story-grid">
-          <h2 id="why-title">We built it for our own site</h2>
-          <div class="story-text">
-            <p>In October 2026 we moved our own business site, taskrhino.ca, off WordPress to a fast, static Astro site. The pages got lighter and faster. Our writers lost the place where they used to edit.</p>
-            <p>They needed to change a page on its real design, not in form fields, without a content database, a subscription or MDX. None of the editors we compared did all of that from our own server, so we built one. Now we give it away to self-host.</p>
-            <p><a class="btn btn-secondary" href="why/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>Read why we built it</span></a></p>
+        <div class="wrap hero-grid">
+          <div class="copy">
+            <h1><span class="kick">The visual editor for Astro sites · free to self-host</span> <span class="h1-line">Edit your site on the <span class="mark">real page</span>.</span></h1>
+            <p class="lede">Writers click into your Astro site’s own design and type, like in Notion. Every save is a clean git commit in their name. No content database, no monthly bill.</p>
+            <p class="cta-row left"><a class="btn btn-primary" href="demo/"><span>Try the live demo</span></a><a class="btn btn-ink" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get it on GitHub</span></a></p>
+            <ul class="chips" aria-label="In short"><li>Notion-style blocks</li><li>AI agents through MCP</li><li>Content stays in git</li><li>Free to self-host</li></ul>
+            <p class="hero-claim">We compared 21 other editors. None of them lets writers edit on the real page from your own server with no database server. <a href="compare/">See the comparison</a></p>
           </div>
+          <figure class="shot win"><a href="./media/blocks.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage editor on a post of the example blog with its block menu open (the “+” beside a line or “/” on an empty line opens it), each block with a small drawing of it"><img src="./media/blocks.webp" alt="The Markstage editor on a post of the example blog with its block menu open (the “+” beside a line or “/” on an empty line opens it), each block with a small drawing of it" width="1800" height="1280" fetchpriority="high" decoding="async" /></a></figure>
         </div>
       </section>
 
-
-      <section class="band" id="features" aria-labelledby="features-title">
+      <section class="sec" id="writing" aria-labelledby="writing-title">
         <div class="wrap">
-          <h2 id="features-title">What Markstage does</h2>
-          <p class="section-lead">Edit your Markdown on the real stage. Everything a content team needs from a CMS, on top of the files you already have.</p>
-        <article class="feature" id="canvas">
-          <div class="feature-text"><h3>Edit on the real page</h3><p>Writers change words, images, tables and links on the site’s own design: its components, its CSS, its column width. Alt text, captions and links are edited where they appear.</p></div>
-          <figure class="shot"><a href="./media/canvas.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage editor showing a blog post on the blog’s own design, with a numbered list and a table being edited"><img src="./media/canvas.webp" alt="The Markstage editor showing a blog post on the blog’s own design, with a numbered list and a table being edited" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature flip" id="outline">
-          <div class="feature-text"><h3>Blocks you can see and move</h3><p>The outline lists every heading, list, table and quote. Drag a block, or press Alt and an arrow, to move it. Locked blocks stay where the site put them.</p></div>
-          <figure class="shot"><a href="./media/outline.webp" class="shot-link" aria-label="Open the full-size screenshot: The outline panel listing the post’s headings, list, table and quote blocks beside the page"><img src="./media/outline.webp" alt="The outline panel listing the post’s headings, list, table and quote blocks beside the page" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature" id="history">
-          <div class="feature-text"><h3>Clean git diffs, and every version kept</h3><p>Open and save changes nothing; only the blocks you change are rewritten. With the Markstage server, every save is a commit with your name, and the history compares any two versions side by side.</p></div>
-          <figure class="shot"><a href="./media/history.webp" class="shot-link" aria-label="Open the full-size screenshot: The history screen comparing an older version of a post with the current text, changed words marked"><img src="./media/history.webp" alt="The history screen comparing an older version of a post with the current text, changed words marked" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature flip" id="seo">
-          <div class="feature-text"><h3>Search checks while you write</h3><p>See the search result as Google shows it, with the title and description measured in pixels, the headings in order, weak links and images without alt text.</p></div>
-          <figure class="shot"><a href="./media/seo.webp" class="shot-link" aria-label="Open the full-size screenshot: The SEO panel with a search result preview, title and description length bars, headings and link checks"><img src="./media/seo.webp" alt="The SEO panel with a search result preview, title and description length bars, headings and link checks" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature" id="library">
-          <div class="feature-text"><h3>A Library of parts to use again</h3><p>Page templates, sections and snippets in folders. Drag one onto a page, or start a page from a template. A synced snippet is edited once and every page that uses it follows.</p></div>
-          <figure class="shot"><a href="./media/library.webp" class="shot-link" aria-label="Open the full-size screenshot: The Library with snippets in folders such as Boxes and Calls to action, and a synced newsletter sign-up"><img src="./media/library.webp" alt="The Library with snippets in folders such as Boxes and Calls to action, and a synced newsletter sign-up" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature flip" id="releases">
-          <div class="feature-text"><h3>Go live together, now or later</h3><p>Put several changes into one release, preview it, have it approved, then publish it now or schedule it. Roll it back if you need to.</p></div>
-          <figure class="shot"><a href="./media/releases.webp" class="shot-link" aria-label="Open the full-size screenshot: The Go live screen listing an open release called Friday posts with three pages in it"><img src="./media/releases.webp" alt="The Go live screen listing an open release called Friday posts with three pages in it" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature" id="environments">
-          <div class="feature-text"><h3>Local, staging and production</h3><p>Each environment is a branch plus a server. Promote a branch to staging and then to production, with checks, screenshots and rules about who may do it.</p></div>
-          <figure class="shot"><a href="./media/environments.webp" class="shot-link" aria-label="Open the full-size screenshot: The Staging and live screen showing this environment, its branch, the remote and the branches to promote"><img src="./media/environments.webp" alt="The Staging and live screen showing this environment, its branch, the remote and the branches to promote" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature flip" id="inbox">
-          <div class="feature-text"><h3>Your forms, in your own inbox</h3><p>The site’s forms post to Markstage on your own host. Messages land in the Inbox with spam checks and daily limits, and the team gets an email for each one.</p></div>
-          <figure class="shot"><a href="./media/inbox.webp" class="shot-link" aria-label="Open the full-size screenshot: The Messages inbox with three contact form messages and one opened, showing name, email, topic and page"><img src="./media/inbox.webp" alt="The Messages inbox with three contact form messages and one opened, showing name, email, topic and page" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-        <article class="feature" id="media">
-          <div class="feature-text"><h3>Images and files in one place</h3><p>Upload, find and reuse images, see which ones have no alt text or are not used, and crop or replace one everywhere it appears.</p></div>
-          <figure class="shot"><a href="./media/media.webp" class="shot-link" aria-label="Open the full-size screenshot: The Images and files library with five uploaded pictures and filters for unused images and missing alt text"><img src="./media/media.webp" alt="The Images and files library with five uploaded pictures and filters for unused images and missing alt text" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-        </article>
-          <h3 class="sub">Also in the editor</h3>
-          <ul class="ticks two">
-            <li>Never lose typing: local recovery copies, offline retry, and a three-way merge when two people edit.</li>
-            <li>Menus, redirects, find and replace, bulk changes, trash, locks, backups, rollback and site health.</li>
-            <li>Roles and custom roles, two-factor sign-in and single sign-on with any OpenID Connect provider.</li>
-            <li>Topics and internal links: old pages learn about new ones, with link suggestions both ways.</li>
-            <li>Authors with profiles, page types with their own checks, and translation status for each locale.</li>
-            <li>An MCP server so an AI agent can draft changes for a person to review, and AI suggestions for alt text and search titles.</li>
-            <li>Webhooks, imports of entries and media, and WordPress imports for the Library and old form messages.</li>
-          </ul>
+          <div class="sec-head"><p class="kick">Writing</p><h2 id="writing-title">Writes like Notion. Looks like your site.</h2><p class="lede">The block editor people already know, drawn on your real design instead of grey form fields.</p></div>
+          <div class="grid3"><article class="f"><span class="k">/</span><h3>Type “/” for any block</h3><p>A searchable block menu with a small drawing of each block. Or click the “+” beside a line.</p></article><article class="f"><span class="k">⋮⋮</span><h3>Drag blocks to move them</h3><p>A grip on every block: drag it, or move it up, down or to a place you pick, duplicate it or delete it.</p></article><article class="f"><span class="k">⌘K</span><h3>Find anything fast</h3><p>One search box for pages, posts, the editor’s screens and its settings.</p></article><article class="f"><span class="k">⌘V</span><h3>Paste from Word</h3><p>Word’s headings and lists come in as real blocks, without its office markup.</p></article><article class="f"><span class="k">≡</span><h3>An outline of the page</h3><p>Every block under its heading: jump to one, fold a section, drag rows to move them.</p></article><article class="f"><span class="k">↺</span><h3>Never lose typing</h3><p>A crash or a closed tab brings your words back. History keeps every saved version.</p></article></div>
+          <p><a href="features/#writing">Everything the editor does for writers</a></p>
         </div>
       </section>
-      <section class="wrap built-with" id="built-with" aria-labelledby="built-title">
-        <h2 id="built-title">Built with Markstage: taskrhino.ca</h2>
-        <p class="section-lead">Our own site is the first one written with Markstage. It moved from WordPress to a static Astro site: 158 posts, 20 pages and 2,414 images and files, every address kept. On a phone, its home page now scores 99 for speed instead of 71.</p>
-        <div class="before-after"><figure class="shot"><a href="./media/showcase-before.webp" class="shot-link" aria-label="Open the full-size screenshot: The old taskrhino.ca home page on WordPress at 1440 pixels wide: the heading monday.com Consulting Services, two buttons and a collage of monday.com board pictures"><img src="./media/showcase-before.webp" alt="The old taskrhino.ca home page on WordPress at 1440 pixels wide: the heading monday.com Consulting Services, two buttons and a collage of monday.com board pictures" width="1440" height="900" loading="lazy" decoding="async" /></a><figcaption>Before: WordPress</figcaption></figure><figure class="shot"><a href="./media/showcase-after.webp" class="shot-link" aria-label="Open the full-size screenshot: The new taskrhino.ca home page on Astro at 1440 pixels wide: a side rail with the menu, theme switch and the page's contents, the same heading and text, two buttons and a cover picture"><img src="./media/showcase-after.webp" alt="The new taskrhino.ca home page on Astro at 1440 pixels wide: a side rail with the menu, theme switch and the page's contents, the same heading and text, two buttons and a cover picture" width="1440" height="900" loading="lazy" decoding="async" /></a><figcaption>After: Astro, edited with Markstage</figcaption></figure></div>
-        <dl class="deltas"><div class="delta"><dt>Speed score, home page on a phone</dt><dd><span class="sr">from </span><span class="was">71</span><span class="to" aria-hidden="true"></span><span class="sr"> to </span><span class="now">99</span></dd></div><div class="delta"><dt>Main content shown (LCP), on a phone</dt><dd><span class="sr">from </span><span class="was">6.8 s</span><span class="to" aria-hidden="true"></span><span class="sr"> to </span><span class="now">2.2 s</span></dd></div><div class="delta"><dt>Home page weight, on a phone</dt><dd><span class="sr">from </span><span class="was">902 KB</span><span class="to" aria-hidden="true"></span><span class="sr"> to </span><span class="now">206 KB</span></dd></div><div class="delta"><dt>Files loaded, home page on a phone</dt><dd><span class="sr">from </span><span class="was">45</span><span class="to" aria-hidden="true"></span><span class="sr"> to </span><span class="now">19</span></dd></div></dl>
-        <p class="small muted">Lighthouse, median of three runs, 28 and 29 October 2026: the old site live, the new one from its own build before launch, so its load times are not those of a real host.</p>
-        <p class="cta-row left"><a class="btn btn-secondary" href="showcase/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>See the before and after</span></a><span class="visit">Visit <span class="copyable"><span class="copyable-value">taskrhino.ca</span><button type="button" class="icon-btn copy-btn" data-copy="https://www.taskrhino.ca/" aria-label="Copy site address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="https://www.taskrhino.ca/" target="_blank" rel="noopener" aria-label="Open site address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></span></p>
-      </section>
 
-      <section class="wrap" id="how" aria-labelledby="how-title">
-        <h2 id="how-title">How it works</h2>
-        <ol class="cards four">
-          <li class="card"><h3>Your content stays in git</h3><p>Posts are Markdown files and pages are JSON files in your site’s repo. Markstage adds no database for content and no MDX.</p></li>
-          <li class="card"><h3>The editor draws your site</h3><p>In astro dev, the editor at /markstage/ draws each entry inside its real page, with your site’s CSS and components.</p></li>
-          <li class="card"><h3>A save is a surgical diff</h3><p>Only the blocks you changed are written back. Moving a block and moving it back gives a byte-identical file.</p></li>
-          <li class="card"><h3>The server runs it for a team</h3><p>A self-hosted Node server adds sign-in, roles, the Library, releases, environments, forms and history, and builds and deploys the site.</p></li>
-        </ol>
-      </section>
-
-      <section class="wrap" id="who" aria-labelledby="who-title">
-        <h2 id="who-title">Who it is for</h2>
-        <ul class="cards three">
-          <li class="card"><h3>Writers and editors</h3><p>Write on the page readers will see, with plain words, a guide inside the editor and no Markdown to learn.</p></li>
-          <li class="card"><h3>Developers and agencies</h3><p>Keep Astro, your components and your git workflow. Give clients a real editor without a hosted CMS or a content database.</p></li>
-          <li class="card"><h3>SEO and content teams</h3><p>Search checks, internal link suggestions, page types, redirects and site health for every page, before it goes live.</p></li>
-        </ul>
-        <figure class="shot"><a href="./media/home.webp" class="shot-link" aria-label="Open the full-size screenshot: The Markstage home screen: edit a page, write a new post, read messages, go live, and the recent posts with their status"><img src="./media/home.webp" alt="The Markstage home screen: edit a page, write a new post, read messages, go live, and the recent posts with their status" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
-      </section>
-
-      <section class="band" id="install" aria-labelledby="install-title">
+      <section class="sec band-lime" id="ghost" aria-labelledby="ghost-title">
         <div class="wrap">
-          <h2 id="install-title">Install in three steps</h2>
+          <div class="sec-head"><p class="kick">Inspired by Ghost</p><h2 id="ghost-title">Ghost’s calm writing, on your own design.</h2><p class="lede">We studied Ghost’s editor row by row, kept what writers love, and put it on the real page.</p></div>
+          <div class="grid3"><article class="f"><span class="k">alt</span><h3>Alt text right on the image</h3><p>Caption and alt text under the picture, where you see it. By default, publishing waits until every image has alt text.</p></article><article class="f"><span class="k">photos</span><h3>Stock photos, with your own key</h3><p>Search Unsplash or Pexels from the media library. The photographer’s name is kept with the photo.</p></article><article class="f"><span class="k">publish</span><h3>A publish sheet that checks</h3><p>What changes, the checks (links, alt text, the page on a phone), then now or at a time you pick.</p></article></div>
+        </div>
+      </section>
+
+      <section class="sec" id="prismic" aria-labelledby="prismic-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Inspired by Prismic</p><h2 id="prismic-title">Prismic’s page building, without the bill.</h2><p class="lede">We used Prismic and left over its price and the missing path from development to live. Markstage includes what we wanted, free to self-host.</p></div>
+          <div class="grid3"><article class="f"><span class="k">sections</span><h3>A Library of sections</h3><p>Reusable sections, snippets and page templates, like Prismic’s Slices. Drag one from the Library onto the live page.</p><p class="vs"><span>Prismic: Slices</span></p></article><article class="f"><span class="k">env</span><h3>Local, staging, production</h3><p>Promote code and content together by git merge, with checks and rules. Included and free.</p><p class="vs"><span>Prismic: Paid option on Platinum ($675); 2 on Enterprise</span></p></article><article class="f"><span class="k">release</span><h3>Releases and share links</h3><p>Bundle changes, preview them together with a link that expires, then publish them at once.</p><p class="vs"><span>Prismic: Yes</span></p></article><article class="f"><span class="k">edit</span><h3>“Edit this page” on the live site</h3><p>Signed-in editors get an edit link on the page itself. Visitors see nothing of it.</p></article><article class="f"><span class="k">roles</span><h3>Custom roles</h3><p>Decide who may edit, publish or delete, down to collections, locales and single fields.</p><p class="vs"><span>Prismic: From Medium ($150); custom on Enterprise</span></p></article><article class="f"><span class="k">mcp</span><h3>AI agents through MCP</h3><p>Claude or any MCP client reads the site and drafts as you. It never publishes.</p><p class="vs"><span>Prismic: Claude and ChatGPT plugins</span></p></article></div>
+        </div>
+      </section>
+
+      <section class="sec band-dark" id="ai" aria-labelledby="ai-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">AI &amp; MCP</p><h2 id="ai-title">AI that drafts. People who publish.</h2><p class="lede">Bring your own AI key. Every suggestion sits next to the value it is for, and nothing is saved until a person reads it.</p></div>
+          <div class="grid3"><article class="f"><h3>MCP server</h3><p>An agent works with the same roles, locks and checks as the person whose token it holds, and only ever drafts.</p></article><article class="f"><h3>Suggestions where you work</h3><p>Alt text for an image, a search title and description, a translation draft, a summary of a promotion.</p></article><article class="f"><p><a class="soon in-progress" href="./roadmap/#ai-writing" data-item="ai-writing" title="AI writing help on the page">Coming in 0.4.0</a></p><h3>Being built now</h3><ul><li>AI writing help on the page</li><li>More AI providers</li><li>An MCP publish tool</li></ul></article></div>
+          <p class="cta-row left"><a class="btn btn-primary" href="ai/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>AI and MCP in Markstage</span></a></p>
+        </div>
+      </section>
+
+      <section class="sec" id="built-with" aria-labelledby="built-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Showcase · taskrhino.ca</p><h2 id="built-title">Built with Markstage: taskrhino.ca</h2><p class="lede">Our own site is the first one written with Markstage. It moved from WordPress to a static Astro site: 158 posts, 20 pages and 2,414 images and files, every address kept. On a phone, its home page now scores 99 for speed instead of 71.</p></div>
+          <dl class="nums"><div class="num"><dt>Speed score, home page on a phone</dt><dd><span class="sr">from </span>71 <span aria-hidden="true">→</span> <span class="sr">to </span>99</dd></div><div class="num"><dt>Main content shown (LCP), on a phone</dt><dd><span class="sr">from </span>6.8 s <span aria-hidden="true">→</span> <span class="sr">to </span>2.2 s</dd></div><div class="num"><dt>Home page weight, on a phone</dt><dd><span class="sr">from </span>902 KB <span aria-hidden="true">→</span> <span class="sr">to </span>206 KB</dd></div><div class="num"><dt>Files loaded, home page on a phone</dt><dd><span class="sr">from </span>45 <span aria-hidden="true">→</span> <span class="sr">to </span>19</dd></div></dl>
+          <p class="small muted">Lighthouse, median of three runs, 28 and 29 October 2026: the old site live, the new one from its own build before launch, so its load times are not those of a real host.</p>
+          <p class="cta-row left"><a class="btn btn-secondary" href="showcase/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>See the before and after</span></a><a class="btn btn-text" href="why/"><span>Read why we built it</span></a><span class="visit">Visit <span class="copyable"><span class="copyable-value">taskrhino.ca</span><button type="button" class="icon-btn copy-btn" data-copy="https://www.taskrhino.ca/" aria-label="Copy site address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="https://www.taskrhino.ca/" target="_blank" rel="noopener" aria-label="Open site address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></span></p>
+        </div>
+      </section>
+
+      <section class="sec" id="compare" aria-labelledby="compare-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Compare</p><h2 id="compare-title">Markstage, WordPress, Ghost, Prismic.</h2><p class="lede">The rows teams decide on most, from our comparison. Each cell has its source there.</p></div>
+          <div class="tbl"><table class="strip"><thead><tr><th scope="col">What you get</th><th scope="col" class="us">Markstage</th><th scope="col">WordPress</th><th scope="col">Ghost</th><th scope="col">Prismic</th></tr></thead><tbody>
+<tr><th scope="row">Edits on the site’s own design</th><td class="us"><span class="m m-yes" aria-hidden="true">✓</span><span class="sr">Yes</span> <span class="note">The site's own components and CSS</span></td><td><span class="m m-no" aria-hidden="true">✗</span><span class="sr">No</span> <span class="note">Headless: written in WordPress's admin</span></td><td><span class="m m-no" aria-hidden="true">✗</span><span class="sr">No</span> <span class="note">Headless: written in Ghost's own editor</span></td><td><span class="m m-part" aria-hidden="true">◐</span><span class="sr">Partly</span> <span class="note">Page Builder: drag sections, live preview</span></td></tr>
+<tr><th scope="row">Content as files in git</th><td class="us"><span class="m m-yes" aria-hidden="true">✓</span><span class="sr">Yes</span> </td><td><span class="m m-no" aria-hidden="true">✗</span><span class="sr">No</span> <span class="note">Read by REST API</span></td><td><span class="m m-no" aria-hidden="true">✗</span><span class="sr">No</span> <span class="note">MySQL database, read by the Content API</span></td><td><span class="m m-no" aria-hidden="true">✗</span><span class="sr">No</span> <span class="note">Hosted, read by API</span></td></tr>
+<tr><th scope="row">Environments or staging</th><td class="us"><span class="m m-yes" aria-hidden="true">✓</span><span class="sr">Yes</span> <span class="note">Local, staging, production; free</span></td><td><span class="m m-unk" aria-hidden="true">?</span><span class="sr">Not confirmed</span> </td><td><span class="m m-unk" aria-hidden="true">?</span><span class="sr">Not confirmed</span> </td><td><span class="m m-part" aria-hidden="true">◐</span><span class="sr">Partly</span> <span class="note">Paid option on Platinum ($675); 2 on Enterprise</span></td></tr>
+<tr><th scope="row">Roles</th><td class="us"><span class="m m-yes" aria-hidden="true">✓</span><span class="sr">Yes</span> <span class="note">Five built in, plus custom roles</span></td><td><span class="m m-yes" aria-hidden="true">✓</span><span class="sr">Yes</span> <span class="note">Six roles</span></td><td><span class="m m-yes" aria-hidden="true">✓</span><span class="sr">Yes</span> <span class="note">Contributor, Author, Editor, Administrator, Owner</span></td><td><span class="m m-part" aria-hidden="true">◐</span><span class="sr">Partly</span> <span class="note">From Medium ($150); custom on Enterprise</span></td></tr>
+<tr><th scope="row">What you run</th><td class="us">One Node server next to your static site</td><td>A WordPress site (PHP with MySQL or MariaDB)</td><td>A Ghost server (Node.js and MySQL 8), or Ghost(Pro)</td><td>Nothing; hosted</td></tr>
+<tr><th scope="row">Price to start</th><td class="us">Free</td><td>Free software; you pay for hosting</td><td>Free software; Ghost(Pro) Starter $18/mo ($15 yearly)</td><td>Free; Starter $10/mo per repository, yearly</td></tr>
+</tbody></table></div>
+          <p class="cta-row left"><a class="btn btn-secondary" href="compare/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>See the whole comparison</span></a><a class="btn btn-text" href="alternatives/"><span>Alternatives, one by one</span></a></p>
+        </div>
+      </section>
+
+      <section class="sec band-soft" id="install" aria-labelledby="install-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Get started</p><h2 id="install-title">Install in three steps</h2><p class="lede">Just looking? The <a href="demo/">live demo</a> runs the editor on the example blog in your browser, with nothing to install.</p></div>
           <ol class="steps">
           <li class="step"><div class="step-text"><h3>Try the example blog</h3><p>Markstage is not on npm yet: install it from a clone. Clone the repo, install, and open the editor on the example blog. Needs Node.js 22.13 or newer and git.</p><p>Then open <span class="copyable"><code class="copyable-value">http://127.0.0.1:18233/markstage/</code><button type="button" class="icon-btn copy-btn" data-copy="http://127.0.0.1:18233/markstage/" aria-label="Copy editor address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="http://127.0.0.1:18233/markstage/" target="_blank" rel="noopener" aria-label="Open editor address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p></div><div class="step-cmds"><div class="cmd"><span class="copyable"><code class="copyable-value">git clone https://github.com/spcaeo/markstage.git</code><button type="button" class="icon-btn copy-btn" data-copy="git clone https://github.com/spcaeo/markstage.git" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div><div class="cmd"><span class="copyable"><code class="copyable-value">cd markstage &amp;&amp; npm install</code><button type="button" class="icon-btn copy-btn" data-copy="cd markstage &amp;&amp; npm install" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div><div class="cmd"><span class="copyable"><code class="copyable-value">npm run dev -w examples/blog</code><button type="button" class="icon-btn copy-btn" data-copy="npm run dev -w examples/blog" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div></div></li>
           <li class="step"><div class="step-text"><h3>Add it to your Astro site</h3><p>Your site needs Astro 7.4 or newer. In your site’s folder next to the clone, link the packages (they are not on npm yet), add markstage() to the integrations in astro.config.mjs and describe your collections in markstage.config.mjs.</p><p><a href="docs/config/">Read: markstage.config: every key</a></p></div><div class="step-cmds"><div class="cmd"><span class="copyable"><code class="copyable-value">npm install ../markstage/packages/core ../markstage/packages/editor ../markstage/packages/astro</code><button type="button" class="icon-btn copy-btn" data-copy="npm install ../markstage/packages/core ../markstage/packages/editor ../markstage/packages/astro" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div></div></li>
@@ -309,17 +266,11 @@
         </div>
       </section>
 
-      <section class="wrap" id="compare" aria-labelledby="compare-title">
-        <h2 id="compare-title">How Markstage compares</h2>
-        <p>Markstage is for teams who want a visual editor without giving up Markdown files, git history and their own servers. See where it fits next to WordPress, Ghost, Prismic and other hosted and git-based CMSs, and where they lead.</p>
-        <p class="cta-row left"><a class="btn btn-secondary" href="compare/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>See the comparison</span></a><a class="btn btn-text" href="alternatives/"><span>Alternatives, one by one</span></a></p>
-      </section>
-
-      <section class="band" id="faq" aria-labelledby="faq-title">
+      <section class="sec" id="faq" aria-labelledby="faq-title">
         <div class="wrap">
-          <h2 id="faq-title">Frequently asked questions</h2>
+          <div class="sec-head"><p class="kick">Questions</p><h2 id="faq-title">Frequently asked questions</h2></div>
           <div class="faq">
-            <div class="qa"><h3>What is Markstage?</h3><p>Markstage is a visual editor for Markdown and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.</p></div>
+            <div class="qa"><h3>What is Markstage?</h3><p>Markstage is a visual editor for Markdown, MDX and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.</p></div>
             <div class="qa"><h3>Is Markstage free?</h3><p>Yes. Markstage is source-available under the Elastic License 2.0: you may use, copy, change and self-host it for free, including in your business and for your clients’ sites. You may not offer it to others as a hosted or managed service without a commercial licence from Space-O Technologies.</p></div>
             <div class="qa"><h3>Is the Markstage source code public?</h3><p>Yes. The code is public on GitHub, free to read, change, use and self-host. Markstage is source-available, not open source in the OSI sense: it may not be resold as a hosted service without a commercial licence.</p></div>
             <div class="qa"><h3>Does Markstage need a database for content?</h3><p>No. Content stays as Markdown and JSON files in your git repo. One SQLite file on the server (node:sqlite, built into Node.js 22.13 and newer) holds people, sessions, the inbox, drafts in progress, trash, releases, the media index and the audit log. There is no database server to install.</p></div>
@@ -333,23 +284,25 @@
       </section>
 
       <section class="wrap cta-end" aria-labelledby="start-title">
-        <h2 id="start-title">Give your writers the real page</h2>
+        <h2 id="start-title">Type it. Ship it.</h2>
         <p>Made by <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a>. Free to self-host under the Elastic License 2.0.</p>
-        <p class="cta-row"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star Markstage on GitHub</span></a><a class="btn btn-secondary" href="docs/writing/"><span>See how writing works</span></a></p>
+        <p class="cta-row"><a class="btn btn-ink" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star Markstage on GitHub</span></a><a class="btn btn-secondary" href="features/"><span>See every feature</span></a></p>
       </section>
     </main>
 
     <footer class="footer">
       <div class="wrap footer-grid">
         <div>
-          <p class="footer-brand"><a class="brand" href="./"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a></p>
+          <p class="footer-brand"><a class="brand" href="./" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
           <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
           <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
         </div>
         <nav aria-label="Footer" class="footer-cols">
           <div>
             <p class="footer-head">Product</p>
-            <a href="./#features">Features</a>
+            <a href="./features/">Features</a>
+            <a href="./ai/">AI and MCP</a>
+            <a href="./demo/">Live demo</a>
             <a href="./#install">Install</a>
             <a href="./compare/">Compare</a>
             <a href="./alternatives/">Alternatives</a>
@@ -380,6 +333,7 @@
       <div class="wrap footer-row small muted">
         <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
         <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
       </div>
     </footer>
   </body>

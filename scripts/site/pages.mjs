@@ -1,7 +1,8 @@
-// The home page, the docs and the 404 page of site/. Each returns `{ path, file, html }`.
-import { CLONE_URL, LICENSE_URL, NAME, PUBLISHER, REPO_URL, SITE_URL, TAGLINE, UPDATED, repoFile } from './config.mjs';
-import { AUDIENCES, DOC_GROUPS, DOCS, FAQ, FEATURES, HOW, INSTALL, MORE_FEATURES } from './content.mjs';
-import { ICONS, ORGANIZATION, absolute, breadcrumbData, breadcrumbs, command, copyable, faqData, organizationData, page } from './layout.mjs';
+// The docs and the 404 page of site/, and the figure and button helpers every page uses. Each page returns
+// `{ path, file, html }`. The home page is home.mjs.
+import { NAME, REPO_URL, SITE_URL, UPDATED, repoFile } from './config.mjs';
+import { DOC_GROUPS, DOCS } from './content.mjs';
+import { ORGANIZATION, absolute, breadcrumbData, breadcrumbs, faqData, page } from './layout.mjs';
 import { escapeHtml as e } from './markdown.mjs';
 
 /** A screenshot from site/media, or nothing when it has not been made yet. */
@@ -13,149 +14,22 @@ export function figure(media, name, alt, root, { eager = false, caption = '', cl
   return `<figure class="shot${cls ? ` ${cls}` : ''}"><a href="${root}media/${info.file}" class="shot-link" aria-label="Open the full-size screenshot: ${e(alt)}">${img}</a>${caption ? `<figcaption>${e(caption)}</figcaption>` : ''}</figure>`;
 }
 
+/** The demo video (site/media/demo.mp4) with its poster, or nothing when it has not been made yet. */
+export function demoVideo(media, root, { video = false } = {}) {
+  const poster = media['demo-poster'];
+  if (!video || !poster) return '';
+  const [w, h] = poster.width > 2000 ? [poster.width / 2, poster.height / 2] : [poster.width, poster.height];
+  return `<figure class="shot demo-video"><video controls muted playsinline preload="none" width="${w}" height="${h}" poster="${root}media/${poster.file}" aria-label="A short video of the live demo: a blog post opens on its page, a heading is edited, Save shows the git diff of that one line"><source src="${root}media/demo.mp4" type="video/mp4" /><source src="${root}media/demo.webm" type="video/webm" /></video><figcaption>Open a post, change a heading, press Save: the diff shows exactly that line.</figcaption></figure>`;
+}
+
+/** A pill button: `primary` lime, `ink` ink, `secondary` outlined, `text` a plain link. */
 export const button = (href, label, kind = 'primary', icon = '') =>
   `<a class="btn btn-${kind}" href="${href}"${/^https?:/.test(href) ? ' target="_blank" rel="noopener"' : ''}>${icon}<span>${label}</span></a>`;
 
-/** SoftwareApplication JSON-LD for the home page. */
 /** A doc's <title>: its search title plus " | Markstage", unless the name is in it already or the suffix would pass 60. */
 export function docTitle(seo) {
   const withName = `${seo} | ${NAME}`;
   return new RegExp(NAME, 'i').test(seo) || withName.length > 60 ? seo : withName;
-}
-
-function softwareData(media, version) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: NAME,
-    alternateName: 'Markstage visual editor for Astro',
-    description:
-      'A self-hosted visual editor for Astro sites: writers edit Markdown and JSON content on the real page design, and every save is a clean git diff (with the Markstage server, a commit by the person who saved). Source-available, free to self-host.',
-    url: SITE_URL,
-    applicationCategory: 'DeveloperApplication',
-    applicationSubCategory: 'Content management system',
-    operatingSystem: 'Linux, macOS (Node.js 22.13 or newer)',
-    softwareVersion: version,
-    softwareRequirements: 'Node.js 22.13 or newer, git, an Astro site',
-    image: absolute('og/home.png'),
-    screenshot: media.hero ? absolute(`media/${media.hero.file}`) : undefined,
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    isAccessibleForFree: true,
-    license: LICENSE_URL,
-    codeRepository: REPO_URL,
-    publisher: ORGANIZATION,
-    author: ORGANIZATION,
-    keywords: 'Astro CMS, visual editor for Astro, git-based CMS, Markdown editor, headless CMS alternative, self-hosted CMS',
-  };
-}
-
-/**
- * The home page. `story` holds its story and showcase sections (story.mjs, from site-content/), and `compared` the
- * number of other products in docs/COMPARISON.md (the hero's claim is scoped to them; no claim without it).
- */
-export function home({ media, version, faq = FAQ, story = { why: '', showcase: '' }, compared = 0 }) {
-  const root = './';
-  const features = FEATURES.map(
-    (f, i) => `        <article class="feature${i % 2 ? ' flip' : ''}" id="${f.id}">
-          <div class="feature-text"><h3>${e(f.title)}</h3><p>${e(f.text)}</p></div>
-          ${figure(media, f.image, f.alt, root)}
-        </article>`,
-  ).join('\n');
-  const install = INSTALL.map(
-    (s) =>
-      `          <li class="step"><div class="step-text"><h3>${e(s.title)}</h3><p>${e(s.text)}</p>${s.url ? `<p>Then open ${copyable(s.url, { href: s.url, what: 'editor address' })}</p>` : ''}${s.doc ? `<p><a href="docs/${s.doc}/">Read: ${e(DOCS.find((d) => d.id === s.doc).title)}</a></p>` : ''}</div><div class="step-cmds">${(s.cmd ?? []).map((c) => command(c)).join('')}</div></li>`,
-  ).join('\n');
-  const body = `    <main id="main">
-      <section class="hero">
-        <div class="wrap">
-          <h1><span class="eyebrow">A visual editor for Astro sites, free to self-host<span class="sr">:</span></span> <span class="hero-title"><span>Edit the real page.</span> <span>Keep the content in git.</span></span></h1>
-          <p class="lead">We built Markstage when we moved our own site off WordPress. Writers click into the site’s own design and type; every save is a clean git diff of exactly what changed, committed in their name. No content database, no subscription, no MDX.</p>
-${compared ? `          <p class="hero-claim">We compared ${compared} other editors. None of them lets writers edit on the real page from your own server with no database server. <a href="compare/">See the comparison</a></p>\n` : ''}
-          <p class="cta-row">${button(REPO_URL, 'Get it on GitHub', 'primary', ICONS.github)}${button('#install', 'Install in 3 steps', 'secondary')}${button('docs/', 'Read the docs', 'text', '')}</p>
-          <ul class="pills" aria-label="In short">
-            <li>Free to self-host</li>
-            <li>Content stays in git</li>
-            <li>Surgical, byte-safe saves</li>
-            <li>Roles, releases and staging</li>
-          </ul>
-        </div>
-        <div class="stage"><div class="wrap wide">${figure(media, 'hero', 'The Markstage editor open on a blog post, drawn with the blog’s own design: title, cover image and text, ready to edit', root, { eager: true, cls: 'hero-shot' })}</div></div>
-      </section>
-${story.why}
-
-      <section class="band" id="features" aria-labelledby="features-title">
-        <div class="wrap">
-          <h2 id="features-title">What Markstage does</h2>
-          <p class="section-lead">${e(TAGLINE)} Everything a content team needs from a CMS, on top of the files you already have.</p>
-${features}
-          <h3 class="sub">Also in the editor</h3>
-          <ul class="ticks two">
-${MORE_FEATURES.map((t) => `            <li>${e(t)}</li>`).join('\n')}
-          </ul>
-        </div>
-      </section>
-${story.showcase}
-      <section class="wrap" id="how" aria-labelledby="how-title">
-        <h2 id="how-title">How it works</h2>
-        <ol class="cards four">
-${HOW.map((s) => `          <li class="card"><h3>${e(s.title)}</h3><p>${e(s.text)}</p></li>`).join('\n')}
-        </ol>
-      </section>
-
-      <section class="wrap" id="who" aria-labelledby="who-title">
-        <h2 id="who-title">Who it is for</h2>
-        <ul class="cards three">
-${AUDIENCES.map((a) => `          <li class="card"><h3>${e(a.title)}</h3><p>${e(a.text)}</p></li>`).join('\n')}
-        </ul>
-        ${figure(media, 'home', 'The Markstage home screen: edit a page, write a new post, read messages, go live, and the recent posts with their status', root)}
-      </section>
-
-      <section class="band" id="install" aria-labelledby="install-title">
-        <div class="wrap">
-          <h2 id="install-title">Install in three steps</h2>
-          <ol class="steps">
-${install}
-          </ol>
-          <p class="small muted">Markstage is in pre-release and in active development. The clone address: ${copyable(CLONE_URL, { href: REPO_URL, what: 'clone address' })}</p>
-        </div>
-      </section>
-
-      <section class="wrap" id="compare" aria-labelledby="compare-title">
-        <h2 id="compare-title">How Markstage compares</h2>
-        <p>Markstage is for teams who want a visual editor without giving up Markdown files, git history and their own servers. See where it fits next to WordPress, Ghost, Prismic and other hosted and git-based CMSs, and where they lead.</p>
-        <p class="cta-row left">${button('compare/', 'See the comparison', 'secondary', ICONS.arrow)}${button('alternatives/', 'Alternatives, one by one', 'text')}</p>
-      </section>
-
-      <section class="band" id="faq" aria-labelledby="faq-title">
-        <div class="wrap">
-          <h2 id="faq-title">Frequently asked questions</h2>
-          <div class="faq">
-${faq.map((x) => `            <div class="qa"><h3>${e(x.q)}</h3><p>${e(x.a)}</p></div>`).join('\n')}
-          </div>
-          <p><a href="faq/">More questions and answers</a></p>
-        </div>
-      </section>
-
-      <section class="wrap cta-end" aria-labelledby="start-title">
-        <h2 id="start-title">Give your writers the real page</h2>
-        <p>Made by <a href="${PUBLISHER.url}" target="_blank" rel="noopener">${PUBLISHER.name}</a>. Free to self-host under the Elastic License 2.0.</p>
-        <p class="cta-row">${button(REPO_URL, 'Star Markstage on GitHub', 'primary', ICONS.github)}${button('docs/writing/', 'See how writing works', 'secondary')}</p>
-      </section>
-    </main>`;
-  return {
-    path: '',
-    file: 'index.html',
-    html: page({
-      path: '',
-      root,
-      title: 'Markstage: Visual Editor for Astro, Edit on the Real Page',
-      description:
-        'Markstage is a self-hosted visual editor for Astro: edit Markdown and JSON on your real page design and save clean git diffs. Source-available, free to use.',
-      body,
-      data: [softwareData(media, version), faqData(faq.map(({ q, a }) => ({ question: q, answer: a }))), organizationData()],
-      styles: ['home.css'],
-    }),
-  };
 }
 
 function docsNav(root, currentId) {

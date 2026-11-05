@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage AI and MCP: Agents Draft, People Publish</title>
+    <meta name="description" content="AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/ai/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage AI and MCP: Agents Draft, People Publish" />
+    <meta property="og:description" content="AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/ai/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/ai.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage AI and MCP: agents draft as a person and never publish; AI suggestions wait for a person to read them." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage AI and MCP: Agents Draft, People Publish" />
+    <meta name="twitter:description" content="AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/ai.png" />
+    <meta name="twitter:image:alt" content="Markstage AI and MCP: agents draft as a person and never publish; AI suggestions wait for a person to read them." />
+    <link rel="icon" href="../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../llms.txt" />
+    <link rel="preload" href="../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../home.css" />
+
+    <script src="../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "AI and MCP",
+          "item": "https://spcaeo.github.io/markstage/ai/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "AI and MCP in Markstage",
+      "description": "AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved.",
+      "url": "https://spcaeo.github.io/markstage/ai/",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../features/">Features</a>
+          <a href="../ai/" aria-current="page">AI &amp; MCP</a>
+          <a href="../compare/">Compare</a>
+          <a href="../showcase/">Showcase</a>
+          <a href="../docs/">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="ai">
+      <div class="wrap page-head">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">AI and MCP</li></ol></nav>
+        <h1><span class="kick">AI and MCP in Markstage</span> <span class="h1-line">AI that drafts. <span class="mark">People who publish.</span></span></h1>
+        <p class="lead left">Markstage works with AI in two ways today: an MCP server, so an agent such as Claude can read your site and draft changes, and suggestions in the editor for the words people find slow to write. You bring your own key, and nothing reaches the site until a person has read it.</p>
+      </div>
+
+      <section class="sec band-dark" id="mcp" aria-labelledby="mcp-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Ships today</p><h2 id="mcp-title">The MCP server</h2><p class="lede">Claude, or any client of the Model Context Protocol, connects to your Markstage server with a token a person made for it.</p></div>
+          <div class="grid2"><article class="f"><h3>As a person, never more</h3><p>An agent acts as the person whose token it holds: the same role, the same locks, the same checks and the site’s own rules. A token reads, or reads and drafts; it lasts 1 to 90 days.</p></article><article class="f"><h3>Drafts only</h3><p>It creates and changes drafts, and puts changes to live pages into a release that is not scheduled. It never publishes, deletes, moves or promotes anything: a person reviews the release and puts it live.</p></article><article class="f"><h3>Lossless</h3><p>It reads and writes an entry as its file’s text, so a change touches only what the agent changed. Locked and synced blocks are refused, naming the block.</p></article><article class="f"><h3>Every write is a commit</h3><p>A draft the agent saves is a git commit that names the agent and its token, so the history shows who did what.</p></article></div>
+          <div class="ai-how">
+            <div>
+              <h3>Connect a local client</h3>
+              <p>Make a token in Settings → Tokens (“New AI assistant token”), then keep it with the <code>markstage mcp</code> relay, which passes each message from a client that starts a command on to your server:</p>
+              <div class="cmd"><span class="copyable"><code class="copyable-value">npx markstage mcp login https://cms.example.com</code><button type="button" class="icon-btn copy-btn" data-copy="npx markstage mcp login https://cms.example.com" aria-label="Copy command" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button></span></div>
+              <p>A client that speaks HTTP itself uses the MCP address the token screen shows, with the token as a bearer header.</p>
+              <p><a href="../docs/api-mcp/">The MCP server, in full</a></p>
+            </div>
+            <figure class="shot"><a href="../media/tokens.webp" class="shot-link" aria-label="Open the full-size screenshot: Settings, Tokens: the form for a new AI assistant token, with reading always on and writing drafts ticked only when asked for"><img src="../media/tokens.webp" alt="Settings, Tokens: the form for a new AI assistant token, with reading always on and writing drafts ticked only when asked for" width="1440" height="900" loading="lazy" decoding="async" /></a></figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="suggestions" aria-labelledby="suggest-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Ships today</p><h2 id="suggest-title">AI suggestions in the editor</h2><p class="lede">Each suggestion sits next to the value it is for. Accept, edit then accept, or dismiss: nothing changes until you accept, and ⌘S saves it like any change.</p></div>
+          <div class="grid2"><article class="f"><h3>Alt text</h3><p>Suggest on an image’s Alt line, in an image’s settings, under a cover’s alt text, or under a picture’s alt text on a page.</p></article><article class="f"><h3>Search title and description</h3><p>Suggest title and description in the SEO check, next to the search result as Google shows it.</p></article><article class="f"><h3>A translation draft</h3><p>Draft translation under a region in Post settings, for a page in another of the site’s languages.</p></article><article class="f"><h3>A promotion summary</h3><p>Summarize changes beside a promotion’s reason: what moving staging to production changes, in plain words.</p></article></div>
+          <ul class="ticks">
+            <li>Bring your own key: the person who runs the server sets <code>MARKSTAGE_AI_KEY</code> or a key file. Without one, everything else works and the editor says why suggestions are off.</li>
+            <li>Anthropic’s models answer today; the model and the limits per minute and per day are set on the server.</li>
+            <li>A suggestion writes no file and no commit. Accepting it goes through the editor’s normal save, with the same rights, locks and checks.</li>
+          </ul>
+          <p><a href="../docs/api-ai/">AI suggestions, in full</a></p>
+        </div>
+      </section>
+      <section class="sec" id="coming" aria-labelledby="coming-title">
+        <div class="wrap">
+          <div class="sec-head"><p class="kick">Coming</p><h2 id="coming-title">What’s next for AI</h2><p class="lede">From the roadmap. Nothing here ships today; the badge says when it is planned.</p></div>
+          <div class="grid3"><article class="f"><p><a class="soon in-progress" href="../roadmap/#ai-writing" data-item="ai-writing" title="AI writing help on the page">Coming in 0.4.0</a></p><h3>AI writing help on the page</h3><p>Rewrite, shorten or fix the grammar of a selection; the writer accepts or rejects each change, and nothing saves by itself.</p></article><article class="f"><p><a class="soon in-progress" href="../roadmap/#ai-providers" data-item="ai-providers" title="More AI providers">Coming in 0.4.0</a></p><h3>More AI providers</h3><p>Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.</p></article><article class="f"><p><a class="soon in-progress" href="../roadmap/#mcp-publish" data-item="mcp-publish" title="An MCP publish tool">Coming in 0.4.0</a></p><h3>An MCP publish tool</h3><p>An AI agent may ask to publish, and the site's publish rules decide, as they do for a person.</p></article><article class="f"><p><a class="soon planned" href="../roadmap/#ai-translate" data-item="ai-translate" title="AI translation of a whole site">Planned</a></p><h3>AI translation of a whole site</h3><p>Draft every page of a site in another language in one run, for people to review.</p></article><article class="f"><p><a class="soon planned" href="../roadmap/#ai-seo" data-item="ai-seo" title="AI link and SEO suggestions">Planned</a></p><h3>AI link and SEO suggestions</h3><p>Suggested internal links and fixes for search problems, for a person to accept.</p></article></div>
+          <p><a href="../roadmap/">The whole roadmap</a> · Coming in 0.4.0 and Planned mark what is being built and what comes later.</p>
+        </div>
+      </section>
+
+      <section class="wrap cta-end" aria-labelledby="ai-start-title">
+        <h2 id="ai-start-title">Free to self-host, AI included</h2>
+        <p>The MCP server and the suggestions come with the Markstage server. There is no Markstage cloud and no AI plan to buy.</p>
+        <p class="cta-row"><a class="btn btn-ink" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get it on GitHub</span></a><a class="btn btn-secondary" href="../features/"><span>See every feature</span></a></p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../features/">Features</a>
+            <a href="../ai/">AI and MCP</a>
+            <a href="../demo/">Live demo</a>
+            <a href="../#install">Install</a>
+            <a href="../compare/">Compare</a>
+            <a href="../alternatives/">Alternatives</a>
+            <a href="../faq/">FAQ</a>
+            <a href="../glossary/">Glossary</a>
+            <a href="../why/">Why we built it</a>
+            <a href="../showcase/">Showcase</a>
+            <a href="../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../docs/">All docs</a>
+            <a href="../docs/writing/">Writing with Markstage</a>
+            <a href="../docs/config/">Site config</a>
+            <a href="../docs/deploy/">Deploy the server</a>
+            <a href="../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

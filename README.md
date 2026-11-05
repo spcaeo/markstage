@@ -1,20 +1,21 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/brand/markstage-logo-dark.png">
-    <img src="assets/brand/markstage-logo.png" alt="Markstage: the mark, a crimson stage arch with a cream M standing in a pool of brass footlight, beside the word Markstage" width="300">
+    <img src="assets/brand/markstage-logo.png" alt="Markstage: the mark, a rounded ink square with a lime slash and a lime text caret, beside the word markstage and the tagline Type it. Ship it." width="300">
   </picture>
 </p>
 
 <p align="center">
-  <strong>Edit the real page. Keep the content in git.</strong><br>
-  A visual editor for Astro sites. We built it when we moved our own site off WordPress:<br>
+  <strong>Type it. Ship it.</strong><br>
+  The visual editor for Astro sites, with Notion-style blocks. We built it when we moved our own site off WordPress:<br>
   writers change Markdown and JSON content on the site's own design, not in form fields,<br>
   and every save is a clean git diff of exactly what they changed.<br>
-  No content database, no subscription, no MDX. Source-available and free to self-host.
+  No content database, no subscription. MDX too: code stays locked, prose is editable.<br>
+  Source-available and free to self-host.
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img alt="Licence: Elastic License 2.0" src="https://img.shields.io/badge/licence-ELv2-9e1b3f"></a>
+  <a href="LICENSE"><img alt="Licence: Elastic License 2.0" src="https://img.shields.io/badge/licence-ELv2-0e1a0b"></a>
   <img alt="Node.js 22.13 or newer; CI on Node 22.13 and 24" src="https://img.shields.io/badge/node-22.13%2B-339933">
   <img alt="For Astro 7" src="https://img.shields.io/badge/for-Astro%207-ff5d01">
   <a href="https://github.com/spcaeo/markstage/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/spcaeo/markstage/actions/workflows/ci.yml/badge.svg"></a>
@@ -23,13 +24,18 @@
 </p>
 
 <p align="center">
-  <a href="https://spcaeo.github.io/markstage/"><img alt="Website: features, docs and the comparison" src="https://img.shields.io/badge/website-features,_docs,_comparison-9e1b3f?style=for-the-badge"></a>
-  <a href="#quick-start"><img alt="Quick start: the example blog in three commands" src="https://img.shields.io/badge/quick_start-3_commands-2b8a3e?style=for-the-badge"></a>
+  <a href="https://spcaeo.github.io/markstage/demo/"><img alt="Try the live demo: the sample blog in your browser, no sign-up" src="https://img.shields.io/badge/try_the_live_demo-sample_blog,_no_sign--up-cdf75a?style=for-the-badge"></a>
+  <a href="https://spcaeo.github.io/markstage/"><img alt="Website: features, docs and the comparison" src="https://img.shields.io/badge/website-features,_docs,_comparison-0e1a0b?style=for-the-badge"></a>
+  <a href="#quick-start"><img alt="Quick start: the example blog in three commands" src="https://img.shields.io/badge/quick_start-3_commands-0e1a0b?style=for-the-badge"></a>
 </p>
 
 <p align="center">
   <a href="https://spcaeo.github.io/markstage/"><strong>Website</strong></a> ·
+  <a href="https://spcaeo.github.io/markstage/demo/"><strong>Live demo</strong></a> ·
   <a href="#quick-start"><strong>Quick start</strong></a> ·
+  <a href="#writes-like-notion">Writes like Notion</a> ·
+  <a href="#ai-and-mcp">AI and MCP</a> ·
+  <a href="#features">Features</a> ·
   <a href="#whats-new">What's new</a> ·
   <a href="#see-it">Screenshots</a> ·
   <a href="#how-markstage-compares">Comparison</a> ·
@@ -47,6 +53,48 @@
     <img src="docs/screenshots/hero.png" alt="The Markstage editor open on a post of the example blog, Plan a content calendar your whole team keeps: the post is drawn inside the blog's own page, with its serif headline, its cover picture of a calendar with Draft, Review and Live notes, the date and author Sam Lee, the list of contents and the first paragraph; above it the editor's bar with Visual and Source, Outline, SEO, the Saved and Not live yet marks, undo, redo, Preview page and Save; on the left the editor's rail of icons" width="960">
   </picture>
 </p>
+
+## Writes like Notion
+
+The block editor people already know, drawn on your real design instead of grey form fields.
+
+<p align="center">
+  <img src="docs/screenshots/blocks.png" alt="The Markstage editor on a post of the example blog with its block menu open under the heading Start with one weekly rhythm: a search box, then Basic blocks, Text, Heading 2, Heading 3, Bulleted list, Numbered list, Table and Quote, each with a small drawing of the block" width="620">
+</p>
+
+- **Type "/" for any block.** On an empty line, "/" opens a searchable block menu with a small drawing of each
+  block. Or click the "+" beside a line.
+- **Drag blocks by their grip.** Drag a block, or open its menu: move it up, down, to the top, to the bottom or to
+  a place you pick, duplicate it or delete it.
+- **Find anything with ⌘K.** One search box for pages, posts, the editor's screens and its settings.
+- **Paste from Word.** Word's headings and lists arrive as real blocks, without its office markup.
+- **An outline of the page.** Every block under its heading: jump to one, fold a section, drag rows to move them.
+- **Never lose typing.** A crash or a closed tab brings your words back; history keeps every saved version.
+
+## AI and MCP
+
+AI that drafts, people who publish. Both ship today and come with the free self-hosted server; the suggestions use
+your own AI key.
+
+- **An MCP server.** Claude or any MCP client reads the site and drafts changes as the person whose token it holds:
+  the same role, locks and checks. It never publishes, deletes, moves or promotes anything; changes to live pages
+  go into a release a person reviews. Local clients connect through the `markstage mcp` relay
+  ([docs/API-MCP.md](docs/API-MCP.md)).
+- **AI suggestions in the editor.** Alt text, a search title and description, a translation draft, and a summary
+  of a promotion, each next to the value it is for. Nothing changes until a person accepts it
+  ([docs/API-AI.md](docs/API-AI.md)).
+- **Coming next:** see the AI items on the [roadmap](#roadmap) and on
+  [the AI page](https://spcaeo.github.io/markstage/ai/).
+
+## Inspired by Ghost and Prismic
+
+- **Ghost's calm writing, on your own design.** We studied Ghost's editor row by row and kept what writers love:
+  alt text and captions right on the image, stock photos from Unsplash or Pexels with your own key, and a publish
+  sheet that checks links, alt text and the page on a phone before it goes live.
+- **Prismic's page building, without the bill.** We used Prismic and left over its price and the missing path from
+  development to live. Markstage includes a Library of reusable sections, local, staging and production, releases
+  with share links, custom roles and an "Edit this page" link on the live site, free to self-host. What Prismic
+  charges for each is in [the comparison](docs/COMPARISON.md).
 
 ## Why we built it
 
@@ -180,36 +228,29 @@ key, AI suggestions for alt text, search titles and translations, which nobody s
 
 ## Features
 
-The headlines, area by area. Every operational task end to end: [docs/OPERATIONS.md](docs/OPERATIONS.md).
+Every feature, grouped as on [the features page](https://spcaeo.github.io/markstage/features/), where each one
+links to the doc that explains it. Every operational task end to end: [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
-- **Editing:** the canvas inside the real page, a "/" and "+" inserter, a toolbar, the ⌘K palette, find and
-  replace, blocks moved by keyboard, by the grip or in the Outline, Word paste that arrives clean, a Source view for
-  the raw Markdown or JSON, and Light, Dark and System themes for the editor itself.
-- **Pages:** JSON pages edited on the page, their sections added, moved and duplicated from the outline, and a
-  section gallery that draws every section type and variation alone.
-- **The Library:** page templates, sections and snippets in folders; synced copies (edit once, every page follows,
-  with Apply, Undo and Detach); packs to export and import; WordPress reusable blocks and parts of a web page
-  brought in as sections.
-- **Publishing:** publish as a background job (commit, build, deploy; a failed step leaves the live site as it was),
-  scheduling, releases, share links, rollback, and an "Edit this page" link on the live site for signed-in people.
-- **Environments:** local, staging and production as branches plus servers; plans that show what a promotion would
-  change, promotion rules, sync and rollback ([docs/ENVIRONMENTS.md](docs/ENVIRONMENTS.md)).
-- **Search and links:** a Google-style preview measured in pixels, headings in order, weak links and missing alt
-  text while writing; publish rules; topics with link suggestions both ways; site health with broken links and
-  redirect chains ([docs/SEO.md](docs/SEO.md), [docs/API-LINKS.md](docs/API-LINKS.md)).
-- **People and safety:** roles named as in WordPress (Owner, Administrator, Editor, Author, Contributor), custom
-  roles, two-factor codes with recovery codes, single sign-on, an audit log, password-protected pages, and every
-  rule the screens show also enforced on the server.
-- **Messages:** forms with an inbox, spam handling, alerts by email, Slack or webhook, a daily digest, CSV export,
-  and old WordPress form messages imported.
-- **For developers:** one `markstage.config.mjs` for the site ([docs/CONFIG.md](docs/CONFIG.md)), block packs for
-  the site's own boxes, a JSON API ([docs/API.md](docs/API.md)), signed webhooks, entry and media imports, and the
-  release line `v0.2.0 · build N · <date>` in the editor's footer.
+- **Writing** (12, [on the site](https://spcaeo.github.io/markstage/features/#writing)): Type “/” for any block; Drag blocks by their grip; Find anything with ⌘K; A bar over selected words; Markdown shortcuts as you type; Paste from Word, cleanly; Tables you change in place; The outline of the page; Find and replace; MDX too; The Markdown file itself; A guide inside the editor.
+- **Pages, sections and media** (12, [on the site](https://spcaeo.github.io/markstage/features/#pages)): Edit on the real page; Your site’s own boxes; A Library of parts; Drag a section onto the live page; The section gallery; Alt text right on the image; Images and files in one place; Stock photos, with your own key; Page frames and page types; Authors and co-authors; Translation status; Choices from other systems.
+- **Team, releases and publishing** (13, [on the site](https://spcaeo.github.io/markstage/features/#team)): A publish sheet that checks; Releases; Share links; Local, staging, production; “Edit this page” on the live site; Every save is a commit in your name; Roles, as WordPress names them; Custom roles; Single sign-on and two-factor; Locks; See who else is editing; Forms in your own inbox; Webhooks and imports.
+- **SEO and site health** (8, [on the site](https://spcaeo.github.io/markstage/features/#seo)): Search checks while you write; Search and social previews; See it on a phone or a tablet; Link suggestions both ways; Link health; Topics and a topic map; Redirects that follow a move; Site check-up.
+- **Safety and history** (7, [on the site](https://spcaeo.github.io/markstage/features/#safety)): A save is a clean diff; Never lose typing; A three-way merge; History of every save; Trash, backups and rollback; An audit log; Previews kept apart.
+- **AI and MCP** (6, [on the site](https://spcaeo.github.io/markstage/features/#ai)): An MCP server for AI agents; The markstage mcp relay; Alt text suggestions; Search title and description; Translation drafts; A promotion summary.
 
 ## See it
 
 Every image below is the real editor on the repo's example blog, with made-up people and `example.com`
 addresses. `npm run site:shots` takes them again from the code.
+
+**Try it yourself:** the [live demo](https://spcaeo.github.io/markstage/demo/) is the real editor on the same example blog, in your browser with no
+sign-up. Edit a post on its page and press Save to see the git diff the save would commit; your edits stay in
+your browser. Publishing, users and settings answer "Not in the demo" there ([how the demo works](docs/DEMO.md)).
+
+<p align="center">
+  <a href="https://spcaeo.github.io/markstage/demo/"><img src="docs/screenshots/demo.gif" alt="The live demo: the post Hello, Markstage opens on its page under the strip Live demo: sample blog, nothing is saved, edits stay in your browser; the heading Text and lists becomes Text and lists, saved cleanly; Save opens Saved in this browser with the git diff of that one line, the old heading in red and the new one in green" width="880"></a><br>
+  <strong>The live demo.</strong> Open a post, change a heading, press Save: the diff is that one line.
+</p>
 
 <p align="center">
   <img src="docs/screenshots/canvas.png" alt="The editor further down the same post: the end of the calendar picture, the date and author, the list of contents, a paragraph, the heading Start with one weekly rhythm with a numbered list for Monday, Wednesday and Friday, and the heading Who does what over a table with the columns Step, Who and Time, all in the blog's own serif type and column" width="900"><br>
@@ -229,6 +270,8 @@ addresses. `npm run site:shots` takes them again from the code.
 You need **Node.js 22.13 or newer** and **git**; to add it to your own site, the site needs **Astro 7.4 or newer**.
 **Not on npm yet: install from a clone.** The `@markstage/*` packages are not published to npm, so each way below
 starts from a clone of this repository.
+
+**Just looking?** The [live demo](https://spcaeo.github.io/markstage/demo/) runs the editor on the example blog in your browser, nothing to install.
 
 ### Option 1: try the example blog (one minute)
 
@@ -336,7 +379,7 @@ is in **[docs/COMPARISON.md](docs/COMPARISON.md)**.
 | ------------------------------- | :----------------: | :-------------------: | :-------------: | :------------------: | :------------------: | :--------------: | :------------------: | :-------------: | :---------------: |
 | **Editing**                     |                    |                       |                 |                      |                      |                  |                      |                 |                   |
 | Edits on the site's own design  |         ✓          |      ✗ headless       |   ✗ headless    |    ◐ live preview    |          ✓           |        ✓         |    ◐ preview pane    |        ✗        |         ✓         |
-| MDX                             |         ✗          |           –           |        –        |          –           |          ✓           |        ?         |          ?           |        ✓        |         –         |
+| MDX                             |         ◐          |           –           |        –        |          –           |          ✓           |        ?         |          ?           |        ✓        |         –         |
 | **Content and git**             |                    |                       |                 |                      |                      |                  |                      |                 |                   |
 | Content as files in git         |         ✓          |           ✗           |        ✗        |          ✗           |          ✓           |        ✓         |          ✓           |        ✓        |         ✗         |
 | Database to run                 | None for content ¹ |   MySQL or MariaDB    |     MySQL 8     |        Hosted        |  ◐ when self-hosted  |      Hosted      |         None         |      None       |      Hosted       |
@@ -368,14 +411,15 @@ Astro gives content collections (Markdown, MDX, JSON and YAML with a schema) but
 send you to a CMS. Markstage is that editor for teams who want writers to work on the site's real design, every
 save to change only what was edited (with the Markstage server, a commit by the person who saved), and staging, roles, single sign-on and a forms inbox included, all on
 their own server for free. CloudCannon is the closest hosted product: also git-based, with editing on a preview of
-the built site, from $55 a month. TinaCMS gives click-to-edit on Astro pages and edits MDX, which Markstage does
-not. Decap CMS needs no server at all and Keystatic runs inside your Astro site, but with both, writers fill in
+the built site, from $55 a month. TinaCMS gives click-to-edit on Astro pages and has edited MDX for longer;
+Markstage's MDX support is new. Decap CMS needs no server at all and Keystatic runs inside your Astro site, but with both, writers fill in
 forms rather than editing the page itself. Markstage is pre-release; most products here have years of use and bigger communities.
 
 ### Where others lead (honestly)
 
-- **MDX.** Markstage edits Markdown with front matter, and JSON. A site built on MDX components fits TinaCMS,
-  Keystatic or Outstatic better today.
+- **MDX.** Markstage edits MDX files' words and simple component settings and keeps the code as written, but it
+  shows components as cards, not rendered, and its MDX support is new ([docs/MDX.md](docs/MDX.md)). TinaCMS,
+  Keystatic and Outstatic have edited MDX for longer.
 - **No server at all.** Decap CMS and Sveltia CMS run in the browser against your git host. Markstage needs Node.js
   for a team (sign-in, publishing, the inbox); alone on your computer it runs inside `astro dev`.
 - **A hosted service.** Prismic, Ghost(Pro), CloudCannon, TinaCloud and Storyblok run it for you. Markstage is
@@ -494,8 +538,10 @@ No. Markstage's editing markup appears only in editor mode, so your production b
 can stay fully static.
 
 **Does Markstage support MDX?**
-No. Markstage edits Markdown with front matter, and JSON. If your site depends on MDX components, TinaCMS,
-Keystatic or Outstatic fit better today.
+Yes, new after 0.3.0. MDX too: code stays locked, prose is editable. Writers change the words and a
+component's simple settings (text, numbers, on/off) in the side panel; imports, exports, `{expressions}` and code
+props are kept as written, and components show as cards on the canvas. A file Markstage cannot read opens
+read-only in Source mode. Details: [docs/MDX.md](docs/MDX.md).
 
 **Can people without a GitHub account edit?**
 Yes. People sign in to Markstage with an email and password, with optional two-step sign-in, or through your
@@ -519,13 +565,15 @@ AI that ships today: an MCP server, so an AI agent drafts as the person whose to
 ([docs/API-MCP.md](docs/API-MCP.md)), and AI suggestions for alt text, search titles and descriptions, translation
 drafts and the promotion summary, which a person reads, changes and saves ([docs/API-AI.md](docs/API-AI.md)).
 
+New since 0.3.0, on main: MDX editing, with the words typed on the page and the code kept as written
+([docs/MDX.md](docs/MDX.md)), and a [live demo](https://spcaeo.github.io/markstage/demo/) of the editor on a sample blog,
+with no sign-up.
+
 Being built now, for 0.4.0:
 
-- **MDX editing.** Edit the prose of MDX files on the page; code and components stay locked, shown as cards.
 - **Import from WordPress, Ghost and Prismic.** Posts, pages, media, authors and redirects.
 - **A ready server image.** A Docker image of the Markstage server, built and tested by CI.
 - **A starter site.** An Astro blog with Markstage already set up.
-- **A live demo.** Try the editor on a sample blog in your browser, with no sign-up.
 - **AI writing help on the page.** Rewrite, shorten or fix the grammar of a selection; the writer accepts or
   rejects each change, and nothing saves by itself.
 - **More AI providers.** Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.
@@ -570,8 +618,9 @@ Technologies. Ask by email at **rp@spaceo.ca**, or open an issue titled "Commerc
 ## Licence
 
 Markstage is **source-available** under the [Elastic License 2.0](LICENSE). Copyright 2026 Space-O Technologies.
-The name, the logo and the tagline "Edit your Markdown on the real stage." are trademarks of Space-O Technologies;
-see [NOTICE](NOTICE).
+The name, the logo and the tagline "Type it. Ship it." are trademarks of Space-O Technologies; see
+[NOTICE](NOTICE). Notion, Ghost, Prismic, WordPress, Astro and the other products named here are trademarks of
+their owners, named only to compare; Markstage is not affiliated with them.
 
 ## Author
 

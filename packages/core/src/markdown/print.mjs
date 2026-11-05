@@ -4,11 +4,13 @@ import { linkOpenTag, markOrder, normalizeInline, sameMark } from '../inline.mjs
 import { looksAutolink, parser } from './parse.mjs';
 import { keepListsApart } from './lists.mjs';
 import { isFigure, printFigure } from './figure.mjs';
+import { componentText, containerHead, escMdxLineStart } from './mdx.mjs';
 
 const MD_DELIM = { bold: '**', italic: '*', strike: '~~' };
 const HTML_TAG = { bold: 'strong', italic: 'em', strike: 'del' };
 
-// Escape text so Markdown reads it back as the same text. ctx.lineStart: the text begins a line.
+// Escape text so Markdown reads it back as the same text. ctx.lineStart: the text begins a line. ctx.mdx: MDX reads
+// `{` as code and `<` as a tag, and a paragraph that starts with import/export as code.
 function escText(text, ctx) {
   let s = '';
   for (let k = 0; k < text.length; k++) {
@@ -16,7 +18,8 @@ function escText(text, ctx) {
     const next = text[k + 1] ?? '';
     if (ch === '\\' || ch === '*' || ch === '`' || ch === '[' || ch === ']' || ch === '~') s += '\\' + ch;
     else if (ch === '_') s += /[A-Za-z0-9]/.test(text[k - 1] ?? '') && /[A-Za-z0-9]/.test(next) ? '_' : '\\_';
-    else if (ch === '<') s += /[A-Za-z/!?]/.test(next) || next === '' ? '\\<' : '<';
+    else if (ch === '<') s += ctx.mdx || /[A-Za-z/!?]/.test(next) || next === '' ? '\\<' : '<';
+    else if (ch === '{' && ctx.mdx) s += '\\{';
     else if (ch === '&') s += /^&(#[xX]?[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]*);/.test(text.slice(k)) ? '\\&' : '&';
     else if (ch === '|' && ctx.table) s += '\\|';
     else s += ch;
@@ -27,6 +30,7 @@ function escText(text, ctx) {
     .split('\n')
     .map((line, idx) => {
       if (idx === 0 && !ctx.lineStart) return line;
+      if (ctx.mdx) line = escMdxLineStart(line);
       let m;
       if ((m = /^(#{1,6})(?=\s|$)/.exec(line))) return '\\' + line;
       if (/^>/.test(line)) return '\\' + line;
@@ -69,8 +73,9 @@ function linkText(nodes, i, mark) {
   return s;
 }
 
-const imageMd = (a) => {
-  const alt = (a.alt ?? '').replace(/([\\[\]])/g, '\\$1');
+// mdx: `{` and `<` in the alt text would read as code or a tag
+const imageMd = (a, mdx = false) => {
+  const alt = (a.alt ?? '').replace(mdx ? /([\\[\]{<])/g : /([\\[\]])/g, '\\$1');
   const title = a.title != null ? ` "${a.title.replace(/(["\\])/g, '\\$1')}"` : '';
   return `![${alt}](${linkDest(a.src ?? '')}${title})`;
 };
@@ -86,8 +91,14 @@ const inlineOf = (node) => node.content ?? [];
 const stripHints = (nodes) =>
   nodes.map((n) => (n.marks ? { ...n, marks: n.marks.map((m) => (m.type === 'link' ? { ...m, attrs: { ...m.attrs, outer: undefined } } : m)) } : n));
 
-/** The Markdown printer for one set of block packs; `inlineNodes` is the reader's (for the read-back check). */
-export function makePrinter(reg, inlineNodes) {
+/**
+ * The Markdown printer for one set of block packs; `inlineNodes` is the reader's (for the read-back check). `mdx`:
+ * print MDX ({parser}: the MDX reader, for the read-back check).
+ */
+export function makePrinter(reg, inlineNodes, { mdx = null } = {}) {
+  const reader = mdx ? mdx.parser : parser;
+  const isMdx = !!mdx;
+  const BR = isMdx ? '<br />' : '<br>';
   // Inline nodes -> Markdown. opts.html: write bold/italic/strike as HTML tags (used when Markdown delimiters would
   // not read back the same, e.g. **x** glued to punctuation). opts.table: a table cell. opts.heading: no newlines.
   function printInline(nodes, opts = {}) {
@@ -121,10 +132,11 @@ export function makePrinter(reg, inlineNodes) {
       }
       if (node.type === 'text') {
         if (node.marks?.some((m) => m.type === 'code')) s += codeSpan(node.text, opts.table);
-        else s += escText(opts.table || opts.heading ? node.text.replace(/\n/g, ' ') : node.text, { lineStart: lineStart(), table: opts.table });
-      } else if (node.type === 'hardBreak') s += opts.table || opts.heading ? '<br>' : '\\\n';
+        else s += escText(opts.table || opts.heading ? node.text.replace(/\n/g, ' ') : node.text, { lineStart: lineStart(), table: opts.table, mdx: isMdx });
+      } else if (node.type === 'hardBreak') s += opts.table || opts.heading ? BR : '\\\n';
       else if (node.type === 'rawInline') s += node.attrs?.html ?? '';
-      else if (node.type === 'image') s += imageMd(node.attrs ?? {});
+      else if (node.type === 'mdxInline') s += node.attrs?.source ?? '';
+      else if (node.type === 'image') s += imageMd(node.attrs ?? {}, isMdx);
     });
     while (open.length) close(open.pop());
     return s;
@@ -140,7 +152,12 @@ export function makePrinter(reg, inlineNodes) {
 
   function reparseInline(md, opts) {
     const text = opts.table ? `| ${md} |\n| --- |` : md;
-    const tree = parser.parse(text);
+    let tree;
+    try {
+      tree = reader.parse(text);
+    } catch {
+      return null;
+    }
     const first = tree.children[0];
     if (!first) return [];
     const kids = opts.table ? (first.children?.[0]?.children?.[0]?.children ?? []) : (first.children ?? []);
@@ -177,7 +194,13 @@ export function makePrinter(reg, inlineNodes) {
         return `${fence}${a.language ?? ''}\n${text}${text ? '\n' : ''}${fence}`;
       }
       case 'image':
-        return isFigure(a) ? printFigure(a, imageMd(a)) : imageMd(a);
+        return isFigure(a) ? printFigure(a, imageMd(a, isMdx), isMdx ? (t) => escText(t, { mdx: true }) : undefined) : imageMd(a, isMdx);
+      case 'mdxCode':
+        return a.source ?? '';
+      case 'mdxComponent':
+        return componentText(a);
+      case 'mdxContainer':
+        return containerHead(a) + printBlocks(node.content ?? []) + (a.close ?? '');
       case 'blockquote':
         return printBlocks(node.content ?? [])
           .split('\n')

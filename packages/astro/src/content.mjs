@@ -112,7 +112,14 @@ export function entryOf(c, raw, md) {
   const item = itemOf(c, raw);
   const base = { id: raw.id, collection: c.id, format: c.format, version: item.version, status: item.status, url: item.url, title: item.title };
   if (c.format === 'json') return { ...base, data: raw.data, autosave: null, can: DEV_CAN };
-  return { ...base, frontmatter: raw.data, doc: md.mdToDoc(raw.text).doc, autosave: null, can: DEV_CAN };
+  if (!c.mdx) return { ...base, frontmatter: raw.data, doc: md.mdToDoc(raw.text).doc, autosave: null, can: DEV_CAN };
+  // an .mdx file the MDX reader cannot read opens read-only, in Source mode, with the reader's words (docs/MDX.md)
+  try {
+    return { ...base, mdx: true, frontmatter: raw.data, doc: md.mdToDoc(raw.text).doc, autosave: null, can: DEV_CAN };
+  } catch (e) {
+    if (!e?.mdx) throw e;
+    return { ...base, mdx: true, unreadable: e.mdx, frontmatter: raw.data, doc: null, autosave: null, can: { ...DEV_CAN, edit: false } };
+  }
 }
 
 /** Throws a 409 unless the file is still at `version`. Returns the current text. */
@@ -139,6 +146,7 @@ export function checkMarkdown(text, md, readFrontmatter) {
   try {
     md.mdToDoc(text);
   } catch (e) {
+    if (e?.mdx) throw new HttpError(422, 'invalid-mdx', `This MDX cannot be read, so it cannot be saved: ${e.mdx.message}`, { mdx: e.mdx });
     throw new HttpError(422, 'invalid', `The Markdown could not be read: ${e.message}`);
   }
 }

@@ -256,7 +256,9 @@ describe('alert rules and personal choices', () => {
     assert.deepEqual(notices('signin.new-device'), [u.id]);
     const text = srv.app.db.prepare("SELECT text FROM notices WHERE kind = 'signin.new-device'").get().text;
     // the time is ISO: the editor shows it in the reader's own zone (QA pass 2, N13)
-    assert.match(text, /^traveller signed in from a new device: Safari on macOS at 127\.0\.0\.1, 2026-10-29T\d\d:\d\d:\d\dZ\. If it wasn't you, change your password and sign out your other sessions\.$/);
+    // the test clock, not a fixed date: the digest steps above move it by the machine's own zone (setHours)
+    const at = new Date(clock.now).toISOString().replace(/\.\d{3}Z$/, 'Z');
+    assert.equal(text, `traveller signed in from a new device: Safari on macOS at 127.0.0.1, ${at}. If it wasn't you, change your password and sign out your other sessions.`);
     const [m] = await until(() => (sink.messages.length ? mails() : null));
     assert.deepEqual(m.to, ['traveller@example.test'], 'theirs only: not the shared address');
     assert.equal(deviceName('Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15'), 'Safari on macOS');

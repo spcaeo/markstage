@@ -37,13 +37,13 @@ Create it empty; the first push comes from `.public-export/` (docs/PUBLISHING.md
 
 ```bash
 gh repo create spcaeo/markstage --public \
-  --description "Edit your Markdown on the real stage. A visual editor for Astro Markdown and JSON sites: writers edit on the site's own design, every save is a clean git diff, no database for content. Self-hosted and source-available (Elastic License 2.0)."
+  --description "Type it. Ship it. The visual editor for Astro sites: Notion-style blocks on your real page design, every save a clean git commit, AI agents that draft through MCP. Self-hosted and source-available (Elastic License 2.0)."
 ```
 
-### Description (240 of 350 characters)
+### Description (219 of 350 characters)
 
 ```text
-Edit your Markdown on the real stage. A visual editor for Astro Markdown and JSON sites: writers edit on the site's own design, every save is a clean git diff, no database for content. Self-hosted and source-available (Elastic License 2.0).
+Type it. Ship it. The visual editor for Astro sites: Notion-style blocks on your real page design, every save a clean git commit, AI agents that draft through MCP. Self-hosted and source-available (Elastic License 2.0).
 ```
 
 ### Website

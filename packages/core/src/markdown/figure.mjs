@@ -22,10 +22,10 @@ export function unescapeCaption(html) {
   return html.replace(/&(amp|lt|gt|quot|#39);/g, (e) => UNESC[e]);
 }
 
-/** The figure around an image's Markdown (`md`), from its attrs. */
-export function printFigure(attrs, md) {
+/** The figure around an image's Markdown (`md`), from its attrs; `esc`: how the caption is written (MDX's own). */
+export function printFigure(attrs, md, esc = escapeCaption) {
   const cls = attrs.figure ? ` class="${attrs.figure}"` : '';
-  const cap = attrs.caption ? `<figcaption>${escapeCaption(attrs.caption)}</figcaption>\n` : '';
+  const cap = attrs.caption ? `<figcaption>${esc(attrs.caption)}</figcaption>\n` : '';
   return `<figure${cls}>\n\n${md}\n\n${cap}</figure>`;
 }
 

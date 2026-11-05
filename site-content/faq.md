@@ -68,9 +68,11 @@ can stay fully static.
 
 ## Does Markstage support MDX?
 
-Not yet. Today Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS,
-Keystatic or Outstatic fit better today. MDX editing is coming in 0.4.0: the prose editable on the page, the code
-and components locked and shown as cards ([roadmap](/roadmap/#mdx)).
+Yes, new after 0.3.0. MDX too: code stays locked, prose is editable. Writers type the words on the page and change
+a component's simple settings (text, numbers, on/off) in a side panel. Imports, exports, `{expressions}` and code
+settings are kept exactly as written, and components show as cards on the canvas rather than as the site renders
+them. A save changes only what the writer changed. A file Markstage cannot read opens read-only in Source mode,
+with a plain message. TinaCMS, Keystatic and Outstatic have edited MDX for longer.
 
 ## Can people without a GitHub account edit?
 

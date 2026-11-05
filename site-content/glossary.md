@@ -28,7 +28,8 @@ to read and to compare in git.
 
 ## MDX
 
-Markdown that can also contain components and code. Markstage does not edit MDX; it edits Markdown and JSON.
+Markdown that can also contain components and code. Markstage edits MDX files: the words and a component's simple
+settings are editable, and the code stays exactly as written.
 
 ## JSON
 
