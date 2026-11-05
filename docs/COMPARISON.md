@@ -120,7 +120,7 @@ These keep content as files in a git repository, like Markstage.
 | Live co-editing (cursors) | ✗ <sub>Locks and a three-way merge instead</sub> [^ms-readme] | ? [^ti-price] | ? [^cc-price] | ✗ [^de-home] | ✗ [^sv-feat] | ✗ [^ks-home] | ✗ <sub>Comments "soon"</sub> [^pc-home] | – [^fm-home] | ✗ [^os-home] | ✓ <sub>Live cursors and avatars</sub> [^sp-home] |
 | Forms inbox for site visitors | ✓ <sub>Forms post to Markstage; Inbox, alerts, thank-you mail</sub> [^ms-inbox] | ✗ [^ti-price] | ✓ <sub>Form inboxes</sub> [^cc-price] | ✗ [^de-home] | ✗ [^sv-feat] | ✗ [^ks-home] | ✗ [^pc-home] | ✗ [^fm-home] | ✗ [^os-home] | ✗ [^sp-home] |
 | Translations | ✓ <sub>Per-language status: missing, outdated, done</sub> [^ms-trans] | ? [^ti-price] | ? [^cc-price] | ? [^de-home] | ✓ <sub>First-class i18n</sub> [^sv-feat] | ? [^ks-home] | ? [^pc-home] | ? [^fm-home] | ? [^os-home] | ? [^sp-home] |
-| AI agents through MCP | ✓ <sub>Agents draft as the person whose token they hold; never publish</sub> [^ms-mcp] | ? [^ti-price] | ? [^cc-price] | ✗ [^de-home] | ◐ <sub>Agent Skill and llms.txt</sub> [^sv-gh] | ✗ [^ks-home] | ✗ [^pc-home] | ✗ [^fm-home] | ◐ <sub>AI completion on Pro</sub> [^os-price] | ◐ <sub>A setup skill</sub> [^sp-home] |
+| AI agents through MCP | ✓ <sub>Agents draft as the person whose token they hold; publish only if an owner allows it</sub> [^ms-mcp] | ? [^ti-price] | ? [^cc-price] | ✗ [^de-home] | ◐ <sub>Agent Skill and llms.txt</sub> [^sv-gh] | ✗ [^ks-home] | ✗ [^pc-home] | ✗ [^fm-home] | ◐ <sub>AI completion on Pro</sub> [^os-price] | ◐ <sub>A setup skill</sub> [^sp-home] |
 
 ### Hosting and price
 

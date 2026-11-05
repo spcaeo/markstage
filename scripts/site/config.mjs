@@ -42,7 +42,7 @@ export const OG_IMAGES = {
   story: { path: 'og/story.png', alt: 'Why we built Markstage: our own site moved off WordPress, and writers still needed the real page.' },
   showcase: { path: 'og/showcase.png', alt: 'Built with Markstage: a WordPress site moved to Astro, edited on the real page.' },
   features: { path: 'og/features.png', alt: 'Every Markstage feature: writing, pages and media, team and publishing, SEO, safety, AI and MCP.' },
-  ai: { path: 'og/ai.png', alt: 'Markstage AI and MCP: agents draft as a person and never publish; AI suggestions wait for a person to read them.' },
+  ai: { path: 'og/ai.png', alt: 'Markstage AI and MCP: agents draft as a person and publish only if allowed; AI suggestions wait for a person to read them.' },
 };
 export const OG_SIZE = { width: 1200, height: 630 };
 

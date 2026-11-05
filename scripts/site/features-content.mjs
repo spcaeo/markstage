@@ -99,12 +99,15 @@ export const FEATURE_GROUPS = [
     title: 'AI and MCP',
     lead: 'AI that drafts, people who publish. Bring your own key; nothing is saved until a person reads it.',
     items: [
-      { id: 'mcp', title: 'An MCP server for AI agents', text: 'Claude or any MCP client reads the site and drafts as the person whose token it holds, with the same roles, locks and checks. It never publishes, deletes or promotes.', doc: 'docs/api-mcp/', shot: 'tokens', top: true },
+      { id: 'mcp', title: 'An MCP server for AI agents', text: 'Claude or any MCP client reads the site and drafts as the person whose token it holds, with the same roles, locks and checks. It never deletes or promotes, and publishes only if you allow it.', doc: 'docs/api-mcp/', shot: 'tokens', top: true },
       { id: 'mcp-relay', title: 'The markstage mcp relay', text: 'For a local client that speaks MCP over stdin and stdout: one command keeps the token and passes each message on.', doc: 'docs/api-mcp/' },
+      { id: 'mcp-publish', title: 'Publishing by an agent, only if you allow it', text: 'An owner or administrator may give an agent a publish token, with a plain warning. The site’s checks run first, then its publish rules and roles decide, as for you; each publish names the agent.', doc: 'docs/api-mcp/#publishing' },
+      { id: 'ai-rewrite', title: 'Writing help on a selection', text: 'Select words, then Improve with AI: rewrite, shorten, fix the spelling or change the tone. The change shows beside the words; accept, edit or reject it.', doc: 'docs/api-ai/' },
       { id: 'ai-alt', title: 'Alt text suggestions', text: 'Suggest on an image’s Alt line writes a description for you to accept, change or dismiss.', doc: 'docs/api-ai/' },
       { id: 'ai-seo', title: 'Search title and description', text: 'Suggest title and description in the SEO check, next to the result as Google shows it.', doc: 'docs/api-ai/' },
       { id: 'ai-translate', title: 'Translation drafts', text: 'Draft translation under a region in Post settings, for a person to read and save.', doc: 'docs/api-ai/' },
       { id: 'ai-summary', title: 'A promotion summary', text: 'Summarize changes beside a promotion’s reason, in plain words, from what the plan changes.', doc: 'docs/api-ai/' },
+      { id: 'ai-providers', title: 'Your choice of AI provider', text: 'Anthropic, any OpenAI-compatible endpoint (OpenAI, Azure, OpenRouter, Together, LM Studio) or Ollama on your own machine with no key.', doc: 'docs/api-ai/#providers' },
     ],
   },
 ];

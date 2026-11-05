@@ -200,7 +200,7 @@
           "name": "Can an AI agent edit my site through Markstage?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live."
+            "text": "An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never deletes or promotes anything, and by default a person reviews its release and puts it live. An owner or administrator may allow an agent to publish; the site’s checks and publish rules still decide."
           }
         }
       ]
@@ -281,7 +281,7 @@ site first.</p></div>
         <div class="qa" id="what-is-markstage"><h3>What is Markstage?</h3><p>Markstage is a visual editor for Markdown, MDX and JSON content sites. Writers edit on the site’s own design instead of in form fields, and every save is a clean git diff of exactly what they changed (with the Markstage server, a commit in their name). Its first adapter is Astro.</p></div>
         <div class="qa" id="which-frameworks-does-markstage-support"><h3>Which frameworks does Markstage support?</h3><p>Astro today, through the @markstage/astro integration. The core (the document model and the Markdown converter) has no framework in it, so other adapters can follow.</p></div>
         <div class="qa" id="will-markstage-rewrite-my-markdown-files"><h3>Will Markstage rewrite my Markdown files?</h3><p>Only the blocks you change. Opening and saving a file with no edit leaves it byte for byte the same, and moving a block and moving it back gives an identical file, so a review shows exactly what moved.</p></div>
-        <div class="qa" id="can-an-ai-agent-edit-my-site-through-markstage"><h3>Can an AI agent edit my site through Markstage?</h3><p>An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live.</p></div>
+        <div class="qa" id="can-an-ai-agent-edit-my-site-through-markstage"><h3>Can an AI agent edit my site through Markstage?</h3><p>An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never deletes or promotes anything, and by default a person reviews its release and puts it live. An owner or administrator may allow an agent to publish; the site’s checks and publish rules still decide.</p></div>
       </section>
       <p class="cta-row left"><a class="btn btn-primary" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a><a class="btn btn-text" href="../docs/"><span>Read the docs</span></a></p>
     </main>

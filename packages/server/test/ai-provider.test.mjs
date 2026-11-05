@@ -68,7 +68,7 @@ describe('the Anthropic provider, with a fake fetch', () => {
   test('no key: off, in words, and nothing is sent', async () => {
     let sent = 0;
     const p = createProvider({ ai: ANTHROPIC }, { env: {}, fetch: async () => (sent++, said('x')) });
-    assert.deepEqual(p.status(), { on: false, why: 'AI suggestions are off: MARKSTAGE_AI_KEY is not set on the server and there is no ai.keyFile.', provider: null, model: 'claude-sonnet-5-5' });
+    assert.deepEqual(p.status(), { on: false, why: 'AI suggestions are off: MARKSTAGE_AI_KEY is not set on the server and there is no ai.keyFile.', reason: 'key', provider: null, model: 'claude-sonnet-5-5' });
     const e = await ask(p).then(() => null, (x) => x);
     assert.deepEqual([e.status, e.code, e.extra.envVar], [503, 'ai-off', 'MARKSTAGE_AI_KEY']);
     // no ai block in the config: the defaults, still off without a key
@@ -204,7 +204,7 @@ describe('translation drafts keep the site’s spelling', () => {
   after(() => srv?.close());
 
   test('translate is offered on a site with locales', async () => {
-    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'translate']);
+    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'translate', 'rewrite']);
   });
 
   test('the draft goes through the locale’s spelling, field by field', async () => {

@@ -85,11 +85,13 @@ const SUGGESTIONS = [
   ['Search title and description', 'Suggest title and description in the SEO check, next to the search result as Google shows it.'],
   ['A translation draft', 'Draft translation under a region in Post settings, for a page in another of the site’s languages.'],
   ['A promotion summary', 'Summarize changes beside a promotion’s reason: what moving staging to production changes, in plain words.'],
+  ['Better words for a selection', 'Select words on the page, then Improve with AI in the format bar: rewrite, shorten, fix the spelling and grammar, or change the tone. The change shows beside the words; accept, edit or reject it.'],
 ];
 
 const MCP_FACTS = [
   ['As a person, never more', 'An agent acts as the person whose token it holds: the same role, the same locks, the same checks and the site’s own rules. A token reads, or reads and drafts; it lasts 1 to 90 days.'],
-  ['Drafts only', 'It creates and changes drafts, and puts changes to live pages into a release that is not scheduled. It never publishes, deletes, moves or promotes anything: a person reviews the release and puts it live.'],
+  ['Drafts, unless you allow more', 'It creates and changes drafts, and puts changes to live pages into a release that is not scheduled. It never deletes, moves or promotes anything, and by default a person reviews the release and puts it live.'],
+  ['Publishing only if you allow it', 'An owner or administrator may give an agent a publish token, with a plain warning. The site’s checks run first and a failed one stops it; then the publish rules and roles decide as they would for that person. Every such publish names the agent, and a token publishes at most 5 times an hour.'],
   ['Lossless', 'It reads and writes an entry as its file’s text, so a change touches only what the agent changed. Locked and synced blocks are refused, naming the block.'],
   ['Every write is a commit', 'A draft the agent saves is a git commit that names the agent and its token, so the history shows who did what.'],
 ];
@@ -101,7 +103,7 @@ export function aiPage({ media, roadmap }) {
     { name: 'Home', path: '' },
     { name: 'AI and MCP', path },
   ];
-  const description = 'AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved.';
+  const description = 'AI in Markstage: an MCP server where agents draft as a person and publish only if you allow it, and AI suggestions you read before anything is saved.';
   const coming = (roadmap?.items ?? []).filter((i) => isAiItem(i) && i.status !== 'shipped');
   const comingHtml = coming.length
     ? `      <section class="sec" id="coming" aria-labelledby="coming-title">

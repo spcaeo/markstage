@@ -1,4 +1,4 @@
-// The four AI suggestions (docs/API-AI.md "Kinds"): what each is given, what it asks the model, and the answer's
+// The five AI suggestions (docs/API-AI.md "Kinds"): what each is given, what it asks the model, and the answer's
 // shape. A suggestion is words for a person to read, change and save through the editor's own routes; nothing here
 // writes a file, the database (beyond the audit, index.mjs) or git.
 //
@@ -15,9 +15,9 @@ import { searchText } from '../publish-rules.mjs';
 import { sniff } from '../media/sniff.mjs';
 import { PROMPT as PLAN_PROMPT, factsOf, numbersHold, planInput } from '../env/summary.mjs';
 
-export const KINDS = ['alt', 'seo', 'summary', 'translate'];
+export const KINDS = ['alt', 'seo', 'summary', 'translate', 'rewrite'];
 /** The most a person may send: a context note, a text to describe, one field to translate (characters). */
-export const CAPS = Object.freeze({ context: 2000, text: 20_000, field: 1000 });
+export const CAPS = Object.freeze({ context: 2000, text: 20_000, field: 1000, selection: 4000 });
 // the model's image types; any other (or a large one) is re-encoded to JPEG when the server has a codec
 const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
 const IMAGE_MAX_BYTES = 3_500_000;
@@ -179,6 +179,7 @@ export async function prepare(kind, body, ctx, kit) {
   if (kind === 'alt') return alt(body, entry, kit);
   if (kind === 'seo') return seo(body, entry);
   if (kind === 'summary') return summary(body, kit);
+  if (kind === 'rewrite') return rewrite(body, entry);
   return translate(body, entry, kit);
 }
 
@@ -275,5 +276,68 @@ async function translate(body, entry, kit) {
     stub: () => Object.fromEntries(keys.map((k) => [k, `${fields[k]} (stub)`])),
     // the site's own spelling for the locale, as its build and the Region switch apply it
     answer: (text) => Object.fromEntries(Object.entries(jsonAnswer(text, keys)).map(([k, v]) => [k, String(spell(v))])),
+  };
+}
+
+/** The writing help's modes: what each asks of the model (docs/API-AI.md "rewrite"). */
+export const REWRITE_MODES = Object.freeze({
+  rewrite: 'Rewrite it to read more clearly and smoothly. Keep the meaning, the facts and about the same length.',
+  shorten: 'Make it shorter: say the same thing in fewer words. Keep every fact and name.',
+  fix: 'Fix only the spelling, grammar and punctuation. Change nothing else: not the words chosen, the order or the tone.',
+  'tone:friendly': 'Make the tone friendly and warm, as if talking to a person. Keep the meaning and the facts.',
+  'tone:formal': 'Make the tone formal and professional. Keep the meaning and the facts.',
+  'tone:confident': 'Make the tone confident and direct: no hedging. Keep the meaning and the facts; claim nothing more than it does.',
+});
+
+/** The stub's answers, one plain change per mode, so a test sees a real difference. */
+function stubRewrite(mode, text) {
+  if (mode === 'fix') return text.replace(/\bteh\b/g, 'the').replace(/\brecieve/g, 'receive').replace(/\balot\b/g, 'a lot').replace(/ {2,}/g, ' ');
+  if (mode === 'shorten') return text.replace(/\b(really|very|just|actually|quite|basically) /gi, '').replace(/\bin order to\b/gi, 'to');
+  if (mode === 'tone:formal') return text.replace(/\bdon't\b/gi, 'do not').replace(/\bcan't\b/gi, 'cannot').replace(/\bit's\b/gi, 'it is');
+  if (mode === 'tone:confident') return text.replace(/\b(I think|maybe|perhaps|probably) /gi, '');
+  if (mode === 'tone:friendly') return `Good news: ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+  return `${text.replace(/[.!?]?\s*$/, '')}, put more plainly.`;
+}
+
+/**
+ * Words the writer selected on the page, rewritten in one of the modes. The entry must be one this person may read;
+ * the text is what is selected now (unsaved too), within one block. The answer is the new text only, one paragraph
+ * when the selection is one.
+ */
+function rewrite(body, entry) {
+  if (!entry) throw unprocessable('invalid', 'rewrite needs the entry: collection and id.', { field: 'id' });
+  if (typeof body.mode !== 'string' || !Object.hasOwn(REWRITE_MODES, body.mode)) throw unprocessable('invalid', `mode is one of ${Object.keys(REWRITE_MODES).join(', ')}.`, { field: 'mode' });
+  const text = capped(body, 'text', CAPS.selection);
+  if (!text) throw unprocessable('invalid', 'Select some words to improve first.', { field: 'text' });
+  const oneLine = !/\n/.test(text);
+  const mode = body.mode;
+  return {
+    target: `${entry.c.id}/${entry.id}`,
+    system: [
+      'You improve a short passage of a web page that its writer selected.',
+      REWRITE_MODES[mode],
+      'Write in the language and spelling of the passage. Keep names, numbers, links’ words and Markdown marks such as **bold** as they are. Add no facts, no quotes and no comments of your own.',
+      oneLine ? 'The passage is one paragraph: answer with one paragraph.' : 'Keep its paragraphs: separate them with a blank line, as it does.',
+      DATA,
+      'Answer with JSON only: {"text": "…"}',
+    ].join('\n'),
+    content: [{ type: 'text', text: `<page-title>${entry.summary.title ?? ''}</page-title>\n<passage>\n${text}\n</passage>` }],
+    stub: () => ({ text: stubRewrite(mode, text) }),
+    answer: (t) => {
+      let v = null;
+      try {
+        const a = t.indexOf('{');
+        const b = t.lastIndexOf('}');
+        v = a >= 0 && b > a ? JSON.parse(t.slice(a, b + 1)) : null;
+      } catch {
+        v = null;
+      }
+      let out = typeof v?.text === 'string' ? v.text.trim() : '';
+      if (!out) throw failed('The model’s answer was not in the expected form. Try again.');
+      if (oneLine) out = out.replace(/\s*\n+\s*/g, ' ');
+      // twice the selection is plenty for any mode; more is not an answer to this
+      if (out.length > Math.max(400, text.length * 2)) throw failed('The model answered with much more than was selected, so it was dropped. Try again.');
+      return { text: out };
+    },
   };
 }

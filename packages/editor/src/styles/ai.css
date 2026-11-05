@@ -193,3 +193,93 @@
   outline: 2px solid var(--ms-accent);
   outline-offset: 2px;
 }
+
+/* The writing help (ai/rewrite.ts): "Improve with AI" in the format bar, the selection marked on the canvas while its
+   card is open, and the card beside it: the choices, then the suggestion as a diff (taken out struck through, put in
+   underlined: not colour alone). */
+.ms-bar__btn.ms-bar__ai {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ms .ProseMirror .ms-ai-mark {
+  border-radius: 2px;
+  background: var(--ms-accent-tint);
+  box-shadow: 0 0 0 1px var(--ms-accent);
+}
+.ms-ai.ms-ai-rw {
+  width: min(460px, calc(100vw - 16px));
+  max-height: min(70vh, 560px);
+  margin: 0;
+  overflow: auto;
+  box-shadow: var(--ms-pop);
+}
+.ms-ai-rw__choices {
+  display: grid;
+  gap: 4px;
+}
+.ms-ai-rw__choice {
+  display: grid;
+  justify-items: start;
+  gap: 1px;
+  height: auto;
+  padding: 7px 10px;
+  text-align: left;
+}
+.ms-ai-rw__hint {
+  color: var(--ms-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+.ms-ai-rw__tones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.ms-ai-rw__tonelabel {
+  color: var(--ms-label);
+  font-weight: 600;
+}
+.ms-ai-rw__what {
+  margin: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-ai-rw__diffwrap {
+  display: flex;
+  align-items: flex-start;
+}
+.ms-ai-rw__diff {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ms-ai-rw__del {
+  border-radius: 3px;
+  background: var(--ms-danger-tint);
+  color: var(--ms-danger);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+.ms-ai-rw__add {
+  border-radius: 3px;
+  background: var(--ms-ok-tint);
+  color: var(--ms-ok-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+.ms-ai-rw__del + .ms-ai-rw__add {
+  margin-left: 3px;
+}

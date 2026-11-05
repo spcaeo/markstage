@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Markstage AI and MCP: Agents Draft, People Publish</title>
-    <meta name="description" content="AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved." />
+    <meta name="description" content="AI in Markstage: an MCP server where agents draft as a person and publish only if you allow it, and AI suggestions you read before anything is saved." />
     <link rel="canonical" href="https://spcaeo.github.io/markstage/ai/" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
@@ -12,19 +12,19 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Markstage" />
     <meta property="og:title" content="Markstage AI and MCP: Agents Draft, People Publish" />
-    <meta property="og:description" content="AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved." />
+    <meta property="og:description" content="AI in Markstage: an MCP server where agents draft as a person and publish only if you allow it, and AI suggestions you read before anything is saved." />
     <meta property="og:url" content="https://spcaeo.github.io/markstage/ai/" />
     <meta property="og:image" content="https://spcaeo.github.io/markstage/og/ai.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Markstage AI and MCP: agents draft as a person and never publish; AI suggestions wait for a person to read them." />
+    <meta property="og:image:alt" content="Markstage AI and MCP: agents draft as a person and publish only if allowed; AI suggestions wait for a person to read them." />
     <meta property="og:locale" content="en_US" />
     <meta property="article:modified_time" content="2026-11-03" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Markstage AI and MCP: Agents Draft, People Publish" />
-    <meta name="twitter:description" content="AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved." />
+    <meta name="twitter:description" content="AI in Markstage: an MCP server where agents draft as a person and publish only if you allow it, and AI suggestions you read before anything is saved." />
     <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/ai.png" />
-    <meta name="twitter:image:alt" content="Markstage AI and MCP: agents draft as a person and never publish; AI suggestions wait for a person to read them." />
+    <meta name="twitter:image:alt" content="Markstage AI and MCP: agents draft as a person and publish only if allowed; AI suggestions wait for a person to read them." />
     <link rel="icon" href="../favicon.ico" sizes="32x32" />
     <link rel="icon" href="../icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
@@ -60,7 +60,7 @@
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "AI and MCP in Markstage",
-      "description": "AI in Markstage: an MCP server where agents draft as a person and never publish, and AI suggestions you read before anything is saved.",
+      "description": "AI in Markstage: an MCP server where agents draft as a person and publish only if you allow it, and AI suggestions you read before anything is saved.",
       "url": "https://spcaeo.github.io/markstage/ai/",
       "dateModified": "2026-11-03",
       "isPartOf": {
@@ -115,7 +115,7 @@
       <section class="sec band-dark" id="mcp" aria-labelledby="mcp-title">
         <div class="wrap">
           <div class="sec-head"><p class="kick">Ships today</p><h2 id="mcp-title">The MCP server</h2><p class="lede">Claude, or any client of the Model Context Protocol, connects to your Markstage server with a token a person made for it.</p></div>
-          <div class="grid2"><article class="f"><h3>As a person, never more</h3><p>An agent acts as the person whose token it holds: the same role, the same locks, the same checks and the site’s own rules. A token reads, or reads and drafts; it lasts 1 to 90 days.</p></article><article class="f"><h3>Drafts only</h3><p>It creates and changes drafts, and puts changes to live pages into a release that is not scheduled. It never publishes, deletes, moves or promotes anything: a person reviews the release and puts it live.</p></article><article class="f"><h3>Lossless</h3><p>It reads and writes an entry as its file’s text, so a change touches only what the agent changed. Locked and synced blocks are refused, naming the block.</p></article><article class="f"><h3>Every write is a commit</h3><p>A draft the agent saves is a git commit that names the agent and its token, so the history shows who did what.</p></article></div>
+          <div class="grid2"><article class="f"><h3>As a person, never more</h3><p>An agent acts as the person whose token it holds: the same role, the same locks, the same checks and the site’s own rules. A token reads, or reads and drafts; it lasts 1 to 90 days.</p></article><article class="f"><h3>Drafts, unless you allow more</h3><p>It creates and changes drafts, and puts changes to live pages into a release that is not scheduled. It never deletes, moves or promotes anything, and by default a person reviews the release and puts it live.</p></article><article class="f"><h3>Publishing only if you allow it</h3><p>An owner or administrator may give an agent a publish token, with a plain warning. The site’s checks run first and a failed one stops it; then the publish rules and roles decide as they would for that person. Every such publish names the agent, and a token publishes at most 5 times an hour.</p></article><article class="f"><h3>Lossless</h3><p>It reads and writes an entry as its file’s text, so a change touches only what the agent changed. Locked and synced blocks are refused, naming the block.</p></article><article class="f"><h3>Every write is a commit</h3><p>A draft the agent saves is a git commit that names the agent and its token, so the history shows who did what.</p></article></div>
           <div class="ai-how">
             <div>
               <h3>Connect a local client</h3>
@@ -132,7 +132,7 @@
       <section class="sec" id="suggestions" aria-labelledby="suggest-title">
         <div class="wrap">
           <div class="sec-head"><p class="kick">Ships today</p><h2 id="suggest-title">AI suggestions in the editor</h2><p class="lede">Each suggestion sits next to the value it is for. Accept, edit then accept, or dismiss: nothing changes until you accept, and ⌘S saves it like any change.</p></div>
-          <div class="grid2"><article class="f"><h3>Alt text</h3><p>Suggest on an image’s Alt line, in an image’s settings, under a cover’s alt text, or under a picture’s alt text on a page.</p></article><article class="f"><h3>Search title and description</h3><p>Suggest title and description in the SEO check, next to the search result as Google shows it.</p></article><article class="f"><h3>A translation draft</h3><p>Draft translation under a region in Post settings, for a page in another of the site’s languages.</p></article><article class="f"><h3>A promotion summary</h3><p>Summarize changes beside a promotion’s reason: what moving staging to production changes, in plain words.</p></article></div>
+          <div class="grid2"><article class="f"><h3>Alt text</h3><p>Suggest on an image’s Alt line, in an image’s settings, under a cover’s alt text, or under a picture’s alt text on a page.</p></article><article class="f"><h3>Search title and description</h3><p>Suggest title and description in the SEO check, next to the search result as Google shows it.</p></article><article class="f"><h3>A translation draft</h3><p>Draft translation under a region in Post settings, for a page in another of the site’s languages.</p></article><article class="f"><h3>A promotion summary</h3><p>Summarize changes beside a promotion’s reason: what moving staging to production changes, in plain words.</p></article><article class="f"><h3>Better words for a selection</h3><p>Select words on the page, then Improve with AI in the format bar: rewrite, shorten, fix the spelling and grammar, or change the tone. The change shows beside the words; accept, edit or reject it.</p></article></div>
           <ul class="ticks">
             <li>Bring your own key: the person who runs the server sets <code>MARKSTAGE_AI_KEY</code> or a key file. Without one, everything else works and the editor says why suggestions are off.</li>
             <li>Anthropic’s models answer today; the model and the limits per minute and per day are set on the server.</li>
@@ -144,7 +144,7 @@
       <section class="sec" id="coming" aria-labelledby="coming-title">
         <div class="wrap">
           <div class="sec-head"><p class="kick">Coming</p><h2 id="coming-title">What’s next for AI</h2><p class="lede">From the roadmap. Nothing here ships today; the badge says when it is planned.</p></div>
-          <div class="grid3"><article class="f"><p><a class="soon in-progress" href="../roadmap/#ai-writing" data-item="ai-writing" title="AI writing help on the page">Coming in 0.4.0</a></p><h3>AI writing help on the page</h3><p>Rewrite, shorten or fix the grammar of a selection; the writer accepts or rejects each change, and nothing saves by itself.</p></article><article class="f"><p><a class="soon in-progress" href="../roadmap/#ai-providers" data-item="ai-providers" title="More AI providers">Coming in 0.4.0</a></p><h3>More AI providers</h3><p>Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.</p></article><article class="f"><p><a class="soon in-progress" href="../roadmap/#mcp-publish" data-item="mcp-publish" title="An MCP publish tool">Coming in 0.4.0</a></p><h3>An MCP publish tool</h3><p>An AI agent may ask to publish, and the site's publish rules decide, as they do for a person.</p></article><article class="f"><p><a class="soon planned" href="../roadmap/#ai-translate" data-item="ai-translate" title="AI translation of a whole site">Planned</a></p><h3>AI translation of a whole site</h3><p>Draft every page of a site in another language in one run, for people to review.</p></article><article class="f"><p><a class="soon planned" href="../roadmap/#ai-seo" data-item="ai-seo" title="AI link and SEO suggestions">Planned</a></p><h3>AI link and SEO suggestions</h3><p>Suggested internal links and fixes for search problems, for a person to accept.</p></article></div>
+          <div class="grid3"><article class="f"><p><a class="soon planned" href="../roadmap/#ai-translate" data-item="ai-translate" title="AI translation of a whole site">Planned</a></p><h3>AI translation of a whole site</h3><p>Draft every page of a site in another language in one run, for people to review.</p></article><article class="f"><p><a class="soon planned" href="../roadmap/#ai-seo" data-item="ai-seo" title="AI link and SEO suggestions">Planned</a></p><h3>AI link and SEO suggestions</h3><p>Suggested internal links and fixes for search problems, for a person to accept.</p></article></div>
           <p><a href="../roadmap/">The whole roadmap</a> · Coming in 0.4.0 and Planned mark what is being built and what comes later.</p>
         </div>
       </section>

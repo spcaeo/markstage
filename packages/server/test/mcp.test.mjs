@@ -124,7 +124,7 @@ describe('the MCP server', () => {
     const draftOnly = await ed.post('/me/tokens', { name: 'Draft', scopes: ['mcp:draft'] });
     assert.deepEqual(draftOnly.json.token.scopes, ['mcp:read', 'mcp:draft']);
     const list = (await ed.get('/me/tokens')).json;
-    assert.deepEqual([list.scopes, list.mcpScopes, list.groups.mcp.reaches], [['env:read', 'env:promote'], ['mcp:read', 'mcp:draft'], '/mcp']);
+    assert.deepEqual([list.scopes, list.mcpScopes, list.groups.mcp.reaches], [['env:read', 'env:promote'], ['mcp:read', 'mcp:draft', 'mcp:publish'], '/mcp']);
     const viaToken = await fetch(`${srv.base}/markstage/api/me/tokens`, { headers: { Authorization: `Bearer ${agent}` } });
     assert.equal(viaToken.status, 403, 'a token never lists or makes tokens');
     // revoked mid-session: the next call is refused

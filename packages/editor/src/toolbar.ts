@@ -1,5 +1,6 @@
-// Floating tools on the canvas: the format bar over selected text (bold, italic, link, H2, H3, lists, code), the
-// link card when the cursor is in a link (open, copy, edit, remove), and the table menu while editing a table.
+// Floating tools on the canvas: the format bar over selected text (bold, italic, link, H2, H3, lists, code, and
+// "Improve with AI" when the server offers it: ai/rewrite.ts), the link card when the cursor is in a link (open,
+// copy, edit, remove), and the table menu while editing a table. Alt+F10 reaches the format bar from the keyboard.
 import type { Editor } from '@tiptap/core';
 import { NodeSelection, TextSelection } from '@tiptap/pm/state';
 import { copyable, siteUrl } from './copy';
@@ -193,6 +194,29 @@ export class Toolbar {
       this.tableMenu.style.left = `${r.right - 190}px`;
     });
 
+    // the keyboard: Alt+F10 in the text moves to the format bar (the usual key for a toolbar), the arrows move along
+    // it, and Esc goes back to the words
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'F10' || !e.altKey || this.bar.hidden || !this.getEditor()?.view.hasFocus()) return;
+      e.preventDefault();
+      // the canvas's blur redraws the bar on its way out: it must not hide the bar the focus is going to
+      this.toBar = true;
+      this.barButtons()[0]?.focus();
+      this.toBar = false;
+    });
+    this.bar.addEventListener('keydown', (e) => {
+      const list = this.barButtons();
+      const at = list.indexOf(document.activeElement as HTMLButtonElement);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        list[(at + (e.key === 'ArrowRight' ? 1 : list.length - 1)) % list.length]?.focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        this.getEditor()?.view.focus();
+      }
+    });
+    this.bar.addEventListener('focusout', () => setTimeout(() => this.update(), 0));
+
     document.body.append(this.bar, this.linkPop, this.linkCard, this.tableBtn, this.tableMenu);
     document.addEventListener('mousedown', (e) => {
       const t = e.target as Node;
@@ -201,6 +225,20 @@ export class Toolbar {
     });
     this.scroller.addEventListener('scroll', () => this.update(), { passive: true });
     window.addEventListener('resize', () => this.update());
+  }
+
+  /** the keyboard is moving to the bar (Alt+F10) */
+  private toBar = false;
+
+  /** The bar's buttons a person can reach now (a hidden one, such as a heading in a one-line box, is skipped). */
+  private barButtons(): HTMLButtonElement[] {
+    return [...this.bar.querySelectorAll<HTMLButtonElement>('button')].filter((b) => !b.hidden && !b.disabled);
+  }
+
+  /** One more tool at the end of the format bar (the writing help's "Improve with AI"); it shows and hides itself. */
+  addTool(el: HTMLElement): void {
+    this.bar.append(Object.assign(document.createElement('span'), { className: 'ms-bar__sep' }), el);
+    el.addEventListener('click', () => (this.bar.hidden = true));
   }
 
   hideAll(): void {
@@ -214,7 +252,8 @@ export class Toolbar {
     if (!editor) return this.hideAll();
     const { state, view } = editor;
     const sel = state.selection;
-    const focused = view.hasFocus();
+    // the bar keeps showing while the keyboard is on it (Alt+F10)
+    const focused = view.hasFocus() || this.toBar || this.bar.contains(document.activeElement);
     const box = this.scroller.getBoundingClientRect();
     const inView = (y: number) => y > box.top + 4 && y < box.bottom - 4;
 

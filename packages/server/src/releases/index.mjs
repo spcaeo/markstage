@@ -261,6 +261,10 @@ export function createReleases(app, entries) {
     routes,
     reserved: rs.reserved,
     tick: (at) => pub.tick(at),
+    /** The site's checks on what release `rid` holds now (the MCP server's publish_release asks first). */
+    checkNow: (rid) => pub.checkNow(rs.must(rid)),
+    /** Log a publish refused before it was asked of the rules (an agent's failed checks), as a refusal is logged. */
+    refused: (ctx, rid, detail) => audit.log(ctx, 'release.publish', { target: rid, ok: false, detail }),
     share,
     start() {
       timer = setInterval(() => void pub.tick().then(sweep).catch((e) => console.error('[markstage] releases:', e.message)), config.scheduler.intervalSeconds * 1000);

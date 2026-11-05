@@ -55,10 +55,10 @@ describe('AI suggestions with the stub provider', () => {
   test('GET /ai says it is on, and lists the kinds this person may ask for', async () => {
     const e = await ed.get('/ai');
     assert.equal(e.status, 200);
-    assert.deepEqual({ on: e.json.on, why: e.json.why, envVar: e.json.envVar, provider: e.json.provider, kinds: e.json.kinds }, { on: true, why: null, envVar: 'MARKSTAGE_AI_KEY', provider: 'stub', kinds: ['alt', 'seo', 'summary'] });
+    assert.deepEqual({ on: e.json.on, why: e.json.why, envVar: e.json.envVar, provider: e.json.provider, kinds: e.json.kinds }, { on: true, why: null, envVar: 'MARKSTAGE_AI_KEY', provider: 'stub', kinds: ['alt', 'seo', 'summary', 'rewrite'] });
     assert.deepEqual(e.json.limits, { perMinute: 600, perDay: 100_000 });
     // a one-locale site has nothing to translate into; a promotion summary is for editors and up
-    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo']);
+    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'rewrite']);
   });
 
   test('alt text for an image, by each way the site writes its address', async () => {
@@ -113,6 +113,34 @@ describe('AI suggestions with the stub provider', () => {
     const early = await suggest(ed, { kind: 'summary', plan: addPlan(srv.app, { files: false }) });
     assert.equal(early.status, 422);
     assert.equal(early.json.error, 'plan-not-ready');
+  });
+
+  test('rewrite: each mode on a selection, the readable rule, its size cap, one paragraph back for one', async () => {
+    const ask = (who, mode, text, id = 'hello-world') => suggest(who, { kind: 'rewrite', collection: 'posts', id, mode, text });
+    const cases = [
+      ['fix', 'I recieve alot of  mail from teh harbour.', 'I receive a lot of mail from the harbour.'],
+      ['shorten', 'We really just walked in order to see the boats.', 'We walked to see the boats.'],
+      ['rewrite', 'The boats came in.', 'The boats came in, put more plainly.'],
+      ['tone:formal', "We don't stop, it's early.", 'We do not stop, it is early.'],
+      ['tone:confident', 'I think maybe the harbour is busy.', 'the harbour is busy.'],
+      ['tone:friendly', 'The harbour opens at nine.', 'Good news: the harbour opens at nine.'],
+    ];
+    for (const [mode, text, want] of cases) {
+      const r = await ask(alice, mode, text);
+      assert.equal(r.status, 200, `${mode}: ${r.text}`);
+      assert.deepEqual([r.json.kind, r.json.suggestion], ['rewrite', { text: want }], mode);
+    }
+    // the readable rule: carol's own draft, not bob's
+    assert.equal((await ask(carol, 'fix', 'Carol writes.', 'carol-draft')).status, 200);
+    assert.equal((await ask(alice, 'fix', 'A draft.', 'bob-draft')).status, 404);
+    // a mode, a selection and the entry are needed; 4,000 characters at most
+    for (const bad of [{ mode: 'poem', text: 'x' }, { mode: 'tone:angry', text: 'x' }, { mode: 'fix', text: '   ' }, { mode: 'fix' }, { mode: 'fix', text: 7 }]) assert.equal((await suggest(alice, { kind: 'rewrite', collection: 'posts', id: 'hello-world', ...bad })).status, 422, JSON.stringify(bad));
+    assert.equal((await suggest(alice, { kind: 'rewrite', mode: 'fix', text: 'x' })).status, 422);
+    const big = await ask(alice, 'fix', 'y'.repeat(4001));
+    assert.deepEqual([big.status, big.json.field, big.json.max], [413, 'text', 4000]);
+    assert.equal((await ask(alice, 'fix', 'y'.repeat(4000))).status, 200);
+    const row = audits('ai.suggest').at(-1);
+    assert.deepEqual([row.target, JSON.parse(row.detail).kind], ['posts/hello-world', 'rewrite']);
   });
 
   test('sizes are capped, naming the field; a wrong kind or body is refused', async () => {

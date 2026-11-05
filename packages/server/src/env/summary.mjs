@@ -102,7 +102,8 @@ export async function summarize(config, plan, deps = {}) {
   const out = { status: 'facts', text: words, words, facts, ai: null };
   const ai = config.ai;
   // the test provider (AI suggestions' stub) words nothing: the facts stand
-  if (!ai || ai.provider !== 'anthropic') return out;
+  if (!ai || ai.provider === 'stub') return out;
+  if (ai.provider !== 'anthropic') return otherProvider(config, plan, facts, out, deps);
   const key = keyOf(ai, deps.env ?? process.env);
   if (!key) return { ...out, ai: { model: ai.model, why: 'no key is set (ai.keyFile or MARKSTAGE_AI_KEY)' } };
   const doFetch = deps.fetch ?? fetch;
@@ -125,4 +126,22 @@ export async function summarize(config, plan, deps = {}) {
   const check = numbersHold(text, facts);
   if (!check.ok) return { ...out, status: 'dropped', ai: { model: ai.model, dropped: true, why: `it stated numbers the facts do not have (${check.stray.slice(0, 5).join(', ')})` } };
   return { ...out, status: 'ai', text: text.slice(0, 2000), ai: { model: ai.model } };
+}
+
+/** The same summary through an OpenAI-compatible endpoint or Ollama (ai/provider.mjs), with the same checks. */
+async function otherProvider(config, plan, facts, out, deps) {
+  const { createProvider } = await import('../ai/provider.mjs');
+  const provider = createProvider(config, deps);
+  const s = provider.status();
+  const model = config.ai.model;
+  if (!s.on) return { ...out, ai: { model, why: s.reason === 'model' ? 'no model is named (ai.model)' : 'no key is set (ai.keyFile or MARKSTAGE_AI_KEY)' } };
+  let text;
+  try {
+    text = (await provider.complete({ system: PROMPT, content: [{ type: 'text', text: planInput(plan, facts) }] })).text;
+  } catch (e) {
+    return { ...out, ai: { model, why: `the model was not reached: ${e.message}` } };
+  }
+  const check = numbersHold(text, facts);
+  if (!check.ok) return { ...out, status: 'dropped', ai: { model, dropped: true, why: `it stated numbers the facts do not have (${check.stray.slice(0, 5).join(', ')})` } };
+  return { ...out, status: 'ai', text: text.slice(0, 2000), ai: { model } };
 }

@@ -187,7 +187,7 @@ function llmsTxt({ pages, alternatives }) {
 
 > ${NAME} is a self-hosted visual editor for Astro sites. Writers edit Markdown, MDX and JSON content on the site's real page design, and every save is a clean git diff of exactly what changed (with the Markstage server, a commit by the person who saved). No content database, no cloud. Source-available under the Elastic License 2.0, free to self-host (not open source). Made by Space-O Technologies.
 
-Tagline: ${TAGLINE} Writers edit with Notion-style blocks ("/" for any block, drag by the grip, ⌘K); AI agents draft through an MCP server and never publish (${SITE_URL}ai/). Status: pre-release, in active development. Requires Node.js 22.13 or newer and git.
+Tagline: ${TAGLINE} Writers edit with Notion-style blocks ("/" for any block, drag by the grip, ⌘K); AI agents draft through an MCP server and publish only when an owner allows it (${SITE_URL}ai/). Status: pre-release, in active development. Requires Node.js 22.13 or newer and git.
 
 - Source code: ${REPO_URL} (clone: ${CLONE_URL})
 - Licence: ${repoFile('LICENSE')}

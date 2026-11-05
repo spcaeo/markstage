@@ -22,6 +22,9 @@ export function trouble(err: unknown): AiTrouble {
   const e = err && typeof err === 'object' && 'status' in err ? (err as { status: number; code?: string; message: string; data?: Record<string, unknown> }) : null;
   const data = (e?.data ?? {}) as { envVar?: string; retryAfter?: number };
   if (e?.status === 503 || e?.code === 'ai-off') {
+    // off for another reason than the key (no model named for an OpenAI-compatible endpoint or Ollama): the server's
+    // own words say what the owner does, and there is no variable to set
+    if ((data as { reason?: string }).reason && !data.envVar && e?.message) return { state: 'off', words: e.message };
     const envVar = data.envVar || ENV_VAR;
     return { state: 'off', words: offWords(envVar), envVar };
   }

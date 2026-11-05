@@ -15,9 +15,10 @@ import { SHOTS, TOKENS_PORT, pw, skip } from './support.mjs';
 const BASE = `http://127.0.0.1:${TOKENS_PORT}`;
 const READ = 'Read the site: pages, articles, the Library and releases, as you see them';
 const DRAFT = 'Write drafts and put changes into a release for you to publish (it never publishes)';
+const PUBLISH = 'Ask to publish a release, as you (the site’s checks and publish rules still decide)';
 
 describe('Settings → Tokens: the command line’s and an AI assistant’s', { skip }, () => {
-  let fx, app, browser, ctx, page, ed;
+  let fx, app, browser, ctx, page, ed, olive;
   const params = () => Object.fromEntries(new URLSearchParams(new URL(page.url()).hash.split('?')[1] ?? ''));
   const shot = async (name) => SHOTS && page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
   const card = () => page.locator('section.ms-env-token');
@@ -50,7 +51,7 @@ describe('Settings → Tokens: the command line’s and an AI assistant’s', { 
     await app.listen(TOKENS_PORT, '127.0.0.1');
     app.backup.stop();
     // a server with an owner signs in (one with none asks for setup)
-    await addUser(app, { email: 'olive@example.test', name: 'Olive Owner', role: 'owner', password: `t-${crypto.randomBytes(12).toString('base64url')}` });
+    olive = await addUser(app, { email: 'olive@example.test', name: 'Olive Owner', role: 'owner', password: `t-${crypto.randomBytes(12).toString('base64url')}` });
     ed = await addUser(app, { email: 'edie@example.test', name: 'Edie Editor', role: 'editor', authorSlug: 'alice', password: `t-${crypto.randomBytes(12).toString('base64url')}` });
     browser = await pw.chromium.launch();
     ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
@@ -84,6 +85,7 @@ describe('Settings → Tokens: the command line’s and an AI assistant’s', { 
     const why = await box(READ).getAttribute('aria-describedby');
     assert.equal((await page.locator(`#${why}`).textContent()).trim(), 'Reading always comes with it.');
     assert.equal(await card().locator('label.ms-rule__box', { hasText: 'environments' }).count(), 0, 'no command line scope here');
+    assert.equal(await card().locator('label.ms-rule__box', { hasText: 'publish a release' }).count(), 0, 'an editor is not offered publishing');
     await shot('tokens-1-mcp-form');
     const secret = await make('Claude on my laptop');
     assert.deepEqual(scopesOf('Claude on my laptop'), ['mcp:read']);
@@ -140,5 +142,33 @@ describe('Settings → Tokens: the command line’s and an AI assistant’s', { 
     await page.goBack();
     await page.waitForURL((u) => !u.hash.includes('new='));
     assert.equal(await card().count(), 0);
+  });
+
+  test('an owner may let an assistant publish: never ticked, a plain warning beside it and on the made token; the server refuses an editor', async () => {
+    // the server refuses an editor's request too (test/mcp-publish.test.mjs); here the owner signs in
+    await ctx.clearCookies();
+    await page.goto(`${BASE}/markstage/#/sign-in?next=${encodeURIComponent('#/settings/tokens?new=mcp')}`);
+    await page.getByLabel('Email').fill(olive.email);
+    await page.getByLabel('Password', { exact: true }).fill(olive.password);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.waitForURL((u) => u.hash.startsWith('#/settings/tokens'));
+    await card().waitFor();
+    assert.equal(await box(PUBLISH).isChecked(), false, 'never ticked for you');
+    // the warning, on screen and read with the box
+    const warn = await box(PUBLISH).getAttribute('aria-describedby');
+    const words = (await page.locator(`#${warn}`).textContent()).trim();
+    assert.match(words, /^It can publish\. With this, the assistant can put releases live on your site without you pressing Publish\./);
+    assert.match(words, /revoke it when you are done\.$/);
+    await card().getByLabel('Name').fill('Release bot');
+    await box(PUBLISH).check();
+    await card().locator('.ms-env-token__warn').scrollIntoViewIfNeeded();
+    await shot('tokens-4-mcp-publish-warning');
+    await card().getByRole('button', { name: 'Make the token' }).click();
+    await card().locator('.ms-adm-secret').waitFor();
+    assert.deepEqual(scopesOf('Release bot'), ['mcp:read', 'mcp:publish']);
+    assert.match(await card().locator('.ms-env-token__warn').first().textContent(), /^This token can publish\. With it, the assistant can put releases live/);
+    await card().getByRole('button', { name: 'Done' }).click();
+    const row = page.locator('tbody tr', { hasText: 'Release bot' });
+    assert.equal((await row.locator('td').nth(2).textContent()).trim(), PUBLISH);
   });
 });

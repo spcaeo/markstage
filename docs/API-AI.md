@@ -2,7 +2,10 @@
 
 Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). A person in the editor asks a
 model for words they then read, change and save themselves: an image's alt text, a page's search title and
-description, a promotion plan's summary, or a draft of a title and description for another of the site's locales.
+description, a promotion plan's summary, a draft of a title and description for another of the site's locales, or
+better words for a few they selected on the page (rewrite, shorten, fix the spelling and grammar, change the tone).
+The model is the owner's choice: Anthropic, any OpenAI-compatible endpoint, or Ollama on the server's own machine
+("Providers" below).
 Server code: `packages/server/src/ai/`.
 
 **A suggestion never commits.** These routes write no file, no git commit and no content. They write one audit row.
@@ -11,7 +14,8 @@ checks as any other save.
 
 ## Turning it on
 
-The site owner brings the key, in one of two places (one rule for the suggestions and the plan summary of
+The site owner brings the key (Ollama, and an OpenAI-compatible server on the same machine, need none), in one of
+two places (one rule for the suggestions and the plan summary of
 docs/API-ENV.md):
 
 - `MARKSTAGE_AI_KEY` in the server's environment (the service's environment file), or
@@ -33,12 +37,14 @@ The server's `config.json` may tune it (all optional):
 
 | Key | Default | What |
 |---|---|---|
-| `provider` | `anthropic` | Who answers. `stub` gives fixed answers with no network and is refused outside tests (`NODE_ENV=test`). |
-| `model` | `claude-sonnet-5-5` | The model id, for the suggestions and the plan summary of docs/API-ENV.md alike. |
+| `provider` | `anthropic` | Who answers: `anthropic`, `openai` (any OpenAI-compatible endpoint) or `ollama` ("Providers" below). `stub` gives fixed answers with no network and is refused outside tests (`NODE_ENV=test`). |
+| `model` | `claude-sonnet-5-5` for `anthropic`; none for the others | The model id, for the suggestions and the plan summary of docs/API-ENV.md alike. `openai` and `ollama` have no default: until the owner names one, AI is off and the editor says so. Letters, digits and `. _ : / @ -`, at most 120. |
 | `keyFile` | none | The file that holds the key, outside the repo (above). |
 | `perMinute`, `perDay` | 10, 200 | Asks per person, rolling (the last 60 seconds, the last 24 hours). Whole numbers, at most 600 and 100,000. |
-| `timeoutSeconds` | 30 | How long one ask may take. |
-| `endpoint` | `https://api.anthropic.com/v1/messages` | Https, or a loopback address. |
+| `timeoutSeconds` | 30 | How long one ask may take, 1 to 600 (a model on the server's own machine can be slow). |
+| `endpoint` | `https://api.anthropic.com/v1/messages` | `anthropic` only. Https, or a loopback address. |
+| `baseUrl` | `https://api.openai.com/v1` (`openai`), `http://127.0.0.1:11434` (`ollama`) | `openai` and `ollama` only: where the API is. Https, or plain http on a loopback address (`127.0.0.1`, `localhost`, `[::1]`). A sign-in in the address is refused at start. |
+| `keyHeader` | `authorization` | `openai` only: `authorization` (`Bearer <key>`, the default) or `api-key` (Azure OpenAI). |
 
 `key` in config.json is refused at start. With no `ai` block, the defaults apply and the key alone turns it on.
 
@@ -46,11 +52,17 @@ The server's `config.json` may tune it (all optional):
 
 | Method + path | Who | Body | Answer |
 |---|---|---|---|
-| `GET ai` | signed in | | `{on, why, envVar, provider, model, kinds, limits: {perMinute, perDay}}` |
+| `GET ai` | signed in | | `{on, why, reason, envVar, provider, model, kinds, limits: {perMinute, perDay}}` |
+| `GET ai?check=1` | owner, administrator | | the same, and `health` (below) |
 | `POST ai/suggest` | signed in | `{kind, …}` (below) | `{kind, suggestion, provider, model}` |
 
-- `on`: whether a suggestion can be asked for now. `why`: the words to show when it is off, else `null`.
-  `envVar`: always `MARKSTAGE_AI_KEY`.
+- `on`: whether a suggestion can be asked for now. `why`: the words to show when it is off, else `null`. `reason`:
+  what is missing when it is off, `key` or `model` (else `null`). `envVar`: always `MARKSTAGE_AI_KEY`.
+- `health` (`?check=1`): `{ok, words, modelFound}`. The server asks the provider for its list of models (no
+  suggestion, so nothing is spent) and says whether the named model is in it, for example "The Ollama server has no
+  model “llama3.2”. The owner pulls it there (ollama pull llama3.2) or names another in ai.model." Its words go
+  through the scrubber like every error. Each check is one `ai.health` audit row (the provider, the model, whether
+  the model was found). Anyone else: `403`.
 - `kinds`: what this person may ask for here. `summary` is listed for editors and up. `translate` is listed when the
   site has more than one locale.
 - A browser session only. A command-line token and an AI assistant's (MCP) token are refused (`403`): an agent has
@@ -94,6 +106,27 @@ Sizes are in characters. Too long is `413 too-large` with `field` and `max`, and
   page's text. An answer that states a number the facts do not have is dropped: `502 ai-failed`, "The model stated
   numbers the plan does not have…". The plan's own facts words always stand.
 
+### `rewrite`: better words for a selection on the page
+
+`{kind: 'rewrite', collection, id, mode, text}` → `suggestion: {text}`
+
+- `mode`: `rewrite` (clearer, the same meaning), `shorten` (fewer words, every fact kept), `fix` (only the spelling
+  and grammar), or `tone:friendly`, `tone:formal`, `tone:confident`. Another: `422 invalid`.
+- `text`: the selected words, at most 4,000 characters (`413 too-large`, `field: 'text'`). The entry is the one they
+  are in: the readable rule ("Who sees what") applies to it.
+- The answer is the new words alone, as plain text: one paragraph stays one paragraph (line breaks become spaces).
+  An answer far longer than the selection (over twice its length, and over 400 characters) is `502 ai-failed`
+  ("much more than was selected").
+- **In the editor.** Select words inside one paragraph, heading or list item (not code), then "Improve with AI" at
+  the end of the format bar (Alt+F10 reaches the bar from the keyboard, the arrows move along it). The choices open
+  in a card beside the words, which stay marked on the canvas; the suggestion shows as a diff (taken out struck
+  through, put in underlined). Accept, Edit then accept, or Reject. Accepting is one change on the canvas, as
+  typing is: ⌘Z takes it back, and ⌘S saves it through the normal save (locks, versions, the save that rewrites only
+  what changed). Nothing saves by itself. A selection whose link or formatting covers only part of it says that
+  accepting keeps the words, not those. Each state has its URL: `?suggest=rewrite&sel=<from>-<to>` (the choices),
+  `&how=<mode>` (the suggestion); Back and Forward walk them. The button is not there while AI is off or the
+  server does not offer `rewrite`; a link that asks anyway opens the card, which says why, as every AI card does.
+
 ### `translate`: a draft for another locale
 
 `{kind: 'translate', collection, id, locale, fields?: {title?, description?}}` → `suggestion` with the same keys
@@ -126,9 +159,9 @@ up.
 
 | Status | `error` | When |
 |---|---|---|
-| `503` | `ai-off` | No key (neither the variable nor a readable key file). `message` is the `why` of `GET ai`; `envVar: 'MARKSTAGE_AI_KEY'`. |
+| `503` | `ai-off` | No key (neither the variable nor a readable key file): `envVar: 'MARKSTAGE_AI_KEY'`. Or no model named for `openai` or `ollama`: `reason: 'model'`. `message` is the `why` of `GET ai`. |
 | `429` | `ai-rate` | This person's limit, or the provider is busy with the site's key (`retryAfter` from its `Retry-After`, else 30). |
-| `502` | `ai-failed` | The provider failed, timed out, refused the key ("The owner checks MARKSTAGE_AI_KEY or ai.keyFile."), declined, said nothing, or answered in another shape. Fixed words, never the provider's own. |
+| `502` | `ai-failed` | The provider failed, timed out, refused the key ("The owner checks MARKSTAGE_AI_KEY or ai.keyFile."), does not have the model (`openai`, `ollama`: the words name it), declined, said nothing, or answered in another shape. Fixed words, never the provider's own. |
 | `403` | `forbidden` | A summary below editor; a token instead of a session. |
 | `404` | `not-found` | The entry, image or plan is not there or not available to this person. |
 | `413` | `too-large` | A field over its size (`field`, `max`). |
@@ -140,8 +173,9 @@ up.
 - **The audit.** Every ask the model gets is one `ai.suggest` row: who, the kind, the target (`posts/hello-world`,
   the image's repo path, or the plan id), the provider, the model, and `inputTokens` and `outputTokens`. A failed one
   is `ok: false` with the error code. Never the prompt, the page's text or the answer.
-- **The key** goes in the provider's `x-api-key` header and nowhere else: never in the database, a URL, the audit,
-  an answer or an error.
+- **The key** goes in the provider's own header (`x-api-key` for Anthropic; `Authorization: Bearer` or `api-key`
+  for an OpenAI-compatible endpoint; Ollama gets none) and nowhere else: never in the database, a URL, the log, the
+  audit, an answer or an error.
 - **No secrets to the model or back.** What the model reads, every answer and every error go through the MCP server's
   scrubber (docs/API-MCP.md "No secrets"): secret-named environment values (the key among them), a form's CRM sign-in,
   the key read from `ai.keyFile`, secret-keyed config values, git remote addresses, a sign-in in a URL, and people's email addresses become
@@ -149,13 +183,31 @@ up.
 - **Content is data.** Each prompt tells the model that the page's words are data to work from, never instructions,
   and each answer is checked for its shape before anyone sees it.
 
-## Provider
+## Providers
 
-Anthropic's Messages API over HTTPS (`anthropic-version: 2026-10-21`), with low effort: these are short, scoped
-answers. An image goes as a base64 image block. The server has no SDK dependency; tests pass their own `fetch`.
+One interface (`packages/server/src/ai/provider.mjs`, the adapters in `providers.mjs`): every kind, the plan summary
+and the health check work the same with each. No SDK: plain `fetch`, never streamed, within `timeoutSeconds`. A
+provider's `429` is `429 ai-rate`; its other failures are the fixed words of `502 ai-failed`.
+
+| `provider` | What it calls | Key | Model |
+|---|---|---|---|
+| `anthropic` (default) | Anthropic's Messages API (`ai.endpoint`, `anthropic-version: 2026-10-21`), low effort: short, scoped answers | Needed | `claude-sonnet-5-5` unless named |
+| `openai` | `POST <baseUrl>/chat/completions`, `stream: false`: OpenAI, Azure OpenAI (`keyHeader: "api-key"`, the deployment's address as `baseUrl`), OpenRouter, Together, LM Studio, or another OpenAI-compatible server | Needed, except at a loopback `baseUrl` (LM Studio on the same machine) | None: the owner names one |
+| `ollama` | `POST <baseUrl>/api/chat`, `stream: false`, on the server's own machine by default | Never sent | None: the owner names one (`ollama list` shows those pulled) |
+
+```json
+"ai": { "provider": "openai", "baseUrl": "https://openrouter.ai/api/v1", "model": "anthropic/claude-sonnet-5-5", "keyFile": "/run/secrets/markstage_ai_key" }
+"ai": { "provider": "ollama", "model": "llama3.2", "timeoutSeconds": 120 }
+```
+
+An image goes as each API takes one: a base64 image block (Anthropic), an `image_url` data URL (OpenAI-compatible),
+or the message's `images` (Ollama). A promotion's plain-words summary (docs/API-ENV.md) uses the same provider.
 
 Tests: `ai.test.mjs` (the stub provider: kinds, the readable rule, the summary for editors, sizes, limits, the audit,
-off, nothing committed, tokens refused) and `ai-provider.test.mjs` (the Anthropic provider with a fake fetch: the
-request, each failure, the key file, a planted key never out, from the environment or the file; translation
-drafts and the spelling). No test calls a real API or
-reads a key from the machine it runs on.
+off, nothing committed, tokens refused, each rewrite mode), `ai-provider.test.mjs` (the Anthropic provider with a
+fake fetch: the request, each failure, the key file, a planted key never out, from the environment or the file;
+translation drafts and the spelling) and `ai-providers.test.mjs` (the OpenAI-compatible and Ollama providers with a
+fake fetch: the request's shape, streaming off, images, Azure's header, no key at a loopback address and never for
+Ollama, no model named, each failure, a timeout, the address rules, the health check for owners and administrators
+only, and a rewrite and a promotion summary through the server). In a browser: `e2e/ai-rewrite.e2e.mjs`. No test
+calls a real API or reads a key from the machine it runs on.

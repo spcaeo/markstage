@@ -6,7 +6,7 @@
 import '../styles/ai.css';
 import { copyable } from '../copy';
 import { ic } from '../icons';
-import { aiInfo, offWords, suggest, trouble, type AiTrouble, type SuggestBody, type Suggestion } from './api';
+import { aiInfo, offTrouble, suggest, trouble, type AiTrouble, type SuggestBody, type Suggestion } from './api';
 
 export interface SuggestField {
   /** the suggestion's key: alt, title, description, text */
@@ -123,7 +123,7 @@ export function suggestCard(spec: CardSpec): Card {
     body.replaceChildren(busy);
     const info = await aiInfo();
     if (!alive || n !== asked) return;
-    if (!info.on) return void drawTrouble({ state: 'off', words: offWords(info.envVar), envVar: info.envVar });
+    if (!info.on) return void drawTrouble(offTrouble(info));
     try {
       const s = await suggest(spec.body());
       if (!alive || n !== asked) return;

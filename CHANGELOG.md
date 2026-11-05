@@ -32,6 +32,26 @@ docs/RELEASES.md says how a release is made.
 - `deploy/compose.yaml` runs a published image with `MARKSTAGE_IMAGE`, keeps the site's Linux packages in a volume,
   and takes the address from `MARKSTAGE_PUBLIC_ORIGIN` when it is set.
 
+### AI writing help, more AI providers and an MCP publish tool
+
+- Writing help on the page: select words in one paragraph, heading or list item, then "Improve with AI" in the
+  format bar (Alt+F10 reaches it from the keyboard). Rewrite, Shorten, Fix spelling and grammar, or Change tone
+  (friendly, formal, confident). The suggestion shows beside the words as a diff; Accept, Edit then accept, or
+  Reject. Accepting is one change you can undo with ⌘Z, and nothing saves by itself. Each step has its URL. The
+  server's new suggestion kind is `rewrite`, with the same rights, sizes, limits and audit as the others.
+  docs/API-AI.md.
+- More AI providers: `ai.provider` may be `openai`, for any OpenAI-compatible endpoint (OpenAI, Azure OpenAI with
+  `keyHeader: "api-key"`, OpenRouter, Together, LM Studio) at `ai.baseUrl`, or `ollama` (http://127.0.0.1:11434 by
+  default, no key). Https or a loopback address only. They have no default model: until the owner names one in
+  `ai.model`, AI is off and the editor says so. Anthropic stays the default.
+- `GET ai?check=1`, for owners and administrators: asks the provider for its models and says whether the named one
+  is there, audited as `ai.health`. `GET ai` now gives `reason` (`key` or `model`) when AI is off.
+- An MCP publish tool, `publish_release`, for a token with the new `mcp:publish` scope. Only an owner or
+  administrator can make such a token, and the Tokens screen warns plainly beside the box and on the made token. The
+  site's checks run first and a failed one refuses it; then the person's own publish route decides (their role now,
+  the promotion rules, the publish rules, the version). Each publish is one commit named "published by an AI agent
+  for <person>, via MCP: <token>", audited with `via: 'mcp'`, at most 5 an hour per token. docs/API-MCP.md.
+
 ### Fixed
 
 - With the drawer folded to its rail, the top bar at 1280 to 1440 pixels wide with unsaved changes no longer

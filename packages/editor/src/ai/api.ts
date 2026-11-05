@@ -1,18 +1,23 @@
-// AI suggestions (docs/API.md "AI suggestions"): `GET ai` says whether they are on (and, when off, the env var that
-// turns them on: its name only, never a value); `POST ai/suggest {kind, …}` answers one suggestion. Nothing is
-// written by the server: the writer accepts a suggestion, and it goes through the editor's own save path.
+// AI suggestions (docs/API.md "AI suggestions"): `GET ai` says whether they are on (and, when off, why: the env var
+// that turns them on, its name only and never a value, or the server's own words when something else is missing,
+// such as a model to name); `POST ai/suggest {kind, …}` answers one suggestion. Nothing is written by the server:
+// the writer accepts a suggestion, and it goes through the editor's own save path.
 import { request } from '../api';
+import type { RewriteMode } from '../router';
 import { ENV_VAR, offWords, trouble as words, type AiTrouble } from './words';
 
 export { offWords, type AiTrouble };
 
-export type AiKind = 'alt' | 'seo' | 'summary' | 'translate';
+export type AiKind = 'alt' | 'seo' | 'summary' | 'translate' | 'rewrite';
 
 export interface AiInfo {
   on: boolean;
   /** the environment variable that holds the key (its name) */
   envVar: string;
   kinds: AiKind[];
+  /** off: what is missing ('key', or 'model' for a provider with no default model), and the server's words */
+  reason?: 'key' | 'model' | null;
+  why?: string | null;
 }
 
 /** What the suggestion is about, by kind (the server reads the rest itself). */
@@ -20,7 +25,8 @@ export type SuggestBody =
   | { kind: 'alt'; image: string; collection?: string; id?: string }
   | { kind: 'seo'; collection: string; id: string; title?: string; text?: string }
   | { kind: 'summary'; plan: string }
-  | { kind: 'translate'; collection: string; id: string; locale: string; fields: Record<string, string> };
+  | { kind: 'translate'; collection: string; id: string; locale: string; fields: Record<string, string> }
+  | { kind: 'rewrite'; collection: string; id: string; mode: RewriteMode; text: string };
 
 /** The suggested text, by field: alt, title and description, text. */
 export type Suggestion = Record<string, string>;
@@ -31,13 +37,16 @@ let info: Promise<AiInfo> | null = null;
  *  failure is not remembered, and asking says what it is. */
 export function aiInfo(): Promise<AiInfo> {
   info ??= request<Partial<AiInfo>>('ai')
-    .then((r) => ({ on: !!r.on, envVar: r.envVar || ENV_VAR, kinds: r.kinds ?? [] }))
+    .then((r) => ({ on: !!r.on, envVar: r.envVar || ENV_VAR, kinds: r.kinds ?? [], reason: r.reason ?? null, why: r.why ?? null }))
     .catch((err: { status?: number }) => {
       if (err?.status !== 404) info = null;
       return { on: err?.status !== 404, envVar: ENV_VAR, kinds: [] };
     });
   return info;
 }
+
+/** Why suggestions are off, in plain words: the variable to set, or the server's own reason. */
+export const offTrouble = (i: AiInfo): AiTrouble => (i.reason && i.reason !== 'key' && i.why ? { state: 'off', words: i.why } : { state: 'off', words: offWords(i.envVar), envVar: i.envVar });
 
 /** One suggestion, and the model that wrote it. */
 export async function suggest(body: SuggestBody): Promise<{ suggestion: Suggestion; model: string | null }> {
@@ -48,6 +57,6 @@ export async function suggest(body: SuggestBody): Promise<{ suggestion: Suggesti
 /** A refusal or failure of ai/suggest, in plain words; an "off" answer is remembered. */
 export function trouble(err: unknown): AiTrouble {
   const t = words(err);
-  if (t.state === 'off') info = Promise.resolve({ on: false, envVar: t.envVar!, kinds: [] });
+  if (t.state === 'off') info = Promise.resolve(t.envVar ? { on: false, envVar: t.envVar, kinds: [] } : { on: false, envVar: ENV_VAR, kinds: [], reason: 'model', why: t.words });
   return t;
 }

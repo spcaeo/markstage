@@ -72,7 +72,7 @@ export const DOC_GROUPS = [
     docs: [
       { id: 'api', file: 'API.md', title: 'Markstage API (contract)', seo: 'Markstage API Reference: Content, Media and Users', summary: 'The HTTP API the Markstage editor and server share: sign-in, collections and entries, saves, publishing, media, users, revisions and the error shapes.' },
       { id: 'mdx', file: 'MDX.md', title: 'Editing MDX', seo: 'Edit MDX in Markstage: Words on the Page, Code Kept', summary: 'How Markstage edits MDX: words typed on the page, components as cards with simple settings, and imports, exports and code kept as written.' },
-      { id: 'api-mcp', file: 'API-MCP.md', title: 'The MCP server: AI agents', seo: 'Markstage MCP Server: Let AI Agents Draft Content', summary: 'Connect an AI agent to Markstage over the Model Context Protocol: it reads the site and drafts changes as the person whose token it holds, and never publishes.' },
+      { id: 'api-mcp', file: 'API-MCP.md', title: 'The MCP server: AI agents', seo: 'Markstage MCP Server: Let AI Agents Draft Content', summary: 'Connect an AI agent to Markstage over MCP: it reads the site and drafts as the person whose token it holds, and publishes only if an owner allows it.' },
       { id: 'api-ai', file: 'API-AI.md', title: 'AI suggestions', seo: 'AI Suggestions in Markstage: Alt Text and SEO Titles', summary: 'Ask a model for words you then read, change and save: image alt text, search titles and descriptions, summaries, and drafts for other locales.' },
       { id: 'api-library', file: 'API-LIBRARY.md', title: 'The Library', seo: 'Markstage Library: Templates, Sections and Snippets', summary: 'One store of parts to use again: page templates, sections and snippets, synced or copied, kept as files in the repo, imported from WordPress or a web page.' },
       { id: 'api-releases', file: 'API-RELEASES.md', title: 'Releases and share links', seo: 'Markstage Releases: Go Live Together, Share Previews', summary: 'Put several changes live together, now or at a set time, with approvals and rules, and share a preview of a release or a draft with people who have no account.' },
@@ -149,6 +149,6 @@ export const FAQ = [
   },
   {
     q: 'Can an AI agent edit my site through Markstage?',
-    a: 'An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never publishes, deletes or promotes anything on its own: a person reviews its release and puts it live.',
+    a: 'An agent that speaks the Model Context Protocol can read the site and draft changes as the person whose token it holds. It never deletes or promotes anything, and by default a person reviews its release and puts it live. An owner or administrator may allow an agent to publish; the site’s checks and publish rules still decide.',
   },
 ];

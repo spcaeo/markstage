@@ -247,7 +247,7 @@ export interface TokenGroup {
   scopes: string[];
   reaches: string;
 }
-export const tokens = () => request<{ tokens: Token[]; scopes: string[]; mcpScopes: string[]; groups: { cli: TokenGroup; mcp: TokenGroup }; maxDays: number }>('me/tokens');
+export const tokens = () => request<{ tokens: Token[]; scopes: string[]; mcpScopes: string[]; groups: { cli: TokenGroup; mcp: TokenGroup }; maxDays: number; canMcpPublish?: boolean }>('me/tokens');
 export const makeToken = (body: { name: string; scopes: string[]; days: number }) => request<{ token: Token; secret: string }>('me/tokens', json('POST', body));
 export const revokeToken = (id: string) => request<{ token: Token }>(`me/tokens/${enc(id)}`, json('DELETE'));
 

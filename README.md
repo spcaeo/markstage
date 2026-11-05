@@ -77,12 +77,22 @@ AI that drafts, people who publish. Both ship today and come with the free self-
 your own AI key.
 
 - **An MCP server.** Claude or any MCP client reads the site and drafts changes as the person whose token it holds:
-  the same role, locks and checks. It never publishes, deletes, moves or promotes anything; changes to live pages
-  go into a release a person reviews. Local clients connect through the `markstage mcp` relay
+  the same role, locks and checks. It never deletes, moves or promotes anything, and by default it never publishes;
+  changes to live pages go into a release a person reviews. Local clients connect through the `markstage mcp` relay
   ([docs/API-MCP.md](docs/API-MCP.md)).
+- **An MCP publish tool, only when you allow it.** An owner or administrator may give an agent a token with
+  `mcp:publish` (the Tokens screen warns plainly). The agent may then ask to publish a release: the site's checks
+  run first and a failed one stops it, then the publish rules and roles decide as they would for that person. Every
+  such publish is audited and its commit names the agent and the person; at most 5 an hour per token.
 - **AI suggestions in the editor.** Alt text, a search title and description, a translation draft, and a summary
   of a promotion, each next to the value it is for. Nothing changes until a person accepts it
   ([docs/API-AI.md](docs/API-AI.md)).
+- **Writing help on the page.** Select a few words, then "Improve with AI" in the format bar: Rewrite, Shorten, Fix
+  spelling and grammar, or Change tone (friendly, formal, confident). The suggestion shows beside the words as a
+  diff; accept, edit or reject it. Accepting is one change you can undo, and nothing saves by itself.
+- **Your choice of model.** Anthropic (the default), any OpenAI-compatible endpoint (OpenAI, Azure OpenAI,
+  OpenRouter, Together, LM Studio) or Ollama on your own machine, with no key. An owner can check the connection
+  and that the model is there ([docs/API-AI.md](docs/API-AI.md), "Providers").
 - **Coming next:** see the AI items on the [roadmap](#roadmap) and on
   [the AI page](https://spcaeo.github.io/markstage/ai/).
 
@@ -236,7 +246,7 @@ links to the doc that explains it. Every operational task end to end: [docs/OPER
 - **Team, releases and publishing** (13, [on the site](https://spcaeo.github.io/markstage/features/#team)): A publish sheet that checks; Releases; Share links; Local, staging, production; “Edit this page” on the live site; Every save is a commit in your name; Roles, as WordPress names them; Custom roles; Single sign-on and two-factor; Locks; See who else is editing; Forms in your own inbox; Webhooks and imports.
 - **SEO and site health** (8, [on the site](https://spcaeo.github.io/markstage/features/#seo)): Search checks while you write; Search and social previews; See it on a phone or a tablet; Link suggestions both ways; Link health; Topics and a topic map; Redirects that follow a move; Site check-up.
 - **Safety and history** (7, [on the site](https://spcaeo.github.io/markstage/features/#safety)): A save is a clean diff; Never lose typing; A three-way merge; History of every save; Trash, backups and rollback; An audit log; Previews kept apart.
-- **AI and MCP** (6, [on the site](https://spcaeo.github.io/markstage/features/#ai)): An MCP server for AI agents; The markstage mcp relay; Alt text suggestions; Search title and description; Translation drafts; A promotion summary.
+- **AI and MCP** (9, [on the site](https://spcaeo.github.io/markstage/features/#ai)): An MCP server for AI agents; The markstage mcp relay; Publishing by an agent, only if you allow it; Writing help on a selection; Alt text suggestions; Search title and description; Translation drafts; A promotion summary; Your choice of AI provider.
 
 ## See it
 
@@ -578,24 +588,23 @@ Markstage is **pre-release** (0.x): a minor version may still change how things 
 [roadmap page](https://spcaeo.github.io/markstage/roadmap/) and the "Coming in 0.4.0" badges on the comparison.
 No dates beyond "0.4.0" and "later".
 
-AI that ships today: an MCP server, so an AI agent drafts as the person whose token it holds and never publishes
-([docs/API-MCP.md](docs/API-MCP.md)), and AI suggestions for alt text, search titles and descriptions, translation
-drafts and the promotion summary, which a person reads, changes and saves ([docs/API-AI.md](docs/API-AI.md)).
+AI that ships today: an MCP server, so an AI agent drafts as the person whose token it holds and publishes only
+when an owner allows it, through the site's own checks and rules ([docs/API-MCP.md](docs/API-MCP.md)), and AI
+suggestions for alt text, search titles and descriptions, translation drafts, the promotion summary and better words
+for a selection, which a person reads, changes and saves ([docs/API-AI.md](docs/API-AI.md)).
 
 New since 0.3.0, on main: MDX editing, with the words typed on the page and the code kept as written
 ([docs/MDX.md](docs/MDX.md)); a [live demo](https://spcaeo.github.io/markstage/demo/) of the editor on a sample blog,
 with no sign-up; a ready server image, built and smoke-tested by CI and published to the GitHub Container Registry
 with each release ([docs/DOCKER.md](docs/DOCKER.md)); and a starter site, an Astro blog with Markstage set up, to start
-a new site from ([docs/STARTER.md](docs/STARTER.md)).
+a new site from ([docs/STARTER.md](docs/STARTER.md)); AI writing help on the page, to rewrite, shorten, fix or change the
+tone of a selection, accepted or rejected by the writer ([docs/API-AI.md](docs/API-AI.md)); more AI providers, any
+OpenAI-compatible endpoint and Ollama beside Anthropic; and an MCP publish tool, which an owner or administrator
+allows, where the site's checks and publish rules decide as they do for a person ([docs/API-MCP.md](docs/API-MCP.md)).
 
 Being built now, for 0.4.0:
 
 - **Import from WordPress, Ghost and Prismic.** Posts, pages, media, authors and redirects.
-- **AI writing help on the page.** Rewrite, shorten or fix the grammar of a selection; the writer accepts or
-  rejects each change, and nothing saves by itself.
-- **More AI providers.** Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.
-- **An MCP publish tool.** An AI agent may ask to publish, and the site's publish rules decide, as they do for a
-  person.
 
 Planned, later:
 

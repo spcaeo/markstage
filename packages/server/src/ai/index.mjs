@@ -1,7 +1,10 @@
 // AI suggestions (docs/API-AI.md): alt text for an image, a search title and description, a promotion plan's
-// summary, and a translation draft of a title and description into one of the site's locales.
+// summary, a rewrite of a selection (rewrite, shorten, fix, a tone), and a translation draft of a title and
+// description into one of the site's locales. The model is Anthropic's, an OpenAI-compatible endpoint's or a local
+// Ollama's (provider.mjs).
 //
-//   GET  /ai           {on, why, envVar, provider, model, kinds, limits: {perMinute, perDay}}
+//   GET  /ai           {on, why, reason, envVar, provider, model, kinds, limits: {perMinute, perDay}}; ?check=1
+//                      (administrators) also {health: {ok, words, modelFound}}: one call to the provider's models list
 //   POST /ai/suggest   {kind, …} -> {kind, suggestion, provider, model}
 //
 // A suggestion never commits: it writes no file, no git and no content row, only its audit row. The person reads
@@ -33,9 +36,16 @@ export function createAi(app, deps = {}) {
 
   const kindsFor = (user) => KINDS.filter((k) => (k !== 'summary' || atLeast(user, 'editor')) && (k !== 'translate' || (app.config.locales?.list.length ?? 0) > 1));
 
-  function info(ctx) {
+  async function info(ctx) {
     const s = provider.status();
-    return { on: s.on, why: s.why, envVar: KEY_ENV, provider: s.provider, model: s.model, kinds: kindsFor(ctx.user), limits: provider.limits };
+    const out = { on: s.on, why: s.why, reason: s.reason, envVar: KEY_ENV, provider: s.provider, model: s.model, kinds: kindsFor(ctx.user), limits: provider.limits };
+    // the health check asks the provider itself: an administrator's, since it costs a call to the provider
+    if (ctx.query?.get?.('check') === '1') {
+      if (!atLeast(ctx.user, 'administrator')) throw new HttpError(403, 'forbidden', 'The AI health check is for owners and administrators.');
+      out.health = scrubber.scrub(await provider.health());
+      app.audit.log(ctx, 'ai.health', { ok: out.health.ok, detail: { provider: s.provider, model: s.model, modelFound: out.health.modelFound } });
+    }
+    return out;
   }
 
   /** This person's asks in the window (audit rows, plus any still running), and when the oldest leaves it. */
@@ -66,7 +76,7 @@ export function createAi(app, deps = {}) {
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new HttpError(422, 'invalid', 'Send {kind, …}.');
       if (!KINDS.includes(body.kind)) throw new HttpError(422, 'invalid', `kind must be one of ${KINDS.join(', ')}.`, { field: 'kind' });
       const s = provider.status();
-      if (!s.on) throw new HttpError(503, 'ai-off', s.why, { envVar: KEY_ENV });
+      if (!s.on) throw new HttpError(503, 'ai-off', s.why, s.reason === 'key' ? { envVar: KEY_ENV } : { reason: s.reason });
       const ask = await prepare(body.kind, body, ctx, suggestKit(app, ctx));
       checkLimits(ctx);
       return await run(ctx, body.kind, ask, s);

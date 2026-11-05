@@ -138,7 +138,7 @@ export function createReleasePublish(app, { rs, builds }) {
   const beforeFile = (r, it) => path.join(rs.dirOf(r.id), 'before', it.id);
 
   /** Write every file and commit them in one; records what was there before. Inside the repo lock. */
-  async function writeAll(r, list, who) {
+  async function writeAll(r, list, who, by = null) {
     fs.mkdirSync(path.join(rs.dirOf(r.id), 'before'), { recursive: true, mode: 0o700 });
     for (const it of list) {
       const was = store.readRelBytes(it.rel);
@@ -150,7 +150,7 @@ export function createReleasePublish(app, { rs, builds }) {
         db.prepare('INSERT OR IGNORE INTO media (id, path, filename, type, width, height, bytes, alt, uploaded_by, uploaded_at, derived_from, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)').run(m.mediaId, it.rel, m.filename, m.type, m.width, m.height, it.bytes, m.alt ?? '', it.added_by, nowIso(clock()));
       }
     }
-    return git.commit(list.map((i) => i.rel), `Release “${r.name}”`, author(who));
+    return git.commit(list.map((i) => i.rel), `Release “${r.name}”${by ? ` (${by})` : ''}`, author(who));
   }
 
   /** Put back what was there before, file by file, unless it changed since the release wrote it. */
@@ -186,6 +186,8 @@ export function createReleasePublish(app, { rs, builds }) {
     const pv = await preview(r);
     const buildTime = scheduled ? r.publish_at : pv.status === 'ready' && pv.fresh ? pv.buildTime : nowIso(clock());
     const entriesIn = list.filter((i) => i.kind === 'entry').map((it) => ({ ...entryOf(it), before: store.readRel(it.rel) }));
+    // an AI agent's publish (the MCP server's publish_release) is named as the agent and its person everywhere
+    const by = ctx?.via?.kind === 'mcp' ? `published by an AI agent for ${who.name}, via MCP: ${ctx.via.tokenName}` : null;
     const commit = await repoLock.run(async () => {
       const cur = rs.must(r.id);
       if (!OPEN.includes(cur.status)) throw new HttpError(409, 'not-open', `This release is ${cur.status}.`);
@@ -193,12 +195,12 @@ export function createReleasePublish(app, { rs, builds }) {
       if (cur.rev !== r.rev) throw conflict('This release changed while it was being published. Open it again.', { version: `r${cur.rev}` });
       const changed = changedOnSite(rs.items(r.id));
       if (changed.length) throw new HttpError(409, 'changed', `${changed.map((i) => `“${i.title}”`).join(', ')} changed on the site since ${changed.length === 1 ? 'it was' : 'they were'} added. Add ${changed.length === 1 ? 'it' : 'them'} again to take the latest, then publish.`, { items: changed.map((i) => i.id) });
-      const sha = await writeAll(cur, list, who);
+      const sha = await writeAll(cur, list, who, by);
       db.prepare("UPDATE releases SET status = 'publishing', commit_sha = ?, build_time = ?, published_by = ?, error = NULL, blocked = NULL, rev = rev + 1, updated_at = ? WHERE id = ?").run(sha, buildTime, who.id, nowIso(clock()), r.id);
       return sha;
     });
     const agent = viaMcp(list);
-    audit.log(ctx, 'release.publish', { target: r.id, detail: { commit, items: list.length, scheduled, buildTime, rule: d.rule?.id ?? null, ...(agent.length ? { mcpItems: agent } : {}) } });
+    audit.log(ctx, 'release.publish', { target: r.id, detail: { commit, items: list.length, scheduled, buildTime, rule: d.rule?.id ?? null, ...(by ? { by } : {}), ...(agent.length ? { mcpItems: agent } : {}) } });
     const job = jobs.enqueue({
       kind: 'release',
       user: scheduled ? null : who,
@@ -222,7 +224,7 @@ export function createReleasePublish(app, { rs, builds }) {
       onSuccess: async () => {
         db.prepare("UPDATE releases SET status = 'published', published_at = ?, error = NULL, rev = rev + 1, updated_at = ? WHERE id = ?").run(nowIso(clock()), nowIso(clock()), r.id);
         audit.log(scheduled ? { actorName: 'scheduler' } : ctx, 'release.published', { target: r.id, detail: { commit, buildTime } });
-        app.notices?.tell({ kind: 'release.published', level: 'info', text: `The release “${r.name}” is live: ${list.length} change${list.length === 1 ? '' : 's'}${scheduled ? `, as scheduled for ${utc(r.publish_at)}` : `, published by ${who.name}`}.`, link: `#/releases/${r.id}`, to: 'editors' });
+        app.notices?.tell({ kind: 'release.published', level: 'info', text: `The release “${r.name}” is live: ${list.length} change${list.length === 1 ? '' : 's'}${scheduled ? `, as scheduled for ${utc(r.publish_at)}` : by ? `, ${by}` : `, published by ${who.name}`}.`, link: `#/releases/${r.id}`, to: 'editors' });
         await builds.remove(target(r));
       },
       onFail: (step) =>
@@ -345,5 +347,16 @@ export function createReleasePublish(app, { rs, builds }) {
     db.prepare("UPDATE releases SET status = 'open', error = ? WHERE id = ?").run(`The server restarted during the publish (commit ${r.commit_sha ?? 'none'}). Check the site, then publish it again.`, r.id);
   }
 
-  return { decision, publish, rollback, schedule, unschedule, tick, buildPreview, preview, refuse, target };
+  /**
+   * The site's checks of every entry in the release, run now on what it holds (an AI agent's publish asks for them
+   * first: one that fails stops it). Kept for the rules, as a preview's checks are, while the release is unchanged.
+   */
+  async function checkNow(r) {
+    const content = rs.contentKey(r);
+    const checks = await runChecks(r, () => {});
+    if (rs.contentKey(rs.must(r.id)) === content) db.prepare('UPDATE releases SET checks = ? WHERE id = ?').run(JSON.stringify({ key: content, ...checks }), r.id);
+    return checks;
+  }
+
+  return { decision, checkNow, publish, rollback, schedule, unschedule, tick, buildPreview, preview, refuse, target };
 }

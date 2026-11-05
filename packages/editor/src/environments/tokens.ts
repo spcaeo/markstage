@@ -1,6 +1,7 @@
 // Settings → Tokens (#/settings/tokens): each person's own tokens, of two kinds. A command line token is for the
 // laptop's markstage (login, status, promote) and reaches the Environments routes only; an AI assistant's token is for
-// the MCP server (docs/API-MCP.md) and reaches it only: it reads the site as its person and, if allowed, drafts.
+// the MCP server (docs/API-MCP.md) and reaches it only: it reads the site as its person and, if allowed, drafts, and
+// (an owner's or administrator's token only, with a plain warning) asks to publish a release.
 // ?new=cli or ?new=mcp opens the form for that kind; the secret is shown once, right after it is made, and is never
 // put in the URL. Each kind's scopes come from the server (scopes, mcpScopes).
 import type { ScreenCtx } from '../host';
@@ -14,12 +15,16 @@ const SCOPE_WORDS: Record<string, string> = {
   'env:promote': 'Make and run plans (the rules still decide)',
   'mcp:read': 'Read the site: pages, articles, the Library and releases, as you see them',
   'mcp:draft': 'Write drafts and put changes into a release for you to publish (it never publishes)',
+  'mcp:publish': 'Ask to publish a release, as you (the site’s checks and publish rules still decide)',
 };
+/** The plain warning beside the publish scope (owners and administrators only see it): what it lets an agent do. */
+export const PUBLISH_WARNING =
+  'Careful: with this, the assistant can put releases live on your site without you pressing Publish. It is checked like you are: the site’s checks, the publish rules, approvals and freezes still decide, and a failed check stops it. Every publish names the assistant and you in the history. Give it only to an assistant you trust, for as few days as you need, and revoke it when you are done.';
 const KIND_WORDS: Record<Kind, string> = { cli: 'Command line', mcp: 'AI assistant (MCP)' };
 const STATUS_WORDS: Record<api.Token['status'], string> = { active: 'Active', expired: 'Expired', revoked: 'Revoked' };
 const kindOf = (t: api.Token): Kind => (t.scopes.some((s) => s.startsWith('mcp:')) ? 'mcp' : 'cli');
 /** what a token can do, in words: an AI assistant that may draft can read too, so it is said once */
-const canWords = (t: api.Token) => (t.scopes.includes('mcp:draft') ? [SCOPE_WORDS['mcp:draft']] : t.scopes.map((s) => SCOPE_WORDS[s] ?? s)).join('; ');
+const canWords = (t: api.Token) => t.scopes.filter((s) => !(s === 'mcp:read' && t.scopes.some((x) => x === 'mcp:draft' || x === 'mcp:publish'))).map((s) => SCOPE_WORDS[s] ?? s).join('; ');
 
 export function mountTokens(host: HTMLElement, ctx: ScreenCtx): { update(c: ScreenCtx): void } {
   let data: Awaited<ReturnType<typeof api.tokens>> | null = null;
@@ -40,7 +45,7 @@ export function mountTokens(host: HTMLElement, ctx: ScreenCtx): { update(c: Scre
     const d = data!;
     const asked = ctx.params().get('new');
     const open: Kind | null = asked === 'cli' || asked === 'mcp' ? asked : null;
-    const head = el('div.ms-env-rules__head', el('div', el('h2.ms-locks__title', 'Tokens'), el('p.ms-locks__lead', 'A token lets a program act as you, and it is for one of two things, never both. A command line token lets markstage on your laptop see the environments and promote. An AI assistant token lets an assistant read the site as you see it and, if you allow it, write drafts; a person still publishes. No token manages tokens.')));
+    const head = el('div.ms-env-rules__head', el('div', el('h2.ms-locks__title', 'Tokens'), el('p.ms-locks__lead', 'A token lets a program act as you, and it is for one of two things, never both. A command line token lets markstage on your laptop see the environments and promote. An AI assistant token lets an assistant read the site as you see it and, if you allow it, write drafts; a person still publishes, unless an owner or administrator lets the assistant ask to publish. No token manages tokens.')));
     const newButton = (k: Kind, label: string, primary: boolean) => button(label, () => ((made = null), ctx.go({ params: { new: k } }, true)), { kind: primary ? 'primary' : undefined, icon: 'plus' });
     const bar = el('div.ms-adm-row', el('span.ms-adm-grow'), open ? '' : newButton('mcp', 'New AI assistant token', false), open ? '' : newButton('cli', 'New command line token', true));
     const t = el('table.ms-adm-table', el('thead', el('tr', el('th', 'Name'), el('th', 'For'), el('th', 'Can'), el('th', 'Made'), el('th', 'Expires'), el('th', 'Last used'), el('th', 'Status'), el('th', ''))));
@@ -77,6 +82,7 @@ export function mountTokens(host: HTMLElement, ctx: ScreenCtx): { update(c: Scre
       return;
     }
     const config = JSON.stringify({ mcpServers: { markstage: { command: 'npx', args: ['markstage', 'mcp', address] } } });
+    if (made?.token.scopes.includes('mcp:publish')) card.append(el('p.ms-adm-outcome.is-bad.ms-env-token__warn', { role: 'note' }, el('strong', 'This token can publish. '), PUBLISH_WARNING.replace(/^Careful: with this, /, 'With it, ')));
     card.append(
       secretBox('Your new token', 'Copy it now: it is shown only this once. Give it to your AI assistant through the command below, never in a link or a chat.', [secret], 'token'),
       el('h3.ms-adm-h3', 'On the computer the assistant runs on'),
@@ -102,12 +108,16 @@ export function mountTokens(host: HTMLElement, ctx: ScreenCtx): { update(c: Scre
     const scopes = el('fieldset.ms-rule__boxes', el('legend.ms-field__label', 'It can'));
     if (kind === 'cli') for (const s of d.scopes) scopes.append(el('label.ms-rule__box', el('input', { type: 'checkbox', value: s, checked: true }), ` ${SCOPE_WORDS[s] ?? s}`));
     else
-      // reading always comes with it, and the screen says so; writing drafts is asked for
+      // reading always comes with it, and the screen says so; writing drafts is asked for; publishing is an owner's or
+      // administrator's to give, never ticked for them, with a plain warning beside it
       for (const s of d.mcpScopes ?? []) {
+        if (s === 'mcp:publish' && !d.canMcpPublish) continue;
         const always = s === 'mcp:read';
+        const publish = s === 'mcp:publish';
         const hid = `ms-token-scope-${s.replace(':', '-')}`;
-        scopes.append(el('label.ms-rule__box', el('input', { type: 'checkbox', value: s, checked: always, disabled: always, ...(always ? { 'aria-describedby': hid } : {}) }), ` ${SCOPE_WORDS[s] ?? s}`));
+        scopes.append(el('label.ms-rule__box', el('input', { type: 'checkbox', value: s, checked: always, disabled: always, ...(always || publish ? { 'aria-describedby': hid } : {}) }), ` ${SCOPE_WORDS[s] ?? s}`));
         if (always) scopes.append(el('p.ms-adm-sub', { id: hid }, 'Reading always comes with it.'));
+        if (publish) scopes.append(el('p.ms-adm-outcome.is-bad.ms-env-token__warn', { id: hid, role: 'note' }, el('strong', 'It can publish. '), PUBLISH_WARNING.replace(/^Careful: with this, /, 'With this, ')));
       }
     const err = el('p.ms-adm-form__err', { role: 'alert' });
     const go = button('Make the token', async () => {

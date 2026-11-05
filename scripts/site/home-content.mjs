@@ -32,7 +32,7 @@ export const PRISMIC_CARDS = [
   { k: 'release', title: 'Releases and share links', text: 'Bundle changes, preview them together with a link that expires, then publish them at once.', prismic: 'Releases (publish many changes at once)' },
   { k: 'edit', title: '“Edit this page” on the live site', text: 'Signed-in editors get an edit link on the page itself. Visitors see nothing of it.' },
   { k: 'roles', title: 'Custom roles', text: 'Decide who may edit, publish or delete, down to collections, locales and single fields.', prismic: 'Roles' },
-  { k: 'mcp', title: 'AI agents through MCP', text: 'Claude or any MCP client reads the site and drafts as you. It never publishes.', prismic: 'MCP server for AI agents' },
+  { k: 'mcp', title: 'AI agents through MCP', text: 'Claude or any MCP client reads the site and drafts as you. It publishes only if you allow it.', prismic: 'MCP server for AI agents' },
 ];
 
 /** The AI and MCP band: what ships today (the third card is the roadmap's AI items, read from site-content/roadmap.md). */

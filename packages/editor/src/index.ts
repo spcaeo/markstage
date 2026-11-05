@@ -188,6 +188,8 @@ export function start(opts: StartOptions): void {
   const shell: PageShell = new PageShell({ sheet, article: $('.ms-sheet > article'), headSlot: $('.ms-headslot'), canvas, dirty: () => isDirty(), redrawHead: () => void post.drawHead(), editor: getEditor, frontmatter: () => post.edits.merged(), scroller, pageUrl: (e) => (e.url ? previewUrl(e.collection, e.id, e.url).then((r) => r.url) : Promise.resolve(null)) });
   // AI suggestions, each at its URL, next to the value it is for (ai/editor.ts)
   const ai = aiEditor({ getEditor, entry: () => entry, title: () => post.title(), edits: post.edits, canvas, redraw: () => (post.drawer.sync(), seo.refresh(), panel.update()) });
+  // the writing help: "Improve with AI" at the end of the format bar (ai/rewrite.ts)
+  toolbar.addTool(ai.rewriteButton);
   panel.altAi = (pos) => ai.panelAlt(pos);
   post.drawer.ai = ai;
   post.drawer.linkHere = linkWordsOnCanvas(getEditor);

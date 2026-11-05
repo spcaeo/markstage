@@ -54,7 +54,7 @@ const MARKSTAGE_FACTS = [
   ['Framework', 'Astro today; a framework-free core'],
   ['Price', 'Free to self-host (Elastic License 2.0)'],
   ['Team features', 'Sign-in, roles, 2FA, single sign-on, releases, staging'],
-  ['AI today', 'An MCP server: AI agents draft as the person whose token they hold, and never publish. AI suggestions for alt text, search titles and descriptions, translation drafts and the promotion summary, which a person reads, changes and saves'],
+  ['AI today', 'An MCP server: AI agents draft as the person whose token they hold, and publish only when an owner allows it, through the site’s checks and rules. AI suggestions for alt text, search titles and descriptions, translation drafts, the promotion summary and better words for a selection, which a person reads, changes and saves. Anthropic, any OpenAI-compatible endpoint or Ollama'],
 ];
 
 const related = (alternatives, root, except = null) =>
@@ -137,7 +137,7 @@ ${kinds}
       ${breadcrumbs(trail, root)}
       <h1>Which is the best CMS for Astro? Markstage compared</h1>
       <p class="lead left">The best CMS for Astro depends on your team: who edits, where content lives and what you want to run. Here is where Markstage, a visual editor that keeps content in git, fits next to WordPress, Ghost, Prismic and other hosted and git-based CMSs, and where each one leads. Markstage is not affiliated with any of them.</p>
-${lead}${facts}${vs}${every}${comingSection(roadmap, root, { today: 'Shipping today: an MCP server, so an AI agent drafts as the person whose token it holds and never publishes, and AI suggestions for alt text, search titles and descriptions, translation drafts and the promotion summary.' })}${
+${lead}${facts}${vs}${every}${comingSection(roadmap, root, { today: 'Shipping today: an MCP server, so an AI agent drafts as the person whose token it holds and publishes only when an owner allows it, and AI suggestions for alt text, search titles and descriptions, translation drafts, the promotion summary and better words for a selection.' })}${
     rendered ? `      <section aria-labelledby="side-title">\n        <h2 id="side-title">How it fits</h2>\n${rendered.html}\n      </section>\n` : ''
   }${
     alternatives.length

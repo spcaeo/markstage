@@ -34,17 +34,17 @@ items:
   - id: ai-writing
     title: AI writing help on the page
     what: Rewrite, shorten or fix the grammar of a selection; the writer accepts or rejects each change, and nothing saves by itself.
-    status: in-progress
+    status: shipped
     rows: []
   - id: ai-providers
     title: More AI providers
     what: Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.
-    status: in-progress
+    status: shipped
     rows: []
   - id: mcp-publish
     title: An MCP publish tool
     what: An AI agent may ask to publish, and the site's publish rules decide, as they do for a person.
-    status: in-progress
+    status: shipped
     rows: []
   - id: npm
     title: Packages on npm

@@ -427,6 +427,13 @@ a.ms-envbadge:hover {
 .ms-env-token {
   margin-bottom: 14px;
 }
+/* the plain warning beside an AI assistant token's publish scope, and on the token once made */
+.ms-env-token__warn {
+  margin: 6px 0 4px 26px;
+  max-width: 68ch;
+  font-size: 13px;
+  line-height: 1.5;
+}
 .ms-adm-head__actions .ms-env-status {
   align-self: center;
   margin-left: 0;

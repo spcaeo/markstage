@@ -17,6 +17,7 @@ import { mayChange } from '../field-access';
 import { figureParts } from '../images';
 import { suggestCard, type Card, type CardSpec, type SuggestField } from './card';
 import type { SuggestBody } from './api';
+import { rewriteHelp } from './rewrite';
 
 export interface AiEditorDeps {
   getEditor(): Editor | null;
@@ -115,6 +116,9 @@ export function aiEditor(d: AiEditorDeps) {
     return null;
   }
 
+  // ---------- the writing help on a selection (rewrite.ts): its own card, beside the words ----------
+  const rewrite = rewriteHelp({ getEditor: d.getEditor, where: () => (loaded() ? where() : null), readOnly: () => readOnly(['body']) });
+
   // ---------- an image on the canvas ----------
   d.canvas.addEventListener('ms-ai-alt', (e) => {
     const pos = (e as CustomEvent<{ pos: number | undefined }>).detail.pos;
@@ -171,6 +175,7 @@ export function aiEditor(d: AiEditorDeps) {
       const s = router.route().suggest;
       const now = s ? keyOf(s) : '';
       canvasCard();
+      rewrite.follow();
       if (now === shown) return;
       shown = now;
       for (const [key, c] of cards) if (key !== now) (c.destroy(), cards.delete(key));
@@ -180,7 +185,11 @@ export function aiEditor(d: AiEditorDeps) {
     update(): void {
       const s = router.route().suggest;
       if (s && 'img' in s) canvasCard();
+      if (s?.kind === 'rewrite') rewrite.update();
     },
+
+    /** the format bar's "Improve with AI" (toolbar.ts addTool) */
+    rewriteButton: rewrite.button,
 
     /** for an image setting's picker (settings/fields.ts) */
     alt(key: string, image: () => string, label: string) {

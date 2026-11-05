@@ -1,8 +1,9 @@
 // Personal access tokens, with the rights of the person who made them and no more, of two kinds that never mix:
 // - the laptop CLI's (`markstage login|status|promote`): env:read, env:promote; they reach the Environments routes
 //   only (/env/...). GET routes need env:read; every write needs env:promote.
-// - an AI agent's (the MCP server, mcp/index.mjs; `markstage mcp`): mcp:read, mcp:draft; they reach /mcp only, and
-//   the tool decides what each scope lets through (mcp:draft needs mcp:read, which it brings).
+// - an AI agent's (the MCP server, mcp/index.mjs; `markstage mcp`): mcp:read, mcp:draft, mcp:publish; they reach /mcp
+//   only, and the tool decides what each scope lets through (mcp:draft and mcp:publish need mcp:read, which they
+//   bring). mcp:publish is an owner's or administrator's to give, and is never ticked for them.
 //
 //   GET    /me/tokens            the signed-in person's tokens (never the secret)
 //   POST   /me/tokens            {name, scopes: ['env:read', 'env:promote'] | ['mcp:read', 'mcp:draft'], days: 1..90}
@@ -13,9 +14,11 @@
 // stored as a SHA-256 hash. Wrong tokens are counted per address: 20 misses in 10 minutes and that address waits
 // (429). Each use records when and from where.
 import { HttpError, badRequest, forbidden, newId, newToken, notFound, nowIso, sha256 } from '../util.mjs';
+import { atLeast } from '../roles.mjs';
 
 export const SCOPES = ['env:read', 'env:promote'];
-export const MCP_SCOPES = ['mcp:read', 'mcp:draft'];
+// mcp:publish lets an agent ask to publish a release (mcp/publish.mjs): made by an owner or administrator only
+export const MCP_SCOPES = ['mcp:read', 'mcp:draft', 'mcp:publish'];
 /** The two kinds, with where each reaches: a token's scopes are all of one kind. */
 export const GROUPS = { cli: { scopes: SCOPES, reaches: '/env' }, mcp: { scopes: MCP_SCOPES, reaches: '/mcp' } };
 const groupOf = (scopes) => (scopes.every((s) => MCP_SCOPES.includes(s)) ? 'mcp' : 'cli');
@@ -97,7 +100,7 @@ export function createTokens(app) {
     router.add('GET', '/me/tokens', (ctx) => {
       mine(ctx);
       const now = clock();
-      return { tokens: db.prepare('SELECT * FROM api_tokens WHERE user_id = ? ORDER BY created_at DESC').all(ctx.user.id).map((r) => toPublic(r, now)), scopes: SCOPES, mcpScopes: MCP_SCOPES, groups: GROUPS, maxDays: MAX_DAYS };
+      return { tokens: db.prepare('SELECT * FROM api_tokens WHERE user_id = ? ORDER BY created_at DESC').all(ctx.user.id).map((r) => toPublic(r, now)), scopes: SCOPES, mcpScopes: MCP_SCOPES, groups: GROUPS, maxDays: MAX_DAYS, canMcpPublish: atLeast(ctx.user, 'administrator') };
     });
     router.add('POST', '/me/tokens', (ctx) => {
       mine(ctx);
@@ -107,8 +110,10 @@ export function createTokens(app) {
       let scopes = [...new Set(b.scopes ?? ['env:read'])];
       if (!scopes.length || scopes.some((s) => !SCOPES.includes(s) && !MCP_SCOPES.includes(s))) throw badRequest(`scopes is a list of ${SCOPES.join(', ')} (the command line), or of ${MCP_SCOPES.join(', ')} (an AI agent).`);
       if (scopes.some((s) => SCOPES.includes(s)) && scopes.some((s) => MCP_SCOPES.includes(s))) throw badRequest('A token is for the command line (env:…) or for an AI agent (mcp:…), not both: make two.');
-      // drafting reads first: mcp:draft brings mcp:read
-      if (scopes.includes('mcp:draft') && !scopes.includes('mcp:read')) scopes = ['mcp:read', ...scopes];
+      // publishing is asked for by name, and only an owner or administrator may give it to an agent
+      if (scopes.includes('mcp:publish') && !atLeast(ctx.user, 'administrator')) throw forbidden('Only an owner or administrator can make a token that lets an AI agent publish.');
+      // drafting and publishing read first: mcp:draft and mcp:publish bring mcp:read
+      if ((scopes.includes('mcp:draft') || scopes.includes('mcp:publish')) && !scopes.includes('mcp:read')) scopes = ['mcp:read', ...scopes];
       const days = b.days ?? 30;
       if (!Number.isInteger(days) || days < 1 || days > MAX_DAYS) throw badRequest(`days is 1 to ${MAX_DAYS}.`);
       const live = db.prepare('SELECT COUNT(*) AS n FROM api_tokens WHERE user_id = ? AND revoked_at IS NULL AND expires_at > ?').get(ctx.user.id, nowIso(clock())).n;

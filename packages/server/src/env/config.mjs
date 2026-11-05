@@ -3,7 +3,8 @@
 //
 //   environment: {name, branch, upstream, promoteTo, ribbon, remote, peers: {<env>: {branch, origin}},
 //                 previews: {branches, host}, mail: 'sink'|'actor', gate, keep: [purge|indexNow|webhook|slack|webhooks]}
-//   ai: {provider: 'anthropic', model, keyFile, endpoint?, perMinute?, perDay?}   the key: MARKSTAGE_AI_KEY or keyFile
+//   ai: {provider: 'anthropic'|'openai'|'ollama', model, keyFile, endpoint?|baseUrl?, keyHeader?, perMinute?, perDay?}
+//       the key: MARKSTAGE_AI_KEY or keyFile
 //       (outside the repo), for the promotion summary and the AI suggestions (ai/, docs/API-AI.md)
 //
 // A server with no `environment` is production on the branch it has checked out. Every other environment is safe
@@ -17,6 +18,9 @@ const BRANCH = /^(?!-)(?!.*\.\.)(?!.*\/\/)(?!.*@\{)[A-Za-z0-9._/-]{1,100}(?<![./
 // `webhooks`: the site's own webhooks (webhooks/), besides the alert `webhook`
 const KEEP = ['purge', 'indexNow', 'webhook', 'slack', 'webhooks'];
 const MODELS = /^claude-[a-z0-9.-]{1,60}$/;
+// another provider's model id: "gpt-5.1", "llama3.2:3b", "meta-llama/Llama-3.3-70B", "qwen@q4"
+const MODEL_ID = /^[A-Za-z0-9][A-Za-z0-9._:/@-]{0,119}$/;
+const LOOPBACK = ['127.0.0.1', 'localhost', '[::1]'];
 
 export const isBranch = (b) => typeof b === 'string' && BRANCH.test(b) && !b.endsWith('.lock');
 
@@ -100,31 +104,48 @@ export function quietOutsideProduction(environment, { purge, indexNow, notify })
  * `ai`: the wording of a promotion's summary, and the AI suggestions (docs/API-AI.md). The key is read when it is
  * used (MARKSTAGE_AI_KEY, else keyFile), so a missing key means the plain facts and suggestions
  * off, never an error at start. `provider: 'stub'` (fixed answers, no network) is for tests only (NODE_ENV=test).
+ * `openai` (any OpenAI-compatible endpoint) and `ollama` have no default model: without `model` they are off, and
+ * the editor says why. Every address is https, or a loopback one (a server on this machine), with no sign-in in it.
  */
 export function checkAi(a, { fail, contentRoot, isInside, env }) {
   if (a === undefined || a === null) return null;
   if (typeof a !== 'object') fail('ai must be { "provider": "anthropic", "model": "claude-sonnet-5-5" } (the key: MARKSTAGE_AI_KEY).');
   const provider = a.provider ?? 'anthropic';
-  if (!['anthropic', 'stub'].includes(provider)) fail('ai.provider can only be "anthropic".');
+  if (!['anthropic', 'openai', 'ollama', 'stub'].includes(provider)) fail('ai.provider is "anthropic", "openai" (any OpenAI-compatible endpoint) or "ollama".');
   if (provider === 'stub' && env.NODE_ENV !== 'test') fail('ai.provider "stub" gives made-up suggestions and is for tests only (NODE_ENV=test).');
-  const model = a.model ?? 'claude-sonnet-5-5';
-  if (!MODELS.test(model)) fail('ai.model must be a Claude model id such as "claude-sonnet-5-5".');
+  const claude = provider === 'anthropic' || provider === 'stub';
+  const model = a.model ?? (claude ? 'claude-sonnet-5-5' : null);
+  if (claude && !MODELS.test(model)) fail('ai.model must be a Claude model id such as "claude-sonnet-5-5".');
+  if (model !== null && (typeof model !== 'string' || !MODEL_ID.test(model))) fail('ai.model must be a model id: letters, digits and . _ : / @ - only, at most 120 characters.');
   if (a.keyFile !== undefined && a.keyFile !== null) {
     if (typeof a.keyFile !== 'string' || !path.isAbsolute(a.keyFile)) fail('ai.keyFile must be an absolute path.');
     if (isInside(contentRoot, path.resolve(a.keyFile))) fail('ai.keyFile must be outside the content repo: a file there can be committed, pushed and built into the site.');
   }
   if (a.key !== undefined) fail('ai takes keyFile (a file outside the repo) or MARKSTAGE_AI_KEY, never the key itself in config.json.');
-  let endpoint;
-  try {
-    endpoint = new URL(a.endpoint ?? 'https://api.anthropic.com/v1/messages');
-  } catch {
-    fail('ai.endpoint is not a URL.');
-  }
-  if (endpoint.protocol !== 'https:' && !['127.0.0.1', 'localhost', '[::1]'].includes(endpoint.hostname)) fail('ai.endpoint must be https.');
+  /** An address the server sends content to: https, or loopback; never with a sign-in in it. */
+  const address = (k, v) => {
+    let u;
+    try {
+      u = new URL(v);
+    } catch {
+      fail(`ai.${k} is not a URL.`);
+    }
+    if (u.protocol !== 'https:' && !(u.protocol === 'http:' && LOOPBACK.includes(u.hostname))) fail(`ai.${k} must be https, or an address on this machine (127.0.0.1, localhost).`);
+    if (u.username || u.password) fail(`ai.${k} must not hold a sign-in: the key goes in ai.keyFile or MARKSTAGE_AI_KEY.`);
+    return u;
+  };
+  if (!claude && a.endpoint !== undefined) fail(`ai.endpoint is for the anthropic provider; "${provider}" takes ai.baseUrl.`);
+  if (claude && a.baseUrl !== undefined) fail('ai.baseUrl is for the openai and ollama providers; anthropic takes ai.endpoint.');
+  const endpoint = claude ? address('endpoint', a.endpoint ?? 'https://api.anthropic.com/v1/messages').href : null;
+  const baseUrl = claude ? null : address('baseUrl', a.baseUrl ?? (provider === 'openai' ? 'https://api.openai.com/v1' : 'http://127.0.0.1:11434')).href.replace(/\/+$/, '');
+  if (a.keyHeader !== undefined && (provider !== 'openai' || !['authorization', 'api-key'].includes(a.keyHeader))) fail('ai.keyHeader is for the openai provider: "authorization" (Bearer, the default) or "api-key" (Azure OpenAI).');
   const count = (k, def, max) => {
     const v = a[k] ?? def;
     if (!Number.isInteger(v) || v < 1 || v > max) fail(`ai.${k} must be a whole number from 1 to ${max}.`);
     return v;
   };
-  return Object.freeze({ provider, model, keyFile: a.keyFile ?? null, keyFromEnv: Boolean(env.MARKSTAGE_AI_KEY), endpoint: endpoint.href, timeoutSeconds: Number.isFinite(a.timeoutSeconds) ? a.timeoutSeconds : 30, perMinute: count('perMinute', 10, 600), perDay: count('perDay', 200, 100_000) });
+  // a local model can take a while to load: up to ten minutes
+  const timeoutSeconds = a.timeoutSeconds ?? 30;
+  if (!Number.isFinite(timeoutSeconds) || timeoutSeconds < 1 || timeoutSeconds > 600) fail('ai.timeoutSeconds must be from 1 to 600.');
+  return Object.freeze({ provider, model, keyFile: a.keyFile ?? null, keyFromEnv: Boolean(env.MARKSTAGE_AI_KEY), endpoint, baseUrl, keyHeader: a.keyHeader ?? 'authorization', timeoutSeconds, perMinute: count('perMinute', 10, 600), perDay: count('perDay', 200, 100_000) });
 }

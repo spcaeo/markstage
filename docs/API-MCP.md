@@ -4,8 +4,11 @@ Part of the API contract (docs/API.md: its conventions, prefix and errors apply 
 client of the Model Context Protocol) reads the site and drafts changes **as the person whose token it holds**,
 through the editor's own routes. Server code: `packages/server/src/mcp/`; the relay: `packages/astro/bin/markstage.mjs`.
 
-Nothing an agent does publishes, deletes, moves or promotes anything. It changes drafts, and it puts changes to live
-pages into a release that is not scheduled. A person reviews that release and publishes or schedules it.
+By default nothing an agent does publishes, deletes, moves or promotes anything. It changes drafts, and it puts
+changes to live pages into a release that is not scheduled. A person reviews that release and publishes or
+schedules it. The one exception is a token an owner or administrator made with `mcp:publish` ("Publishing" below):
+its agent may ask to publish a release, and the site decides exactly as it would for that person, after its checks
+pass.
 
 ## The endpoint
 
@@ -30,11 +33,20 @@ with plain JSON: one JSON-RPC 2.0 message in, its answer out. There is no event 
 
 An agent's token is its own kind. It is not the laptop CLI's token.
 
-- Scopes: `mcp:read` (the read tools) and `mcp:draft` (the write tools too; it brings `mcp:read`).
-- Made in a browser session: `POST me/tokens {name, scopes: ['mcp:read'] | ['mcp:draft'], days: 1..90}` gives
-  `201 {token, secret}` (`mst_…`, shown once). In the editor: Settings → Tokens, "New AI assistant token"
-  (`#/settings/tokens?new=mcp`). Reading is always ticked; writing drafts is ticked only when asked for. The page
-  then shows the secret once, `npx markstage mcp login <origin>`, the client config and the MCP address.
+- Scopes: `mcp:read` (the read tools), `mcp:draft` (the write tools too; it brings `mcp:read`) and `mcp:publish`
+  (`publish_release`; it brings `mcp:read`, not `mcp:draft`).
+- Made in a browser session: `POST me/tokens {name, scopes: ['mcp:read'] | ['mcp:draft'] | ['mcp:publish'] | …,
+  days: 1..90}` gives `201 {token, secret}` (`mst_…`, shown once). In the editor: Settings → Tokens, "New AI
+  assistant token" (`#/settings/tokens?new=mcp`). Reading is always ticked; writing drafts is ticked only when asked
+  for. The page then shows the secret once, `npx markstage mcp login <origin>`, the client config and the MCP
+  address.
+- **`mcp:publish` is an owner's or administrator's to give.** Anyone else asking for it gets `403` ("Only an owner or
+  administrator can make a token that lets an AI agent publish."), and the screen does not offer it to them
+  (`GET me/tokens` says `canMcpPublish`). It is never ticked for you. Beside it, and again on the made token, a plain
+  warning: the assistant can put releases live without you pressing Publish; it is checked like you are (the
+  site's checks, the publish rules, approvals and freezes still decide, and a failed check stops it); every publish
+  names the assistant and you; give it only to an assistant you trust, for as few days as you need, and revoke it
+  when you are done.
 - A token is for the command line (`env:…`) or for an agent (`mcp:…`), never both: a mixed request gets `400`.
   `GET me/tokens` gives `scopes` (the command line's), `mcpScopes` and `groups: {cli: {scopes, reaches: '/env'},
   mcp: {scopes, reaches: '/mcp'}}`.
@@ -74,8 +86,9 @@ A client that speaks Streamable HTTP itself uses `https://cms.example.com/markst
 
 ## Tools
 
-`tools/list` lists the read tools, and the write tools only for an `mcp:draft` token. Each tool has a JSON Schema
-(`additionalProperties: false`) and annotations: reads `readOnlyHint`, nothing `destructiveHint`. A result is
+`tools/list` lists the read tools, the write tools only for an `mcp:draft` token, and `publish_release` only for an
+`mcp:publish` token. Each tool has a JSON Schema (`additionalProperties: false`) and annotations: reads
+`readOnlyHint`, and only `publish_release` `destructiveHint`. A result is
 `structuredContent` plus the same JSON as text. A refusal is a result with `isError: true` and `structuredContent
 {error, status, message, …}`: the editor's own error code, status and words.
 
@@ -91,6 +104,7 @@ A client that speaks Streamable HTTP itself uses `https://cms.example.com/markst
 | `create_draft` | draft | A new draft in a collection with drafts, under the person's author name (Markdown for an article, data for a JSON entry). A collection without drafts: `422 no-drafts` |
 | `update_entry` | draft | A changed `source` saved over a **draft**, with the `version` from `get_entry` (stale: `409`). The commit says `Update <c>/<id> (an AI agent, via MCP: <token name>)`. A live or scheduled entry, or a page in a collection without drafts: `409 live`, pointing at `add_to_release` |
 | `add_to_release` | draft | An entry, as saved or with a changed `source`, into a release that is **not scheduled**. Needs the right to publish that entry, as for a person (`403`) |
+| `publish_release` | publish | `{release, version, reason?}`: publish an open release now, as the token's person would ("Publishing" below) |
 
 ### Source in, source out (lossless)
 
@@ -154,6 +168,34 @@ Every answer and every error goes through a scrub last (`src/mcp/answer.mjs`). E
 Only a value of 8 characters or more counts as a secret, so a short value never blanks ordinary words. Search and
 excerpts are matched and cut on the scrubbed text, so half a secret is never shown.
 
+## Publishing
+
+`publish_release {release, version, reason?}`, for an `mcp:publish` token only. Without the scope the call is a
+JSON-RPC error that says so: "…does not hold mcp:publish. Only an owner or administrator makes such a token
+(Settings → Tokens); until then a person publishes."
+
+It never bypasses a rule. In order, and nothing is written until every step passes:
+
+1. **The person.** The token's person must be an owner or administrator **now**: someone made an editor since gets
+   `403 forbidden`, in words.
+2. **The release.** It must be open (`409 not-open`), not empty (`422`), and `version` must be the one from
+   `get_release` (stale: `409`).
+3. **The checks, now.** The site's content checks run again on exactly what the release holds. A blocking check
+   that fails stops it: `422 checks-failed`, naming each entry and check ("…an AI agent never publishes past a
+   failed check"), and the refusal is audited as `release.publish` with `ok: false`. (A person's publish runs the
+   checks inside its job and puts every file back when one fails; an agent's is refused before anything is written.)
+4. **The person's own publish route.** Then the same route a person's Publish uses: the promotion rules for that
+   person (who may publish releases, approvals, freezes and hours; refused: `403 rule`, audited), the publish rules
+   (an image with no description, a broken link…: `422 blocked`) and the version.
+
+When it is allowed the release goes out as a person's would (`{publishing: true, job, release, checks: {passed,
+warnings}}`). It is **one commit by the person**, its subject naming the agent: `Release “Name” (published by an AI
+agent for <person>, via MCP: <token name>)`. The `release.publish` audit row carries `via: 'mcp'`, the token's name
+and the same words (`by`), and so does the notice editors see.
+
+At most **5 publishes an hour per token** (counted when asked), on top of the call limits below. Over: `429` with
+`Retry-After`, audited `mcp.limited` (`publishesPerHour`) once an hour. Another token is not held up.
+
 ## Limits and audit
 
 - At most **120 calls a minute per token, 30 of them writes**. Over that: `429` with `Retry-After`, audited
@@ -166,8 +208,9 @@ excerpts are matched and cut on the scrubbed text, so half a secret is never sho
 
 ## Not in v1
 
-- No publish tool. `mcp:publish` comes later, behind the publish rules.
 - No resources, prompts or sampling; no event stream.
+- No tool that schedules, promotes, deletes or moves. `publish_release` publishes an open release now; a schedule is
+  a person's.
 
 ## Proof
 
@@ -193,4 +236,10 @@ Server tests run against a real server on 127.0.0.1, with test people and tokens
 | What else names a draft follows the role: a Library item's pages, a release's entries, the plans; no revisions tool | `mcp-roles.test.mjs`: "what else names a draft follows the role too…" |
 | **Nothing an agent does publishes**: the example blog (`examples/blog`, with a sitemap and an RSS feed filtered as its pages are) built with Astro, then every write tool (a new draft, two drafts changed, a live post's change and a draft into a release: three commits), then built again: the same files, byte for byte, none of the agent's words anywhere. A person's save of a live post then changes the page, the index and the feed, so the comparison does see a change | `mcp-build.test.mjs` |
 | The token screen: two kinds, one or the other; `?new=mcp` and `?new=cli` (reload, Back); reading always, drafting when ticked; the secret once and never in the URL; the commands, the config and the address with copy and open (opened, it says what it is); it reaches `/mcp` and not `/env` | `e2e/tokens.e2e.mjs` (Playwright, Chromium) |
+| Publishing: `mcp:publish` an owner's or administrator's to give (an editor `403`), it brings reading and not drafting, `publish_release` listed with it only and `destructiveHint`; without the scope, refused in words | `mcp-publish.test.mjs`: "the scope…", "refused without the scope…" |
+| Allowed: one commit by the person naming the agent and the token, the audit row and the notice | "allowed: the checks pass…" |
+| Refused by a failed check (nothing written, audited), by the publish rules and a stale version, by the promotion rules (`403 rule`) and by the person's role now (`403`) | "refused by a check…", "refused by the publish rules…", "refused by the rules and by role…" |
+| 5 publishes an hour per token: `429` with `Retry-After`, audited once, another token not held up | "at most 5 publishes an hour per token…" |
+| On the example blog with its real Astro build and a deploy: refused while a blocking check fails (nothing committed, built or deployed), then published, built and live once it passes | `e2e/mcp-publish.e2e.mjs` |
+| The Tokens screen: the publish box only for an owner, never ticked, its warning read with it and on the made token | `e2e/tokens.e2e.mjs`: "an owner may let an assistant publish…" |
 | The relay: one line per answer in order, JSON only; `mcp login` keeps the token (0600) apart from the CLI's; refusals as `-32000` and on stderr; a server at another `basePath` (`/cms`) for `mcp login`, the relay, `login` and `status` | `mcp-cli.test.mjs` |
