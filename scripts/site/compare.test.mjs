@@ -8,7 +8,7 @@ import path from 'node:path';
 import { describe, test } from 'node:test';
 import { buildSite, REPO_ROOT } from './build-site.mjs';
 import { CARD_FACTS, KINDS, PRODUCTS, parseComparison } from './comparison-data.mjs';
-import { itemsByRow, soonBadge, soonFinder } from './roadmap.mjs';
+import { STATUS, itemsByRow, soonBadge, soonFinder } from './roadmap.mjs';
 import { parseFrontMatter } from './markdown.mjs';
 
 const read = (f) => fs.readFileSync(path.join(REPO_ROOT, f), 'utf8');
@@ -259,7 +259,7 @@ describe('the roadmap is the one list behind every "coming" badge', () => {
       return [...block.matchAll(/^- \*\*(.+?)\*\*/gm)].map((m) => m[1].replace(/[.:,]$/, ''));
     };
     const titles = (status) => items.filter((i) => i.status === status).map((i) => i.title);
-    assert.deepEqual(list('Being built now, for 0.4.0:'), titles('in-progress'));
+    assert.deepEqual(list(`${STATUS['in-progress'].group}:`), titles('in-progress'));
     assert.deepEqual(list('Planned, later:'), titles('planned'));
   });
 
@@ -269,14 +269,14 @@ describe('the roadmap is the one list behind every "coming" badge', () => {
     for (const f of files) {
       const text = fs.readFileSync(path.join(dir, f), 'utf8');
       for (const para of text.split(/\n\s*\n/)) {
-        if (!/coming in 0\.4\.0|\bis planned\b|\bare planned\b|\[planned\]/i.test(para)) continue;
+        if (!/coming in \d+\.\d+\.\d+|\bis planned\b|\bare planned\b|\[planned\]/i.test(para)) continue;
         const ids = [...para.matchAll(/\/roadmap\/#([a-z0-9-]+)/g)].map((m) => m[1]);
         assert.ok(ids.length, `${f}: "${squash(para).slice(0, 80)}" names no roadmap item`);
         for (const id of ids) {
           assert.ok(byId.has(id), `${f}: /roadmap/#${id} is not an item`);
           assert.notEqual(byId.get(id).status, 'shipped', `${f}: ${id} is shipped`);
-          // "coming in 0.4.0" only for an item being built for 0.4.0
-          if (/coming in 0\.4\.0/i.test(para) && !/planned/i.test(para)) assert.equal(byId.get(id).status, 'in-progress', `${f}: ${id}`);
+          // "coming in x.y.z" only for an item being built for the next release
+          if (/coming in \d+\.\d+\.\d+/i.test(para) && !/planned/i.test(para)) assert.equal(byId.get(id).status, 'in-progress', `${f}: ${id}`);
         }
       }
     }

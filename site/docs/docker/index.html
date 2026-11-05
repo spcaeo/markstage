@@ -123,8 +123,8 @@
 carries Node and git; your site stays a git folder on the host, mounted into the container. Markstage is
 pre-release: try it on a copy of your site first.</p>
 <ul><li><strong>Where it comes from.</strong> <code>ghcr.io/spcaeo/markstage:&lt;version&gt;</code> and <code>:latest</code>, for amd64 and arm64, published by
-GitHub Actions when a release is tagged in the public repo (from 0.4.0 on; <code>.github/workflows/image.yml</code>). Until
-that release is out, build it from a clone: <code>docker build -f deploy/Dockerfile -t markstage-server .</code>, and use
+GitHub Actions when a release is tagged in the public repo (since 0.4.0; <code>.github/workflows/image.yml</code>). To run
+your own changes, build it from a clone: <code>docker build -f deploy/Dockerfile -t markstage-server .</code>, and use
 <code>markstage-server</code> wherever this page says <code>ghcr.io/spcaeo/markstage:latest</code>.</li><li><strong>What it needs from the site.</strong> A git working copy of an Astro site with Markstage set up: the
 <a href="../starter/">starter</a>, or your own site (<a href="../config/">CONFIG.md</a>). Since the <code>@markstage/*</code> packages are not on
 npm yet, the site carries them in <code>vendor/</code> (the starter does that for you).</li><li>The full deploy guide (nginx, https, previews, backups, alerts) is <a href="../deploy/">DEPLOY.md</a>; this page is the image.</li></ul>

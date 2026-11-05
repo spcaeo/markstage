@@ -73,8 +73,8 @@ docker exec markstage markstage-server setup-code
 ```
 
 Then open http://127.0.0.1:18231/markstage/#/setup. On first start the image installs the site's packages, builds
-its editor and writes a config whose build is `npm run build`. The image is published from the 0.4.0 release on;
-before that, build it from the clone (`docker build -f deploy/Dockerfile -t markstage-server .`).
+its editor and writes a config whose build is `npm run build`. The image is published with each release since 0.4.0;
+to run your own changes, build it from the clone (`docker build -f deploy/Dockerfile -t markstage-server .`).
 
 **"Edit this page".** With `MARKSTAGE_CMS_URL` set when the site is built (the image sets it to its own address),
 every page gets a small inline script that shows an "Edit this page" link to people signed in to that server

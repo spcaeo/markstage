@@ -359,9 +359,9 @@ docker exec markstage markstage-server setup-code
 Then open `http://127.0.0.1:18231/markstage/#/setup`, enter the one-time code and make the owner. There is no
 default password: the first owner needs that code. On its first start the image writes a config, installs the
 site's packages and builds its editor; **Publish site** then builds and deploys the site inside the container. The
-image is published to the GitHub Container Registry from the 0.4.0 release on (amd64 and arm64); until then, build
-it from the clone with `docker build -f deploy/Dockerfile -t markstage-server .` and use that name. CI builds and
-smoke-tests it on every push. Settings, secrets, compose with nginx and updates: **[docs/DOCKER.md](docs/DOCKER.md)**;
+image is published to the GitHub Container Registry with each release (amd64 and arm64); to run your own changes,
+build it from the clone with `docker build -f deploy/Dockerfile -t markstage-server .` and use that name. CI builds
+and smoke-tests it on every push. Settings, secrets, compose with nginx and updates: **[docs/DOCKER.md](docs/DOCKER.md)**;
 HTTPS in front, previews, backups and the systemd way without Docker: **[docs/DEPLOY.md](docs/DEPLOY.md)**.
 
 ## Integrations
@@ -587,15 +587,15 @@ More answers: [the FAQ on the website](https://spcaeo.github.io/markstage/faq/).
 
 Markstage is **pre-release** (0.x): a minor version may still change how things work. The list is kept in
 [site-content/roadmap.md](site-content/roadmap.md), which also makes the site's
-[roadmap page](https://spcaeo.github.io/markstage/roadmap/) and the "Coming in 0.4.0" badges on the comparison.
-No dates beyond "0.4.0" and "later".
+[roadmap page](https://spcaeo.github.io/markstage/roadmap/) and the "Coming in" badges on the comparison.
+No dates beyond "the next release" and "later".
 
 AI that ships today: an MCP server, so an AI agent drafts as the person whose token it holds and publishes only
 when an owner allows it, through the site's own checks and rules ([docs/API-MCP.md](docs/API-MCP.md)), and AI
 suggestions for alt text, search titles and descriptions, translation drafts, the promotion summary and better words
 for a selection, which a person reads, changes and saves ([docs/API-AI.md](docs/API-AI.md)).
 
-New since 0.3.0, on main: MDX editing, with the words typed on the page and the code kept as written
+Shipped in 0.4.0 (4 November 2026): MDX editing, with the words typed on the page and the code kept as written
 ([docs/MDX.md](docs/MDX.md)); a [live demo](https://spcaeo.github.io/markstage/demo/) of the editor on a sample blog,
 with no sign-up; a ready server image, built and smoke-tested by CI and published to the GitHub Container Registry
 with each release ([docs/DOCKER.md](docs/DOCKER.md)); a starter site, an Astro blog with Markstage set up, to start
@@ -606,9 +606,9 @@ allows, where the site's checks and publish rules decide as they do for a person
 and Import from WordPress, Ghost and Prismic: posts, pages, media, authors and redirects, with a dry run first
 ([docs/IMPORT.md](docs/IMPORT.md)).
 
-Being built now, for 0.4.0:
+Being built now, for 0.5.0:
 
-Nothing else for now: everything planned for 0.4.0 is on main.
+Nothing yet: the next items are picked from the list below, smallest first.
 
 Planned, later:
 

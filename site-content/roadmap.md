@@ -1,9 +1,10 @@
 ---
-title: "Markstage Roadmap: What Is Coming in 0.4.0 and Later"
-description: "What the Markstage team is building now for 0.4.0, and what is planned later: imports from WordPress, Ghost and Prismic, AI writing help and more."
+title: "Markstage Roadmap: What Is Being Built Next and Later"
+description: "What the Markstage team is building for the next release and what is planned later: npm packages, AI link and SEO suggestions, live co-editing and more."
 h1: "Markstage roadmap"
 # One source of truth for every "coming" badge on the site and the README's Roadmap section (compare.test.mjs
-# checks both). status: in-progress (being built for 0.4.0), planned (later) or shipped (no badge any more).
+# checks both). status: in-progress (being built for the next minor release; the badge names it from package.json),
+# planned (later) or shipped (no badge any more).
 # rows: the rows of docs/COMPARISON.md whose Markstage cell the item changes; never a row Markstage already has as ✓.
 items:
   - id: mdx
@@ -89,9 +90,9 @@ items:
 ---
 
 Markstage is pre-release (0.x): a minor version may still change how things work. This page lists what is being
-built now for the next release, 0.4.0, and what is planned after it. We promise no dates beyond that.
+built now for the next release and what is planned after it. We promise no dates beyond that.
 
-Every "Coming in 0.4.0" or "Planned" badge on the comparison pages links here. The mark beside it is always what
+Every "Coming in" or "Planned" badge on the comparison pages links here. The mark beside it is always what
 Markstage does today.
 
 Have a need that is not here? [Open a feature request](https://github.com/spcaeo/markstage/issues/new/choose).

@@ -1,5 +1,5 @@
 // The roadmap: site-content/roadmap.md (front matter `items`) is the one list of what is coming. It makes /roadmap/,
-// the "What's coming" section of /compare/ and every "Coming in 0.4.0" / "Planned" badge in the comparison cells,
+// the "What's coming" section of /compare/ and every "Coming in <next>" / "Planned" badge in the comparison cells,
 // so a badge can only name an item that is on the list (compare.test.mjs also checks the README's Roadmap).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,9 +8,21 @@ import { escapeHtml as e, parseFrontMatter } from './markdown.mjs';
 import { NAME, REPO_URL, SITE_URL, UPDATED } from './config.mjs';
 import { button } from './pages.mjs';
 
+/**
+ * The release being built: the next minor after the packages' version (package.json), so "Coming in …" moves on by
+ * itself when a release is cut and never names a version that is already out (roadmap-version.test.mjs).
+ */
+export function nextRelease(version) {
+  const m = /^(\d+)\.(\d+)\.\d+/.exec(version ?? '');
+  if (!m) throw new Error(`package.json version "${version}" is not x.y.z`);
+  return `${m[1]}.${Number(m[2]) + 1}.0`;
+}
+export const VERSION = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version;
+export const NEXT = nextRelease(VERSION);
+
 /** Each status, with the words its badge shows; a shipped item shows no badge. */
 export const STATUS = {
-  'in-progress': { label: 'Coming in 0.4.0', group: 'Being built now, for 0.4.0' },
+  'in-progress': { label: `Coming in ${NEXT}`, group: `Being built now, for ${NEXT}` },
   planned: { label: 'Planned', group: 'Planned, later' },
   shipped: { label: null, group: 'Shipped' },
 };
@@ -29,7 +41,7 @@ export function readRoadmap(contentDir, render) {
   return { meta, items, rendered: render(body) };
 }
 
-/** The badge an item shows ("Coming in 0.4.0", "Planned") linking to its line on /roadmap/; '' once shipped. */
+/** The badge an item shows ("Coming in <next>", "Planned") linking to its line on /roadmap/; '' once shipped. */
 export function soonBadge(item, root, { link = true } = {}) {
   const label = STATUS[item.status].label;
   if (!label) return '';

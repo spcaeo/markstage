@@ -156,8 +156,8 @@ build, deploy), run the server image next to the site (<a href="../docker/">DOCK
   ghcr.io/spcaeo/markstage:latest
 docker exec markstage markstage-server setup-code</code></pre>
 <p>Then open <a href="http://127.0.0.1:18231/markstage/#/setup" rel="noopener">http://127.0.0.1:18231/markstage/#/setup</a>. On first start the image installs the site's packages, builds
-its editor and writes a config whose build is <code>npm run build</code>. The image is published from the 0.4.0 release on;
-before that, build it from the clone (<code>docker build -f deploy/Dockerfile -t markstage-server .</code>).</p>
+its editor and writes a config whose build is <code>npm run build</code>. The image is published with each release since 0.4.0;
+to run your own changes, build it from the clone (<code>docker build -f deploy/Dockerfile -t markstage-server .</code>).</p>
 <p><strong>&quot;Edit this page&quot;.</strong> With <code>MARKSTAGE_CMS_URL</code> set when the site is built (the image sets it to its own address),
 every page gets a small inline script that shows an &quot;Edit this page&quot; link to people signed in to that server
 (<a href="../api-edit/">API-EDIT.md</a>). Without it the build has no script at all.</p>
