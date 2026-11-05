@@ -32,12 +32,26 @@ const FACTS_FOR = 30_000;
 /** A fetch asked for with GET /env?fetch=1 runs at most this often (review 3 Nov, S9). */
 const FETCH_EVERY = 30_000;
 
-/** The rules file: <dataDir>/promotion-rules.json (0600), the starter rules until someone saves. */
+/**
+ * The rules file: <dataDir>/promotion-rules.json (0600), the starter rules until someone saves. Kept parsed while the
+ * file is the same (its inode, size and time): another server process on the data dir may write it (docs/SCALING.md).
+ */
 function createRulesFile(app) {
   const file = path.join(app.config.dataDir, 'promotion-rules.json');
   let cache = null;
+  let stamp = null;
+  const stampNow = () => {
+    try {
+      const st = fs.statSync(file);
+      return `${st.ino}:${st.size}:${st.mtimeMs}`;
+    } catch {
+      return 'none';
+    }
+  };
   function read() {
-    if (cache) return cache;
+    const now = stampNow();
+    if (cache && stamp === now) return cache;
+    stamp = now;
     try {
       const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
       cache = { rev: doc.rev ?? 1, groups: doc.groups ?? {}, rules: doc.rules ?? [], saved: true };
@@ -54,6 +68,7 @@ function createRulesFile(app) {
     fs.renameSync(tmp, file);
     fs.chmodSync(file, 0o600);
     cache = { ...next, saved: true };
+    stamp = stampNow();
     return cache;
   }
   return { get: read, write };
@@ -157,13 +172,17 @@ export function createEnvironments(app, deps = {}) {
 
   function putRules(ctx) {
     if (!atLeast(ctx.user, 'administrator')) throw forbidden('Only the owner and administrators change the promotion rules.');
-    const now = rules.get();
-    if (ctx.body.version !== `r${now.rev}`) throw conflict('The rules changed since you loaded them.', { current: rulesView() });
-    const clean = checkRules(ctx.body, { users: app.users.list().map((u) => u.id), envs: envNames(), fail: (w) => { throw badRequest(w); } });
-    const before = new Map(now.rules.map((r) => [r.id, JSON.stringify(r)]));
-    const after = new Map(clean.rules.map((r) => [r.id, JSON.stringify(r)]));
-    const diff = { added: [...after.keys()].filter((k) => !before.has(k)), removed: [...before.keys()].filter((k) => !after.has(k)), changed: [...after.keys()].filter((k) => before.has(k) && before.get(k) !== after.get(k)), groups: JSON.stringify(now.groups) !== JSON.stringify(clean.groups) };
-    rules.write(clean);
+    // the version check and the write hold the database's write lock: two server processes saving at once, one wins
+    // and the other gets the 409, as two saves on one process do
+    const diff = app.cluster.exclusive(() => {
+      const now = rules.get();
+      if (ctx.body.version !== `r${now.rev}`) throw conflict('The rules changed since you loaded them.', { current: rulesView() });
+      const clean = checkRules(ctx.body, { users: app.users.list().map((u) => u.id), envs: envNames(), fail: (w) => { throw badRequest(w); } });
+      const before = new Map(now.rules.map((r) => [r.id, JSON.stringify(r)]));
+      const after = new Map(clean.rules.map((r) => [r.id, JSON.stringify(r)]));
+      rules.write(clean);
+      return { added: [...after.keys()].filter((k) => !before.has(k)), removed: [...before.keys()].filter((k) => !after.has(k)), changed: [...after.keys()].filter((k) => before.has(k) && before.get(k) !== after.get(k)), groups: JSON.stringify(now.groups) !== JSON.stringify(clean.groups) };
+    });
     app.audit.log(ctx, 'env.rules', { target: 'promotion-rules', detail: diff });
     const parts = [diff.added.length && `added ${diff.added.join(', ')}`, diff.removed.length && `removed ${diff.removed.join(', ')}`, diff.changed.length && `changed ${diff.changed.join(', ')}`, diff.groups && 'changed the groups'].filter(Boolean);
     app.notices.tell({ kind: 'env.rules-changed', level: 'warn', text: `${ctx.user.name} changed the promotion rules on ${env.name}${parts.length ? `: ${parts.join('; ')}` : ''}.`, link: '#/settings/environments/rules', to: 'administrators' });

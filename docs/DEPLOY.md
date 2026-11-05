@@ -120,9 +120,8 @@ Notes:
   https `publicOrigin`, and put the nginx from Option 2 in front (the compose ports stay on 127.0.0.1). Dev mode
   (`devNoAuth`, no sign-in) refuses to start in production and with any `publicOrigin` that is not a loopback
   address, so a dev config copied to a server cannot open the editor to the internet.
-- One server process is assumed: the sign-in, share-link and gate limiters count in process memory (see
-  docs/SECURITY.md "Known limits"). Run one `markstage-server serve` per data dir; do not scale it to several
-  processes behind one address.
+- The compose file runs one server process. Several processes on one data dir are supported on one machine with
+  systemd ([Several server processes](#several-server-processes)); two containers on one volume are not tested.
 - The site's own redirects/headers: add them to `deploy/nginx/site.conf` (it is mounted read-only).
 - The editor itself: the image builds it at every start from the site's `node_modules/@markstage/astro` and names it
   with `MARKSTAGE_EDITOR_DIR` (DOCKER.md). Without Docker, build it with `markstage build-editor` and set `editorDir`
@@ -226,6 +225,59 @@ node node_modules/@markstage/astro/bin/markstage.mjs build-editor --out /srv/mar
   `no-store`; on 401, `@gate` proxies to Markstage, which shows the password form or 404 (then the site's own
   404 page). `/markstage/page-auth` is `internal`.
 - If Markstage is down, protected pages answer 500 (fail closed); public pages are unaffected.
+
+## Several server processes
+
+Several `markstage-server serve` processes may share one data dir on one machine, each on its own port, with nginx
+spreading the editor's requests across them. They count the limits, hold the edit locks, run jobs and write the
+site repo as one server; one of them (the "primary") also runs the timers and the preview and share listeners, and
+another takes over within seconds when it stops. What they share and what is still limited:
+[SCALING.md](SCALING.md).
+
+The supported way is a systemd template unit, one instance per port:
+
+1. Copy the unit of Option 2 to `/etc/systemd/system/markstage@.service` and give each instance its port:
+
+   ```ini
+   [Service]
+   Environment=NODE_ENV=production MARKSTAGE_DATA_DIR=/srv/markstage-data MARKSTAGE_PORT=%i
+   ExecStart=/usr/bin/node /opt/markstage/packages/server/bin/markstage-server.mjs serve
+   ```
+
+   (the rest as in Option 2). Stop the single `markstage.service` first, then start, say, three instances:
+   `systemctl disable --now markstage && systemctl enable --now markstage@18231 markstage@18233 markstage@18237`.
+   Every instance reads the same `config.json`; the port in it is overridden by `MARKSTAGE_PORT`.
+2. nginx: list every instance in the CMS upstream. The preview and share upstreams stay one port each
+   (`preview.port`, 18245, and `share.port`, 18251, in config.json): only the primary process listens there, and
+   whichever process holds the role binds them.
+
+   ```nginx
+   upstream markstage {
+     server 127.0.0.1:18231 max_fails=1 fail_timeout=5s;
+     server 127.0.0.1:18233 max_fails=1 fail_timeout=5s;
+     server 127.0.0.1:18237 max_fails=1 fail_timeout=5s;
+     keepalive 16;
+   }
+   upstream markstage_preview { server 127.0.0.1:18245; }
+   upstream markstage_share   { server 127.0.0.1:18251; }
+   ```
+
+   With `keepalive`, add `proxy_http_version 1.1; proxy_set_header Connection "";` to the CMS `location` blocks.
+   No sticky sessions are needed: a session made on one process is good on every other.
+3. Restart them one at a time (`systemctl restart markstage@18231`, wait, then the next) for an update without
+   a gap: a clean stop finishes the process's job first and lets its roles go, and nginx sends requests to the
+   others meanwhile.
+
+`processes.leaseSeconds` in config.json (1 to 600, 30 by default): how long the heartbeat of a process the others
+cannot check by its pid (one in another container) may stand still before its locks free themselves. A process that
+crashed on the same machine is noticed at the next heartbeat of another (a sixth of it: 5 seconds). One that hangs or
+is paused on the same machine keeps its locks until it is stopped (systemd's `TimeoutStopSec` stops a hung one on a
+restart): a live process is never taken for stopped, so a clock jump never runs a job twice (SCALING.md, "Clock
+jumps and pauses").
+
+Each process keeps its own connection to the database, and everything that must hold across them is written there.
+All of them must run on this one machine with the data dir on a local disk: SQLite over a network file system is not
+safe, so several machines need more than this (not built).
 
 ## What the site must do (site contract)
 

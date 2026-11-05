@@ -69,7 +69,9 @@ export function createFormSettings(app) {
       if (!can(ctx.user, 'site.alerts')) throw forbidden("Only an owner or administrator can see the forms' settings.");
       return view();
     });
-    router.add('PUT', '/site/forms/:fid/reply', (ctx) => {
+    // the version check and the write hold the database's write lock (two server processes: one wins, one gets 409)
+    const locked = (fn) => (ctx) => app.cluster.exclusive(() => fn(ctx));
+    router.add('PUT', '/site/forms/:fid/reply', locked((ctx) => {
       const { form, cur } = guard(ctx);
       const { on, subject, text } = ctx.body;
       if (typeof on !== 'boolean') throw badRequest('on must be true (send a thank-you mail) or false (send none).');
@@ -88,8 +90,8 @@ export function createFormSettings(app) {
         audit.log(ctx, 'forms.reply', { target: form.id, detail: { from: was, to: next } });
       }
       return view();
-    });
-    router.add('DELETE', '/site/forms/:fid/reply', (ctx) => {
+    }));
+    router.add('DELETE', '/site/forms/:fid/reply', locked((ctx) => {
       const { form, cur } = guard(ctx);
       if (cur.doc[form.id]?.reply !== undefined) {
         const was = replyOf(form, cur.doc);
@@ -101,7 +103,7 @@ export function createFormSettings(app) {
         audit.log(ctx, 'forms.reply', { target: form.id, detail: { from: was, to: form.reply, reset: true } });
       }
       return view();
-    });
+    }));
   }
 
   return { replyOf, routes };

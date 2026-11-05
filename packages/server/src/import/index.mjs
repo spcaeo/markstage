@@ -24,6 +24,12 @@ const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 export function createImport(app, entries) {
   const { db, store, audit } = app;
+  // a run cut by a restart, or whose server process stopped (its job failed: jobs.mjs, which says why), is not
+  // running any more
+  app.cluster.onReap(({ startup, alone, jobs: cut }) => {
+    if (startup && alone) db.prepare("UPDATE import_runs SET status = 'failed', finished_at = COALESCE(finished_at, ?) WHERE status = 'running'").run(nowIso(app.clock()));
+    else for (const j of cut) db.prepare("UPDATE import_runs SET status = 'failed', finished_at = COALESCE(finished_at, ?) WHERE status = 'running' AND job_id = ?").run(nowIso(app.clock()), j);
+  });
 
   const may = (ctx) => {
     if (!can(ctx.user, 'content.import')) throw forbidden('Importing is for editors and up.');
@@ -80,7 +86,8 @@ export function createImport(app, entries) {
     if (v.status === 'expired') throw new HttpError(410, 'expired', 'This plan is more than an hour old. Make it again, so it shows what an import would do now.');
     if (r.status !== 'planned') throw conflict(`This import is ${r.status} already.`, { status: r.status });
     const payload = JSON.parse(r.payload);
-    db.prepare("UPDATE import_runs SET status = 'running' WHERE id = ?").run(r.id);
+    // claimed in the database: two starts at once (two clicks, two server processes) run it once
+    if (Number(db.prepare("UPDATE import_runs SET status = 'running' WHERE id = ? AND status = 'planned'").run(r.id).changes) !== 1) throw conflict('This import is running already.', { status: 'running' });
     if (payload.kind === 'site') return startSite(ctx, r, payload);
     const job = app.jobs.enqueue({
       kind: 'import',

@@ -15,6 +15,7 @@
 // (429). Each use records when and from where.
 import { HttpError, badRequest, forbidden, newId, newToken, notFound, nowIso, sha256 } from '../util.mjs';
 import { atLeast } from '../roles.mjs';
+import { limitKey } from '../cluster/limits.mjs';
 
 export const SCOPES = ['env:read', 'env:promote'];
 // mcp:publish lets an agent ask to publish a release (mcp/publish.mjs): made by an owner or administrator only
@@ -40,14 +41,14 @@ const toPublic = (r, now) => ({
 
 export function createTokens(app) {
   const { db, clock, audit } = app;
-  const misses = new Map();
+  // wrong tokens per address: in the database, counted by every server process (cluster/limits.mjs)
+  const BUCKET = 'token.miss';
+  const hits = app.cluster.hits;
 
   function missCheck(ip) {
     const now = clock();
-    const hits = (misses.get(ip) ?? []).filter((t) => now - t < MISS_WINDOW_MS);
-    misses.set(ip, hits);
-    if (hits.length >= MISS_MAX) throw new HttpError(429, 'rate-limited', 'Too many wrong tokens from your network. Try again later.', { retryAfter: Math.max(1, Math.ceil((hits[0] + MISS_WINDOW_MS - now) / 1000)) });
-    return hits;
+    const { n, oldest } = hits.count(BUCKET, limitKey(ip), MISS_WINDOW_MS, now);
+    if (n >= MISS_MAX) throw new HttpError(429, 'rate-limited', 'Too many wrong tokens from your network. Try again later.', { retryAfter: Math.max(1, Math.ceil((oldest + MISS_WINDOW_MS - now) / 1000)) });
   }
 
   /**
@@ -55,15 +56,14 @@ export function createTokens(app) {
    * ctx.token ({id, scopes}).
    */
   function authenticate(ctx, header, routePath, method) {
-    const hits = missCheck(ctx.ip ?? 'unknown');
+    missCheck(ctx.ip ?? 'unknown');
     const secret = /^Bearer\s+(\S+)$/i.exec(header)?.[1] ?? '';
     const now = clock();
     const row = secret.startsWith(PREFIX) ? db.prepare('SELECT * FROM api_tokens WHERE token_hash = ?').get(sha256(secret)) : null;
     const user = row ? app.users.get(row.user_id) : null;
     const dead = !row || row.revoked_at || Date.parse(row.expires_at) <= now || !user || user.disabled;
     if (dead) {
-      hits.push(now);
-      if (misses.size > 10_000) for (const k of misses.keys()) if (misses.size > 5_000) misses.delete(k);
+      hits.add(BUCKET, limitKey(ctx.ip ?? 'unknown'), MISS_WINDOW_MS, { at: now });
       audit.log(ctx, 'security.token', { ok: false, target: routePath, detail: { why: !row ? 'unknown' : row.revoked_at ? 'revoked' : !user || user.disabled ? 'user' : 'expired' } });
       // a new one is made where this kind is: the command line's with `markstage login`, an agent's with `markstage mcp login`
       const again = row && groupOf(row.scopes.split(' ')) === 'mcp' ? 'Make a new one at Settings → Tokens and give it to the agent (`markstage mcp login`).' : 'Make a new one with `markstage login`.';
@@ -136,5 +136,5 @@ export function createTokens(app) {
     });
   }
 
-  return { authenticate, alive, routes, reset: () => misses.clear() };
+  return { authenticate, alive, routes, reset: () => db.prepare('DELETE FROM limit_hits WHERE bucket = ?').run(BUCKET) };
 }

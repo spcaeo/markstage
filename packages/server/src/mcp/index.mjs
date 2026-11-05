@@ -9,7 +9,7 @@
 //   listed only for mcp:publish, an owner's or administrator's token, and asks the site's checks and rules (publish.mjs).
 // - Each call is audited (`mcp.call`), and what a route records says "via mcp" and the token's name (audit.mjs).
 // - At most 120 calls a minute per token, 30 of them writes (429 with Retry-After; `mcp.limited` once a minute), and
-//   5 publishes an hour.
+//   5 publishes an hour. Counted in the database, by every server process on the data dir (cluster/limits.mjs).
 // - Every answer and error is scrubbed of secrets last (answer.mjs).
 // - The protocol version is negotiated as the spec says: the client's when it is one of ours, else our newest.
 import { HttpError, forbidden, unauthorized } from '../util.mjs';
@@ -39,8 +39,7 @@ export function createMcp(app, api) {
   const { config, audit, clock } = app;
   const scrubber = createScrub(app);
   const origins = new Set([config.publicOrigin, ...loopbackAliases(config.publicOrigin)]);
-  const calls = new Map();
-  const published = new Map();
+  const hits = app.cluster.hits;
 
   /** One of the editor's routes, as this person, inside this call (the same checks a browser's request meets). */
   const dispatch = (outer) => async (method, path, { query = {}, body } = {}) => {
@@ -55,23 +54,11 @@ export function createMcp(app, api) {
   /** 120 calls a minute per token, 30 writes; over it 429, audited once a minute. */
   function limit(ctx, write) {
     const now = clock();
-    const c = calls.get(ctx.token.id) ?? { all: [], writes: [], told: 0 };
-    c.all = c.all.filter((t) => now - t < 60_000);
-    c.writes = c.writes.filter((t) => now - t < 60_000);
-    const over = c.all.length >= PER_MINUTE || (write && c.writes.length >= WRITES_PER_MINUTE);
-    if (over) {
-      if (now - c.told >= 60_000) {
-        c.told = now;
-        audit.log(ctx, 'mcp.limited', { ok: false, target: ctx.token.id, detail: { perMinute: PER_MINUTE, writesPerMinute: WRITES_PER_MINUTE, write } });
-      }
-      calls.set(ctx.token.id, c);
-      const oldest = (write && c.writes.length >= WRITES_PER_MINUTE ? c.writes : c.all)[0];
-      throw new HttpError(429, 'rate-limited', `Too many calls: at most ${PER_MINUTE} a minute${write ? `, ${WRITES_PER_MINUTE} of them changes` : ''}. Wait a little.`, { retryAfter: Math.max(1, Math.ceil((oldest + 60_000 - now) / 1000)) });
-    }
-    c.all.push(now);
-    if (write) c.writes.push(now);
-    calls.set(ctx.token.id, c);
-    if (calls.size > 5000) for (const k of calls.keys()) if (calls.size > 2500) calls.delete(k);
+    const id = ctx.token.id;
+    const over = write ? hits.take('mcp.write', id, 60_000, WRITES_PER_MINUTE, { at: now, also: [['mcp.call', 60_000, PER_MINUTE]] }) : hits.take('mcp.call', id, 60_000, PER_MINUTE, { at: now });
+    if (!over) return;
+    if (hits.once('mcp.limited', id, 60_000, now)) audit.log(ctx, 'mcp.limited', { ok: false, target: id, detail: { perMinute: PER_MINUTE, writesPerMinute: WRITES_PER_MINUTE, write } });
+    throw new HttpError(429, 'rate-limited', `Too many calls: at most ${PER_MINUTE} a minute${write ? `, ${WRITES_PER_MINUTE} of them changes` : ''}. Wait a little.`, { retryAfter: Math.max(1, Math.ceil((over.oldest + 60_000 - now) / 1000)) });
   }
 
   const allowed = (ctx, tool) => ctx.token.scopes.includes(SCOPE_OF[tool.scope]);
@@ -79,15 +66,10 @@ export function createMcp(app, api) {
   /** At most 5 publishes an hour per token, on top of the calls a minute; over it 429, audited once an hour. */
   function publishLimit(ctx) {
     const now = clock();
-    const p = published.get(ctx.token.id) ?? { at: [], told: 0 };
-    p.at = p.at.filter((t) => now - t < 3_600_000);
-    published.set(ctx.token.id, p);
-    if (p.at.length < PUBLISHES_PER_HOUR) return void p.at.push(now);
-    if (now - p.told >= 3_600_000) {
-      p.told = now;
-      audit.log(ctx, 'mcp.limited', { ok: false, target: ctx.token.id, detail: { publishesPerHour: PUBLISHES_PER_HOUR } });
-    }
-    throw new HttpError(429, 'rate-limited', `At most ${PUBLISHES_PER_HOUR} publishes an hour from one AI agent token. Wait, or ask a person to publish.`, { retryAfter: Math.max(1, Math.ceil((p.at[0] + 3_600_000 - now) / 1000)) });
+    const over = hits.take('mcp.publish', ctx.token.id, 3_600_000, PUBLISHES_PER_HOUR, { at: now });
+    if (!over) return;
+    if (hits.once('mcp.limited.publish', ctx.token.id, 3_600_000, now)) audit.log(ctx, 'mcp.limited', { ok: false, target: ctx.token.id, detail: { publishesPerHour: PUBLISHES_PER_HOUR } });
+    throw new HttpError(429, 'rate-limited', `At most ${PUBLISHES_PER_HOUR} publishes an hour from one AI agent token. Wait, or ask a person to publish.`, { retryAfter: Math.max(1, Math.ceil((over.oldest + 3_600_000 - now) / 1000)) });
   }
   const ok = (id, result) => ({ jsonrpc: '2.0', id, result });
   const fail = (id, code, message) => ({ jsonrpc: '2.0', id: id ?? null, error: { code, message: scrubber.scrub(message) } });

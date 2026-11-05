@@ -1,10 +1,18 @@
 // Build/deploy jobs: one at a time, each a list of steps with a log, kept in the database. Site commands run as
 // argv arrays (no shell), in the content repo, with a small allowlisted environment and a timeout.
+// One at a time across every server process on the data dir too (docs/SCALING.md): a job runs while its process holds
+// the "jobs" lease; the others' jobs wait, queued. Its steps and log are written to the database as it goes (at most
+// a second behind), so a browser whose next request lands on another process sees the same progress. A job whose
+// process stopped is marked failed, as a restart marks it.
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { newId, notFound, nowIso } from './util.mjs';
 
 const MAX_LOG = 1024 * 1024;
+/** How often a running job's log is written to the database for the other processes. */
+const LOG_EVERY_MS = 1000;
+/** How often a queued job asks again for the "jobs" lease while another process runs one. */
+const WAIT_MS = 250;
 const FAILED_WORDS = { rollback: 'A rollback', 'media-replace': 'Replacing an image', replace: 'A find and replace', bulk: 'A change to many entries', redirects: 'A redirects change', undo: 'An undo', backup: 'A backup', publish: 'A publish', unpublish: 'An unpublish', delete: 'A delete', schedule: 'A scheduled publish', site: 'The site rebuild', protect: 'Password-protecting a page', unprotect: 'Removing a page password', move: 'A move', design: 'A design change', 'code-injection': 'Code on a page', 'env-plan': 'Preparing a promotion', 'env-promote': 'A promotion', 'env-sync': 'A sync', 'env-rollback': 'A rollback', 'env-preview': 'A branch preview', 'library-sync': 'A synced Library item', 'media-import': 'A media import', import: 'An import', release: 'A release', 'release-rollback': 'Rolling back a release', 'release-preview': 'A release preview' };
 /** The alert a failed job raises: a backup's (a safety alert), the deploy step's (the host), or a publish's. */
 export const failedKind = (kind, step = null) => (kind === 'backup' ? 'backup.failed' : kind.startsWith('env-') ? 'env.promote-failed' : step === 'deploy' ? 'deploy.failed' : 'publish.failed');
@@ -73,13 +81,22 @@ export function createJobs(app) {
   const live = new Map(); // id -> { steps, log } while running
   const idle = [];
 
-  // a restart loses running work: say so instead of leaving jobs "running" forever
-  const cut = db.prepare("SELECT id, kind, user_id, collection, entry_id FROM jobs WHERE status IN ('queued', 'running')").all();
-  db.prepare("UPDATE jobs SET status = 'failed', error = 'The server restarted during this job.', finished_at = ? WHERE status IN ('queued', 'running')").run(nowIso(clock()));
-  for (const r of cut) {
-    const target = r.collection ? ` (${r.collection}/${r.entry_id})` : '';
-    app.notices?.tell({ kind: failedKind(r.kind), text: `${FAILED_WORDS[r.kind] ?? 'A job'}${target} stopped: the server restarted during it. Nothing changed on the live site if it had not finished; run it again.`, link: `#/jobs/${r.id}`, to: r.user_id ? [r.user_id] : 'editors' });
-  }
+  const cluster = app.cluster;
+  // a restart, or a process that stopped, loses its running work: say so instead of leaving jobs "running" for ever.
+  // The jobs of a process that is not running any more (none: rows from before there were several) are failed.
+  cluster?.onReap((out) => {
+    const words = out.startup ? 'the server restarted during it' : 'the server process running it stopped';
+    const error = out.startup ? 'The server restarted during this job.' : 'The server process running this job stopped.';
+    const orphan = "status IN ('queued', 'running') AND (owner IS NULL OR owner NOT IN (SELECT id FROM server_processes))";
+    const cut = db.prepare(`SELECT id, kind, user_id, collection, entry_id FROM jobs WHERE ${orphan}`).all();
+    if (!cut.length) return;
+    db.prepare(`UPDATE jobs SET status = 'failed', error = ?, finished_at = ? WHERE ${orphan}`).run(error, nowIso(clock()));
+    out.jobs.push(...cut.map((r) => r.id));
+    for (const r of cut) {
+      const target = r.collection ? ` (${r.collection}/${r.entry_id})` : '';
+      app.notices?.tell({ kind: failedKind(r.kind), text: `${FAILED_WORDS[r.kind] ?? 'A job'}${target} stopped: ${words}. Nothing changed on the live site if it had not finished; run it again.`, link: `#/jobs/${r.id}`, to: r.user_id ? [r.user_id] : 'editors' });
+    }
+  });
 
   function persist(id, state, extra = {}) {
     db.prepare('UPDATE jobs SET status = ?, steps = ?, log = ?, started_at = COALESCE(?, started_at), finished_at = ?, error = ? WHERE id = ?').run(
@@ -99,7 +116,7 @@ export function createJobs(app) {
    */
   function enqueue({ kind, collection = null, entryId = null, user = null, run, onFail = null, onSuccess = null, target = null, notice = null }) {
     const id = newId('j');
-    db.prepare('INSERT INTO jobs (id, kind, status, collection, entry_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run(
+    db.prepare('INSERT INTO jobs (id, kind, status, collection, entry_id, user_id, created_at, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(
       id,
       kind,
       'queued',
@@ -107,26 +124,43 @@ export function createJobs(app) {
       entryId,
       user?.id ?? null,
       nowIso(clock()),
+      cluster?.id ?? null,
     );
     queue.push({ id, kind, user, run, onFail, onSuccess, notice, target: target ?? (entryId ? `${collection}/${entryId}` : kind) });
     setImmediate(pump);
     return id;
   }
 
+  let waiting = null;
   async function pump() {
-    if (running || !queue.length) return;
+    if (running || waiting || !queue.length) return;
+    // another process runs a job: this one waits, queued, and asks again shortly
+    if (cluster && !cluster.take('jobs', queue[0].id)) {
+      waiting = setTimeout(() => {
+        waiting = null;
+        void pump();
+      }, WAIT_MS);
+      return;
+    }
     const job = queue.shift();
     running = job;
     const state = { steps: [], log: '' };
     live.set(job.id, state);
+    let flushing = null;
     const append = (text) => {
       state.log += text;
       if (state.log.length > MAX_LOG) state.log = `[earlier output cut]\n${state.log.slice(-MAX_LOG / 2)}`;
+      flushing ??= setTimeout(() => {
+        flushing = null;
+        if (running === job) persist(job.id, state);
+      }, LOG_EVERY_MS);
     };
     persist(job.id, state, { startedAt: nowIso(clock()) });
 
     // soft: a failure is a warning on the step ('warned') and the job goes on (work after the site is live)
     const step = async (name, fn, { soft = false } = {}) => {
+      // fencing: the "jobs" lease is still this process's (one paused while another took over stops here)
+      cluster?.check('jobs', 'the job');
       const s = { name, status: 'running', startedAt: nowIso(clock()), finishedAt: null, exitCode: null };
       state.steps.push(s);
       append(`\n== ${name} ==\n`);
@@ -166,6 +200,7 @@ export function createJobs(app) {
     if (!error && job.onSuccess) await job.onSuccess();
     // whoever started it hears about a failure even if they left the screen; the scheduler's, every editor (or whom
     // the job names: `notice: {to, text(error)}`)
+    clearTimeout(flushing);
     if (error) app.notices?.tell({ kind: failedKind(job.kind, failedStep), text: job.notice?.text ? job.notice.text(error) : `${FAILED_WORDS[job.kind] ?? 'A job'}${job.target && job.target !== job.kind ? ` (${job.target})` : ''} did not go live. ${error}`, link: `#/jobs/${job.id}`, to: job.user ? [job.user.id] : job.notice?.to ?? 'editors' });
     persist(job.id, state, { status: error ? 'failed' : 'succeeded', finishedAt: nowIso(clock()), error });
     // `deployed`: the site's deploy step ran and succeeded (the change is live: a webhook's site.live, webhooks/)
@@ -173,6 +208,7 @@ export function createJobs(app) {
     audit.log(job.user ? { user: job.user } : { actorName: 'scheduler' }, error ? 'job.failed' : 'job.succeeded', { target: job.id, ok: !error, detail: { kind: job.kind, entry: job.target, ...(deployed ? { deployed } : {}), ...(failedStep ? { step: failedStep } : {}) } });
     live.delete(job.id);
     running = null;
+    cluster?.release('jobs');
     if (queue.length) setImmediate(pump);
     else while (idle.length) idle.shift()();
   }
@@ -315,7 +351,7 @@ export function createJobs(app) {
       const n = Math.min(Math.max(Number(limit) || 20, 1), 100);
       return db.prepare('SELECT * FROM jobs ORDER BY created_at DESC, rowid DESC LIMIT ?').all(n).map((r) => ({ ...rowToJob(r), log: undefined }));
     },
-    /** Resolves when no job is queued or running (tests and shutdown). */
+    /** Resolves when no job of this process is queued or running (tests and shutdown). */
     idle: () => (running || queue.length ? new Promise((r) => idle.push(r)) : Promise.resolve()),
   };
 }

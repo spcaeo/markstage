@@ -43,8 +43,10 @@ export async function createLinks(app, entries) {
   const lm = createLinkMap(app, { core, cfg, files });
   const { store, db, audit, repoLock, converter } = app;
   const derived = new WeakMap();
-  // the inbox per map object and skip-list version (a skip, an unskip or an accept moves it)
-  let skipsRev = 0;
+  // the inbox per map object and skip-list version (a skip, an unskip or an accept moves it). The version is in the
+  // database, so a skip made on another server process moves it here too (docs/SCALING.md)
+  const skipsRev = () => db.prepare("SELECT value FROM kv WHERE key = 'links.skipsRev'").get()?.value ?? '0';
+  const bumpSkips = () => db.prepare("INSERT INTO kv (key, value) VALUES ('links.skipsRev', '1') ON CONFLICT(key) DO UPDATE SET value = CAST(value AS INTEGER) + 1").run();
 
   /** The findings of a map (worked out once per map). */
   function findingsOf(map) {
@@ -56,7 +58,7 @@ export async function createLinks(app, entries) {
   function inboxOf(map, topic) {
     findingsOf(map);
     const box = derived.get(map).inbox;
-    const key = `${skipsRev}\0${topic ?? ''}`;
+    const key = `${skipsRev()}\0${topic ?? ''}`;
     if (!box.has(key)) {
       if (box.size > 50) box.clear();
       box.set(key, core.suggest.linkInbox(map, { skipped: skipped(), topic }));
@@ -148,7 +150,7 @@ export async function createLinks(app, entries) {
         detail: { suggestion: id, to: sg.to, anchor: sg.anchor },
       });
       db.prepare('DELETE FROM link_skips WHERE id = ?').run(id);
-      skipsRev++;
+      bumpSkips();
       return { ok: true, ...out, from: sg.from, to: sg.to, anchor: sg.anchor };
     });
 
@@ -157,7 +159,7 @@ export async function createLinks(app, entries) {
       if (typeof id !== 'string' || !/^sg_[0-9a-z]+$/.test(id) || typeof from !== 'string' || typeof to !== 'string') throw new HttpError(400, 'bad-request', 'This suggestion is incomplete. Reload the page and try again.');
       db.prepare('INSERT OR IGNORE INTO link_skips (id, from_ref, to_ref, anchor, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?)').run(id, from.slice(0, 300), to.slice(0, 300), typeof anchor === 'string' ? anchor.slice(0, 200) : null, ctx.user.id, nowIso(app.clock()));
       audit.log(ctx, 'links.skip', { target: to, detail: { suggestion: id, from } });
-      skipsRev++;
+      bumpSkips();
       return { ok: true };
     });
 
@@ -171,7 +173,7 @@ export async function createLinks(app, entries) {
     router.add('DELETE', '/links/skips/:id', (ctx) => {
       db.prepare('DELETE FROM link_skips WHERE id = ?').run(ctx.params.id);
       audit.log(ctx, 'links.unskip', { target: ctx.params.id });
-      skipsRev++;
+      bumpSkips();
       return { ok: true };
     });
 

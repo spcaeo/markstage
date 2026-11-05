@@ -95,18 +95,28 @@ export function createDeliveries(app) {
     return null;
   }
 
-  /** Send what is due, one at a time (the order events happened in); old deliveries are let go. */
+  /**
+   * Send what is due, one at a time (the order events happened in); old deliveries are let go. One server process
+   * sends at a time (a lease in the database): the others leave it to that one, or to the next tick.
+   */
   function tick() {
     if (closed) return Promise.resolve();
+    if (!running && app.cluster && !app.cluster.take('webhooks.send', 'webhooks')) return Promise.resolve();
     running ??= (async () => {
       for (;;) {
         const d = closed ? null : db.prepare("SELECT * FROM webhook_deliveries WHERE status = 'pending' AND next_at <= ? ORDER BY next_at, created_at LIMIT 1").get(nowIso(app.clock()));
         if (!d) break;
+        // fencing: still this process's turn to send (one paused while another took over stops here)
+        if (app.cluster && !app.cluster.renew('webhooks.send')) {
+          console.error('[markstage] webhooks: another server process took the sending over while this one was paused; this one stopped sending.');
+          break;
+        }
         await attempt(d);
       }
       if (!closed) db.prepare("DELETE FROM webhook_deliveries WHERE created_at < ? AND status != 'pending'").run(nowIso(app.clock() - KEEP_DAYS * 86_400_000));
     })().finally(() => {
       running = null;
+      app.cluster?.release('webhooks.send');
     });
     return running;
   }
@@ -115,6 +125,7 @@ export function createDeliveries(app) {
     queue,
     tick,
     start() {
+      closed = false;
       timer = setInterval(() => void tick().catch((e) => console.error(`[markstage] webhooks: ${e.message}`)), 5_000);
       timer.unref();
     },

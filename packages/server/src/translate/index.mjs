@@ -38,8 +38,12 @@ export function createTranslate(app, entries, deps = {}) {
   };
   const runner = createRunner(kit, rows, deps);
 
-  // a restart stops a run that was going: it waits, paused, for its person to resume it
-  db.prepare("UPDATE translate_runs SET status = 'paused', reason = ?, updated_at = ? WHERE status = 'running'").run('The server restarted during the run. Resume it to carry on with the entries not done yet.', nowIso(app.clock()));
+  // a restart, or a server process that stopped, stops a run that was going: it waits, paused, for its person to
+  // resume it (on any process). A run whose process still runs is left alone.
+  app.cluster.onReap(({ startup }) => {
+    const why = startup ? 'The server restarted during the run.' : 'The server process running it stopped.';
+    db.prepare("UPDATE translate_runs SET status = 'paused', reason = ?, live = NULL, stop_asked = NULL, updated_at = ? WHERE status = 'running' AND (owner IS NULL OR owner NOT IN (SELECT id FROM server_processes))").run(`${why} Resume it to carry on with the entries not done yet.`, nowIso(app.clock()));
+  });
 
   /** A person in the editor, never a token; editors and up, or a custom role (each entry decides then). */
   function may(ctx) {
@@ -77,7 +81,8 @@ export function createTranslate(app, entries, deps = {}) {
     const by = app.users.get(r.created_by);
     const plan = JSON.parse(r.plan);
     const items = r.result ? JSON.parse(r.result).items : [];
-    const live = runner.live(r.id);
+    // where it is: from this process when it runs here, else from its row (written by the process that runs it)
+    const live = runner.live(r.id) ?? (r.status === 'running' && r.live ? JSON.parse(r.live) : null);
     const status = r.status === 'planned' && app.clock() >= Date.parse(r.expires_at) ? 'expired' : r.status;
     return {
       id: r.id,
@@ -140,10 +145,24 @@ export function createTranslate(app, entries, deps = {}) {
   const own = (ctx, r, admins = false) => {
     if (r.created_by !== ctx.user.id && !(admins && atLeast(ctx.user, 'administrator'))) throw forbidden('Only the person who made this run does that. Make your own plan first.');
   };
-  const busy = (id) => {
-    const other = db.prepare("SELECT id FROM translate_runs WHERE status = 'running' AND id != ?").get(id);
-    if (other) throw new HttpError(409, 'busy', 'Another translation of the site is running. Wait for it, or pause it first.', { run: other.id });
-  };
+  /**
+   * Claim the run in the database: it becomes running, this process's, unless another run is running (409 busy) or
+   * it is not `from` any more (two starts at once, two clicks or two server processes: one runs).
+   */
+  function claim(r, from, fields) {
+    const out = app.cluster.exclusive(() => {
+      const other = db.prepare("SELECT id FROM translate_runs WHERE status = 'running' AND id != ?").get(r.id);
+      if (other) return { other };
+      const keys = Object.keys(fields);
+      const changed = db.prepare(`UPDATE translate_runs SET status = 'running', reason = NULL, owner = ?, stop_asked = NULL, live = NULL, ${keys.map((k) => `${k} = ?, `).join('')}updated_at = ? WHERE id = ? AND status = ?`).run(app.cluster.id, ...keys.map((k) => fields[k]), nowIso(app.clock()), r.id, from).changes;
+      return { ok: Number(changed) === 1 };
+    });
+    if (out.other) throw new HttpError(409, 'busy', 'Another translation of the site is running. Wait for it, or pause it first.', { run: out.other.id });
+    if (!out.ok) {
+      const now = rows.get(r.id);
+      throw conflict(`This run is ${now?.status ?? 'gone'} already.`, { status: now?.status ?? null });
+    }
+  }
 
   /** POST /translate/:rid/run, and resume: in the background, by its person. */
   function start(ctx, resume = false) {
@@ -155,8 +174,7 @@ export function createTranslate(app, entries, deps = {}) {
     if (r.status !== (resume ? 'paused' : 'planned')) throw conflict(`This run is ${v.status}${resume ? ', not paused' : ' already'}.`, { status: v.status });
     aiOn();
     mayLocale(ctx, localeOf(app, r.locale));
-    busy(r.id);
-    rows.set(r.id, { status: 'running', reason: null, ...(resume ? {} : { started_at: nowIso(app.clock()), result: JSON.stringify(firstResult(JSON.parse(r.plan))) }) });
+    claim(r, resume ? 'paused' : 'planned', resume ? {} : { started_at: nowIso(app.clock()), result: JSON.stringify(firstResult(JSON.parse(r.plan))) });
     audit.log(ctx, resume ? 'translate.resume' : 'translate.start', { target: r.id, detail: { locale: r.locale } });
     void runner.drive(r.id);
     ctx.status = 202;
@@ -172,9 +190,27 @@ export function createTranslate(app, entries, deps = {}) {
     if (what === 'cancel' && !['running', 'paused'].includes(r.status)) throw conflict(`This run is ${r.status}: there is nothing to cancel.`, { status: r.status });
     audit.log(ctx, `translate.${what}`, { target: r.id, detail: { locale: r.locale } });
     if (runner.signal(r.id, what)) await runner.drive(r.id);
+    else if (r.status === 'running' && r.owner && r.owner !== app.cluster.id && app.cluster.alive(r.owner)) await askOther(r, what);
     else if (what === 'cancel') rows.set(r.id, { status: 'cancelled', reason: 'Cancelled. The drafts made before are kept for review.', finished_at: nowIso(app.clock()) });
     else rows.set(r.id, { status: 'paused', reason: 'Paused. Resume it to carry on with the entries not done yet.' });
     return { run: runView(rows.get(r.id)) };
+  }
+
+  /**
+   * Pause or cancel a run going on another server process: asked on its row, which that process reads between two
+   * asks (a wait is cut short within a second); this answers once it has stopped (or after 30 s, still running).
+   */
+  async function askOther(r, what) {
+    db.prepare("UPDATE translate_runs SET stop_asked = ? WHERE id = ? AND status = 'running'").run(what, r.id);
+    for (let i = 0; i < 150 && rows.get(r.id)?.status === 'running'; i++) {
+      if (!app.cluster.alive(r.owner)) {
+        app.cluster.reap();
+        break;
+      }
+      await new Promise((res) => setTimeout(res, 200));
+    }
+    // its process stopped meanwhile (the run was paused for it): a cancel still cancels
+    if (what === 'cancel' && rows.get(r.id)?.status === 'paused') rows.set(r.id, { status: 'cancelled', reason: 'Cancelled. The drafts made before are kept for review.', finished_at: nowIso(app.clock()) });
   }
 
   /** The entry, when this person may read it (else 404, as if it were not there). */

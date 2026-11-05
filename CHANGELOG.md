@@ -34,6 +34,26 @@ docs/RELEASES.md says how a release is made.
 - Editors and up may run it, or a custom role that writes that region's words; a token or an agent may not. Each ask
   is audited as `ai.suggest`, the run as `translate.*`. On the server: `markstage-server translate --to <locale>
   [--only <collections>] [--include-translated] [--dry] --as <email>` (docs/API-TRANSLATIONS.md).
+- More than one server process on one data dir (docs/SCALING.md, docs/DEPLOY.md "Several server processes"). Run
+  several `markstage-server serve` processes on one machine, each on its own port, behind one address. They behave
+  as one server:
+  - the limits count across all of them: sign-in misses per address, share-link tries, wrong tokens, AI asks a
+    minute and a day, MCP calls and publishes, and live redirect tests;
+  - edit locks and who has an entry open are shared;
+  - one job runs at a time, whichever process started it, and its log is live on every process;
+  - saves to the site repo take turns through a lock file in the data dir (`repo.lock`), so two saves at once are two
+    clean commits.
+- One process holds the "primary" role and runs what must run once: the scheduler, backups, the digests, webhook
+  sends, the preview and share-link listeners. When it stops, another takes the role within a few seconds. A
+  process that stops mid-job leaves its job failed, with "The server process running this job stopped.", and a site
+  translation it ran paused, to resume on any process.
+- New config: `processes.leaseSeconds` (30 by default), how long the heartbeat of a process in another container
+  may stand still before its locks free themselves. On the same machine a crashed process's locks free at the next
+  heartbeat, and a live one (paused, or after a clock jump) keeps them: a process is never taken for stopped by the
+  wall clock alone, and work under a lock checks it still holds it before each step (docs/SCALING.md, "Clock jumps
+  and pauses").
+- A flood of share-link tries no longer fills the database: a refused try is not stored, an IPv6 address counts as
+  its /64 (for sign-in misses and wrong tokens too), and passed tries are deleted within a minute.
 
 ### Fixed
 

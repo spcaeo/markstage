@@ -56,7 +56,9 @@ const PROVIDERS = {
 export function stockRoutes(router, app, { storeImage, toPublic }) {
   const st = app.config.stock;
   const doFetch = app.fetch ?? globalThis.fetch;
-  const thumbs = new Map(); // token -> provider thumbnail URL (only URLs the provider sent us)
+  // token -> provider thumbnail URL (only URLs the provider sent us), in the database: the browser's thumbnail request
+  // may land on another server process than its search (docs/SCALING.md)
+  const { db } = app;
 
   /** A URL on one of the provider's image hosts, https (http only for loopback test doubles in development). */
   function allowed(url) {
@@ -107,10 +109,10 @@ export function stockRoutes(router, app, { storeImage, toPublic }) {
 
   function thumbToken(url) {
     const token = newToken(12);
-    thumbs.set(token, url);
-    while (thumbs.size > THUMBS_KEPT) thumbs.delete(thumbs.keys().next().value);
+    db.prepare('INSERT INTO stock_thumbs (token, url, at) VALUES (?, ?, ?)').run(token, url, Date.now());
     return token;
   }
+  const keepRecent = () => db.prepare('DELETE FROM stock_thumbs WHERE rowid NOT IN (SELECT rowid FROM stock_thumbs ORDER BY rowid DESC LIMIT ?)').run(THUMBS_KEPT);
 
   router.add('GET', '/stock', () => (st ? { enabled: true, provider: st.provider, label: PROVIDERS[st.provider].label } : { enabled: false }));
 
@@ -122,7 +124,7 @@ export function stockRoutes(router, app, { storeImage, toPublic }) {
     const perPage = Math.min(Math.max(Number(ctx.query.get('perPage')) || 24, 1), 30);
     const body = await call(p.searchUrl(st.apiBase, q, page, perPage), { headers: p.auth(st.key) });
     const { items, total } = p.list(body);
-    return {
+    const out = {
       provider: st.provider,
       label: p.label,
       page,
@@ -130,12 +132,14 @@ export function stockRoutes(router, app, { storeImage, toPublic }) {
       total,
       items: items.map(p.item).map(({ thumb, full: _f, track: _t, ...rest }) => ({ ...rest, thumb: thumb && allowed(thumb) ? `stock/thumb/${thumbToken(thumb)}` : null })),
     };
+    keepRecent();
+    return out;
   });
 
   // a thumbnail from the last searches, fetched from the provider's image host and checked to be an image
   router.add('GET', '/stock/thumb/:t', async (ctx) => {
     provider();
-    const url = thumbs.get(ctx.params.t);
+    const url = db.prepare('SELECT url FROM stock_thumbs WHERE token = ?').get(String(ctx.params.t))?.url;
     if (!url) throw notFound('This thumbnail has expired. Search again.');
     const buf = await call(url, { json: false, max: THUMB_MAX });
     const { type, svg } = sniff(buf);

@@ -27,7 +27,7 @@ function stubTarget(html) {
 export function redirectsRoutes(router, app, entries) {
   const { config, git, jobs, repoLock, audit, store, clock } = app;
   const hook = app.redirectsHook;
-  const tests = new Map(); // user id -> [times of the tests in the last minute]
+  // each person's live tests in the last minute: counted by every server process (cluster/limits.mjs)
 
   const mayManage = (ctx) => {
     if (!atLeast(ctx.user, 'editor')) throw forbidden('Only editors, administrators and the owner manage redirects.');
@@ -169,11 +169,7 @@ export function redirectsRoutes(router, app, entries) {
 
   /** At most TESTS_PER_MINUTE live tests per person: each one is requests to the live site. */
   function slowDown(user) {
-    const now = clock();
-    const recent = (tests.get(user.id) ?? []).filter((t) => now - t < 60_000);
-    if (recent.length >= TESTS_PER_MINUTE) throw new HttpError(429, 'rate-limited', 'That is a lot of tests in a minute. Wait a moment and try again.', { retryAfter: 60 });
-    recent.push(now);
-    tests.set(user.id, recent);
+    if (app.cluster.hits.take('redirects.test', user.id, 60_000, TESTS_PER_MINUTE, { at: clock() })) throw new HttpError(429, 'rate-limited', 'That is a lot of tests in a minute. Wait a moment and try again.', { retryAfter: 60 });
   }
 
   /** Ask the live site for `from` and follow its redirects on the same site, one hop at a time. */

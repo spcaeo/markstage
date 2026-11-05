@@ -7,6 +7,9 @@
 //   The day's: it pauses, saying when to resume. A busy provider: it waits as long as the provider asks.
 // - Pause, Resume and Cancel act between two asks (a wait is cut short). What was drafted stays, committed.
 // - A restart pauses a run that was going (index.mjs); Resume carries on with the entries not done yet.
+// - With several server processes (docs/SCALING.md) a run goes on in the process that started it. A Pause or Cancel
+//   asked on another one is written on the run's row (stop_asked) and read here between two asks and during a wait;
+//   where the run is (drafts not committed yet, a wait) is written on the row too (live), for the others to show.
 import { HttpError, nowIso } from '../util.mjs';
 import { SKIP_WORDS, decide, localeOf } from './plan.mjs';
 
@@ -16,6 +19,8 @@ const LONGEST_WAIT_S = 15 * 60;
 const plural = (n, one, many = `${one}s`) => `${n.toLocaleString('en-US')} ${n === 1 ? one : many}`;
 const utc = (ms) => `${new Date(ms).toISOString().slice(0, 16).replace('T', ' ')} UTC`;
 const realSleep = (ms) => new Promise((r) => setTimeout(r, ms));
+/** How often a wait looks for a Pause or Cancel asked on another server process. */
+const ASKED_EVERY_MS = 1000;
 
 /**
  * The runner. `kit`: {app, entries, drafts}; `rows`: {get(id), set(id, fields)} on translate_runs; `sleep(ms)`: how
@@ -40,16 +45,38 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
     return a ? { pending: a.pending.length, waiting: a.waiting } : null;
   };
 
-  /** A wait that Pause and Cancel cut short. */
-  function waitFor(a, ms, why) {
+  /** Where a going run is, on its row, for the other server processes. */
+  const show = (id, a) => rows.set(id, { live: JSON.stringify({ pending: a.pending.length, waiting: a.waiting }) });
+  /**
+   * A Pause or Cancel asked on another server process: true when there is one (the run stops then). Fencing too: a
+   * run no longer this process's (another one found it stopped while this one was paused, and it was resumed there)
+   * stops at once, writing nothing more ('lost').
+   */
+  function asked(id, a) {
+    const row = rows.get(id);
+    if (!a.stop && row && (row.status !== 'running' || (row.owner && row.owner !== app.cluster?.id))) {
+      a.stop = 'lost';
+      console.error(`[markstage] the site translation ${id} is no longer this server process's (it was found stopped while this one was paused); it stopped here.`);
+    }
+    if (row?.stop_asked && !a.stop) a.stop = row.stop_asked;
+    return Boolean(a.stop);
+  }
+
+  /** A wait that Pause and Cancel cut short (asked here, or on another server process). */
+  function waitFor(id, a, ms, why) {
     a.waiting = { until: nowIso(app.clock() + ms), why };
+    show(id, a);
     return new Promise((resolve) => {
       let done = false;
+      const poll = setInterval(() => asked(id, a) && end(), ASKED_EVERY_MS);
+      poll.unref();
       const end = () => {
         if (done) return;
         done = true;
+        clearInterval(poll);
         a.wake = null;
         a.waiting = null;
+        show(id, a);
         resolve();
       };
       a.wake = end;
@@ -109,7 +136,7 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
     const done = new Set(result.items.map((i) => `${i.collection}/${i.id}`));
     const todo = plan.items.filter((i) => i.action === 'draft' && !done.has(`${i.collection}/${i.id}`));
     const batches = Math.max(1, Math.ceil(plan.counts.draft / BATCH));
-    const save = () => rows.set(id, { result: JSON.stringify(result) });
+    const save = () => rows.set(id, { result: JSON.stringify(result), live: JSON.stringify({ pending: a.pending.length, waiting: a.waiting }) });
 
     const flush = async () => {
       if (!a.pending.length) return;
@@ -129,7 +156,7 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
 
     let stopWords = null;
     for (let i = 0; i < todo.length; ) {
-      if (a.stop) break;
+      if (asked(id, a)) break;
       const s = app.ai.provider.status();
       if (!s.on) {
         stopWords = `AI is off now: ${s.why} Resume it once AI is on again.`;
@@ -141,7 +168,7 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
           stopWords = `You have used your ${plural(room.max, 'AI ask')} for ${room.window === 'day' ? 'today' : 'now'}. Resume it after ${utc(app.clock() + room.wait * 1000)}.`;
           break;
         }
-        await waitFor(a, room.wait * 1000, `At most ${plural(room.max, 'ask')} a minute: waiting ${plural(room.wait, 'second')}.`);
+        await waitFor(id, a, room.wait * 1000, `At most ${plural(room.max, 'ask')} a minute: waiting ${plural(room.wait, 'second')}.`);
         continue;
       }
       const out = await draftOne(ctx, l, plan, todo[i]);
@@ -150,9 +177,11 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
           stopWords = `The AI provider asked for a break of ${plural(Math.ceil(out.retry / 60), 'minute')}. Resume it later.`;
           break;
         }
-        await waitFor(a, out.retry * 1000, `The AI provider is busy: waiting ${plural(out.retry, 'second')}.`);
+        await waitFor(id, a, out.retry * 1000, `The AI provider is busy: waiting ${plural(out.retry, 'second')}.`);
         continue;
       }
+      // the answer is kept only while the run is still this process's (it may have been paused during the ask)
+      if (asked(id, a) && a.stop === 'lost') break;
       if (out.stop) {
         stopWords = `${out.stop} Resume it once AI is on again.`;
         break;
@@ -161,11 +190,14 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
       if (out.created) {
         a.pending.push(out.created);
         if (a.pending.length >= BATCH) await flush();
+        else show(id, a);
       } else {
         result.items.push(out.row);
         save();
       }
     }
+    // another process carries it on: nothing more is written here (the drafts not saved yet are asked again there)
+    if (a.stop === 'lost') return;
     await flush();
     const now = nowIso(app.clock());
     const counts = countsOf(result.items);
@@ -190,6 +222,11 @@ export function createRunner(kit, rows, { sleep = realSleep } = {}) {
       } catch (e) {
         rows.set(id, { status: 'paused', reason: `It stopped on an error (${e.message}). Resume it to try again.` });
       } finally {
+        try {
+          if (a.stop !== 'lost') rows.set(id, { live: null, stop_asked: null });
+        } catch {
+          // the database closed under a stopping server
+        }
         active.delete(id);
       }
     })();

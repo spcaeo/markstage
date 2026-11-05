@@ -31,6 +31,12 @@ const isLoopbackHost = (h) => /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(h
 export const slugOf = (branch) => branch.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'branch';
 
 export function createSiteGate(app, { ops, rules }) {
+  // a branch preview cut by a restart, or whose server process stopped (its job failed: jobs.mjs), did not build
+  app.cluster?.onReap(({ startup, alone, jobs: cut }) => {
+    const why = startup ? 'The server restarted while it was building.' : 'The server process building it stopped.';
+    if (startup && alone) app.db.prepare("UPDATE env_previews SET status = 'failed', error = ? WHERE status = 'building'").run(why);
+    else for (const j of cut) app.db.prepare("UPDATE env_previews SET status = 'failed', error = ? WHERE status = 'building' AND job_id = ?").run(why, j);
+  });
   const { config, db, clock, audit, jobs } = app;
   const env = config.environment;
   const on = !env.production && env.gate;

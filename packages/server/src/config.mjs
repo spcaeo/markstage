@@ -64,6 +64,9 @@ const DEFAULTS = {
   // importMaxBytes: a pack or a WordPress export (POST library/import), streamed to <dataDir>/tmp first
   library: { dir: 'markstage/library', importMaxBytes: 64 * 1024 * 1024 },
   scheduler: { intervalSeconds: 60 },
+  // more than one server process on this data dir (docs/SCALING.md): how long a process's heartbeat and the locks it
+  // holds count without being renewed; a process on another machine that stops frees its locks after this long
+  processes: { leaseSeconds: 30 },
   maxBodyBytes: 4 * 1024 * 1024,
   editorDir: null,
   // preview render: its own origin (author HTML must never run on the CMS origin), a private clone of the site,
@@ -392,7 +395,7 @@ export function loadConfig({ env = process.env, overrides = {} } = {}) {
     }
   }
   const raw = { ...DEFAULTS, ...fromFile, ...overrides };
-  for (const key of ['session', 'login', 'git', 'commands', 'media', 'compat', 'scheduler', 'protectedPages', 'preview', 'library', 'share']) {
+  for (const key of ['session', 'login', 'git', 'commands', 'media', 'compat', 'scheduler', 'processes', 'protectedPages', 'preview', 'library', 'share']) {
     raw[key] = { ...DEFAULTS[key], ...(fromFile[key] ?? {}), ...(overrides[key] ?? {}) };
   }
   if (env.MARKSTAGE_CONTENT_ROOT) raw.contentRoot = env.MARKSTAGE_CONTENT_ROOT;
@@ -411,6 +414,7 @@ export function loadConfig({ env = process.env, overrides = {} } = {}) {
   if (isInside(realData, contentRoot)) fail('The content repo cannot be inside the data dir.');
 
   if (!Number.isInteger(raw.port) || raw.port < 1 || raw.port > 65535) fail(`Bad port: ${raw.port}`);
+  if (Object.keys(raw.processes).some((k) => k !== 'leaseSeconds') || !Number.isFinite(raw.processes.leaseSeconds) || raw.processes.leaseSeconds < 1 || raw.processes.leaseSeconds > 600) fail('processes is { "leaseSeconds": 1 to 600 } (30 by default).');
 
   // dev mode: no sign-in at all, so it may only ever listen on loopback and never in production
   if (raw.devNoAuth) {

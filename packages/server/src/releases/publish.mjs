@@ -342,10 +342,12 @@ export function createReleasePublish(app, { rs, builds }) {
     return started;
   }
 
-  // a publish cut by a restart: the job was failed at start (jobs.mjs); the release says so and is open again
-  for (const r of db.prepare("SELECT * FROM releases WHERE status = 'publishing'").all()) {
-    db.prepare("UPDATE releases SET status = 'open', error = ? WHERE id = ?").run(`The server restarted during the publish (commit ${r.commit_sha ?? 'none'}). Check the site, then publish it again.`, r.id);
-  }
+  // a publish cut by a restart, or whose server process stopped: the job was failed (jobs.mjs); the release says so
+  // and is open again. Alone at a start, every publishing release is such a one; else only those of the jobs failed.
+  app.cluster.onReap(({ startup, alone, jobs: cut }) => {
+    const list = startup && alone ? db.prepare("SELECT * FROM releases WHERE status = 'publishing'").all() : cut.flatMap((j) => db.prepare("SELECT * FROM releases WHERE status = 'publishing' AND job_id = ?").all(j));
+    for (const r of list) db.prepare("UPDATE releases SET status = 'open', error = ? WHERE id = ?").run(`The ${startup ? 'server restarted' : 'server process running it stopped'} during the publish (commit ${r.commit_sha ?? 'none'}). Check the site, then publish it again.`, r.id);
+  });
 
   /**
    * The site's checks of every entry in the release, run now on what it holds (an AI agent's publish asks for them

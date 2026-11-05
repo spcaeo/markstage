@@ -101,6 +101,39 @@ describe('webhooks', () => {
     assert.equal(JSON.parse(rx.got.at(-1).body).job.kind, 'publish');
   });
 
+  test('fencing: when another server process takes the sending over (this one was paused), this one stops before its next send', async () => {
+    const lease = () => srv.app.db.prepare("SELECT owner FROM leases WHERE name = 'webhooks.send'").get()?.owner ?? null;
+    const db = srv.app.db;
+    const c = srv.app.cluster;
+    const n = rx.got.length;
+    // another live process sends for now: the two tests queue, unsent
+    db.prepare('INSERT INTO server_processes (id, pid, host, kind, port, started_at, seen_at, machine, pid_start) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run('p_elsewhere', process.pid, c.host, 'serve', 1, Date.now(), Date.now(), c.machine, c.pidStart);
+    db.prepare("INSERT INTO leases (name, owner, what, since, expires_at) VALUES ('webhooks.send', 'p_elsewhere', 'webhooks', ?, ?)").run(Date.now(), Date.now() + 60_000);
+    for (let i = 0; i < 2; i++) assert.equal((await owner.post(`/webhooks/${hook.id}/test`, {})).status, 202);
+    await srv.app.webhooks.tick();
+    assert.equal(rx.got.length, n, 'nothing sent while the other holds it');
+    db.prepare("DELETE FROM leases WHERE name = 'webhooks.send'").run();
+    // this one sends; during its first send, the other takes the lease back (as when it found this one stopped)
+    rx.reply.body = () => {
+      srv.app.db.prepare("UPDATE leases SET owner = 'p_elsewhere' WHERE name = 'webhooks.send'").run();
+      return 'ok';
+    };
+    try {
+      await srv.app.webhooks.tick();
+    } finally {
+      rx.reply.body = 'ok';
+    }
+    assert.equal(rx.got.length - n, 1, 'one send, then it stopped');
+    assert.equal(lease(), 'p_elsewhere', 'the other process’s lease is left alone');
+    assert.equal((await deliveries('?status=pending')).items.length, 1, 'the second is still due, for the holder to send');
+    // the other process ends; this one sends what is left
+    db.prepare("DELETE FROM leases WHERE name = 'webhooks.send'").run();
+    db.prepare("DELETE FROM server_processes WHERE id = 'p_elsewhere'").run();
+    await srv.app.webhooks.tick();
+    assert.equal(rx.got.length - n, 2);
+    assert.equal((await deliveries('?status=pending')).items.length, 0);
+  });
+
   test('a failing address: tried again after 1, 5, 30, 120 and 360 minutes, then given up, and the admins told', async () => {
     rx.reply.status = 500;
     rx.reply.body = () => `oops ${planted} ${secret}`;

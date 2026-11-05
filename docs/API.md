@@ -552,7 +552,8 @@ heard from for 60 s is gone. The first tab in `editing` mode holds the entry's l
 answered `mode: "viewing"` with who holds it, until the lock is free or it takes over (`take: true`); the old holder
 hears `takenOver: {by, at}` once, on its next heartbeat. Someone who may not edit the entry is always a viewer
 (`canEdit: false`). The lock is advice for the editor: saves still go through the version check, so no save is
-refused because of it. It lives in memory; after a restart every open tab claims again on its next heartbeat.
+refused because of it. It is kept in the database, so every server process on the data dir sees the same tabs and
+the same lock (docs/SCALING.md); a tab not heard from for 60 s is gone, after a restart too.
 
 | Route | Does |
 |---|---|

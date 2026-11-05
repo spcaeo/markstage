@@ -57,11 +57,6 @@ items:
     what: The built editor on a server draws each article inside its real page, as astro dev does today.
     status: planned
     rows: []
-  - id: multi-process
-    title: More than one server process
-    what: Sign-in and share-link limits shared between processes, so one data dir can run on several.
-    status: planned
-    rows: []
   - id: adapters
     title: Adapters beyond Astro
     what: The core has no framework in it; more site generators after Astro.
@@ -80,6 +75,11 @@ items:
   - id: ai-seo
     title: AI link and SEO suggestions
     what: Suggested internal links and fixes for search problems, for a person to accept.
+    status: shipped
+    rows: []
+  - id: multi-process
+    title: More than one server process
+    what: Several server processes on one data dir, on one machine, sharing the sign-in and share-link limits, the locks and the jobs.
     status: shipped
     rows: []
   - id: stable

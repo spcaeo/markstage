@@ -3,20 +3,40 @@
 import { execFile } from 'node:child_process';
 
 const SHA = /^[0-9a-f]{7,40}$/;
+// the commands that change the work tree, the index, HEAD or a branch: across server processes they hold the repo's
+// lock file (cluster/file-lock.mjs), so two processes never write the repo at once (no index.lock errors). The rest
+// only read, or write objects only (hash-object, commit-tree, merge-tree: safe side by side), or work on an index of
+// their own (GIT_INDEX_FILE).
+const WRITES = new Set(['add', 'am', 'apply', 'branch', 'checkout', 'cherry-pick', 'clean', 'commit', 'gc', 'merge', 'mv', 'notes', 'pull', 'rebase', 'reset', 'restore', 'revert', 'rm', 'stash', 'switch', 'tag', 'update-ref', 'worktree']);
+const INDEX = new Set(['read-tree', 'update-index', 'write-tree']);
 const clean = (s, max) => String(s ?? '').replace(/[\u0000-\u001f\u007f<>]/g, ' ').trim().slice(0, max);
 
-export function createGit(config) {
+/**
+ * `lock`: the repo's lock file across processes ({hold(fn, what)}); `critical(name, fn)`: one process at a time for
+ * a fetch (two fetches at once fail to lock the remote's refs). Both optional (a tool that runs alone).
+ */
+export function createGit(config, { lock = null, critical = null } = {}) {
   const env = {
     PATH: process.env.PATH,
     HOME: process.env.HOME,
     LANG: 'C',
     GIT_TERMINAL_PROMPT: '0',
+    // `git status` and the like never write the index on the side (they would take index.lock while another
+    // process commits)
+    GIT_OPTIONAL_LOCKS: '0',
     GIT_COMMITTER_NAME: config.git.committerName,
     GIT_COMMITTER_EMAIL: config.git.committerEmail,
   };
 
   /** `extra`: more environment (GIT_INDEX_FILE, a fetch's ssh command); `input`: stdin; `cwd`: another work tree. */
-  function git(args, { allowFail = false, extra = null, input = null, cwd = config.contentRoot } = {}) {
+  function git(args, opts = {}) {
+    const writes = WRITES.has(args[0]) || (INDEX.has(args[0]) && !opts.extra?.GIT_INDEX_FILE);
+    if (lock && writes && (opts.cwd ?? config.contentRoot) === config.contentRoot) return lock.hold(() => run(args, opts), `git ${args[0]}`);
+    if (critical && args[0] === 'fetch') return critical('git.fetch', () => run(args, opts));
+    return run(args, opts);
+  }
+
+  function run(args, { allowFail = false, extra = null, input = null, cwd = config.contentRoot } = {}) {
     return new Promise((resolve, reject) => {
       const child = execFile('git', ['-C', cwd, '-c', 'core.quotepath=off', ...args], { env: extra ? { ...env, ...extra } : env, maxBuffer: 64 * 1024 * 1024 }, (err, stdout, stderr) => {
         if (err && !allowFail) return reject(Object.assign(new Error(`git ${args[0]} failed: ${stderr || err.message}`), { stderr, code: err.code }));
@@ -32,6 +52,9 @@ export function createGit(config) {
    * user; the committer is the server. Returns the new sha, or null when the paths had nothing to commit.
    */
   async function commit(paths, message, author) {
+    return lock ? lock.hold(() => commitNow(paths, message, author), 'commit') : commitNow(paths, message, author);
+  }
+  async function commitNow(paths, message, author) {
     const status = await git(['status', '--porcelain', '--', ...paths]);
     if (!status.stdout.trim()) return null;
     await git(['add', '-A', '--', ...paths]);

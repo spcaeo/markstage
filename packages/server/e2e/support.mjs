@@ -69,6 +69,9 @@ export const IMPORT_PORTS = [PORT_BASE + 18, PORT_BASE + 20];
 export const AI_SEO_PORTS = [PORT_BASE + 69, PORT_BASE + 21];
 // translating the site with AI (translate-site.e2e.mjs): its server +31, inside DEV_PORTS (the files run one at a time)
 export const TRANSLATE_SITE_PORT = PORT_BASE + 31;
+// two server processes on one data dir (two-process.e2e.mjs): A +32 and B +34, inside DEV_PORTS (the files run one at
+// a time)
+export const TWO_PROCESS_PORTS = [PORT_BASE + 32, PORT_BASE + 34];
 export const SHOTS = process.env.MARKSTAGE_E2E_SHOTS ?? null;
 
 async function loadPlaywright() {
@@ -95,7 +98,7 @@ export const pw = await loadPlaywright();
 export const skip = !pw ? 'Playwright not found (npm install at the repo root, or set MARKSTAGE_PLAYWRIGHT)' : false;
 if (pw) {
   const taken = listening();
-  const ours = [PORT, PREVIEW_PORT, STOCK_PORT, REDIR_PORT, LIVE_PORT, ...Array.from({ length: DEV_PORTS[1] - DEV_PORTS[0] + 1 }, (_, i) => DEV_PORTS[0] + i), ...LIBRARY_PORTS, GROUPS_PORT, ENTRIES_PORT, SHARE_PORT, ...EDIT_BUTTON_PORTS, ...GALLERY_PORTS, ...INBOX_ODOO_PORTS, RELEASES_UI_PORT, TOKENS_PORT, ...AI_SUGGEST_PORTS, TRANSLATIONS_PORT, SSO_UI_PORT, ROLES_UI_PORT, FIELDS_UI_PORT, AUTHORS_PORT, ...PAGE_TYPES_PORTS, LINKS_PORT, CANVAS_SHELL_PORT, ...QA_PORTS, ...QA2_PORTS, DEMO_PORT, MDX_PORT, MCP_PUBLISH_PORT, ...IMPORT_PORTS, ...AI_SEO_PORTS, TRANSLATE_SITE_PORT];
+  const ours = [PORT, PREVIEW_PORT, STOCK_PORT, REDIR_PORT, LIVE_PORT, ...Array.from({ length: DEV_PORTS[1] - DEV_PORTS[0] + 1 }, (_, i) => DEV_PORTS[0] + i), ...LIBRARY_PORTS, GROUPS_PORT, ENTRIES_PORT, SHARE_PORT, ...EDIT_BUTTON_PORTS, ...GALLERY_PORTS, ...INBOX_ODOO_PORTS, RELEASES_UI_PORT, TOKENS_PORT, ...AI_SUGGEST_PORTS, TRANSLATIONS_PORT, SSO_UI_PORT, ROLES_UI_PORT, FIELDS_UI_PORT, AUTHORS_PORT, ...PAGE_TYPES_PORTS, LINKS_PORT, CANVAS_SHELL_PORT, ...QA_PORTS, ...QA2_PORTS, DEMO_PORT, MDX_PORT, MCP_PUBLISH_PORT, ...IMPORT_PORTS, ...AI_SEO_PORTS, TRANSLATE_SITE_PORT, ...TWO_PROCESS_PORTS];
   const busy = ours.filter((p) => taken.has(p));
   if (busy.length) {
     // never a quiet skip: a run that did not run must not look like a pass

@@ -1,6 +1,6 @@
 // Login throttling, three layers:
-//  - per IP: a sliding window of *failed* attempts (in memory; a restart forgets it, which is fine for a window of
-//    minutes; one server process is assumed, see docs/SECURITY.md "Known limits"). A right sign-in never counts, and
+//  - per IP: a sliding window of *failed* attempts, in the database (cluster/limits.mjs), so every server process on
+//    the data dir counts the same misses (docs/SCALING.md) and a restart keeps them. A right sign-in never counts, and
 //    it clears the address's misses, so an office or a proxy with many people behind one address is not locked out
 //    by its own successful sign-ins.
 //  - per (account, address) pair: progressive lockout kept in the database. After `accountFreeFailures` misses in a
@@ -11,42 +11,37 @@
 //    from before (the known-device cookie) may still try its password during that lock (auth/routes.mjs).
 // A success clears the pair and the account. The same keys serve protected pages (protect.mjs: `page:<entry>`).
 import { HttpError } from '../util.mjs';
+import { limitKey } from '../cluster/limits.mjs';
 
 const WORDS = (retryAfter) => `Too many wrong tries. This account is locked for ${retryAfter} seconds.`;
 
-export function createLimiter(db, settings, clock = () => Date.now()) {
-  const ipHits = new Map();
+/** `hits`: the shared recent hits (cluster/limits.mjs). */
+export function createLimiter(db, settings, clock = () => Date.now(), hits) {
+  const BUCKET = 'login.ip';
   const windowMs = settings.ipWindowSeconds * 1000;
   const maxFailures = settings.accountMaxFailures ?? 50;
   const accountWindowMs = (settings.accountWindowSeconds ?? 3600) * 1000;
-
-  const recent = (ip, now) => (ipHits.get(ip) ?? []).filter((t) => now - t < windowMs);
+  // an IPv6 address counts as its /64: rotating addresses inside it gives no more tries
+  const ipKey = (ip) => limitKey(ip);
 
   /** Refuse (429) while this address has `ipMaxAttempts` misses in the window. Looking does not count. */
   function ipCheck(ip) {
     const now = clock();
-    const hits = recent(ip, now);
-    if (hits.length) ipHits.set(ip, hits);
-    else ipHits.delete(ip);
-    if (hits.length >= settings.ipMaxAttempts) {
-      const retryAfter = Math.max(1, Math.ceil((hits[0] + windowMs - now) / 1000));
+    const { n, oldest } = hits.count(BUCKET, ipKey(ip), windowMs, now);
+    if (n >= settings.ipMaxAttempts) {
+      const retryAfter = Math.max(1, Math.ceil((oldest + windowMs - now) / 1000));
       throw new HttpError(429, 'rate-limited', `Too many failed sign-ins from your network. Try again in ${retryAfter} seconds.`, { retryAfter });
     }
   }
 
   /** Record a miss from this address (a wrong password, code or invite). */
   function ipFailure(ip) {
-    const now = clock();
-    const hits = recent(ip, now);
-    hits.push(now);
-    ipHits.set(ip, hits);
-    // keep the map bounded if a scanner rotates through many addresses
-    if (ipHits.size > 10_000) for (const key of ipHits.keys()) if (ipHits.size > 5_000) ipHits.delete(key);
+    hits.add(BUCKET, ipKey(ip), windowMs);
   }
 
   /** A right sign-in from this address: its misses are forgotten. */
   function ipSuccess(ip) {
-    ipHits.delete(ip);
+    hits.clear(BUCKET, ipKey(ip));
   }
 
   const norm = (email) => String(email ?? '').trim().toLowerCase();
@@ -116,5 +111,5 @@ export function createLimiter(db, settings, clock = () => Date.now()) {
     return Number(db.prepare('DELETE FROM lockouts WHERE locked_until < ? AND last_failure_at < ?').run(now, now - accountWindowMs).changes);
   }
 
-  return { ipCheck, ipFailure, ipSuccess, accountCheck, accountFailure, accountSuccess, accountLockedFor, sweep, reset: () => ipHits.clear() };
+  return { ipCheck, ipFailure, ipSuccess, accountCheck, accountFailure, accountSuccess, accountLockedFor, sweep, reset: () => db.prepare('DELETE FROM limit_hits WHERE bucket = ?').run(BUCKET) };
 }

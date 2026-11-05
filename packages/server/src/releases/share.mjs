@@ -18,6 +18,7 @@ import { atLeast } from '../roles.mjs';
 import { statusText } from '../publish.mjs';
 import { HttpError, badRequest, forbidden, newId, newToken, notFound, nowIso, sha1, sha256 } from '../util.mjs';
 import { OPEN } from './store.mjs';
+import { limitKey } from '../cluster/limits.mjs';
 import { staticFileIn } from '../static-file.mjs';
 
 const COOKIE = 'ms_share';
@@ -44,11 +45,8 @@ export function createShare(app, { rs, builds, pub, entries }) {
   const key = kv('share.key');
   const sign = (s) => crypto.createHmac('sha256', key).update(s).digest('base64url');
 
-  const tries = new Map(); // address -> the times of its recent /share/ requests
-  const sweepTries = setInterval(() => {
-    for (const [ip, list] of tries) if (!list.some((t) => t > clock() - 60_000)) tries.delete(ip);
-  }, 300_000);
-  sweepTries.unref();
+  // the recent /share/ requests of each address: in the database, counted by every server process (cluster/limits.mjs)
+  const hits = app.cluster.hits;
   const stateOf = (l) => (l.revoked_at ? 'revoked' : Date.parse(l.expires_at) <= clock() ? 'expired' : 'active');
   const toPublic = (l) => ({
     id: l.id,
@@ -243,12 +241,10 @@ export function createShare(app, { rs, builds, pub, entries }) {
     }
     // the token is in this address only: never logged or audited (the link's id is), and tried at a limited rate
     if (url.pathname.startsWith('/share/')) {
-      const ip = clientIp(req, config.trustProxy) ?? '?';
-      const recent = (tries.get(ip) ?? []).filter((t) => t > clock() - 60_000);
-      recent.push(clock());
-      tries.set(ip, recent);
-      if (recent.length > PER_MINUTE) {
-        if (recent.length === PER_MINUTE + 1) audit.log(viewer(req), 'share.limited', { ok: false, detail: { perMinute: PER_MINUTE } });
+      // counted first, written only when let through (a refused try writes nothing); an IPv6 address as its /64
+      const key = limitKey(clientIp(req, config.trustProxy) ?? '?');
+      if (hits.take('share.try', key, 60_000, PER_MINUTE)) {
+        if (hits.once('share.limited', key, 60_000)) audit.log(viewer(req), 'share.limited', { ok: false, detail: { perMinute: PER_MINUTE } });
         res.setHeader('Retry-After', '60');
         return page(res, 429, 'Too many tries', 'Wait a minute, then open the link again.');
       }
@@ -335,7 +331,6 @@ export function createShare(app, { rs, builds, pub, entries }) {
       });
     },
     async close() {
-      clearInterval(sweepTries);
       if (!server) return;
       server.closeAllConnections?.();
       await new Promise((r) => server.close(() => r()));

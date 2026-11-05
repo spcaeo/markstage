@@ -83,11 +83,9 @@ export function createPageGate(app) {
   const cookieMs = (opts.cookieHours ?? 12) * 3_600_000;
 
   // the cookie signing key: random, made once, kept in the data dir database
-  let secret = db.prepare("SELECT value FROM kv WHERE key = 'pageCookieSecret'").get()?.value;
-  if (!secret) {
-    secret = crypto.randomBytes(32).toString('base64url');
-    db.prepare("INSERT INTO kv (key, value) VALUES ('pageCookieSecret', ?)").run(secret);
-  }
+  // made once: two server processes starting at once keep the first one written, and both use it
+  db.prepare("INSERT INTO kv (key, value) VALUES ('pageCookieSecret', ?) ON CONFLICT(key) DO NOTHING").run(crypto.randomBytes(32).toString('base64url'));
+  const secret = db.prepare("SELECT value FROM kv WHERE key = 'pageCookieSecret'").get().value;
   const sign = (s) => crypto.createHmac('sha256', secret).update(s).digest('base64url');
 
   /** The protected entry whose current URL is this path, with its password row. */

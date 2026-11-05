@@ -87,16 +87,19 @@ export function createCustomRoles(app) {
 
     api.add('PUT', '/roles/:rid', (ctx) => {
       may(ctx);
-      const was = rowOf(ctx.params.rid);
-      if (!was) throw notFound('No such role.');
-      if (ctx.body?.version !== `r${was.rev}`) throw conflict('The role changed since you loaded it.', { current: view(was) });
-      const r = check({ ...ctx.body, id: was.id });
-      mayBase(ctx, was.base, 'changes');
-      mayBase(ctx, r.base, 'changes');
-      tx(db, () => {
+      // the version check and the change hold the database's write lock: of two saves at once (on two server
+      // processes), one wins and the other gets the 409
+      const { was, r } = tx(db, () => {
+        const was = rowOf(ctx.params.rid);
+        if (!was) throw notFound('No such role.');
+        if (ctx.body?.version !== `r${was.rev}`) throw conflict('The role changed since you loaded it.', { current: view(was) });
+        const r = check({ ...ctx.body, id: was.id });
+        mayBase(ctx, was.base, 'changes');
+        mayBase(ctx, r.base, 'changes');
         db.prepare('UPDATE custom_roles SET name = ?, base = ?, rules = ?, rev = rev + 1, updated_at = ?, updated_by = ? WHERE id = ?').run(r.name, r.base, JSON.stringify(r.rules), nowIso(app.clock()), ctx.user.id, was.id);
         // the people with it take its new base as their rank
         if (r.base !== was.base) db.prepare('UPDATE users SET role = ? WHERE custom_role = ?').run(r.base, was.id);
+        return { was, r };
       });
       audit.log(ctx, 'role.update', { target: was.id, detail: { base: r.base !== was.base ? { from: was.base, to: r.base } : undefined, rules: r.rules.length } });
       tell(ctx, `changed the role ${r.name}${r.base !== was.base ? ` (now built on ${r.base})` : ''}`);

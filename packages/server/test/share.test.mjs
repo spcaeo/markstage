@@ -34,7 +34,8 @@ describe('share links', () => {
   };
 
   before(async () => {
-    ({ fx, srv, clock, shareOrigin } = await releaseServer());
+    // behind a proxy: a request without X-Forwarded-For is its socket's address, one with it is many visitors
+    ({ fx, srv, clock, shareOrigin } = await releaseServer({ overrides: { trustProxy: true } }));
     ed = await as(srv, 'editor');
     rel = (await ed.post('/releases', { name: 'Preview me' })).json;
     const v = (await ed.get('/collections/posts/entries/bob-draft')).json.version;
@@ -205,6 +206,23 @@ describe('share links', () => {
     const open = await go(url);
     assert.equal(open.status, 303);
     assert.equal((await go(open.headers.get('location'))).status === 429, false);
+  });
+
+  test('a flood of tries stays small in the database: a refused try is not stored, an IPv6 /64 counts as one address, passed tries go within a minute', async () => {
+    const rows = () => srv.app.db.prepare("SELECT COUNT(*) AS n FROM limit_hits WHERE bucket = 'share.try'").get().n;
+    // the address comes from the proxy's header here (trustProxy), so one test can be many visitors
+    clock.now += 61_000;
+    const go = visitor();
+    const fake = (i) => `/share/${String(i).padStart(43, 'y')}`;
+    const statuses = [];
+    // rotating addresses inside one IPv6 /64, as a flood would
+    for (let i = 0; i < 120; i++) statuses.push((await go(fake(i), { headers: { 'X-Forwarded-For': `2001:db8:7:9::${(i + 1).toString(16)}` } })).status);
+    assert.deepEqual([statuses.filter((s) => s === 404).length, statuses.filter((s) => s === 429).length], [30, 90], 'the whole /64 gets 30 tries a minute');
+    assert.equal(rows(), 30, 'only the tries let through are stored (the earlier tests’ were swept, a minute old)');
+    // one try a minute on, from anywhere: every passed try of every address is deleted by it
+    clock.now += 61_000;
+    assert.equal((await go(fake(500), { headers: { 'X-Forwarded-For': '198.51.100.7' } })).status, 404);
+    assert.equal(rows(), 1);
   });
 
   test('the site moves under a link: the next page builds it again on the new commit, never the old build', async () => {

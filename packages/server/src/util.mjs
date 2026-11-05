@@ -56,6 +56,21 @@ export function safeEqual(a, b) {
 
 export const nowIso = (now = Date.now()) => new Date(now).toISOString();
 
+/** The network an address belongs to: `a.b.c.0/24` for IPv4, the first four groups `/64` for IPv6; null if unknown. */
+export function netOf(ip) {
+  const s = String(ip ?? '').trim();
+  const v4 = /^(?:::ffff:)?(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.\d{1,3}$/.exec(s);
+  if (v4) return `${v4[1]}.${v4[2]}.${v4[3]}.0/24`;
+  if (!s.includes(':')) return null;
+  // expand :: so the first four groups are known
+  const [head, tail = ''] = s.split('::');
+  const h = head ? head.split(':') : [];
+  const t = tail ? tail.split(':') : [];
+  const groups = s.includes('::') ? [...h, ...Array(Math.max(0, 8 - h.length - t.length)).fill('0'), ...t] : h;
+  if (groups.length !== 8 || groups.some((g) => !/^[0-9a-f]{1,4}$/i.test(g))) return null;
+  return `${groups.slice(0, 4).map((g) => g.toLowerCase().replace(/^0+(?=.)/, '')).join(':')}::/64`;
+}
+
 /** A URL-safe slug from a title: lowercase ascii, hyphens, max 100 chars; '' when no letter a-z or digit survives. */
 export function slugify(title) {
   return String(title ?? '')
@@ -75,24 +90,24 @@ export function slugify(title) {
 export const datedId = (c, now = Date.now()) => `${c?.format === 'json' ? 'page' : 'post'}-${new Date(now).toISOString().slice(0, 10)}`;
 
 /**
- * A lock that never waits: `take(what)` gives a release function, or null while someone holds it (the route answers
- * 409 busy). For work that must run one at a time per server and should tell the caller so, like an import.
+ * A lock that never waits, across every server process on the data dir (a lease, cluster/): `take(what)` gives a
+ * release function, or null while someone holds it (the route answers 409 busy). For work that must run one at a
+ * time per server and should tell the caller so, like an import. A process that stops mid-way frees it (its lease).
  */
-export function createBusyLock() {
-  let held = null;
+export function createBusyLease(cluster, name) {
   return {
     take(what = 'work') {
-      if (held) return null;
-      held = { what, since: Date.now() };
+      if (!cluster.take(name, what)) return null;
       let released = false;
       return () => {
         if (released) return;
         released = true;
-        held = null;
+        cluster.release(name);
       };
     },
     get holder() {
-      return held;
+      const h = cluster.holder(name);
+      return h ? { what: h.what, since: h.since } : null;
     },
   };
 }

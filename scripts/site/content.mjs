@@ -38,6 +38,13 @@ export const DOC_GROUPS = [
         summary: 'Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.',
       },
       {
+        id: 'scaling',
+        file: 'SCALING.md',
+        title: 'Several server processes on one data dir',
+        seo: 'Run Markstage on Several Server Processes',
+        summary: 'Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited.',
+      },
+      {
         id: 'docker',
         file: 'DOCKER.md',
         title: 'Markstage with Docker',

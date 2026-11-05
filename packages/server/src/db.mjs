@@ -633,6 +633,91 @@ export const MIGRATIONS = [
     updated_at TEXT NOT NULL
   );
   `,
+  // 24: more than one server process on one data dir (docs/SCALING.md): the processes and their heartbeats, leases
+  // (a lock with an owner that frees itself when the owner stops), the limits' recent hits, who has an entry open and
+  // its soft lock, the preview's unsaved states, the stock search's thumbnails, and who runs a job or a translation
+  `
+  CREATE TABLE IF NOT EXISTS server_processes (
+    id TEXT PRIMARY KEY,
+    pid INTEGER NOT NULL,
+    host TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    port INTEGER,
+    started_at INTEGER NOT NULL,
+    seen_at INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS leases (
+    name TEXT PRIMARY KEY,
+    owner TEXT NOT NULL,
+    what TEXT,
+    since INTEGER NOT NULL,
+    expires_at INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS limit_hits (
+    bucket TEXT NOT NULL,
+    key TEXT NOT NULL,
+    at INTEGER NOT NULL,
+    expires_at INTEGER NOT NULL,
+    owner TEXT
+  );
+  CREATE INDEX IF NOT EXISTS limit_hits_key ON limit_hits (bucket, key, at);
+  CREATE INDEX IF NOT EXISTS limit_hits_expires ON limit_hits (expires_at);
+  CREATE TABLE IF NOT EXISTS presence_tabs (
+    entry TEXT NOT NULL,
+    tab_key TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    name TEXT,
+    tab TEXT NOT NULL,
+    mode TEXT NOT NULL,
+    since INTEGER NOT NULL,
+    seen INTEGER NOT NULL,
+    PRIMARY KEY (entry, tab_key)
+  );
+  CREATE TABLE IF NOT EXISTS presence_locks (
+    entry TEXT PRIMARY KEY,
+    tab_key TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    name TEXT,
+    since INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS presence_taken (
+    tab_key TEXT PRIMARY KEY,
+    entry TEXT NOT NULL,
+    by_name TEXT,
+    at INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS preview_states (
+    key TEXT PRIMARY KEY,
+    version TEXT NOT NULL,
+    text TEXT,
+    css TEXT,
+    at INTEGER NOT NULL,
+    rev INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE TABLE IF NOT EXISTS stock_thumbs (
+    token TEXT PRIMARY KEY,
+    url TEXT NOT NULL,
+    at INTEGER NOT NULL
+  );
+  `,
+  // 25: the process that runs a job or a site translation, a Pause or Cancel asked on another process, and where a
+  // running translation is; empty columns only, added when missing (the step may run again, as 22 to 24 may)
+  (db) => {
+    const add = (table, column) => {
+      if (!db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT`);
+    };
+    add('jobs', 'owner');
+    add('translate_runs', 'owner');
+    add('translate_runs', 'stop_asked');
+    add('translate_runs', 'live');
+  },
+  // 26: how a server process is told alive without the wall clock (cluster/identity.mjs): its machine (hostname, pid
+  // namespace, boot) and when its pid started; empty columns, added when missing
+  (db) => {
+    for (const column of ['machine', 'pid_start']) {
+      if (!db.prepare('PRAGMA table_info(server_processes)').all().some((c) => c.name === column)) db.exec(`ALTER TABLE server_processes ADD COLUMN ${column} TEXT`);
+    }
+  },
 ];
 
 /** Open (and create or upgrade) the database at `<dataDir>/markstage.db`, readable by the server user only. */
@@ -646,11 +731,30 @@ export function openDb(dataDir) {
       // the -wal/-shm files appear later; they inherit the umask set by the CLI
     }
   }
-  db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 5000;');
-  const { user_version: version } = db.prepare('PRAGMA user_version').get();
-  for (let v = version; v < MIGRATIONS.length; v++) {
-    db.exec('BEGIN');
+  db.exec('PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON;');
+  // another server process may be opening the same new database: switching it to WAL does not wait by itself, so it
+  // is tried again for a few seconds (once it is WAL, it stays WAL and this returns at once)
+  const until = Date.now() + 5000;
+  for (;;) {
     try {
+      db.exec('PRAGMA journal_mode = WAL');
+      break;
+    } catch (e) {
+      if (!/locked|busy/i.test(e.message) || Date.now() > until) throw e;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 25);
+    }
+  }
+  const version = () => db.prepare('PRAGMA user_version').get().user_version;
+  while (version() < MIGRATIONS.length) {
+    // the write lock first, then the version again: two server processes starting at once run each step once
+    // (docs/SCALING.md); the second one waits (busy_timeout) and finds the step done
+    db.exec('BEGIN IMMEDIATE');
+    try {
+      const v = version();
+      if (v >= MIGRATIONS.length) {
+        db.exec('COMMIT');
+        break;
+      }
       // a step is SQL, or a function for what SQL cannot say (a check in plain words before a change)
       if (typeof MIGRATIONS[v] === 'function') MIGRATIONS[v](db);
       else db.exec(MIGRATIONS[v]);
@@ -664,15 +768,26 @@ export function openDb(dataDir) {
   return db;
 }
 
-/** Run fn inside a transaction (node:sqlite has no helper for it). */
+const txDepth = new WeakMap();
+
+/**
+ * Run fn inside a write transaction (node:sqlite has no helper for it). BEGIN IMMEDIATE takes the database's write
+ * lock first, so what fn reads cannot change under it from another server process before it writes. Inside another
+ * tx it is a savepoint: an error undoes fn's part only, and the outer transaction decides.
+ */
 export function tx(db, fn) {
-  db.exec('BEGIN IMMEDIATE');
+  const depth = txDepth.get(db) ?? 0;
+  const [begin, commit, undo] = depth ? [`SAVEPOINT tx${depth}`, `RELEASE tx${depth}`, `ROLLBACK TO tx${depth}; RELEASE tx${depth}`] : ['BEGIN IMMEDIATE', 'COMMIT', 'ROLLBACK'];
+  db.exec(begin);
+  txDepth.set(db, depth + 1);
   try {
     const out = fn();
-    db.exec('COMMIT');
+    db.exec(commit);
     return out;
   } catch (e) {
-    db.exec('ROLLBACK');
+    db.exec(undo);
     throw e;
+  } finally {
+    txDepth.set(db, depth);
   }
 }

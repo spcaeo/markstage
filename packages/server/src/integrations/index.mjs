@@ -226,7 +226,10 @@ export function createIntegrations(app) {
       const r = row(cfg.name);
       const since = r?.refreshed_at ? app.clock() - Date.parse(r.refreshed_at) : Infinity;
       if (since < REFRESH_GAP_MS) throw new HttpError(429, 'too-soon', 'This list was fetched a moment ago. Try again in a minute.', { retryAfter: Math.ceil((REFRESH_GAP_MS - since) / 1000) });
-      if (r) db.prepare('UPDATE integration_cache SET refreshed_at = ? WHERE name = ?').run(nowIso(app.clock()), cfg.name);
+      // compare and set: of two refreshes at once (on two server processes), one fetches and the other is too soon
+      if (r && Number(db.prepare('UPDATE integration_cache SET refreshed_at = ? WHERE name = ? AND refreshed_at IS ?').run(nowIso(app.clock()), cfg.name, r.refreshed_at).changes) !== 1) {
+        throw new HttpError(429, 'too-soon', 'This list was fetched a moment ago. Try again in a minute.', { retryAfter: Math.ceil(REFRESH_GAP_MS / 1000) });
+      }
       const out = await fetchOne(cfg);
       if (!r) db.prepare('UPDATE integration_cache SET refreshed_at = ? WHERE name = ?').run(nowIso(app.clock()), cfg.name);
       audit.log(ctx, 'integration.refresh', { target: cfg.name, ok: out.status === 'ok', detail: { count: out.count, host: out.host } });
@@ -239,6 +242,7 @@ export function createIntegrations(app) {
     tick,
     check,
     start() {
+      closed = false;
       if (!Object.keys(all).length) return;
       setImmediate(() => void tick().catch((e) => console.error(`[markstage] integrations: ${e.message}`)));
       timer = setInterval(() => void tick().catch((e) => console.error(`[markstage] integrations: ${e.message}`)), 30_000);

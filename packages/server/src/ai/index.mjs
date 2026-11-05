@@ -13,8 +13,8 @@
 // - Who may ask: a signed-in person, in the editor (a session; the command line's and an agent's tokens are refused
 //   before this runs). They see what they may read (the MCP server's `readable`); a plan's summary is for editors
 //   and up.
-// - What it costs: at most `ai.perMinute` and `ai.perDay` asks per person (counted from the audit, rolling), and
-//   capped sizes (suggest.mjs CAPS).
+// - What it costs: at most `ai.perMinute` and `ai.perDay` asks per person (counted from the audit, rolling, with the
+//   asks still going on every server process: cluster/limits.mjs), and capped sizes (suggest.mjs CAPS).
 // - What is kept: the audit row "ai.suggest" with the kind, the entry, image or plan, the provider, the model and
 //   the token counts; never the prompt or the answer.
 // - The key (MARKSTAGE_AI_KEY) and every other secret is scrubbed from what goes to the model and from every answer
@@ -27,13 +27,15 @@ import { KINDS, prepare, suggestKit } from './suggest.mjs';
 
 const MINUTE = 60_000;
 const DAY = 24 * 60 * MINUTE;
+/** An ask still going counts this long at most (one whose process stopped goes with it before that). */
+const BUSY_MS = 10 * MINUTE;
 
 /** The AI suggestions of a server. `deps`: {fetch, env} (tests: a fake fetch, an environment with or without a key). */
 export function createAi(app, deps = {}) {
   const provider = createProvider(app.config, deps);
   const scrubber = app.mcp?.scrubber ?? createScrub(app, deps.env ? { env: deps.env } : {});
-  const busy = new Map();
-  const limitedAt = new Map();
+  // the asks going now, of every server process: claimed with the check, in one write transaction
+  const hits = app.cluster.hits;
 
   // a summary is for editors and up; a translation needs a second locale; links need the site's link index (topics)
   const kindsFor = (user) => KINDS.filter((k) => (k !== 'summary' || atLeast(user, 'editor')) && (k !== 'translate' || (app.config.locales?.list.length ?? 0) > 1) && (k !== 'links' || !!app.links?.enabled));
@@ -54,7 +56,7 @@ export function createAi(app, deps = {}) {
   function used(userId, ms) {
     const since = nowIso(app.clock() - ms);
     const r = app.db.prepare("SELECT COUNT(*) AS n, MIN(at) AS oldest FROM audit WHERE user_id = ? AND action = 'ai.suggest' AND at >= ?").get(userId, since);
-    return { n: r.n + (busy.get(userId) ?? 0), oldest: r.oldest ? Date.parse(r.oldest) : app.clock() };
+    return { n: r.n + hits.count('ai.busy', userId, BUSY_MS).n, oldest: r.oldest ? Date.parse(r.oldest) : app.clock() };
   }
 
   /**
@@ -73,19 +75,25 @@ export function createAi(app, deps = {}) {
   /** How many asks this person has left today (the plan of a site translation says so). */
   const leftToday = (userId) => Math.max(0, provider.limits.perDay - used(userId, DAY).n);
 
-  /** 429 when this person has had their asks for the minute or the day; logged at most once a minute. */
+  /**
+   * Claim one ask for this person, or 429 when they have had their asks for the minute or the day (logged at most once
+   * a minute). The count and the claim are one write transaction, so two server processes never both take the last.
+   */
   function checkLimits(ctx) {
-    for (const [window, ms, max] of [['minute', MINUTE, provider.limits.perMinute], ['day', DAY, provider.limits.perDay]]) {
-      const u = used(ctx.user.id, ms);
-      if (u.n < max) continue;
-      const retryAfter = Math.max(1, Math.ceil((u.oldest + ms - app.clock()) / 1000));
-      if (app.clock() - (limitedAt.get(ctx.user.id) ?? 0) >= MINUTE) {
-        limitedAt.set(ctx.user.id, app.clock());
-        app.audit.log(ctx, 'ai.limited', { ok: false, detail: { window, max } });
+    const over = app.cluster.exclusive(() => {
+      for (const [window, ms, max] of [['minute', MINUTE, provider.limits.perMinute], ['day', DAY, provider.limits.perDay]]) {
+        const u = used(ctx.user.id, ms);
+        if (u.n >= max) return { window, ms, max, oldest: u.oldest };
       }
-      const when = window === 'minute' ? `in ${retryAfter} seconds` : `in about ${Math.ceil(retryAfter / 3600)} hours`;
-      throw new HttpError(429, 'ai-rate', `You have asked for ${max} suggestions in the last ${window}, the most this site allows. Try again ${when}.`, { retryAfter, limit: window, max });
-    }
+      hits.add('ai.busy', ctx.user.id, BUSY_MS, { mine: true });
+      return null;
+    });
+    if (!over) return;
+    const { window, ms, max } = over;
+    const retryAfter = Math.max(1, Math.ceil((over.oldest + ms - app.clock()) / 1000));
+    if (hits.once('ai.limited', ctx.user.id, MINUTE)) app.audit.log(ctx, 'ai.limited', { ok: false, detail: { window, max } });
+    const when = window === 'minute' ? `in ${retryAfter} seconds` : `in about ${Math.ceil(retryAfter / 3600)} hours`;
+    throw new HttpError(429, 'ai-rate', `You have asked for ${max} suggestions in the last ${window}, the most this site allows. Try again ${when}.`, { retryAfter, limit: window, max });
   }
 
   async function suggest(ctx) {
@@ -109,7 +117,7 @@ export function createAi(app, deps = {}) {
     const list = scrubber.values();
     const content = ask.content.map((b) => (b.type === 'text' ? { ...b, text: scrubber.scrub(b.text, list) } : b));
     const detail = { kind, provider: s.provider, model: s.model, inputTokens: 0, outputTokens: 0 };
-    busy.set(ctx.user.id, (busy.get(ctx.user.id) ?? 0) + 1);
+    // the ask was claimed by checkLimits; it counts from the audit row from now on
     try {
       const out = await provider.complete({ system: ask.system, content, stub: ask.stub });
       detail.inputTokens = out.usage.input;
@@ -121,7 +129,7 @@ export function createAi(app, deps = {}) {
       app.audit.log(ctx, 'ai.suggest', { ok: false, target: ask.target, detail: { ...detail, error: e instanceof HttpError ? e.code : 'server' } });
       throw e;
     } finally {
-      busy.set(ctx.user.id, busy.get(ctx.user.id) - 1);
+      hits.drop('ai.busy', ctx.user.id);
     }
   }
 

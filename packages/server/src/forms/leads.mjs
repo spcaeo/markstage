@@ -85,7 +85,8 @@ export async function sendSkald(url, secret, lead, { fetchImpl = fetch, now = Da
 export function createLeads(app, { fetchImpl = fetch, env = process.env } = {}) {
   const { db, clock } = app;
   const forms = () => app.config.forms ?? {};
-  const busy = new Set();
+  // a message being sent: a lease in the database, so two server processes never send it twice at once
+  const busy = { add: (id) => app.cluster.take(`lead:${id}`, 'lead'), delete: (id) => app.cluster.release(`lead:${id}`) };
   // kept apart from form_messages, one row per message sent on (a table of its own: no schema version of its own)
   db.exec(`CREATE TABLE IF NOT EXISTS form_leads (
     message_id TEXT PRIMARY KEY REFERENCES form_messages(id) ON DELETE CASCADE,
@@ -115,14 +116,17 @@ export function createLeads(app, { fetchImpl = fetch, env = process.env } = {}) 
 
   /** Try one message now. Returns {ok, error?}. `who`: the person who asked, else the server. */
   async function push(id, who = null) {
-    if (busy.has(id)) return { ok: false, error: 'It is being sent right now.' };
+    if (!busy.add(id)) return { ok: false, error: 'It is being sent right now.' };
+    // read after the claim: a send that just ended on another process has written its result
     const l = db.prepare('SELECT * FROM form_leads WHERE message_id = ?').get(id);
-    if (!l || l.state === 'sent') return { ok: l?.state === 'sent' };
+    if (!l || l.state === 'sent') {
+      busy.delete(id);
+      return { ok: l?.state === 'sent' };
+    }
     const msg = db.prepare('SELECT id, form, name, email, ip FROM form_messages WHERE id = ?').get(id);
     const form = msg && forms()[msg.form];
     const name = NAME[l.kind] ?? l.kind;
     let s = null;
-    busy.add(id);
     try {
       if (!form?.leads) throw new Error('Its form no longer sends leads.');
       s = settingsOf(form.leads, env);

@@ -216,7 +216,8 @@ export function createAlertRules(app) {
       if (!atLeast(ctx.user, 'editor')) throw forbidden("Only editors and above can see the site's alert rules.");
       return siteView();
     });
-    router.add('PUT', '/site/alerts', (ctx) => {
+    // the version check and the write hold the database's write lock (two server processes: one wins, one gets 409)
+    router.add('PUT', '/site/alerts', (ctx) => app.cluster.exclusive(() => {
       if (!can(ctx.user, 'site.alerts')) throw forbidden("Only an owner or administrator can change the site's alert rules.");
       const cur = stored();
       if (ctx.body.version !== versionOf(cur.text)) throw new HttpError(409, 'stale', 'The alert rules changed since you opened them. Here they are as they are now.', { current: siteView() });
@@ -237,7 +238,7 @@ export function createAlertRules(app) {
         audit.log(ctx, 'site.alerts', { target: 'alerts', detail: { changed: changed.map((k) => ({ kind: k, from: ruleOf(k, cur.kinds), to: next[k] })), ...(nameChanged ? { senderName: { from: cur.senderName, to: name } } : {}) } });
       }
       return { ...siteView(), changed: [...changed, ...(nameChanged ? ['senderName'] : [])] };
-    });
+    }));
     router.add('GET', '/me/alerts', (ctx) => myView(ctx.user));
     router.add('PUT', '/me/alerts', (ctx) => {
       if (ctx.body.version !== undefined && ctx.body.version !== myVersion(ctx.user)) throw new HttpError(409, 'stale', 'Your alert choices changed in another window. Here they are as they are now.', { current: myView(ctx.user) });

@@ -94,8 +94,11 @@ export function createReleaseBuilds(app) {
     db.prepare('DELETE FROM release_builds WHERE target = ?').run(target);
   }
 
-  /** At start: a build cut by a restart is not building any more. */
-  db.prepare("UPDATE release_builds SET status = 'failed', error = 'The server restarted during the build.' WHERE status = 'building'").run();
+  // a build cut by a restart, or whose server process stopped (its job failed: jobs.mjs), is not building any more
+  app.cluster.onReap(({ startup, alone, jobs: cut }) => {
+    if (startup && alone) db.prepare("UPDATE release_builds SET status = 'failed', error = 'The server restarted during the build.' WHERE status = 'building'").run();
+    else for (const j of cut) db.prepare("UPDATE release_builds SET status = 'failed', error = 'The server process running the build stopped.' WHERE status = 'building' AND job_id = ?").run(j);
+  });
 
   return { state, outDir, ensure, remove, dirOf, servable: () => outRel !== null };
 }

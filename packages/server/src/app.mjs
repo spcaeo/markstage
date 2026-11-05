@@ -70,12 +70,14 @@ import { createTranslations } from './content/translations.mjs';
 import { createImport } from './import/index.mjs';
 import { createIntegrations } from './integrations/index.mjs';
 import { createCustomRoles } from './custom-roles/index.mjs';
+import { createCluster } from './cluster/index.mjs';
+import { createFileLock, createRepoLock } from './cluster/file-lock.mjs';
 import { createWebhooks } from './webhooks/index.mjs';
 import { createPageGate, protectRoutes } from './protect.mjs';
 import { createPresence } from './presence.mjs';
 import { createScheduler, publishRoutes } from './publish.mjs';
 import { createUsers, userRoutes } from './users.mjs';
-import { HttpError, createBusyLock, createLock, forbidden, newToken, notFound, nowIso, safeEqual, unauthorized } from './util.mjs';
+import { HttpError, createBusyLease, forbidden, newToken, notFound, nowIso, safeEqual, unauthorized } from './util.mjs';
 
 export { loadConfig, ConfigError } from './config.mjs';
 
@@ -87,7 +89,7 @@ const STATIC_TYPES = { ...SITE_FILE_TYPES, '.html': 'text/html; charset=utf-8', 
 /**
  * Build the server. `deps` lets tests swap the converter core, the image codec and the clock:
  * { core: module|null, codec: object|null, clock: () => ms, outbound: {lookup, allow} (library/fetch.mjs), ai: {fetch, env} (ai/),
- *   translate: {sleep} (translate/run.mjs: how a run waits for the AI limits) }.
+ *   translate: {sleep} (translate/run.mjs: how a run waits for the AI limits), cluster: {leaseMs, now} (cluster/) }.
  */
 export async function createMarkstage(config, deps = {}) {
   const clock = deps.clock ?? (() => Date.now());
@@ -96,6 +98,8 @@ export async function createMarkstage(config, deps = {}) {
   ({ config, site } = await applySiteConfig(config, deps.siteConfig));
   const db = openDb(config.dataDir);
   const app = { config, db, clock, site, outbound: deps.outbound ?? {} };
+  // this process among the others on the data dir: leases, limits, the primary role (cluster/, docs/SCALING.md)
+  app.cluster = createCluster(db, { leaseMs: deps.cluster?.leaseMs ?? config.processes.leaseSeconds * 1000, now: deps.cluster?.now, clock });
   app.audit = createAudit(db, clock);
   app.users = createUsers(db, clock);
   // custom roles (custom-roles/): a person's role, ready to answer, rides on them from users.toPublic
@@ -103,7 +107,7 @@ export async function createMarkstage(config, deps = {}) {
   app.users.customRoleOf = app.customRoles.customRoleOf;
   app.sessions = createSessions(db, config, clock);
   app.challenges = createChallenges(db, clock);
-  app.limiter = createLimiter(db, config.login, clock);
+  app.limiter = createLimiter(db, config.login, clock, app.cluster.hits);
   app.tokens = createTokens(app);
   const packs = [];
   for (const file of config.packs ?? []) {
@@ -113,10 +117,14 @@ export async function createMarkstage(config, deps = {}) {
   app.packs = packs;
   app.converter = createConverter('core' in deps ? deps.core : await loadCore(), { packs });
   app.codec = 'codec' in deps ? deps.codec : await loadSharpCodec();
-  app.git = createGit(config);
-  app.repoLock = createLock();
-  // one import (a media zip, a Library pack or export) at a time per server: a second one is answered 409 busy
-  app.importLock = createBusyLock();
+  // the repo's lock across processes: a lock file in the data dir (cluster/file-lock.mjs); every git write and every
+  // repo-lock section holds it
+  const repoFile = createFileLock(path.join(config.dataDir, 'repo.lock'), app.cluster);
+  app.git = createGit(config, { lock: repoFile, critical: app.cluster.critical });
+  app.repoLock = createRepoLock(repoFile);
+  // one import (a media zip, a Library pack or export) at a time per server, across its processes: a second one is
+  // answered 409 busy
+  app.importLock = createBusyLease(app.cluster, 'import');
   app.store = createStore(config, app.converter, clock, app.site);
   app.alerts = createAlerts(app);
   app.alertRules = createAlertRules(app);
@@ -228,8 +236,10 @@ export async function createMarkstage(config, deps = {}) {
   const devCsrf = newToken(24);
 
   if (config.devNoAuth && !app.users.get(DEV_USER)) {
-    db.prepare('INSERT INTO users (id, email, name, role, author_slug, created_at) VALUES (?, ?, ?, ?, ?, ?)').run(DEV_USER, 'dev@markstage.invalid', 'Developer', 'owner', null, nowIso(clock()));
+    db.prepare('INSERT INTO users (id, email, name, role, author_slug, created_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING').run(DEV_USER, 'dev@markstage.invalid', 'Developer', 'owner', null, nowIso(clock()));
   }
+  // what processes that stopped left (at a start alone: what the restart cut), then the heartbeat
+  app.cluster.ready();
 
   /** A write must come from our own origin: Origin header, or Referer when a browser left Origin out. */
   function sameOrigin(req) {
@@ -405,6 +415,44 @@ export async function createMarkstage(config, deps = {}) {
   let server = null;
   let sweeper = null;
   let retrier = null;
+  /**
+   * What runs once for the whole server, in the process holding the primary role (cluster/): the timers, the
+   * preview's listener and dev server, the share links' listener. With one process, that is this one, from the start.
+   */
+  async function startPrimary() {
+    app.scheduler.start();
+    app.releases.start();
+    void app.library.moveOld();
+    app.backup.start();
+    app.alertRules.start();
+    app.webhooks.start();
+    app.integrations.start();
+    sweeper = setInterval(() => {
+      app.sessions.sweep();
+      app.forms.sweep();
+      app.limiter.sweep();
+      app.cluster.hits.sweep();
+      app.presence.sweep();
+    }, 3_600_000);
+    sweeper.unref();
+    // a team alert that failed is tried again when due (forms/submit.mjs)
+    retrier = setInterval(() => void app.forms.retry().catch((e) => console.error(`[markstage] form alert retry: ${e.message}`)), 60_000);
+    retrier.unref();
+    await app.preview.listen();
+    await app.releases.share.listen();
+  }
+  async function stopPrimary() {
+    app.scheduler.stop();
+    app.releases.stop();
+    app.backup.stop();
+    app.alertRules.stop();
+    await app.webhooks.stop();
+    await app.integrations.stop();
+    clearInterval(sweeper);
+    clearInterval(retrier);
+    await app.preview.close();
+    await app.releases.share.close();
+  }
   Object.assign(app, {
     handle,
     entries,
@@ -413,47 +461,25 @@ export async function createMarkstage(config, deps = {}) {
       server = http.createServer(handle);
       server.headersTimeout = 30_000;
       server.requestTimeout = 120_000;
-      app.scheduler.start();
-      app.releases.start();
-      void app.library.moveOld();
-      app.backup.start();
-      app.alertRules.start();
-      app.webhooks.start();
-      app.integrations.start();
-      sweeper = setInterval(() => {
-        app.sessions.sweep();
-        app.forms.sweep();
-        app.limiter.sweep();
-      }, 3_600_000);
-      sweeper.unref();
-      // a team alert that failed is tried again when due (forms/submit.mjs)
-      retrier = setInterval(() => void app.forms.retry().catch((e) => console.error(`[markstage] form alert retry: ${e.message}`)), 60_000);
-      retrier.unref();
       return new Promise((resolve, reject) => {
         server.once('error', reject);
         server.listen(port, host, () => resolve(server.address()));
       }).then(async (addr) => {
-        await app.preview.listen();
-        await app.releases.share.listen();
+        await app.cluster.serve(addr.port, { primary: { start: startPrimary, stop: stopPrimary } });
         return addr;
       });
     },
     async close() {
-      app.scheduler.stop();
-      app.releases.stop();
-      app.backup.stop();
-      app.alertRules.stop();
+      // the primary role's work stops and the role is let go (another process takes it)
+      await app.cluster.stepDown();
+      // a send started by an event on this process (not the primary's timer) finishes before the database closes
       await app.webhooks.stop();
-      await app.integrations.stop();
-      clearInterval(sweeper);
-      clearInterval(retrier);
       app.geo.close();
-      await app.preview.close();
-      await app.releases.share.close();
       await app.jobs.idle();
       // a site translation that is going stops between two asks, paused (Resume carries on after a restart)
       await app.translate.stop();
       if (server) await new Promise((r) => server.close(() => r()));
+      await app.cluster.close();
       db.close();
     },
   });

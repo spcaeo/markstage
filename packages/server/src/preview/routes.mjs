@@ -13,6 +13,11 @@
 //                 own tools and files outside the site (dev-paths.mjs)
 //
 // The preview cookie dies with the CMS session (sign-out, revoke, timeout, disabled user).
+//
+// With several server processes (docs/SCALING.md) the preview listener and its dev server run in the one holding the
+// primary role; the CMS side runs in every process. The unsaved states pushed by the editor are in the database
+// (preview_states), so the listener shows a state pushed to any process, and it looks every second for a new one of
+// the entry it shows (a push or an autosave elsewhere) to refresh the frame as it does for its own.
 import http from 'node:http';
 import net from 'node:net';
 import { COOKIE } from '../auth/sessions.mjs';
@@ -26,8 +31,10 @@ import { createPreviewSite } from './site.mjs';
 
 export const PREVIEW_COOKIE = '__Host-markstage-preview';
 const TICKET_MS = 60_000;
-/** Pushed preview states kept in memory at most (oldest dropped first); each lives until the entry changes. */
+/** Pushed preview states kept at most (oldest dropped first); each lives until the entry changes. */
 const MAX_STATES = 200;
+/** How often the listener looks for a new state of the entry it shows, pushed or autosaved on another process. */
+const WATCH_MS = 1000;
 const STATE_MS = 6 * 3600_000;
 const HOP = new Set(['connection', 'keep-alive', 'proxy-connection', 'transfer-encoding', 'upgrade', 'te', 'trailer', 'proxy-authorization', 'proxy-authenticate']);
 
@@ -96,9 +103,24 @@ export function createPreview(app, entries) {
   let refreshTimer = null;
   // the server is closing: a request still on its way ends quietly (no error logged for a stop asked for)
   let closing = false;
-  /** `${userId}/${c}/${id}` -> { version, text, at }: unsaved state pushed by the editor, newer than any autosave */
-  const pushed = new Map();
+  /** `${userId}/${c}/${id}` -> { version, text, css, at }: unsaved state pushed by the editor, newer than any autosave */
+  const pushed = {
+    get(key) {
+      const r = db.prepare('SELECT * FROM preview_states WHERE key = ?').get(key);
+      return r ? { version: r.version, text: r.text, css: r.css ? JSON.parse(r.css) : null, at: r.at } : undefined;
+    },
+    set(key, { version, text, css, at }) {
+      db.prepare('INSERT INTO preview_states (key, version, text, css, at, rev) VALUES (?, ?, ?, ?, ?, 1) ON CONFLICT(key) DO UPDATE SET version = excluded.version, text = excluded.text, css = excluded.css, at = excluded.at, rev = rev + 1').run(key, version, text, css ? JSON.stringify(css) : null, at);
+      db.prepare('DELETE FROM preview_states WHERE key NOT IN (SELECT key FROM preview_states ORDER BY at DESC LIMIT ?)').run(MAX_STATES);
+    },
+    delete: (key) => void db.prepare('DELETE FROM preview_states WHERE key = ?').run(key),
+  };
   const stateKey = (userId, cId, id) => `${userId}/${cId}/${id}`;
+  /** What the shown entry's state is now, wherever it was pushed or autosaved: a change means "refresh". */
+  const stateMark = (s) =>
+    s ? JSON.stringify([db.prepare('SELECT rev, at FROM preview_states WHERE key = ?').get(stateKey(s.userId, s.c, s.id)) ?? null, db.prepare('SELECT saved_at FROM autosaves WHERE user_id = ? AND collection = ? AND entry_id = ?').get(s.userId, s.c, s.id)?.saved_at ?? null]) : null;
+  let watched = null;
+  let watcher = null;
 
   // --- CMS side ------------------------------------------------------------------------------------------------
   function apiRoutes(router) {
@@ -137,9 +159,7 @@ export function createPreview(app, entries) {
       // code added to a page runs on the preview origin: the same rule as a save
       if (text !== null && entries.injectionChanged(c, file.text, text) && !can(ctx.user, 'code.inject')) throw forbidden('Only an owner or administrator can change the code added to this page.');
       const key = stateKey(ctx.user.id, c.id, ctx.params.id);
-      pushed.delete(key);
       pushed.set(key, { version: file.version, text, css, at: app.clock() });
-      if (pushed.size > MAX_STATES) pushed.delete(pushed.keys().next().value);
       refresh(ctx.user.id, c.id, ctx.params.id);
       return { ok: true };
     });
@@ -389,6 +409,7 @@ export function createPreview(app, entries) {
         const at = Date.now();
         const changed = await site.show({ ...gallery.files(), ...files });
         shown = { userId: who.user.id, c: who.row.collection, id: who.row.entry_id };
+        watched = stateMark(shown);
         const port = await site.start();
         if (changed && wasRunning) await site.settle(at);
         await forward(req, res, port);
@@ -440,6 +461,7 @@ export function createPreview(app, entries) {
   /** After an autosave: if the clone shows this user's state of this entry, rewrite it so HMR refreshes the frame. */
   function refresh(userId, cId, id) {
     if (!site?.running || shown?.userId !== userId || shown.c !== cId || shown.id !== id) return;
+    watched = stateMark(shown);
     clearTimeout(refreshTimer);
     refreshTimer = setTimeout(() => {
       site.lock
@@ -450,13 +472,21 @@ export function createPreview(app, entries) {
     }, 300);
   }
 
-  const sweeper = setInterval(() => {
+  const sweep = () => {
     db.prepare('DELETE FROM preview_tickets WHERE expires_at < ?').run(app.clock());
+    db.prepare('DELETE FROM preview_states WHERE at < ?').run(app.clock() - STATE_MS);
     for (const r of db.prepare('SELECT token_hash, session_id FROM preview_sessions').all()) {
       if (!sessions.alive(r.session_id)) db.prepare('DELETE FROM preview_sessions WHERE token_hash = ?').run(r.token_hash);
     }
-  }, 600_000);
-  sweeper.unref();
+  };
+  let sweeper = null;
+  /** The listener's process: a state of the shown entry pushed or autosaved on another process refreshes the frame. */
+  const watch = () => {
+    if (!site?.running || !shown) return;
+    const now = stateMark(shown);
+    if (watched === null) watched = now;
+    else if (now !== watched) refresh(shown.userId, shown.c, shown.id);
+  };
 
   let server = null;
   /** the warm-up started with the listener (preview.warm): its seconds, or null when off or failed */
@@ -473,6 +503,11 @@ export function createPreview(app, entries) {
     handle,
     listen(port = pv.port, host = config.host) {
       if (!site) return Promise.resolve(null);
+      closing = false;
+      sweeper = setInterval(sweep, 600_000);
+      sweeper.unref();
+      watcher = setInterval(watch, WATCH_MS);
+      watcher.unref();
       server = http.createServer(handle);
       server.on('upgrade', upgrade);
       server.headersTimeout = 30_000;
@@ -493,6 +528,7 @@ export function createPreview(app, entries) {
     async close() {
       closing = true;
       clearInterval(sweeper);
+      clearInterval(watcher);
       clearTimeout(refreshTimer);
       if (server) {
         server.closeAllConnections?.();

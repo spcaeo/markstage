@@ -56,10 +56,18 @@ export function placeholder(field, key = '') {
 }
 
 export function createGallery(app) {
-  const { config, store } = app;
+  const { config, store, db } = app;
   const pv = config.preview;
-  /** collection id -> { rel: text } of its throwaway pages; all of them go into every state the clone shows */
-  const built = new Map();
+  // collection id -> { rel: text } of its throwaway pages; all of them go into every state the clone shows. In the
+  // database (kv preview.gallery:<collection>): the gallery is asked for on any server process, and the preview
+  // listener runs in the one holding the primary role (docs/SCALING.md)
+  const KEY = 'preview.gallery:';
+  const built = {
+    set: (cid, files) => db.prepare('INSERT INTO kv (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value').run(`${KEY}${cid}`, JSON.stringify(files)),
+    values: () => db.prepare('SELECT value FROM kv WHERE key LIKE ?').all(`${KEY}%`).map((r) => JSON.parse(r.value)),
+  };
+  // they lived until a restart, as they did in memory
+  app.cluster?.onReap(({ startup, alone }) => startup && alone && db.prepare('DELETE FROM kv WHERE key LIKE ?').run(`${KEY}%`));
   const coll = (id) => config.collections.find((c) => c.id === id);
   const addressKey = (c) => c.fields.url || (typeof c.url === 'string' && /^\{([A-Za-z_][\w.]*)\}$/.exec(c.url)?.[1]) || null;
 

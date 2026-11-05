@@ -298,6 +298,25 @@ describe('translate the site: a translator’s role, AI off, the limits, pause a
     mode = 'clock';
   });
 
+  test('fencing: a run another server process carried on (this one was paused meanwhile) stops here at once and writes nothing more', async () => {
+    await nextDay();
+    mode = 'gate';
+    const db = srv.app.db;
+    const rid = (await ed.post('/translate', { locale: 'de' })).json.run.id;
+    await ed.post(`/translate/${rid}/run`, {});
+    await until(ed, rid, (r) => r.progress.waiting);
+    const drafts = readFile(fx, 'markstage/translations/de.json');
+    // another process found this one stopped, and the run was resumed there
+    db.prepare("UPDATE translate_runs SET owner = 'p_elsewhere', status = 'running', live = NULL WHERE id = ?").run(rid);
+    const before = db.prepare('SELECT * FROM translate_runs WHERE id = ?').get(rid);
+    await srv.app.translate.idle(); // the wait looks every second: the run stops at its next look
+    const after = db.prepare('SELECT * FROM translate_runs WHERE id = ?').get(rid);
+    assert.deepEqual([after.owner, after.status, after.result, after.updated_at], [before.owner, before.status, before.result, before.updated_at], 'nothing written over the other process’s run');
+    assert.equal(readFile(fx, 'markstage/translations/de.json'), drafts, 'the drafts asked here and not saved yet are not saved (asked again there)');
+    db.prepare("UPDATE translate_runs SET status = 'cancelled' WHERE id = ?").run(rid);
+    mode = 'clock';
+  });
+
   test('the command line: the plan with --dry, then the run, as the person named by --as', async () => {
     await nextDay();
     const lines = [];

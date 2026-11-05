@@ -10,7 +10,8 @@
 //   once the hour is under the cap again. So a flood never turns the form off for real visitors.
 // The visitor's address comes from the connection, or the hop a trusted proxy appended; never from the body.
 import { clientIp, readRaw } from '../http.mjs';
-import { HttpError, newId, nowIso } from '../util.mjs';
+import { tx } from '../db.mjs';
+import { HttpError, netOf, newId, nowIso } from '../util.mjs';
 import { addressOf, sendMail } from '../notify/smtp.mjs';
 import { createCrm } from './crm.mjs';
 import { createLeads } from './leads.mjs';
@@ -89,20 +90,7 @@ export function greetingName(name) {
 
 const fill = (template, vars) => template.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
 
-/** The network an address belongs to: `a.b.c.0/24` for IPv4, the first four groups `/64` for IPv6; null if unknown. */
-export function netOf(ip) {
-  const s = String(ip ?? '').trim();
-  const v4 = /^(?:::ffff:)?(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.\d{1,3}$/.exec(s);
-  if (v4) return `${v4[1]}.${v4[2]}.${v4[3]}.0/24`;
-  if (!s.includes(':')) return null;
-  // expand :: so the first four groups are known
-  const [head, tail = ''] = s.split('::');
-  const h = head ? head.split(':') : [];
-  const t = tail ? tail.split(':') : [];
-  const groups = s.includes('::') ? [...h, ...Array(Math.max(0, 8 - h.length - t.length)).fill('0'), ...t] : h;
-  if (groups.length !== 8 || groups.some((g) => !/^[0-9a-f]{1,4}$/i.test(g))) return null;
-  return `${groups.slice(0, 4).map((g) => g.toLowerCase().replace(/^0+(?=.)/, '')).join(':')}::/64`;
-}
+export { netOf };
 
 const TEST_WORDS = 'Test form: not sent. This is not the live site; the message is kept here and nobody was mailed.';
 
@@ -127,8 +115,7 @@ export function createFormSubmit(app, deps = {}) {
     if (!net) return 0;
     return db.prepare('SELECT ip FROM form_messages WHERE at > ? AND ip IS NOT NULL').all(since).filter((r) => netOf(r.ip) === net).length;
   };
-  // the administrators hear once an hour per form that its messages are being held
-  const heldTold = new Map();
+  // the administrators hear once an hour per form that its messages are being held (once across every server process)
 
   /** The team mail: every field and where the visitor came from; replying answers the visitor. */
   function teamMail(form, row, values, meta) {
@@ -150,9 +137,7 @@ export function createFormSubmit(app, deps = {}) {
 
   /** The form's hourly cap is reached: tell the administrators (once an hour per form). */
   function tellHeld(form, now) {
-    const last = heldTold.get(form.id) ?? 0;
-    if (now - last < DAY / 24) return;
-    heldTold.set(form.id, now);
+    if (!app.cluster.hits.once('forms.held', form.id, DAY / 24, now)) return;
     audit.log(null, 'forms.held', { target: `form.${form.id}`, ok: false, detail: { perHour: form.perHour } });
     app.notices.tell({ kind: 'form.held', level: 'warn', text: `The ${form.label} form got more than ${form.perHour} messages in an hour. New ones are kept in the Inbox as held (nobody is mailed, nothing goes to the CRM) and let through once the hour calms down. Check the Inbox for spam that got past the checks.`, link: `#/inbox?status=held`, to: 'administrators' });
   }
@@ -293,57 +278,66 @@ export function createFormSubmit(app, deps = {}) {
       if (!form) throw new HttpError(404, 'not-found', 'There is no such form.');
       const posted = valuesOf(req, await readRaw(req, MAX_BODY));
       const now = clock();
-      const since = nowIso(now - DAY);
-      if (ctx.ip && count('SELECT COUNT(*) AS n FROM form_messages WHERE ip = ? AND at > ?', ctx.ip, since) >= MAX_PER_IP_DAY) throw new HttpError(429, 'too-many', form.limitMessage);
-      if (ctx.ip && netCount(ctx.ip, since) >= MAX_PER_NET_DAY) throw new HttpError(429, 'too-many', form.limitMessage);
+      // the counts and the store are one write transaction: two server processes (or two quick posts) cannot both
+      // pass a limit with one message left (docs/SCALING.md)
+      const out = tx(db, () => {
+        const since = nowIso(now - DAY);
+        if (ctx.ip && count('SELECT COUNT(*) AS n FROM form_messages WHERE ip = ? AND at > ?', ctx.ip, since) >= MAX_PER_IP_DAY) throw new HttpError(429, 'too-many', form.limitMessage);
+        if (ctx.ip && netCount(ctx.ip, since) >= MAX_PER_NET_DAY) throw new HttpError(429, 'too-many', form.limitMessage);
 
-      // spam: kept aside (as far as it can be read), answered as if it went through
-      const started = Number(form.started ? posted.get(form.started) : NaN);
-      const spam = form.honeypot && cleanText(posted.get(form.honeypot)) ? 'honeypot' : Number.isFinite(started) && started > 0 && now - started < form.minSeconds * 1000 ? 'too-fast' : null;
+        // spam: kept aside (as far as it can be read), answered as if it went through
+        const started = Number(form.started ? posted.get(form.started) : NaN);
+        const spam = form.honeypot && cleanText(posted.get(form.honeypot)) ? 'honeypot' : Number.isFinite(started) && started > 0 && now - started < form.minSeconds * 1000 ? 'too-fast' : null;
 
-      const values = {};
-      const problems = {};
-      for (const f of form.fields) {
-        const r = checkField(f, posted.get(f.key));
-        if (r.error && !spam) problems[f.key] = r.error;
-        values[f.key] = r.value ?? cleanText(posted.get(f.key), f.type === 'textarea').slice(0, f.max);
-      }
-      if (Object.keys(problems).length) throw new HttpError(400, 'invalid', Object.values(problems)[0], { fields: problems });
-      const email = form.email ? values[form.email] || null : null;
-      if (!spam) {
-        const seen = count("SELECT COUNT(*) AS n FROM form_messages WHERE form = ? AND status != 'spam' AND at > ? AND (ip = ? OR (? IS NOT NULL AND email = ?))", form.id, since, ctx.ip, email, email);
-        if (seen >= form.perDay) throw new HttpError(429, 'too-many', form.limitMessage);
-      }
-      const meta = {};
-      for (const [k, key] of Object.entries(form.meta)) {
-        const v = cleanText(posted.get(key)).slice(0, 2000);
-        if (v) meta[k] = v;
-      }
-      // where the visitor is, roughly: from their address and the city file here (never what the browser says)
-      const where = spam ? null : app.geo?.where(ctx.ip);
-      if (where) meta.location = where.place;
-      // the place's parts, for a CRM's own fields (city, state by name, country by code)
-      const place = where && (where.city || where.region || where.countryCode) ? JSON.stringify({ city: where.city, region: where.region, countryCode: where.countryCode }) : null;
-      // the lead for analytics: the visitor id and the test mark are posted values, kept with the send
-      const lead = form.leads ? { vid: form.leads.vid ? cleanText(posted.get(form.leads.vid)) : null, test: form.leads.test ? cleanText(posted.get(form.leads.test)) === '1' : false } : null;
-      // past the form's hourly cap (real messages only) the message is held: stored, the visitor answered, nobody
-      // mailed until the hour calms down (releaseHeld)
-      const held = !spam && !testOnly && hourCount(form, now) >= form.perHour;
-      // the same message again from the same place within a few minutes (a double click, a retry): kept once, the
-      // visitor thanked again (QA pass 2, N12)
-      if (!spam) {
-        const again = db.prepare("SELECT id FROM form_messages WHERE form = ? AND ip IS ? AND fields = ? AND at > ? AND status != 'spam' ORDER BY at DESC LIMIT 1").get(form.id, ctx.ip, JSON.stringify(values), nowIso(now - SAME_AGAIN_MS));
-        if (again) {
-          db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(again.id, nowIso(now), 'sent again from the site within a few minutes: kept once');
-          answer(req, res, 200, testOnly ? { message: TEST_WORDS, test: true } : { message: form.message }, testOnly ? null : form);
-          return true;
+        const values = {};
+        const problems = {};
+        for (const f of form.fields) {
+          const r = checkField(f, posted.get(f.key));
+          if (r.error && !spam) problems[f.key] = r.error;
+          values[f.key] = r.value ?? cleanText(posted.get(f.key), f.type === 'textarea').slice(0, f.max);
         }
+        if (Object.keys(problems).length) throw new HttpError(400, 'invalid', Object.values(problems)[0], { fields: problems });
+        const email = form.email ? values[form.email] || null : null;
+        if (!spam) {
+          const seen = count("SELECT COUNT(*) AS n FROM form_messages WHERE form = ? AND status != 'spam' AND at > ? AND (ip = ? OR (? IS NOT NULL AND email = ?))", form.id, since, ctx.ip, email, email);
+          if (seen >= form.perDay) throw new HttpError(429, 'too-many', form.limitMessage);
+        }
+        const meta = {};
+        for (const [k, key] of Object.entries(form.meta)) {
+          const v = cleanText(posted.get(key)).slice(0, 2000);
+          if (v) meta[k] = v;
+        }
+        // where the visitor is, roughly: from their address and the city file here (never what the browser says)
+        const where = spam ? null : app.geo?.where(ctx.ip);
+        if (where) meta.location = where.place;
+        // the place's parts, for a CRM's own fields (city, state by name, country by code)
+        const place = where && (where.city || where.region || where.countryCode) ? JSON.stringify({ city: where.city, region: where.region, countryCode: where.countryCode }) : null;
+        // the lead for analytics: the visitor id and the test mark are posted values, kept with the send
+        const lead = form.leads ? { vid: form.leads.vid ? cleanText(posted.get(form.leads.vid)) : null, test: form.leads.test ? cleanText(posted.get(form.leads.test)) === '1' : false } : null;
+        // past the form's hourly cap (real messages only) the message is held: stored, the visitor answered, nobody
+        // mailed until the hour calms down (releaseHeld)
+        const held = !spam && !testOnly && hourCount(form, now) >= form.perHour;
+        // the same message again from the same place within a few minutes (a double click, a retry): kept once, the
+        // visitor thanked again (QA pass 2, N12)
+        if (!spam) {
+          const again = db.prepare("SELECT id FROM form_messages WHERE form = ? AND ip IS ? AND fields = ? AND at > ? AND status != 'spam' ORDER BY at DESC LIMIT 1").get(form.id, ctx.ip, JSON.stringify(values), nowIso(now - SAME_AGAIN_MS));
+          if (again) {
+            db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(again.id, nowIso(now), 'sent again from the site within a few minutes: kept once');
+            return { again: true };
+          }
+        }
+        const row = { id: newId('fm'), at: nowIso(now) };
+        db.prepare('INSERT INTO form_messages (id, form, at, status, name, email, service, fields, meta, ip, user_agent, spam, place) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
+          row.id, form.id, row.at, spam ? 'spam' : held ? 'held' : 'new', form.name ? values[form.name] || null : null, email, form.service ? values[form.service] || null : null, JSON.stringify(values), JSON.stringify(held && lead ? { ...meta, lead } : meta), ctx.ip, ctx.userAgent.slice(0, 300) || null, spam, place,
+        );
+        db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(row.id, row.at, spam ? `put aside as spam (${spam === 'honeypot' ? 'a field people never see was filled in' : `sent within ${form.minSeconds} seconds of the page opening`})` : held ? `held: the form got more than ${form.perHour} messages in an hour; the team is told once it calms down` : 'sent from the site');
+        return { row, held, spam, values, meta, lead };
+      });
+      if (out.again) {
+        answer(req, res, 200, testOnly ? { message: TEST_WORDS, test: true } : { message: form.message }, testOnly ? null : form);
+        return true;
       }
-      const row = { id: newId('fm'), at: nowIso(now) };
-      db.prepare('INSERT INTO form_messages (id, form, at, status, name, email, service, fields, meta, ip, user_agent, spam, place) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
-        row.id, form.id, row.at, spam ? 'spam' : held ? 'held' : 'new', form.name ? values[form.name] || null : null, email, form.service ? values[form.service] || null : null, JSON.stringify(values), JSON.stringify(held && lead ? { ...meta, lead } : meta), ctx.ip, ctx.userAgent.slice(0, 300) || null, spam, place,
-      );
-      db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(row.id, row.at, spam ? `put aside as spam (${spam === 'honeypot' ? 'a field people never see was filled in' : `sent within ${form.minSeconds} seconds of the page opening`})` : held ? `held: the form got more than ${form.perHour} messages in an hour; the team is told once it calms down` : 'sent from the site');
+      const { row, held, spam, values, meta, lead } = out;
       // stored: from here on the visitor's answer is a success, whatever the mail does
       if (held) tellHeld(form, now);
       else if (!spam && testOnly) {

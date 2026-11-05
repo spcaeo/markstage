@@ -41,7 +41,12 @@ export function createRunner(app, { ops, plans, rules, tokens }) {
     const tokenId = ctx.token?.id ?? null;
     const runner = ctx.user;
     const kind = p.action === 'sync' ? 'env-sync' : 'env-promote';
-    plans.save(p, { status: 'running', reason, run_by: runner.id });
+    // claimed in one write transaction: of two runs asked at once (on two server processes), one runs
+    app.cluster.exclusive(() => {
+      const now = app.db.prepare('SELECT status, rev FROM env_plans WHERE id = ?').get(p.id);
+      if (now?.status !== 'ready' || now.rev !== p.rev) throw conflict('The plan changed since you loaded it.', { current: plans.toPublic(plans.load(p.id), ctx.user) });
+      plans.save(p, { status: 'running', reason, run_by: runner.id });
+    });
     p.run_job_id = jobs.enqueue({
       kind,
       user: runner,

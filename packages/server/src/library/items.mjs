@@ -495,6 +495,8 @@ export function createLibrary(app) {
     moving ??= (async () => {
       if (db.prepare("SELECT value FROM kv WHERE key = 'library.moved'").get()) return null;
       return app.repoLock.run(async () => {
+        // looked at again under the repo lock: another server process may have moved them meanwhile
+        if (db.prepare("SELECT value FROM kv WHERE key = 'library.moved'").get()) return null;
         const nameOf = (uid) => app.users.get(uid)?.name ?? null;
         const shared = db.prepare('SELECT * FROM snippets WHERE shared = 1').all();
         const templates = db.prepare('SELECT * FROM templates').all();

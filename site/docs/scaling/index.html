@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Run Markstage on Several Server Processes</title>
+    <meta name="description" content="Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/scaling/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Run Markstage on Several Server Processes" />
+    <meta property="og:description" content="Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/scaling/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Run Markstage on Several Server Processes" />
+    <meta name="twitter:description" content="Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Several server processes on one data dir",
+          "item": "https://spcaeo.github.io/markstage/docs/scaling/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Run Markstage on Several Server Processes",
+      "description": "Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited.",
+      "url": "https://spcaeo.github.io/markstage/docs/scaling/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/scaling/" aria-current="page">Several server processes on one data dir</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Several server processes on one data dir</li></ol></nav>
+        <h1>Several server processes on one data dir</h1>
+        <p class="lead left">Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#how-they-share">How they share</a></li><li><a href="#clock-jumps-and-pauses">Clock jumps and pauses</a></li><li><a href="#the-audit-every-piece-of-process-memory-in-packages-server-src">The audit: every piece of process memory in packages/server/src</a></li><li><a href="#what-is-still-limited">What is still limited</a></li></ul></nav>
+        <div class="prose">
+<p>Markstage may run as several <code>markstage-server serve</code> processes on one data dir, each on its own port, behind one
+address. They behave as one server: a person may sign in on one, and their next request may land on another. This
+page says what they share, how, and what is still limited. How to run them: <a href="../deploy/">DEPLOY.md</a>, &quot;Several server
+processes&quot;. The proof: <code>packages/server/test/multi-process.test.mjs</code> (two real processes on one data dir),
+<code>test/cluster.test.mjs</code> (the shared pieces) and <code>e2e/two-process.e2e.mjs</code> (signed in on one, editing on the other, in
+a browser).</p>
+<h2 id="how-they-share">How they share</h2>
+<ul><li><strong>The database.</strong> Everything that must hold across processes is in the data dir's SQLite database
+(<code>markstage.db</code>, WAL mode, a 5 second busy wait). Every count that a limit checks is read and written in one write
+transaction (<code>BEGIN IMMEDIATE</code>), so two processes never both see &quot;one left&quot; and both take it.</li><li><strong>Leases.</strong> A lock with an owner, in the database (<code>leases</code>). Each process has a row in <code>server_processes</code> and a
+heartbeat (every sixth of <code>processes.leaseSeconds</code>: 5 seconds by default) that keeps it fresh. A lease is let go
+by its owner, or taken over by another process only once its owner has stopped (see &quot;Clock jumps and pauses&quot;): at
+once when the owner ran on the same machine and its pid is gone (a crash, <code>kill -9</code>), and for a process on another
+machine (another container) once its heartbeat stood still for a lease (30 seconds by default).</li><li><strong>Fencing.</strong> Work done under a lease checks the lease is still its process's before each step: each job step, each
+git write (the repo lock file still names it), each webhook send, and each AI ask of a site translation. When it is
+not (another process took over while this one was paused), the work stops there and says so: the job fails with
+&quot;Another server process took this over while this one was paused, so the job stopped here.&quot;, the server log says
+which lease was lost.</li><li><strong>The repo lock file.</strong> Every write to the site repo (a save, a commit, a revert, a merge) holds
+<code>&lt;data dir&gt;/repo.lock</code>, made with an exclusive create (one process wins) and naming its owner: its process id, pid,
+when that pid started, and its machine. A lock left by a process that stopped is removed by the next process that
+wants it, judged by that pid and its start time (on another machine by its heartbeat), never by the file's age;
+the removal is decided inside the database's write transaction so two waiters never both remove it. Git's own
+optional locks are off for reads (<code>GIT_OPTIONAL_LOCKS=0</code>), so a <code>git status</code> on one process never trips a commit
+on another with <code>index.lock</code>.</li><li><strong>The primary role.</strong> One lease, <code>primary</code>, held by one <code>serve</code> process. Its holder runs what must run once for the
+whole server: the scheduler, scheduled releases, backups, alert digests, the webhook timer, integration refreshes,
+form alert retries, the hourly sweeps, the preview listener with its dev server, and the share-link listener (both
+on their fixed ports). When it stops, another process takes the role at its next heartbeat. The first process to
+start takes it; the rest serve the editor and the API.</li><li><strong>Stopped work.</strong> At a start with no other process running, the old restart rules apply as before (jobs failed,
+site translations paused). While others run, only the work of the process that stopped is marked: its jobs failed
+with &quot;The server process running this job stopped.&quot;, its release builds and publishes, imports and branch previews
+failed, its site translation paused for anyone to resume, its in-flight AI asks and leases dropped.</li><li><strong>Stepping down.</strong> A process that is stopping lets its roles go and never takes one back, even when a heartbeat
+runs while a role is still stopping (its preview dev server exiting, a webhook send ending). Its heartbeat stops
+first when it closes, so nothing runs on its behalf against a closed database.</li><li><strong>Floods.</strong> A limit counts first and writes a try only when it lets it through, so a refused try costs no row. An
+IPv6 address counts as its /64 (one person usually holds a whole /64) for sign-in misses, wrong tokens and
+share-link tries. Tries whose window has passed are deleted at most a minute later, by the next process that
+writes one.</li></ul>
+<h2 id="clock-jumps-and-pauses">Clock jumps and pauses</h2>
+<p>The wall clock is not trusted to say a process stopped. It jumps: an NTP step, a VM paused and resumed, a laptop
+asleep, a process stopped with SIGSTOP for a while. Before, a jump of more than the lease made a live process look
+stopped, and another one took its job, its primary role and its repo lock while it was still working. Now:</p>
+<ul><li><strong>On the same machine</strong> (the same hostname, and on Linux the same pid namespace and boot id), a process runs while
+its pid answers. Its row also keeps when that pid started (from <code>/proc/&lt;pid&gt;/stat</code> on Linux, <code>ps -o lstart</code> on
+macOS), so a new process that got the old pid is not taken for it. The heartbeat's age is only used to decide when
+to ask. A paused process keeps its leases and its lock however long it was silent; a hung one keeps them until it
+is stopped (systemd's <code>TimeoutStopSec</code> or a <code>kill</code>).</li><li><strong>On another machine</strong> (another container), a process runs while its heartbeat moves. Once a process has seen it,
+it times it with its own monotonic clock, which does not jump: it counts as stopped only when its heartbeat stood
+still for a lease by that clock and by the wall clock. At the first sight (just after a start) the heartbeat's age
+decides, as before.</li><li><strong>Fencing</strong> (above) covers what is left: a process on another machine that was paused for longer than the lease
+finds, when it wakes, that its lease or lock is someone else's, and stops before its next step.</li></ul>
+<p>The proof: <code>test/cluster.test.mjs</code> (clock jumps of 40 seconds and an hour, forward and back; a reused pid; another
+pid namespace with the same hostname; fencing; stepping down) and <code>test/multi-process.test.mjs</code> (a real process
+frozen with SIGSTOP for twice its lease keeps its primary role and its job, then finishes it).</p>
+<h2 id="the-audit-every-piece-of-process-memory-in-packages-server-src">The audit: every piece of process memory in packages/server/src</h2>
+<p>Each item is one of three kinds: <strong>(a)</strong> must be shared, so it moved to the database or a lock; <strong>(b)</strong> a cache
+each process keeps, safe when another process writes (the &quot;why&quot; says how); <strong>(c)</strong> harmless per process.</p>
+<h3 id="a-moved-shared-through-the-database-or-a-lock-33">(a) Moved: shared through the database or a lock (33)</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Where</th><th scope="col">What it held in memory</th><th scope="col">Now</th></tr></thead><tbody><tr><td><code>jobs.mjs</code></td><td>The one running job, and the queue's turn</td><td>Lease <code>jobs</code>: one job at a time across processes; a queued job waits for it. Each job row names its process (<code>owner</code>).</td></tr><tr><td><code>jobs.mjs</code></td><td>A running job's steps and log</td><td>Written to its row as it goes, at most a second behind, so <code>GET /jobs/:id</code> on any process shows it live.</td></tr><tr><td><code>jobs.mjs</code></td><td>The restart sweep (every queued or running job failed)</td><td>By owner: only the jobs of a process that stopped.</td></tr><tr><td><code>app.mjs</code> (<code>repoLock</code>)</td><td>The repo's one-at-a-time queue</td><td>The same queue in each process, plus the repo lock file across processes.</td></tr><tr><td><code>content/git.mjs</code></td><td>Git writes outside the repo lock (<code>index.lock</code> races)</td><td>Every write subcommand holds the repo lock file; <code>fetch</code> holds lease <code>git.fetch</code>.</td></tr><tr><td><code>util.mjs</code> (<code>createBusyLock</code>), <code>import/</code></td><td>&quot;An import is running&quot;</td><td>Lease <code>import</code>; starting a planned run is one <code>UPDATE … WHERE status = 'planned'</code> (two starts: one runs, one gets 409).</td></tr><tr><td><code>import/index.mjs</code></td><td>(no restart rule before)</td><td>A running import whose process stopped is failed.</td></tr><tr><td><code>releases/builds.mjs</code></td><td>The restart sweep of release builds</td><td>By owner (the build's job).</td></tr><tr><td><code>releases/publish.mjs</code></td><td>The restart sweep of release publishes</td><td>By owner (the publish's job).</td></tr><tr><td><code>env/site.mjs</code></td><td>(no restart rule before)</td><td>A branch preview being built whose process stopped is failed.</td></tr><tr><td><code>translate/</code></td><td>The running site translation, its busy check, Pause and Cancel, its progress</td><td>Claimed in one write transaction (one run at a time); its row names its process; Pause or Cancel asked on another process is written on the row (<code>stop_asked</code>) and read between two asks and during a wait; where it is (<code>live</code>: drafts not committed, a wait) is on the row for the others to show.</td></tr><tr><td><code>translate/index.mjs</code></td><td>The restart pause</td><td>By owner: a run whose process stopped is paused, to resume on any process.</td></tr><tr><td><code>auth/limiter.mjs</code></td><td>Sign-in misses per address</td><td><code>limit_hits</code> bucket <code>login.ip</code>, same window and limit.</td></tr><tr><td><code>releases/share.mjs</code></td><td>Share-link tries per address (30 a minute)</td><td>Bucket <code>share.try</code>, counted first: the 31st is 429 (not stored) and audited once, as before; an IPv6 address counts as its /64.</td></tr><tr><td><code>env/tokens.mjs</code></td><td>Wrong tokens per address (20 in 10 minutes)</td><td>Bucket <code>token.miss</code>.</td></tr><tr><td><code>redirects/routes.mjs</code></td><td>Live redirect tests per person a minute</td><td>Bucket <code>redirects.test</code>.</td></tr><tr><td><code>mcp/index.mjs</code></td><td>MCP calls and writes a minute, publishes an hour, &quot;audited once a minute&quot;</td><td>Buckets <code>mcp.call</code>, <code>mcp.write</code>, <code>mcp.publish</code>; a write counts as a call in the same transaction; &quot;once&quot; is a shared once.</td></tr><tr><td><code>ai/index.mjs</code></td><td>AI asks in flight; &quot;audited once a minute&quot;</td><td>The count (audit rows plus asks in flight) and the claim of one more are one transaction; in-flight asks are the process's and go with it.</td></tr><tr><td><code>presence.mjs</code></td><td>Who has an entry open, the edit lock, takeover notes</td><td>Tables <code>presence_tabs</code>, <code>presence_locks</code>, <code>presence_taken</code>; each heartbeat is one write transaction.</td></tr><tr><td><code>preview/routes.mjs</code></td><td>Unsaved states pushed by the editor</td><td>Table <code>preview_states</code> (bounded as before); the listener's process looks every second for a new state of the entry it shows, pushed or autosaved on any process.</td></tr><tr><td><code>preview/gallery.mjs</code></td><td>The section gallery's throwaway pages</td><td>Kept in the database (<code>kv</code>), read by the preview listener.</td></tr><tr><td><code>media/stock.mjs</code></td><td>Stock photo thumbnail tokens</td><td>Table <code>stock_thumbs</code> (the last 600, as before).</td></tr><tr><td><code>forms/crm.mjs</code></td><td>&quot;Being sent to the CRM&quot; per message</td><td>Lease <code>crm:&lt;message&gt;</code>.</td></tr><tr><td><code>forms/leads.mjs</code></td><td>&quot;Being sent as a lead&quot; per message</td><td>Lease <code>lead:&lt;message&gt;</code>.</td></tr><tr><td><code>forms/submit.mjs</code></td><td>&quot;Held messages told once an hour&quot;</td><td>A shared once per form.</td></tr><tr><td><code>forms/submit.mjs</code></td><td>(check, then store) per address, network, email and form</td><td>The day's and the hour's counts and the store are one write transaction.</td></tr><tr><td><code>webhooks/deliver.mjs</code></td><td>One send loop (an event may start it on any process)</td><td>Lease <code>webhooks.send</code>: one process sends at a time.</td></tr><tr><td><code>app.mjs</code> and the timers</td><td>Every timer and both extra listeners</td><td>Run by the primary role only.</td></tr><tr><td><code>protect.mjs</code></td><td>Making the page cookie secret on first start</td><td>Made once (<code>INSERT … ON CONFLICT DO NOTHING</code>), then read: two first starts use one secret.</td></tr><tr><td><code>library/items.mjs</code></td><td>&quot;The Library moved into the repo&quot; (once)</td><td>Checked again under the repo lock.</td></tr><tr><td><code>env/index.mjs</code></td><td>The promotion rules file, parsed</td><td>Re-read when the file changes (inode, size, time); its version check and write hold the database's write lock.</td></tr><tr><td><code>links/index.mjs</code></td><td>The link inbox's skip-list version</td><td>In the database (<code>kv</code> <code>links.skipsRev</code>).</td></tr><tr><td><code>db.mjs</code></td><td>Migrations at start</td><td>Each step re-reads the version inside its write transaction (two first starts: each step once); switching to WAL is tried again for a few seconds.</td></tr></tbody></table></div>
+<p>Also made atomic, though they held nothing in memory (a check, then a write, which two processes could interleave):
+saving a custom role, the site's alert rules and a form's thank-you mail (the version check and the write in one
+write transaction), running an environment plan (claimed only while it is still ready, at the version loaded), and
+the manual refresh of an integration (compare and set on its last refresh time).</p>
+<h3 id="b-kept-per-process-caches-that-stay-right-when-another-process-writes-14">(b) Kept per process: caches that stay right when another process writes (14)</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Where</th><th scope="col">The cache</th><th scope="col">Why it stays right</th></tr></thead><tbody><tr><td><code>content/index.mjs</code></td><td>The entries' list and summaries</td><td>Swept by file stat (size, time, inode); a save on another process changes them.</td></tr><tr><td><code>content/store.mjs</code></td><td>Parsed files</td><td>Keyed by the file's version (its content hash).</td></tr><tr><td><code>links/map.mjs</code></td><td>The link map and related pages</td><td>Keyed by the files' versions and the skip-list version (now shared).</td></tr><tr><td><code>links/map.mjs</code></td><td>The site's redirects, from its hook</td><td>A minute at most, as with one process.</td></tr><tr><td><code>content/translations.mjs</code></td><td>The git log per HEAD and each file's status</td><td>Keyed by the repo's HEAD and the files' versions.</td></tr><tr><td><code>custom-roles/index.mjs</code></td><td>Compiled roles</td><td>Keyed by the role's <code>rev</code> read from the database each time.</td></tr><tr><td><code>integrations/index.mjs</code></td><td>Parsed option lists</td><td>Keyed by the row's <code>fetched_at</code>.</td></tr><tr><td><code>env/index.mjs</code></td><td>Git facts of the status</td><td>30 seconds, keyed by HEAD and branch.</td></tr><tr><td><code>env/index.mjs</code></td><td>Promotion rules</td><td>Keyed by the file's inode, size and time (made safe here).</td></tr><tr><td><code>links/index.mjs</code></td><td>The link inbox</td><td>Keyed by the shared skip-list version (made safe here).</td></tr><tr><td><code>mcp/</code>, <code>ai/</code></td><td>The secret scrubber's list</td><td>A short time to live; secrets come from the environment, the same in every process.</td></tr><tr><td><code>auth/oidc.mjs</code></td><td>The provider's discovery and keys</td><td>A time to live, as with one process.</td></tr><tr><td><code>geo/</code></td><td>The city database</td><td>Re-read when the file's stamp changes.</td></tr><tr><td><code>preview/</code></td><td>Dev paths, the shown state, the refresh timer</td><td>Only the primary's preview listener uses them.</td></tr></tbody></table></div>
+<h3 id="c-harmless-per-process-13">(c) Harmless per process (13)</h3>
+<p>The version and commit read at start; the crash handler's &quot;exiting&quot; flag; the dummy password hash (for even sign-in
+timing); the AI's spelling helper; the authors' pending writes (inside the repo lock only); the site config
+description; the store's &quot;held&quot; view; the address checker's &quot;running&quot; guard; the release publisher's tick guard
+(primary only); the integrations' &quot;fetching now&quot; dedupe (a second fetch on another process is the same fetch);
+the preview's shown entry, refresh timer and written files (primary only); the mail and Library fetch timeouts;
+and every per-request map.</p>
+<h2 id="what-is-still-limited">What is still limited</h2>
+<ul><li><strong>One machine.</strong> All processes must run on one machine with the data dir on a local disk. SQLite's WAL mode does
+not work over a network file system, and the quick &quot;its pid is gone&quot; check only works for processes on the same
+machine. Several machines would need a database server; that is not built.</li><li><strong>Docker.</strong> Two containers on one volume are not tested. Run several processes with systemd on one host (the
+supported way, DEPLOY.md), or one container per data dir. Containers that share a hostname are told apart by their
+pid namespace (Linux), so one never reads the other's pids; they judge each other by the heartbeat.</li><li><strong>Taking over takes a moment.</strong> When the primary process stops cleanly, another takes the role at its next
+heartbeat (5 seconds by default, <code>processes.leaseSeconds</code> / 6); when it crashes on the same machine, the same. A
+process on the same machine that hangs, or is paused, without dying keeps its role until it is stopped (the role
+is never taken from a live process, so nothing runs twice); one in another container, after its heartbeat stood
+still for a lease (30 seconds by default). Meanwhile the preview and share hosts answer 502 from nginx, and the
+timers wait. The editor and the API go on, on the other processes.</li><li><strong>A process on another machine that wakes from a long pause</strong> stops its work at its next step (fencing), but a
+step already running when it froze (a build command, a webhook request in flight) ends as it would have.</li><li><strong>A process that stops mid-job.</strong> Its job is failed and must be run again; a job still queued in it is failed too
+(it is not handed to another process). A site command it had started (a build) is not stopped by its crash and
+runs to its end, so the next build may start while that one finishes; a clean stop (SIGTERM) waits for the job
+first, as before.</li><li><strong>Turns, not order.</strong> Jobs run one at a time across processes, each process's in the order it got them; between
+processes, whichever asks first when the lease frees goes next.</li><li><strong>Small delays.</strong> A running job's log on another process is at most a second behind; an unsaved change pushed to
+another process reaches the preview within a second; Pause or Cancel of a site translation asked on another process
+takes effect between two asks (the answer waits up to 30 seconds for it).</li></ul>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/SCALING.md" target="_blank" rel="noopener">docs/SCALING.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../deploy/"><span class="small muted">Previous</span>Deploying Markstage</a>
+          <a class="next" href="../docker/"><span class="small muted">Next</span>Markstage with Docker</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

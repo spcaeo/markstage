@@ -93,7 +93,8 @@ export async function pushOdoo(s, crm, lead, place, { fetchImpl = fetch } = {}) 
 export function createCrm(app, { fetchImpl = fetch, env = process.env } = {}) {
   const { db, clock, audit } = app;
   const forms = () => app.config.forms ?? {};
-  const busy = new Set();
+  // a message being sent: a lease in the database, so two server processes never send it twice at once
+  const busy = { add: (id) => app.cluster.take(`crm:${id}`, 'crm'), delete: (id) => app.cluster.release(`crm:${id}`) };
   const event = (id, change, who = null) => db.prepare('INSERT INTO form_events (message_id, at, by_id, by_name, change) VALUES (?, ?, ?, ?, ?)').run(id, nowIso(clock()), who?.id ?? null, who?.name ?? null, change);
 
   /** Words with every secret of `s` taken out (an error from far away may quote what it was sent). */
@@ -113,14 +114,20 @@ export function createCrm(app, { fetchImpl = fetch, env = process.env } = {}) {
 
   /** Try one message now. Returns {ok, id?, error?}. `who`: the person who asked (the Inbox), else the server. */
   async function push(id, who = null) {
-    if (busy.has(id)) return { ok: false, error: 'It is being sent right now.' };
+    if (!busy.add(id)) return { ok: false, error: 'It is being sent right now.' };
+    // read after the claim: a send that just ended on another process has written its result
     const row = db.prepare('SELECT * FROM form_messages WHERE id = ?').get(id);
-    if (!row || !row.crm || row.crm === 'sent') return { ok: row?.crm === 'sent', id: row?.crm_id ?? null };
+    if (!row || !row.crm || row.crm === 'sent') {
+      busy.delete(id);
+      return { ok: row?.crm === 'sent', id: row?.crm_id ?? null };
+    }
     const form = forms()[row.form];
-    if (!form?.crm) return { ok: false, error: 'Its form no longer sends messages to a CRM.' };
+    if (!form?.crm) {
+      busy.delete(id);
+      return { ok: false, error: 'Its form no longer sends messages to a CRM.' };
+    }
     const name = NAME[form.crm.kind];
     const s = settingsOf(form.crm, env);
-    busy.add(id);
     try {
       if (!s.on) throw new Error(s.problem);
       const values = JSON.parse(row.fields);

@@ -112,12 +112,12 @@
     </header>
 
     <main id="main" class="wrap doc-layout">
-      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/" aria-current="page">Deploying Markstage</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/" aria-current="page">Deploying Markstage</a></li><li><a href="../../docs/scaling/">Several server processes on one data dir</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
       <article class="doc">
         <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Deploying Markstage</li></ol></nav>
         <h1>Deploying Markstage</h1>
         <p class="lead left">Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.</p>
-        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#the-shape">The shape</a></li><li><a href="#ports">Ports</a></li><li><a href="#the-deploy-command-markstage-deploy">The deploy command: markstage-deploy</a></li><li><a href="#option-1-docker-compose-one-server-or-local">Option 1: Docker compose (one server, or local)</a></li><li><a href="#the-editor-in-production">The editor in production</a></li><li><a href="#option-2-no-docker-systemd-nginx">Option 2: no Docker (systemd + nginx)</a></li><li><a href="#what-the-site-must-do-site-contract">What the site must do (site contract)</a></li><li><a href="#optional-a-browser-publish-gate">Optional: a browser publish gate</a></li><li><a href="#operations">Operations</a></li><li><a href="#alerts">Alerts</a></li><li><a href="#single-sign-on">Single sign-on</a></li><li><a href="#forms">Forms</a></li><li><a href="#environments-staging-next-to-production">Environments (staging next to production)</a></li><li><a href="#updating-markstage">Updating Markstage</a></li><li><a href="#backups">Backups</a></li><li><a href="#what-was-proven">What was proven</a></li></ul></nav>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#the-shape">The shape</a></li><li><a href="#ports">Ports</a></li><li><a href="#the-deploy-command-markstage-deploy">The deploy command: markstage-deploy</a></li><li><a href="#option-1-docker-compose-one-server-or-local">Option 1: Docker compose (one server, or local)</a></li><li><a href="#the-editor-in-production">The editor in production</a></li><li><a href="#option-2-no-docker-systemd-nginx">Option 2: no Docker (systemd + nginx)</a></li><li><a href="#several-server-processes">Several server processes</a></li><li><a href="#what-the-site-must-do-site-contract">What the site must do (site contract)</a></li><li><a href="#optional-a-browser-publish-gate">Optional: a browser publish gate</a></li><li><a href="#operations">Operations</a></li><li><a href="#alerts">Alerts</a></li><li><a href="#single-sign-on">Single sign-on</a></li><li><a href="#forms">Forms</a></li><li><a href="#environments-staging-next-to-production">Environments (staging next to production)</a></li><li><a href="#updating-markstage">Updating Markstage</a></li><li><a href="#backups">Backups</a></li><li><a href="#what-was-proven">What was proven</a></li></ul></nav>
         <div class="prose">
 <p>How to run the Markstage server next to a static site, with Docker or without it. All files referred to here are
 in <code>deploy/</code> and were tested locally (see <a href="#what-was-proven">What was proven</a>). Security detail is in
@@ -191,9 +191,8 @@ docker compose -f deploy/compose.yaml exec markstage markstage-server setup-code
 local play copy). On every public server set <code>NODE_ENV=production</code> (the plain-Node and systemd ways below too), an
 https <code>publicOrigin</code>, and put the nginx from Option 2 in front (the compose ports stay on 127.0.0.1). Dev mode
 (<code>devNoAuth</code>, no sign-in) refuses to start in production and with any <code>publicOrigin</code> that is not a loopback
-address, so a dev config copied to a server cannot open the editor to the internet.</li><li>One server process is assumed: the sign-in, share-link and gate limiters count in process memory (see
-docs/SECURITY.md &quot;Known limits&quot;). Run one <code>markstage-server serve</code> per data dir; do not scale it to several
-processes behind one address.</li><li>The site's own redirects/headers: add them to <code>deploy/nginx/site.conf</code> (it is mounted read-only).</li><li>The editor itself: the image builds it at every start from the site's <code>node_modules/@markstage/astro</code> and names it
+address, so a dev config copied to a server cannot open the editor to the internet.</li><li>The compose file runs one server process. Several processes on one data dir are supported on one machine with
+systemd (<a href="#several-server-processes">Several server processes</a>); two containers on one volume are not tested.</li><li>The site's own redirects/headers: add them to <code>deploy/nginx/site.conf</code> (it is mounted read-only).</li><li>The editor itself: the image builds it at every start from the site's <code>node_modules/@markstage/astro</code> and names it
 with <code>MARKSTAGE_EDITOR_DIR</code> (DOCKER.md). Without Docker, build it with <code>markstage build-editor</code> and set <code>editorDir</code>
 (see <a href="#the-editor-in-production">The editor in production</a>); until then <code>/markstage/</code> shows a placeholder page.</li></ul>
 <h2 id="the-editor-in-production">The editor in production</h2>
@@ -263,6 +262,43 @@ for uploads.</li><li><strong>site host:</strong> files from <code>/srv/site/curr
 cookie forwarded). On 204, nginx serves the file from <code>/srv/site/current/private</code> with <code>noindex</code> and
 <code>no-store</code>; on 401, <code>@gate</code> proxies to Markstage, which shows the password form or 404 (then the site's own
 404 page). <code>/markstage/page-auth</code> is <code>internal</code>.</li><li>If Markstage is down, protected pages answer 500 (fail closed); public pages are unaffected.</li></ul>
+<h2 id="several-server-processes">Several server processes</h2>
+<p>Several <code>markstage-server serve</code> processes may share one data dir on one machine, each on its own port, with nginx
+spreading the editor's requests across them. They count the limits, hold the edit locks, run jobs and write the
+site repo as one server; one of them (the &quot;primary&quot;) also runs the timers and the preview and share listeners, and
+another takes over within seconds when it stops. What they share and what is still limited:
+<a href="../scaling/">SCALING.md</a>.</p>
+<p>The supported way is a systemd template unit, one instance per port:</p>
+<ol><li>Copy the unit of Option 2 to <code>/etc/systemd/system/markstage@.service</code> and give each instance its port:
+<pre data-lang="ini"><code class="language-ini">[Service]
+Environment=NODE_ENV=production MARKSTAGE_DATA_DIR=/srv/markstage-data MARKSTAGE_PORT=%i
+ExecStart=/usr/bin/node /opt/markstage/packages/server/bin/markstage-server.mjs serve</code></pre>
+(the rest as in Option 2). Stop the single <code>markstage.service</code> first, then start, say, three instances:
+<code>systemctl disable --now markstage &amp;&amp; systemctl enable --now markstage@18231 markstage@18233 markstage@18237</code>.
+Every instance reads the same <code>config.json</code>; the port in it is overridden by <code>MARKSTAGE_PORT</code>.</li><li>nginx: list every instance in the CMS upstream. The preview and share upstreams stay one port each
+(<code>preview.port</code>, 18245, and <code>share.port</code>, 18251, in config.json): only the primary process listens there, and
+whichever process holds the role binds them.
+<pre data-lang="nginx"><code class="language-nginx">upstream markstage {
+  server 127.0.0.1:18231 max_fails=1 fail_timeout=5s;
+  server 127.0.0.1:18233 max_fails=1 fail_timeout=5s;
+  server 127.0.0.1:18237 max_fails=1 fail_timeout=5s;
+  keepalive 16;
+}
+upstream markstage_preview { server 127.0.0.1:18245; }
+upstream markstage_share   { server 127.0.0.1:18251; }</code></pre>
+With <code>keepalive</code>, add <code>proxy_http_version 1.1; proxy_set_header Connection &quot;&quot;;</code> to the CMS <code>location</code> blocks.
+No sticky sessions are needed: a session made on one process is good on every other.</li><li>Restart them one at a time (<code>systemctl restart markstage@18231</code>, wait, then the next) for an update without
+a gap: a clean stop finishes the process's job first and lets its roles go, and nginx sends requests to the
+others meanwhile.</li></ol>
+<p><code>processes.leaseSeconds</code> in config.json (1 to 600, 30 by default): how long the heartbeat of a process the others
+cannot check by its pid (one in another container) may stand still before its locks free themselves. A process that
+crashed on the same machine is noticed at the next heartbeat of another (a sixth of it: 5 seconds). One that hangs or
+is paused on the same machine keeps its locks until it is stopped (systemd's <code>TimeoutStopSec</code> stops a hung one on a
+restart): a live process is never taken for stopped, so a clock jump never runs a job twice (SCALING.md, &quot;Clock
+jumps and pauses&quot;).</p>
+<p>Each process keeps its own connection to the database, and everything that must hold across them is written there.
+All of them must run on this one machine with the data dir on a local disk: SQLite over a network file system is not
+safe, so several machines need more than this (not built).</p>
 <h2 id="what-the-site-must-do-site-contract">What the site must do (site contract)</h2>
 <p>From <a href="../api/#site-side-contract-static-sites">API.md</a>, checked by the rehearsal:</p>
 <ol><li><p>Build only live entries: <code>draft: true</code> and a future <code>publishAt</code> (compared with <code>MARKSTAGE_BUILD_TIME</code>) stay out.</p></li><li><p>Exit non-zero on failure (Astro does: an invalid entry fails the build, and Markstage reverts).</p></li><li><p>Emit <code>protected: true</code> pages to <code>dist-private/</code> instead of <code>dist/</code>, and leave them out of every derived output
@@ -494,7 +530,7 @@ server started from the restored folder signs an existing account in and shows t
         <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/DEPLOY.md" target="_blank" rel="noopener">docs/DEPLOY.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
         <nav class="pager" aria-label="More docs">
           <a class="prev" href="../config/"><span class="small muted">Previous</span>markstage.config: every key</a>
-          <a class="next" href="../docker/"><span class="small muted">Next</span>Markstage with Docker</a>
+          <a class="next" href="../scaling/"><span class="small muted">Next</span>Several server processes on one data dir</a>
         </nav>
       </article>
     </main>

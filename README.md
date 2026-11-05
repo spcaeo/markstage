@@ -618,6 +618,11 @@ Shipped since 0.4.0, on main:
   skipped and why), then a run on the server that can be paused, resumed and cancelled. Each draft waits beside its
   page for a person to review in Post settings; none is published, and none replaces anyone's words. Also
   `markstage-server translate --to <locale> [--dry]` ([docs/API-TRANSLATIONS.md](docs/API-TRANSLATIONS.md)).
+- **More than one server process.** Several `markstage-server serve` processes may run on one data dir on one
+  machine, behind one address: the sign-in, share-link, AI and MCP limits count across all of them, edit locks and
+  jobs are shared, saves to the site repo take turns, and one process runs the timers and the preview and share
+  listeners, with another taking over when it stops ([docs/SCALING.md](docs/SCALING.md),
+  [docs/DEPLOY.md](docs/DEPLOY.md)).
 
 Being built now, for 0.5.0:
 
@@ -628,8 +633,6 @@ Planned, later:
 - **Packages on npm**, so a site installs `@markstage/astro` without a clone.
 - **The real page on the server, too.** Drawing an article inside its real page works in `astro dev`; the built
   editor on a server still draws it as a sheet with the site's CSS ([docs/CANVAS-FIDELITY.md](docs/CANVAS-FIDELITY.md)).
-- **More than one server process.** Sign-in and share-link limits are counted in one process's memory today, so a
-  server runs one process per data dir ([docs/SECURITY.md](docs/SECURITY.md), "Known limits").
 - **Adapters beyond Astro.** The core has no framework in it; Astro is the first adapter.
 - **Live co-editing**, with live cursors, beside today's locks and three-way merge.
 - **A stable 1.0**, after deeper quality, security and performance work.
