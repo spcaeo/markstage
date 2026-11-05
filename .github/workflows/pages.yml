@@ -49,6 +49,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # the demo editor's release line counts commits for its build number (a shallow clone says 1)
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -63,6 +65,8 @@ jobs:
       # static files only: no server, no browser; it keeps site/demo/index.html (the landing page) as it is
       - name: Build the live demo
         run: npm run demo:build -- site/demo --base /markstage/demo/
+        env:
+          MARKSTAGE_TIME_ZONE: America/Toronto  # the release line's time, in the maintainers' zone (EST/EDT)
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
