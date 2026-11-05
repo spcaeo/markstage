@@ -125,8 +125,15 @@ describe('the canvas in its page (canvas.shell)', { skip, timeout: 240_000 }, ()
     // a click scrolls the canvas to that heading, and the editor stays on the entry
     const before = page.url();
     await page.locator('.ms-pg nav.post__contents a').first().click();
-    await page.waitForTimeout(300);
-    const top = await page.evaluate(() => document.querySelector('.ms-canvas > .ProseMirror > h2').getBoundingClientRect().top - document.querySelector('.ms-scroll').getBoundingClientRect().top);
+    // the scroll is smooth: wait for it to arrive (a fixed 300 ms was too short on CI, which stopped at 170px)
+    const headingTop = () => document.querySelector('.ms-canvas > .ProseMirror > h2').getBoundingClientRect().top - document.querySelector('.ms-scroll').getBoundingClientRect().top;
+    await page
+      .waitForFunction(() => {
+        const t = document.querySelector('.ms-canvas > .ProseMirror > h2').getBoundingClientRect().top - document.querySelector('.ms-scroll').getBoundingClientRect().top;
+        return t >= -1 && t < 120;
+      }, null, { timeout: 5000 })
+      .catch(() => {}); // the assert below names the position if it never arrives
+    const top = await page.evaluate(headingTop);
     assert.ok(top >= -1 && top < 120, `the heading is at the top of the canvas (${top}px)`);
     assert.equal(new URL(page.url()).hash.split('?')[0], new URL(before).hash.split('?')[0]);
     // Post settings: "Show contents" off takes the list away, on brings it back (not saved)
