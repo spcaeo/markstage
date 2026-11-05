@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markstage Roadmap: What Is Coming in 0.4.0 and Later</title>
+    <meta name="description" content="What the Markstage team is building now for 0.4.0, and what is planned later: MDX editing, imports, a server image, AI writing help and more." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/roadmap/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#170d12" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markstage Roadmap: What Is Coming in 0.4.0 and Later" />
+    <meta property="og:description" content="What the Markstage team is building now for 0.4.0, and what is planned later: MDX editing, imports, a server image, AI writing help and more." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/roadmap/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markstage Roadmap: What Is Coming in 0.4.0 and Later" />
+    <meta name="twitter:description" content="What the Markstage team is building now for 0.4.0, and what is planned later: MDX editing, imports, a server image, AI writing help and more." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../llms.txt" />
+    <link rel="preload" href="../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../compare.css" />
+
+    <script src="../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Roadmap",
+          "item": "https://spcaeo.github.io/markstage/roadmap/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Markstage roadmap",
+      "description": "What the Markstage team is building now for 0.4.0, and what is planned later: MDX editing, imports, a server image, AI writing help and more.",
+      "url": "https://spcaeo.github.io/markstage/roadmap/",
+      "dateModified": "2026-11-03",
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/",
+        "codeRepository": "https://github.com/spcaeo/markstage"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../#features">Features</a>
+          <a href="../docs/">Docs</a>
+          <a href="../compare/">Compare</a>
+          <a href="../alternatives/">Alternatives</a>
+          <a href="../faq/">FAQ</a>
+          <a href="../why/">Why we built it</a>
+          <a href="../showcase/">Showcase</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc wide">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Roadmap</li></ol></nav>
+      <h1>Markstage roadmap</h1>
+      <div class="prose">
+<p>Markstage is pre-release (0.x): a minor version may still change how things work. This page lists what is being
+built now for the next release, 0.4.0, and what is planned after it. We promise no dates beyond that.</p>
+<p>Every &quot;Coming in 0.4.0&quot; or &quot;Planned&quot; badge on the comparison pages links here. The mark beside it is always what
+Markstage does today.</p>
+<p>Have a need that is not here? <a href="https://github.com/spcaeo/markstage/issues/new/choose" rel="noopener">Open a feature request</a>.</p>
+      </div>
+      <section aria-labelledby="rm-in-progress">
+        <h2 id="rm-in-progress">Being built now, for 0.4.0</h2>
+        <ul class="rm-list">
+          <li class="rm-item" id="mdx"><p class="rm-head"><strong>MDX editing</strong> <span class="soon in-progress" data-item="mdx">Coming in 0.4.0</span></p><p>Edit the prose of MDX files on the page; code and components stay locked, shown as cards.</p></li>
+          <li class="rm-item" id="import"><p class="rm-head"><strong>Import from WordPress, Ghost and Prismic</strong> <span class="soon in-progress" data-item="import">Coming in 0.4.0</span></p><p>Bring posts, pages, media, authors and redirects across from WordPress, Ghost or Prismic.</p></li>
+          <li class="rm-item" id="server-image"><p class="rm-head"><strong>A ready server image</strong> <span class="soon in-progress" data-item="server-image">Coming in 0.4.0</span></p><p>A Docker image of the Markstage server, built and tested by CI.</p></li>
+          <li class="rm-item" id="starter-site"><p class="rm-head"><strong>A starter site</strong> <span class="soon in-progress" data-item="starter-site">Coming in 0.4.0</span></p><p>An Astro blog with Markstage already set up, to start a new site from.</p></li>
+          <li class="rm-item" id="live-demo"><p class="rm-head"><strong>A live demo</strong> <span class="soon in-progress" data-item="live-demo">Coming in 0.4.0</span></p><p>Try the editor on a sample blog in your browser, with no sign-up.</p></li>
+          <li class="rm-item" id="ai-writing"><p class="rm-head"><strong>AI writing help on the page</strong> <span class="soon in-progress" data-item="ai-writing">Coming in 0.4.0</span></p><p>Rewrite, shorten or fix the grammar of a selection; the writer accepts or rejects each change, and nothing saves by itself.</p></li>
+          <li class="rm-item" id="ai-providers"><p class="rm-head"><strong>More AI providers</strong> <span class="soon in-progress" data-item="ai-providers">Coming in 0.4.0</span></p><p>Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.</p></li>
+          <li class="rm-item" id="mcp-publish"><p class="rm-head"><strong>An MCP publish tool</strong> <span class="soon in-progress" data-item="mcp-publish">Coming in 0.4.0</span></p><p>An AI agent may ask to publish, and the site's publish rules decide, as they do for a person.</p></li>
+        </ul>
+      </section>
+      <section aria-labelledby="rm-planned">
+        <h2 id="rm-planned">Planned, later</h2>
+        <ul class="rm-list">
+          <li class="rm-item" id="npm"><p class="rm-head"><strong>Packages on npm</strong> <span class="soon planned" data-item="npm">Planned</span></p><p>Install @markstage/astro from npm, without a clone of the repository.</p></li>
+          <li class="rm-item" id="server-canvas"><p class="rm-head"><strong>The real page on the server, too</strong> <span class="soon planned" data-item="server-canvas">Planned</span></p><p>The built editor on a server draws each article inside its real page, as astro dev does today.</p></li>
+          <li class="rm-item" id="multi-process"><p class="rm-head"><strong>More than one server process</strong> <span class="soon planned" data-item="multi-process">Planned</span></p><p>Sign-in and share-link limits shared between processes, so one data dir can run on several.</p></li>
+          <li class="rm-item" id="adapters"><p class="rm-head"><strong>Adapters beyond Astro</strong> <span class="soon planned" data-item="adapters">Planned</span></p><p>The core has no framework in it; more site generators after Astro.</p></li>
+          <li class="rm-item" id="co-editing"><p class="rm-head"><strong>Live co-editing</strong> <span class="soon planned" data-item="co-editing">Planned</span></p><p>Several people in one page at once, with live cursors, beside today's locks and three-way merge.</p></li>
+          <li class="rm-item" id="ai-translate"><p class="rm-head"><strong>AI translation of a whole site</strong> <span class="soon planned" data-item="ai-translate">Planned</span></p><p>Draft every page of a site in another language in one run, for people to review.</p></li>
+          <li class="rm-item" id="ai-seo"><p class="rm-head"><strong>AI link and SEO suggestions</strong> <span class="soon planned" data-item="ai-seo">Planned</span></p><p>Suggested internal links and fixes for search problems, for a person to accept.</p></li>
+          <li class="rm-item" id="stable"><p class="rm-head"><strong>A stable 1.0</strong> <span class="soon planned" data-item="stable">Planned</span></p><p>After deeper quality, security and performance work.</p></li>
+        </ul>
+      </section>
+      <p class="cta-row left"><a class="btn btn-secondary" href="../compare/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg><span>How Markstage compares today</span></a><a class="btn btn-text" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg><span>Get Markstage on GitHub</span></a></p>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg><span>Markstage</span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../#features">Features</a>
+            <a href="../#install">Install</a>
+            <a href="../compare/">Compare</a>
+            <a href="../alternatives/">Alternatives</a>
+            <a href="../faq/">FAQ</a>
+            <a href="../glossary/">Glossary</a>
+            <a href="../why/">Why we built it</a>
+            <a href="../showcase/">Showcase</a>
+            <a href="../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../docs/">All docs</a>
+            <a href="../docs/writing/">Writing with Markstage</a>
+            <a href="../docs/config/">Site config</a>
+            <a href="../docs/deploy/">Deploy the server</a>
+            <a href="../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -94,7 +94,7 @@ const githubButton = `<a class="gh-btn" href="${REPO_URL}" target="_blank" rel="
  * One full page. `path` is the page's site path ('' for home, 'docs/deploy/'). `root` is how links reach the site
  * root from this page ('../../'), or the absolute address for the 404 page, which GitHub Pages serves at any depth.
  */
-export function page({ path, root, title, description, body, data = [], og = 'home', type = 'website', noindex = false, current = '', modified = null, styles = [] }) {
+export function page({ path, root, title, description, body, data = [], og = 'home', type = 'website', noindex = false, current = '', modified = null, styles = [], scripts = [] }) {
   const r = root;
   const image = OG_IMAGES[og];
   const link = ([, target, label, key]) => `<a href="${target.startsWith('#') ? `${r}${target}` : `${r}${target}`}"${current === key ? ' aria-current="page"' : ''}>${label}</a>`;
@@ -131,7 +131,7 @@ ${modified ? `    <meta property="article:modified_time" content="${modified}" /
     <link rel="stylesheet" href="${r}styles.css" />
 ${styles.map((s) => `    <link rel="stylesheet" href="${r}${s}" />\n`).join('')}
     <script src="${r}enhance.js" defer></script>
-${data.map((d) => indent(jsonLd(d), 4)).join('\n')}
+${scripts.map((s) => `    <script src="${r}${s}" defer></script>\n`).join('')}${data.map((d) => indent(jsonLd(d), 4)).join('\n')}
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -168,6 +168,7 @@ ${body}
             <a href="${r}glossary/">Glossary</a>
             <a href="${r}why/">Why we built it</a>
             <a href="${r}showcase/">Showcase</a>
+            <a href="${r}roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

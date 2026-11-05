@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -157,6 +158,31 @@
       <h1>A Keystatic alternative for Astro sites</h1>
       <p class="lead left">Markstage vs Keystatic: Markstage reads your Keystatic schema, edits pages on the real design and saves JSON byte-identical. Facts checked 3 Nov 2026.</p>
       <p class="small muted">Facts about Keystatic checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and Keystatic at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="keystatic" data-k="git">
+        <div class="pcard-top"><span class="tile git" aria-hidden="true">Ke</span><div><p class="pcard-name">Keystatic</p><p class="pcard-kind">Git-based editor</p></div></div>
+        <p class="pcard-what">A typed admin for Markdown, Markdoc or MDX inside your Astro project.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Admin UI with fields and a WYSIWYG editor <sup class="fn"><a href="../../compare/full/#fn-ks-home" aria-label="Source 39">39</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Local or GitHub <sup class="fn"><a href="../../compare/full/#fn-ks-home" aria-label="Source 39">39</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ks-home" aria-label="Source 39">39</a></sup></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free; Cloud Pro from $10/mo</span> <sup class="fn"><a href="../../compare/full/#fn-ks-cloud" aria-label="Source 40">40</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">MIT</span> <sup class="fn"><a href="../../compare/full/#fn-ks-gh" aria-label="Source 42">42</a></sup></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>Keystatic gives an Astro project a typed admin for Markdown, Markdoc, MDX, JSON and YAML files, with no database.
 Markstage can sit on top of the same files: it reads your Keystatic schema and saves JSON exactly as Keystatic
@@ -169,7 +195,8 @@ sign-on, a forms inbox and SEO checks. Markstage is pre-release.</p>
 <h2 id="side-by-side">Side by side</h2>
 <div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Keystatic</th></tr></thead><tbody><tr><td>Editing</td><td>On the real page; other fields in a side panel</td><td>Admin UI with fields and a WYSIWYG editor</td></tr><tr><td>Formats</td><td>Markdown and JSON</td><td>Markdown, Markdoc, MDX, JSON, YAML</td></tr><tr><td>Astro output</td><td>The live site stays fully static</td><td>Pages stay static; the admin routes are rendered on demand, so an adapter is needed</td></tr><tr><td>Storage</td><td>Git on your server</td><td>Local files or GitHub</td></tr><tr><td>Roles</td><td>Five built in, plus custom roles</td><td>Keystatic Cloud: access per team; no roles described</td></tr><tr><td>Staging, forms inbox, SEO checks</td><td>Included</td><td>Not listed</td></tr><tr><td>Price</td><td>Free to self-host</td><td>Free; Keystatic Cloud free up to 3 users per team, Pro from $10/mo plus $5 per extra user</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>MIT</td></tr></tbody></table></div>
 <h2 id="where-keystatic-is-stronger">Where Keystatic is stronger</h2>
-<ul><li><strong>MDX and Markdoc</strong> fields. Markstage edits Markdown and JSON only.</li><li><strong>A typed reader API</strong> for your Astro code, with TypeScript.</li><li><strong>No extra server.</strong> Keystatic runs inside your Astro project (with an adapter).</li><li><strong>GitHub mode</strong> with Keystatic Cloud handling sign-in.</li></ul>
+<ul><li><strong>MDX and Markdoc</strong> fields. Markstage edits Markdown and JSON today; MDX editing is coming in 0.4.0
+(<a href="../../roadmap/#mdx">roadmap</a>).</li><li><strong>A typed reader API</strong> for your Astro code, with TypeScript.</li><li><strong>No extra server.</strong> Keystatic runs inside your Astro project (with an adapter).</li><li><strong>GitHub mode</strong> with Keystatic Cloud handling sign-in.</li></ul>
 <h2 id="moving-from-keystatic-to-markstage">Moving from Keystatic to Markstage</h2>
 <p>You do not have to move your files or your schema. Point Markstage at it:
 <code>schema: { keystatic: './keystatic.config.ts' }</code> in <code>markstage.config.mjs</code>. Each JSON collection takes the
@@ -226,6 +253,7 @@ Markstage runs as its own server and leaves your whole site static.</p>
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

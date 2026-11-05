@@ -40,7 +40,7 @@ pre-release.
 - **Nothing to run.** CloudCannon builds and hosts the site and runs the editor. Markstage needs your own server.
 - **Hosting and CDN included,** with automatic HTTPS and DDoS protection on its plans.
 - **Support and services.** Priority and dedicated support, onboarding, and a migration service.
-- **Many generators.** CloudCannon works with more than Astro; Markstage's only adapter today is Astro.
+- **Many generators.** CloudCannon works with more than Astro; Markstage has one adapter today, Astro; adapters beyond Astro are planned ([roadmap](/roadmap/#adapters)).
 - **Maturity.** CloudCannon has years of production use; Markstage is pre-release.
 
 ## Moving from CloudCannon to Markstage

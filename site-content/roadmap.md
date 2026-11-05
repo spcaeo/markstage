@@ -1,0 +1,97 @@
+---
+title: "Markstage Roadmap: What Is Coming in 0.4.0 and Later"
+description: "What the Markstage team is building now for 0.4.0, and what is planned later: MDX editing, imports, a server image, AI writing help and more."
+h1: "Markstage roadmap"
+# One source of truth for every "coming" badge on the site and the README's Roadmap section (compare.test.mjs
+# checks both). status: in-progress (being built for 0.4.0), planned (later) or shipped (no badge any more).
+# rows: the rows of docs/COMPARISON.md whose Markstage cell the item changes; never a row Markstage already has as ✓.
+items:
+  - id: mdx
+    title: MDX editing
+    what: Edit the prose of MDX files on the page; code and components stay locked, shown as cards.
+    status: in-progress
+    rows: [MDX]
+  - id: import
+    title: Import from WordPress, Ghost and Prismic
+    what: Bring posts, pages, media, authors and redirects across from WordPress, Ghost or Prismic.
+    status: in-progress
+    rows: [WordPress import]
+  - id: server-image
+    title: A ready server image
+    what: A Docker image of the Markstage server, built and tested by CI.
+    status: in-progress
+    rows: []
+  - id: starter-site
+    title: A starter site
+    what: An Astro blog with Markstage already set up, to start a new site from.
+    status: in-progress
+    rows: []
+  - id: live-demo
+    title: A live demo
+    what: Try the editor on a sample blog in your browser, with no sign-up.
+    status: in-progress
+    rows: []
+  - id: ai-writing
+    title: AI writing help on the page
+    what: Rewrite, shorten or fix the grammar of a selection; the writer accepts or rejects each change, and nothing saves by itself.
+    status: in-progress
+    rows: []
+  - id: ai-providers
+    title: More AI providers
+    what: Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.
+    status: in-progress
+    rows: []
+  - id: mcp-publish
+    title: An MCP publish tool
+    what: An AI agent may ask to publish, and the site's publish rules decide, as they do for a person.
+    status: in-progress
+    rows: []
+  - id: npm
+    title: Packages on npm
+    what: Install @markstage/astro from npm, without a clone of the repository.
+    status: planned
+    rows: []
+  - id: server-canvas
+    title: The real page on the server, too
+    what: The built editor on a server draws each article inside its real page, as astro dev does today.
+    status: planned
+    rows: []
+  - id: multi-process
+    title: More than one server process
+    what: Sign-in and share-link limits shared between processes, so one data dir can run on several.
+    status: planned
+    rows: []
+  - id: adapters
+    title: Adapters beyond Astro
+    what: The core has no framework in it; more site generators after Astro.
+    status: planned
+    rows: []
+  - id: co-editing
+    title: Live co-editing
+    what: Several people in one page at once, with live cursors, beside today's locks and three-way merge.
+    status: planned
+    rows: [Live co-editing (cursors), Real-time collaboration]
+  - id: ai-translate
+    title: AI translation of a whole site
+    what: Draft every page of a site in another language in one run, for people to review.
+    status: planned
+    rows: []
+  - id: ai-seo
+    title: AI link and SEO suggestions
+    what: Suggested internal links and fixes for search problems, for a person to accept.
+    status: planned
+    rows: []
+  - id: stable
+    title: A stable 1.0
+    what: After deeper quality, security and performance work.
+    status: planned
+    rows: []
+---
+
+Markstage is pre-release (0.x): a minor version may still change how things work. This page lists what is being
+built now for the next release, 0.4.0, and what is planned after it. We promise no dates beyond that.
+
+Every "Coming in 0.4.0" or "Planned" badge on the comparison pages links here. The mark beside it is always what
+Markstage does today.
+
+Have a need that is not here? [Open a feature request](https://github.com/spcaeo/markstage/issues/new/choose).

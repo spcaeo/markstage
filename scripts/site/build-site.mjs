@@ -13,11 +13,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { alternativePage, alternativesIndex, checkedOn, comparePage, comparisonPage, leadFirst } from './compare.mjs';
+import { parseComparison } from './comparison-data.mjs';
 import { CLONE_URL, NAME, REPO_URL, SITE_URL, TAGLINE, repoFile } from './config.mjs';
 import { DOCS, FAQ, FEATURES } from './content.mjs';
 import { faqPage, glossaryPage } from './learn.mjs';
 import { parseFrontMatter, renderMarkdown } from './markdown.mjs';
 import { docPage, docsIndex, home, notFound } from './pages.mjs';
+import { readRoadmap, roadmapPage } from './roadmap.mjs';
 import { showcasePage, storySections, whyPage } from './story.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -124,7 +126,7 @@ function readComparison(root) {
   const source = fs.readFileSync(file, 'utf8');
   const docs = docLink('docs', '../../docs/');
   const link = (href) => (/^(\.\.\/)?README\.md#how-markstage-compares$/.test(href) ? '../' : docs(href));
-  return { rendered: renderMarkdown(source, { link }), checked: checkedOn(source) };
+  return { rendered: renderMarkdown(source, { link }), checked: checkedOn(source), data: parseComparison(source) };
 }
 
 /**
@@ -211,16 +213,18 @@ export function buildSite(root = REPO_ROOT, { contentDir = path.join(root, 'site
   const comparison = readComparison(root);
   const why = readPage(contentDir, 'why');
   const showcase = readPage(contentDir, 'showcase');
+  const roadmap = readRoadmap(contentDir, (md) => renderMarkdown(md, { link: siteContentLink('../') }));
   const pages = [
     home({ media, version, story: storySections({ why, showcase, media }), compared: comparedCount(root) }),
     ...(why ? [whyPage({ why })] : []),
     ...(showcase ? [showcasePage({ showcase, media })] : []),
     docsIndex(),
     ...docs.map(docPage),
-    comparePage({ readme, alternatives, renderSection, hasComparison: Boolean(comparison) }),
-    ...(comparison ? [comparisonPage({ rendered: comparison.rendered, checked: comparison.checked, alternatives })] : []),
+    comparePage({ readme, alternatives, renderSection, comparison, roadmap }),
+    ...(comparison ? [comparisonPage({ comparison, alternatives, roadmap })] : []),
     alternativesIndex({ alternatives }),
-    ...alternatives.map((alt) => alternativePage({ alt, alternatives })),
+    ...alternatives.map((alt) => alternativePage({ alt, alternatives, comparison, roadmap })),
+    ...(roadmap ? [roadmapPage({ roadmap })] : []),
     faqPage({ builtIn: FAQ, file: readEntries(path.join(contentDir, 'faq.md'), siteContentLink('../')) }),
     glossaryPage({ file: readEntries(path.join(contentDir, 'glossary.md'), siteContentLink('../')) }),
     notFound(),

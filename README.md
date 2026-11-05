@@ -384,7 +384,7 @@ forms rather than editing the page itself. Markstage is pre-release; most produc
   ecosystem of themes and plugins.
 - **Years of use.** Most of these products have been in production for years, with bigger communities and plugin
   ecosystems. Markstage is pre-release.
-- **Frameworks other than Astro.** Markstage's core has no framework in it, but Astro is the only adapter so far.
+- **Frameworks other than Astro.** Markstage's core has no framework in it, but it has one adapter so far, Astro; more are planned (see the Roadmap).
 
 The same comparison on the website, with one page per alternative:
 [spcaeo.github.io/markstage/compare/full/](https://spcaeo.github.io/markstage/compare/full/).
@@ -510,15 +510,39 @@ More answers: [the FAQ on the website](https://spcaeo.github.io/markstage/faq/).
 
 ## Roadmap
 
-Markstage is **pre-release** (0.x): a minor version may still change how things work. Not there yet, and next:
+Markstage is **pre-release** (0.x): a minor version may still change how things work. The list is kept in
+[site-content/roadmap.md](site-content/roadmap.md), which also makes the site's
+[roadmap page](https://spcaeo.github.io/markstage/roadmap/) and the "Coming in 0.4.0" badges on the comparison.
+No dates beyond "0.4.0" and "later".
+
+AI that ships today: an MCP server, so an AI agent drafts as the person whose token it holds and never publishes
+([docs/API-MCP.md](docs/API-MCP.md)), and AI suggestions for alt text, search titles and descriptions, translation
+drafts and the promotion summary, which a person reads, changes and saves ([docs/API-AI.md](docs/API-AI.md)).
+
+Being built now, for 0.4.0:
+
+- **MDX editing.** Edit the prose of MDX files on the page; code and components stay locked, shown as cards.
+- **Import from WordPress, Ghost and Prismic.** Posts, pages, media, authors and redirects.
+- **A ready server image.** A Docker image of the Markstage server, built and tested by CI.
+- **A starter site.** An Astro blog with Markstage already set up.
+- **A live demo.** Try the editor on a sample blog in your browser, with no sign-up.
+- **AI writing help on the page.** Rewrite, shorten or fix the grammar of a selection; the writer accepts or
+  rejects each change, and nothing saves by itself.
+- **More AI providers.** Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.
+- **An MCP publish tool.** An AI agent may ask to publish, and the site's publish rules decide, as they do for a
+  person.
+
+Planned, later:
 
 - **Packages on npm**, so a site installs `@markstage/astro` without a clone.
-- **A published server image**, built and tested by CI, beside today's Dockerfile.
 - **The real page on the server, too.** Drawing an article inside its real page works in `astro dev`; the built
   editor on a server still draws it as a sheet with the site's CSS ([docs/CANVAS-FIDELITY.md](docs/CANVAS-FIDELITY.md)).
 - **More than one server process.** Sign-in and share-link limits are counted in one process's memory today, so a
   server runs one process per data dir ([docs/SECURITY.md](docs/SECURITY.md), "Known limits").
 - **Adapters beyond Astro.** The core has no framework in it; Astro is the first adapter.
+- **Live co-editing**, with live cursors, beside today's locks and three-way merge.
+- **AI translation of a whole site** in one run, for people to review.
+- **AI link and SEO suggestions**: internal links and fixes for search problems, for a person to accept.
 - **A stable 1.0**, after deeper quality, security and performance work.
 
 Have a need that is not here? [Open a feature request](https://github.com/spcaeo/markstage/issues/new/choose).

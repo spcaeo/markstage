@@ -25,7 +25,7 @@ single sign-on and a forms inbox. Markstage is pre-release.
 | Editing | On the real page | A WYSIWYG editor over your files; "not a page builder" |
 | Setup | `markstage.config` lists your collections | Detects your schema from your files |
 | Git hosts | A git repository on your own server | GitHub; GitLab on Team and Agency |
-| Live co-editing | No: locks and a three-way merge | Yes: live cursors and avatars |
+| Live co-editing | No: locks and a three-way merge (live co-editing is [planned](/roadmap/#co-editing)) | Yes: live cursors and avatars |
 | Roles | Five built in, plus custom roles | Roles and permissions |
 | Single sign-on, forms inbox | Included | Not listed |
 | Price | Free to self-host | Free self-hosted; Cloud Pro $12/mo ($10 yearly), $249 lifetime |

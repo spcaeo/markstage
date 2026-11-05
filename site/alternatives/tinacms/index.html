@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -116,7 +117,7 @@
           "name": "Can Markstage edit MDX like TinaCMS?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS or Keystatic fits better."
+            "text": "Not yet. Today Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS or Keystatic fits better. MDX editing is coming in 0.4.0, with the prose editable and the code locked (roadmap)."
           }
         },
         {
@@ -165,6 +166,31 @@
       <h1>A TinaCMS alternative for Astro sites</h1>
       <p class="lead left">Markstage vs TinaCMS for Astro: edit on your site's real design, keep content in git, self-host free with no database server. Checked 3 Nov 2026.</p>
       <p class="small muted">Facts about TinaCMS checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and TinaCMS at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="tinacms" data-k="git">
+        <div class="pcard-top"><span class="tile git" aria-hidden="true">TC</span><div><p class="pcard-name">TinaCMS</p><p class="pcard-kind">Git-based editor</p></div></div>
+        <p class="pcard-what">A git-based CMS with click-to-edit on Astro pages, hosted (TinaCloud) or self-hosted.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Click a region of the Astro page; its field opens in a sidebar form and the page updates live. Each page is set up with a data loader and an island or server route <sup class="fn"><a href="../../compare/full/#fn-ti-astro" aria-label="Source 19">19</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ti-gh" aria-label="Source 22">22</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">&quot;Some features are not available&quot; <sup class="fn"><a href="../../compare/full/#fn-ti-self" aria-label="Source 20">20</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free (2 users); Team $29/mo</span> <sup class="fn"><a href="../../compare/full/#fn-ti-price" aria-label="Source 18">18</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Apache 2.0</span> <sup class="fn"><a href="../../compare/full/#fn-ti-gh" aria-label="Source 22">22</a></sup></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>TinaCMS and Markstage both keep your content as files in git and both let people edit on the page. They differ in
 what you run, what it costs and what the editor covers beyond the page.</p>
@@ -177,7 +203,7 @@ pre-release.</p>
 <h2 id="side-by-side">Side by side</h2>
 <div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">TinaCMS</th></tr></thead><tbody><tr><td>Editing on the page</td><td>Text typed on the real page; other fields in a side panel</td><td>Click a region; its field opens in a sidebar form and the page updates live</td></tr><tr><td>Setting up a page for editing</td><td>Each component marks its fields with a helper (the marks appear in editor mode only)</td><td>Each page gets a schema field, a data loader, and an island or a server route</td></tr><tr><td>Astro output</td><td>The live site stays fully static</td><td>Visual editing wants <code>output: 'server'</code> and an adapter, or every region in <code>&lt;TinaIsland&gt;</code></td></tr><tr><td>Content</td><td>Markdown and JSON in git</td><td>Markdown, MDX, JSON, YAML in git</td></tr><tr><td>MDX</td><td>No</td><td>Yes</td></tr><tr><td>Self-hosting</td><td>Free; no database server (its working data, such as people, sessions, the inbox and drafts, in one SQLite file)</td><td>Free; needs a database adapter such as MongoDB or Postgres as a cache, and &quot;some features are not available&quot;</td></tr><tr><td>Hosted plan</td><td>None</td><td>TinaCloud: Free (2 users), Team $29/mo, Business $299/mo</td></tr><tr><td>Review before going live</td><td>Staging and production, promotion rules, included</td><td>Editorial workflow on protected branches and pull requests, on Team and up</td></tr><tr><td>Roles</td><td>Five built in, plus custom roles</td><td>3 roles; custom roles on Enterprise (beta)</td></tr><tr><td>Single sign-on</td><td>OpenID Connect, included</td><td>Enterprise</td></tr><tr><td>Forms inbox</td><td>Yes</td><td>Not listed</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>Apache 2.0</td></tr></tbody></table></div>
 <h2 id="where-tinacms-is-stronger">Where TinaCMS is stronger</h2>
-<ul><li><strong>MDX.</strong> TinaCMS edits MDX; Markstage edits Markdown and JSON only.</li><li><strong>A hosted option.</strong> TinaCloud runs the backend for you. Markstage needs a server you look after.</li><li><strong>Many frameworks.</strong> TinaCMS supports more than Astro. Markstage's only adapter today is Astro.</li><li><strong>A large community.</strong> TinaCMS has about 13.9k stars on GitHub and years of use.</li></ul>
+<ul><li><strong>MDX.</strong> TinaCMS edits MDX; Markstage edits Markdown and JSON only.</li><li><strong>A hosted option.</strong> TinaCloud runs the backend for you. Markstage needs a server you look after.</li><li><strong>Many frameworks.</strong> TinaCMS supports more than Astro. Markstage has one adapter today, Astro; adapters beyond Astro are planned (<a href="../../roadmap/#adapters">roadmap</a>).</li><li><strong>A large community.</strong> TinaCMS has about 13.9k stars on GitHub and years of use.</li></ul>
 <h2 id="moving-from-tinacms-to-markstage">Moving from TinaCMS to Markstage</h2>
 <p>Your Markdown and JSON files stay where they are. List the same folders as collections in <code>markstage.config.mjs</code>,
 add the <code>@markstage/astro</code> integration, and mark the fields your components show so they can be edited on the page.
@@ -192,8 +218,9 @@ itself is also free to self-host, but it then needs a database adapter, and its 
 <p>Yes. TinaCMS has an Astro guide and an <code>@tinacms/astro</code> integration with visual editing. Its docs say visual
 editing needs server output and an adapter, or every editable region wrapped in <code>&lt;TinaIsland&gt;</code>.</p>
 <h3 id="can-markstage-edit-mdx-like-tinacms">Can Markstage edit MDX like TinaCMS?</h3>
-<p>No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS or
-Keystatic fits better.</p>
+<p>Not yet. Today Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS
+or Keystatic fits better. MDX editing is coming in 0.4.0, with the prose editable and the code locked
+(<a href="../../roadmap/#mdx">roadmap</a>).</p>
 <h3 id="do-i-need-a-database-to-self-host">Do I need a database to self-host?</h3>
 <p>TinaCMS's self-hosted backend uses a database adapter (its docs name MongoDB and Postgres) as a cache of your
 files. Markstage needs no database server: one SQLite file holds people, sessions, the inbox,
@@ -235,6 +262,7 @@ workflow on protected branches with pull requests and preview links, on its Team
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

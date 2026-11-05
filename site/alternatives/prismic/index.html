@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -165,6 +166,31 @@
       <h1>A Prismic alternative for Astro sites</h1>
       <p class="lead left">Markstage vs Prismic: page building, releases and share links with your content in git, self-hosted, no per-repository fees. Facts checked 3 Nov 2026.</p>
       <p class="small muted">Facts about Prismic checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and Prismic at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="prismic" data-k="hosted lead">
+        <div class="pcard-top"><span class="tile hosted" aria-hidden="true">Pr</span><div><p class="pcard-name">Prismic</p><p class="pcard-kind">Hosted CMS</p></div></div>
+        <p class="pcard-what">A hosted page builder: nothing to run, and your developers build the sections (slices).</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk part"><span class="mk-g" aria-hidden="true">◐</span><span class="mk-l">Partly</span></span> <span class="note">Page Builder: drag sections, live preview <sup class="fn"><a href="../../compare/full/#fn-pr-pb" aria-label="Source 68">68</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Hosted, read by API <sup class="fn"><a href="../../compare/full/#fn-pr-price" aria-label="Source 67">67</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <sup class="fn"><a href="../../compare/full/#fn-pr-price" aria-label="Source 67">67</a></sup></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free; Starter $10/mo per repository, yearly</span> <sup class="fn"><a href="../../compare/full/#fn-pr-price" aria-label="Source 67">67</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Closed, hosted service</span> <sup class="fn"><a href="../../compare/full/#fn-pr-price" aria-label="Source 67">67</a></sup></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>Prismic is a hosted headless CMS with a drag-and-drop Page Builder built on &quot;slices&quot;, the reusable sections your
 developers make. Markstage covers the same ground for Astro, with one big difference: your content stays as
@@ -180,7 +206,8 @@ fees or plan limits on users, locales and environments. Markstage is pre-release
 <h2 id="where-prismic-is-stronger">Where Prismic is stronger</h2>
 <ul><li><strong>Hosted, with a CDN</strong> and image processing; nothing to run.</li><li><strong>Many front ends.</strong> One API can serve sites, apps and other channels.</li><li><strong>A mature page builder</strong> with many customers and case studies.</li><li><strong>Enterprise services:</strong> SSO, backups, uptime SLAs and support plans.</li></ul>
 <h2 id="moving-from-prismic-to-markstage">Moving from Prismic to Markstage</h2>
-<p>Prismic content has to become files. Markstage's import API takes entries and media as JSON: a dry run first, then
+<p>Prismic content has to become files. An importer for Prismic is coming in 0.4.0 (<a href="../../roadmap/#import">roadmap</a>).
+Today, Markstage's import API takes entries and media as JSON: a dry run first, then
 the run, as drafts, and running it again only updates what changed (it remembers each source id). Each slice type
 becomes a section type in your Astro components and Markstage block pack, so writers keep building pages from the
 same sections. To get your content out, read your documents through Prismic's API and write them in the import's
@@ -238,6 +265,7 @@ person reviews and publishes.</p>
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

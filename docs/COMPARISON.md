@@ -221,8 +221,8 @@ Each line names the capability and which of the 21 products above have it, as ch
   GitHub stars), Ghost (55.7k), Payload (45.6k), Decap CMS (19.4k), EmDash (14.1k) and TinaCMS (13.9k) have large
   communities [^gh-api]. WordPress, Contentful and Sanity have big partner and plugin ecosystems, and Ghost has a
   theme marketplace [^go-price]. Markstage is pre-release.
-- **Other frameworks.** Most products here also serve Next.js, Hugo, Eleventy and others. Markstage's first and only
-  adapter today is Astro.
+- **Other frameworks.** Most products here also serve Next.js, Hugo, Eleventy and others. Markstage has one
+  adapter today, Astro; adapters beyond Astro are on its roadmap.
 
 ## Who should use what
 

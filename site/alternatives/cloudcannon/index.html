@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -157,6 +158,31 @@
       <h1>A self-hosted CloudCannon alternative for Astro</h1>
       <p class="lead left">Markstage vs CloudCannon: both git-based with on-page editing for Astro. Markstage runs on your own server for free. Facts checked 3 Nov 2026.</p>
       <p class="small muted">Facts about CloudCannon checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and CloudCannon at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="cloudcannon" data-k="git hosted">
+        <div class="pcard-top"><span class="tile git" aria-hidden="true">CC</span><div><p class="pcard-name">CloudCannon</p><p class="pcard-kind">Git-based editor</p></div></div>
+        <p class="pcard-what">A hosted git-based CMS that edits regions on a preview of your built site.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Editable regions on a preview of your built site; Astro components re-render live <sup class="fn"><a href="../../compare/full/#fn-cc-visual" aria-label="Source 25">25</a></sup> <sup class="fn"><a href="../../compare/full/#fn-cc-astro" aria-label="Source 26">26</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">GitHub, GitLab, Bitbucket <sup class="fn"><a href="../../compare/full/#fn-cc-price" aria-label="Source 24">24</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">No self-hosted version listed <sup class="fn"><a href="../../compare/full/#fn-cc-price" aria-label="Source 24">24</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Standard $55/mo ($49 yearly), 3 users</span> <sup class="fn"><a href="../../compare/full/#fn-cc-price" aria-label="Source 24">24</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Closed, hosted service</span> <sup class="fn"><a href="../../compare/full/#fn-cc-price" aria-label="Source 24">24</a></sup></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>CloudCannon is the product closest to Markstage. Both keep content as files in git, and both let writers edit
 text where it appears on the site. The big difference: CloudCannon is a hosted service with monthly plans, and
@@ -170,7 +196,7 @@ pre-release.</p>
 <h2 id="side-by-side">Side by side</h2>
 <div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">CloudCannon</th></tr></thead><tbody><tr><td>Editing on the page</td><td>Text typed on the real page; other fields in a side panel</td><td>Editable regions on a preview of your built site; Astro components re-render live</td></tr><tr><td>Content</td><td>Markdown and JSON in git</td><td>Files in GitHub, GitLab or Bitbucket</td></tr><tr><td>Where it runs</td><td>Your server (Docker Compose, or systemd and nginx)</td><td>CloudCannon's service; no self-hosted version listed</td></tr><tr><td>Hosting your site</td><td>Your own host</td><td>Included, on a CDN</td></tr><tr><td>Price to start</td><td>Free</td><td>Standard $55/mo ($49 yearly), 3 users</td></tr><tr><td>Extra users</td><td>No fees</td><td>$10 per user a month</td></tr><tr><td>Staging and branches</td><td>Local, staging and production included</td><td>Branching workflows on Team ($350/mo)</td></tr><tr><td>Custom roles</td><td>Included</td><td>Custom permissions from Team</td></tr><tr><td>Single sign-on</td><td>OpenID Connect, included</td><td>SSO/SAML on Enterprise</td></tr><tr><td>Forms inbox</td><td>Yes</td><td>Yes</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>Closed, hosted service</td></tr></tbody></table></div>
 <h2 id="where-cloudcannon-is-stronger">Where CloudCannon is stronger</h2>
-<ul><li><strong>Nothing to run.</strong> CloudCannon builds and hosts the site and runs the editor. Markstage needs your own server.</li><li><strong>Hosting and CDN included,</strong> with automatic HTTPS and DDoS protection on its plans.</li><li><strong>Support and services.</strong> Priority and dedicated support, onboarding, and a migration service.</li><li><strong>Many generators.</strong> CloudCannon works with more than Astro; Markstage's only adapter today is Astro.</li><li><strong>Maturity.</strong> CloudCannon has years of production use; Markstage is pre-release.</li></ul>
+<ul><li><strong>Nothing to run.</strong> CloudCannon builds and hosts the site and runs the editor. Markstage needs your own server.</li><li><strong>Hosting and CDN included,</strong> with automatic HTTPS and DDoS protection on its plans.</li><li><strong>Support and services.</strong> Priority and dedicated support, onboarding, and a migration service.</li><li><strong>Many generators.</strong> CloudCannon works with more than Astro; Markstage has one adapter today, Astro; adapters beyond Astro are planned (<a href="../../roadmap/#adapters">roadmap</a>).</li><li><strong>Maturity.</strong> CloudCannon has years of production use; Markstage is pre-release.</li></ul>
 <h2 id="moving-from-cloudcannon-to-markstage">Moving from CloudCannon to Markstage</h2>
 <p>Your content is already in your git repository, so nothing has to be exported. List the same folders as
 collections in <code>markstage.config.mjs</code> and add the <code>@markstage/astro</code> integration. CloudCannon's editable regions
@@ -221,6 +247,7 @@ today.</p>
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

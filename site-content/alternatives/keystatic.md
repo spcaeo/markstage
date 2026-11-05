@@ -33,7 +33,8 @@ sign-on, a forms inbox and SEO checks. Markstage is pre-release.
 
 ## Where Keystatic is stronger
 
-- **MDX and Markdoc** fields. Markstage edits Markdown and JSON only.
+- **MDX and Markdoc** fields. Markstage edits Markdown and JSON today; MDX editing is coming in 0.4.0
+  ([roadmap](/roadmap/#mdx)).
 - **A typed reader API** for your Astro code, with TypeScript.
 - **No extra server.** Keystatic runs inside your Astro project (with an adapter).
 - **GitHub mode** with Keystatic Cloud handling sign-in.

@@ -15,6 +15,7 @@ Edit your Markdown on the real stage. Status: pre-release, in active development
 - [taskrhino.ca: WordPress to Astro, Edited with Markstage](https://spcaeo.github.io/markstage/showcase/)
 - [Best CMS for Astro? Markstage Compared With 21 Others](https://spcaeo.github.io/markstage/compare/)
 - [Astro CMS Comparison: Markstage and 21 CMSs, Sourced](https://spcaeo.github.io/markstage/compare/full/)
+- [Markstage Roadmap: What Is Coming in 0.4.0 and Later](https://spcaeo.github.io/markstage/roadmap/)
 - [Markstage FAQ: the visual editor for Astro sites](https://spcaeo.github.io/markstage/faq/)
 - [Glossary: Astro, git-based CMS and visual editing terms](https://spcaeo.github.io/markstage/glossary/)
 

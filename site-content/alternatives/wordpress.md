@@ -39,7 +39,8 @@ pre-release.
 
 ## Moving from WordPress to Markstage
 
-Markstage has importers for the parts of a WordPress site that are hardest to move:
+Markstage has importers for the parts of a WordPress site that are hardest to move (a fuller WordPress import of
+posts, pages, media, authors and redirects is coming in 0.4.0, [roadmap](/roadmap/#import)):
 
 - **Reusable blocks** (patterns) come in from a WordPress export (`.xml`) or a database dump (`.sql` or `.sql.gz`)
   as shared sections in the Library, with their Gutenberg HTML read into Markdown and the site's blocks.

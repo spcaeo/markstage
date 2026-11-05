@@ -34,6 +34,15 @@
   --logo-pool: #f2b33d;
   --ok: #15803d;
   --code-bg: #f6f0f2;
+  --yes-ink: #166534;
+  --yes-bg: #e6f4ea;
+  --part-ink: #7a4500;
+  --part-bg: #fdf0d5;
+  --no-ink: #a11d2a;
+  --no-bg: #fbe8ea;
+  --unk-ink: #4a3a41;
+  --unk-bg: #f1ecee;
+  --ms-col: #fdf4f6;
   --shadow: 0 1px 2px rgb(42 15 27 / 6%), 0 8px 24px rgb(42 15 27 / 8%);
   --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   --display: 'Big Shoulders Display', 'Arial Narrow', 'Helvetica Neue', sans-serif;
@@ -67,6 +76,15 @@
     --logo-pool: #f5c04f;
     --ok: #4ade80;
     --code-bg: #24161d;
+    --yes-ink: #86efac;
+    --yes-bg: #143322;
+    --part-ink: #fcd38a;
+    --part-bg: #3b2a0e;
+    --no-ink: #fda4af;
+    --no-bg: #3d1820;
+    --unk-ink: #d7c4cb;
+    --unk-bg: #2e1d25;
+    --ms-col: #2a1720;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 35%);
   }
 }

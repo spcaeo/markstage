@@ -1,10 +1,15 @@
-// The comparison pages of site/: /compare/ (from the README's "How Markstage compares" section, so the two never
-// disagree), /compare/full/ (docs/COMPARISON.md with its sources), /alternatives/ and one page per
-// site-content/alternatives/<slug>.md.
+// The comparison pages of site/: /compare/ (the verdict, product cards and the lead table, drawn from
+// docs/COMPARISON.md, plus the prose of the README's "How Markstage compares" section), /compare/full/
+// (docs/COMPARISON.md with its sources, its tables grouped and filterable), /alternatives/ and one page per
+// site-content/alternatives/<slug>.md, each topped by a "Markstage vs X" card pair. Every fact in a card or a table
+// is read from docs/COMPARISON.md (comparison-data.mjs), never typed here.
 import { NAME, REPO_URL, SITE_URL, UPDATED, repoFile } from './config.mjs';
 import { ICONS, ORGANIZATION, absolute, breadcrumbData, breadcrumbs, faqData, page } from './layout.mjs';
 import { escapeHtml as e } from './markdown.mjs';
 import { button } from './pages.mjs';
+import { KINDS, MARKSTAGE, allProducts, productInfo } from './comparison-data.mjs';
+import { cardPair, comparisonTable, filterBar, leadSections, legend, productCard, sourceRef, verdictTiles } from './compare-render.mjs';
+import { comingSection, soonFinder } from './roadmap.mjs';
 
 export const COMPARE_HEADING = '## How Markstage compares';
 
@@ -29,6 +34,17 @@ export function compareSection(readme) {
   return end < 0 ? rest : rest.slice(0, end);
 }
 
+/**
+ * The README section's prose for /compare/: its short table, the legend above it and the numbered notes under it
+ * are left out, because the page draws the same comparison from docs/COMPARISON.md, with sources.
+ */
+export function compareProse(section) {
+  return section
+    .split(/\n\s*\n/)
+    .filter((b) => !/^\s*\|/.test(b) && !/^\s*✓ yes ·/.test(b) && !/^\s*¹/.test(b))
+    .join('\n\n');
+}
+
 /** What Markstage is and is not, for the compare page (README and docs facts only). */
 const MARKSTAGE_FACTS = [
   ['Where content lives', 'Markdown and JSON files in your git repo'],
@@ -38,6 +54,7 @@ const MARKSTAGE_FACTS = [
   ['Framework', 'Astro today; a framework-free core'],
   ['Price', 'Free to self-host (Elastic License 2.0)'],
   ['Team features', 'Sign-in, roles, 2FA, single sign-on, releases, staging'],
+  ['AI today', 'An MCP server: AI agents draft as the person whose token they hold, and never publish. AI suggestions for alt text, search titles and descriptions, translation drafts and the promotion summary, which a person reads, changes and saves'],
 ];
 
 const related = (alternatives, root, except = null) =>
@@ -46,8 +63,16 @@ const related = (alternatives, root, except = null) =>
     .map((a) => `<li><a href="${root}alternatives/${a.slug}/">${e(a.meta.h1 ?? a.meta.title)}</a></li>`)
     .join('');
 
-export function comparePage({ readme, alternatives, renderSection, hasComparison = false }) {
-  // hasComparison: docs/COMPARISON.md exists, so /compare/full/ is built
+/** The products of `kind` that are not in the lead table, in the order of the tables. */
+const ofKind = (data, kind) => allProducts(data).filter((n) => !data.lead.products.includes(n) && productInfo(n).kind === kind);
+
+/** The context every card and table needs: the data, source links, the alternatives that have pages, badges. */
+function context({ comparison, alternatives, roadmap, root, sourcesBase }) {
+  const data = comparison.data;
+  return { data, ref: sourceRef(data.notes, sourcesBase), root, pages: new Set(alternatives.map((a) => a.slug)), soonFor: soonFinder(roadmap, root) };
+}
+
+export function comparePage({ readme, alternatives, renderSection, comparison = null, roadmap = null }) {
   const root = '../';
   const path = 'compare/';
   const trail = [
@@ -55,25 +80,73 @@ export function comparePage({ readme, alternatives, renderSection, hasComparison
     { name: 'Compare', path },
   ];
   const section = compareSection(readme);
-  const rendered = section ? renderSection(section) : null;
-  const body = `    <main id="main" class="wrap doc wide">
+  const rendered = section ? renderSection(compareProse(section)) : null;
+  const cx = comparison ? context({ comparison, alternatives, roadmap, root, sourcesBase: 'full/' }) : null;
+  const card = (name, tag) => productCard({ name, ...cx, tag });
+  const lead = cx
+    ? `      <section aria-labelledby="verdict-title" class="verdict">
+        <h2 id="verdict-title">The short verdict</h2>
+        <ul class="vtiles">
+${verdictTiles(cx.data, cx.ref, root, cx.pages)}
+        </ul>
+      </section>
+`
+    : '';
+  const facts = `      <section aria-labelledby="facts-title">
+        <h2 id="facts-title">Markstage in one table</h2>
+        <div class="table-wrap"><table class="facts-table"><thead><tr><th scope="col">Question</th><th scope="col">Markstage</th></tr></thead><tbody>
+${MARKSTAGE_FACTS.map(([q, a]) => `          <tr><th scope="row">${e(q)}</th><td>${e(a)}</td></tr>`).join('\n')}
+        </tbody></table></div>
+      </section>\n`;
+  const vs = cx
+    ? `      <section aria-labelledby="vs-title">
+        <h2 id="vs-title">Markstage vs WordPress, Ghost and Prismic</h2>
+        <p>The three people weigh most often, beside Markstage. Each fact is the same, with the same source, as in <a href="full/">the full comparison</a>.</p>
+        <ul class="pcards four">
+${[MARKSTAGE, ...cx.data.lead.products.filter((p) => p !== MARKSTAGE)].map((n) => card(n, 'h3')).join('\n')}
+        </ul>
+        ${legend()}
+        ${comparisonTable({ caption: 'Markstage vs WordPress, Ghost and Prismic: the rows a team usually decides on', captionId: 'cap-lead', products: cx.data.lead.products, sections: leadSections(cx.data), ...cx })}
+      </section>
+`
+    : '';
+  const kinds = cx
+    ? KINDS.map((k) => ({ ...k, names: ofKind(cx.data, k.id) }))
+        .filter((k) => k.names.length)
+        .map(
+          (k) => `        <div class="kind-group" id="kind-${k.id}">
+          <h3>${e(k.title)} <span class="kind-count">${k.names.length}</span></h3>
+          <p class="muted">${e(k.text)}</p>
+          <ul class="pcards three">
+${k.names.map((n) => card(n, 'h4')).join('\n')}
+          </ul>
+        </div>`,
+        )
+        .join('\n')
+    : '';
+  const every = cx
+    ? `      <section aria-labelledby="every-title" data-filter-scope>
+        <h2 id="every-title">Every other product, grouped</h2>
+        <p>The other ${allProducts(cx.data).length - cx.data.lead.products.filter((p) => p !== MARKSTAGE).length} products of the comparison, by what they are. WordPress and Ghost are publishing platforms and Prismic a hosted CMS; they are above.</p>
+        ${filterBar({ segments: ['all', 'git', 'hosted', 'app'] })}
+${kinds}
+      </section>
+`
+    : '';
+  const body = `    <main id="main" class="wrap doc wide compare">
       ${breadcrumbs(trail, root)}
       <h1>Which is the best CMS for Astro? Markstage compared</h1>
       <p class="lead left">The best CMS for Astro depends on your team: who edits, where content lives and what you want to run. Here is where Markstage, a visual editor that keeps content in git, fits next to WordPress, Ghost, Prismic and other hosted and git-based CMSs, and where each one leads. Markstage is not affiliated with any of them.</p>
-      <section aria-labelledby="facts-title">
-        <h2 id="facts-title">Markstage in one table</h2>
-        <div class="table-wrap"><table><thead><tr><th scope="col">Question</th><th scope="col">Markstage</th></tr></thead><tbody>
-${MARKSTAGE_FACTS.map(([q, a]) => `          <tr><th scope="row">${e(q)}</th><td>${e(a)}</td></tr>`).join('\n')}
-        </tbody></table></div>
-      </section>
-${rendered ? `      <section aria-labelledby="side-title">\n        <h2 id="side-title">Side by side</h2>\n${rendered.html}\n      </section>\n` : ''}${
+${lead}${facts}${vs}${every}${comingSection(roadmap, root, { today: 'Shipping today: an MCP server, so an AI agent drafts as the person whose token it holds and never publishes, and AI suggestions for alt text, search titles and descriptions, translation drafts and the promotion summary.' })}${
+    rendered ? `      <section aria-labelledby="side-title">\n        <h2 id="side-title">How it fits</h2>\n${rendered.html}\n      </section>\n` : ''
+  }${
     alternatives.length
       ? `      <section aria-labelledby="alt-title">
         <h2 id="alt-title">Markstage as an alternative to</h2>
         <ul class="link-list">${related(alternatives, root)}</ul>
       </section>\n`
       : ''
-  }      <p class="cta-row left">${hasComparison ? button('full/', 'Full comparison with sources', 'secondary', ICONS.arrow) : ''}${button('../docs/', 'Read the docs', 'text')}</p>
+  }      <p class="cta-row left">${comparison ? button('full/', 'Full comparison with sources', 'secondary', ICONS.arrow) : ''}${button('../docs/', 'Read the docs', 'text')}</p>
     </main>`;
   const data = [
     breadcrumbData(trail),
@@ -92,6 +165,8 @@ ${rendered ? `      <section aria-labelledby="side-title">\n        <h2 id="side
       data,
       og: 'compare',
       current: 'compare',
+      styles: ['compare.css'],
+      scripts: ['compare.js'],
     }),
   };
 }
@@ -135,8 +210,8 @@ ${alternatives.length ? `        <ul class="cards two">\n${cards}\n        </ul>
   };
 }
 
-/** One /alternatives/<slug>/ page from its Markdown file, rendered. */
-export function alternativePage({ alt, alternatives }) {
+/** One /alternatives/<slug>/ page from its Markdown file, rendered, topped by the "Markstage vs X" card pair. */
+export function alternativePage({ alt, alternatives, comparison = null, roadmap = null }) {
   const root = '../../';
   const path = `alternatives/${alt.slug}/`;
   const { meta, rendered } = alt;
@@ -161,12 +236,13 @@ export function alternativePage({ alt, alternatives }) {
   ];
   if (rendered.faq.length) data.push(faqData(rendered.faq));
   const others = related(alternatives, root, alt.slug);
+  const pair = comparison ? cardPair({ name: meta.competitor, ...context({ comparison, alternatives, roadmap, root, sourcesBase: `${root}compare/full/` }) }) : '';
   const body = `    <main id="main" class="wrap doc wide">
       ${breadcrumbs(trail, root)}
       <h1>${e(h1)}</h1>
       <p class="lead left">${e(meta.description)}</p>
       ${meta.checked ? `<p class="small muted">Facts about ${e(meta.competitor ?? 'other tools')} checked on <time datetime="${e(meta.checked)}">${e(meta.checked)}</time>, from its own website. Markstage is not affiliated with it.</p>` : ''}
-      <div class="prose">
+${pair ? `${pair}\n      <p class="small muted pair-note">From <a href="${root}compare/full/">the full comparison</a>; each number links to its source.</p>\n` : ''}      <div class="prose">
 ${rendered.html}
       </div>
       <p class="cta-row left">${button(REPO_URL, 'Get Markstage on GitHub', 'primary', ICONS.github)}${button('../../compare/', 'All comparisons', 'secondary')}${button('../../docs/', 'Read the docs', 'text')}</p>
@@ -174,15 +250,41 @@ ${others ? `      <section aria-labelledby="more-alt">\n        <h2 id="more-alt
   return {
     path,
     file: `alternatives/${alt.slug}/index.html`,
-    html: page({ path, root, title: meta.title, description: meta.description, body, data, og: 'compare', type: 'article', current: 'alternatives', modified: meta.checked ?? null }),
+    html: page({ path, root, title: meta.title, description: meta.description, body, data, og: 'compare', type: 'article', current: 'alternatives', modified: meta.checked ?? null, styles: pair ? ['compare.css'] : [] }),
   };
 }
 
 /** The date docs/COMPARISON.md says its facts were checked ("checked on **2026-11-03**"), or the site's date. */
 export const checkedOn = (markdown) => /checked on \*\*(\d{4}-\d{2}-\d{2})\*\*/i.exec(markdown)?.[1] ?? UPDATED;
 
+// a run of "### Section" headings, each followed by its table: one group of COMPARISON.md
+const RUN = /(?:<h3 id="[^"]+">[^<]*<\/h3>\n<div class="table-wrap"><table>[\s\S]*?<\/table><\/div>(?:\n|$))+/g;
+const LEAD_TABLE = /<div class="table-wrap"><table><thead><tr><th scope="col">Feature<\/th>[\s\S]*?<\/table><\/div>/;
+
+/**
+ * The rendered COMPARISON.md with its comparison tables drawn again from the data: Group A and Group B each one
+ * table whose row groups are the ### sections (the headings' ids stay, on the group rows), the lead table grouped
+ * the same way, the filter above them. The legend and "Who should use what" tables stay as they are.
+ */
+export function groupedComparison(html, cx) {
+  let i = 0;
+  const { data } = cx;
+  let out = html.replace(RUN, (run) => {
+    const group = data.groups[i++];
+    if (!group) throw new Error('docs/COMPARISON.md: more groups of tables than Group A and Group B');
+    const ids = [...run.matchAll(/<h3 id="([^"]+)">/g)].map((m) => m[1]);
+    if (ids.length !== group.sections.length) throw new Error(`docs/COMPARISON.md: ${group.title} has ${group.sections.length} tables, the page ${ids.length}`);
+    const sections = group.sections.map((s, j) => ({ ...s, id: ids[j] }));
+    return `${comparisonTable({ caption: group.title, captionId: `cap-${group.id}`, products: group.products, sections, ...cx })}\n`;
+  });
+  if (i !== data.groups.length) throw new Error(`docs/COMPARISON.md: ${data.groups.length} groups, ${i} drawn`);
+  out = out.replace(LEAD_TABLE, () => `${filterBar({ segments: ['all', 'lead', 'git', 'hosted', 'app', 'publishing'], diff: true })}\n${legend()}\n${comparisonTable({ caption: 'Markstage vs WordPress, Ghost and Prismic', captionId: 'cap-lead', products: data.lead.products, sections: leadSections(data), ...cx })}`);
+  return out;
+}
+
 /** /compare/full/: docs/COMPARISON.md, every table and its numbered sources. */
-export function comparisonPage({ rendered, checked, alternatives }) {
+export function comparisonPage({ comparison, alternatives, roadmap = null }) {
+  const { rendered, checked } = comparison;
   const root = '../../';
   const path = 'compare/full/';
   const count = alternatives.length > 1 ? `${alternatives.length} ` : '';
@@ -205,12 +307,13 @@ export function comparisonPage({ rendered, checked, alternatives }) {
       publisher: ORGANIZATION,
     },
   ];
-  const body = `    <main id="main" class="wrap doc wide">
+  const html = groupedComparison(rendered.html, context({ comparison, alternatives, roadmap, root, sourcesBase: '' }));
+  const body = `    <main id="main" class="wrap doc wide compare full">
       ${breadcrumbs(trail, root)}
       <h1>${e(h1)}</h1>
       <p class="lead left">An Astro CMS comparison with a source for every cell: editing, content and git, Astro output, team workflow, hosting, price and licence, checked on <time datetime="${e(checked)}">${e(checked)}</time>.</p>
-      <div class="prose comparison">
-${rendered.html}
+      <div class="prose comparison" data-filter-scope>
+${html}
       </div>
       <p class="cta-row left">${button(REPO_URL, 'Get Markstage on GitHub', 'primary', ICONS.github)}${button('../', 'The short comparison', 'secondary')}${button(repoFile('docs/COMPARISON.md'), 'This page on GitHub', 'text')}</p>
     </main>`;
@@ -228,6 +331,8 @@ ${rendered.html}
       type: 'article',
       current: 'compare',
       modified: checked,
+      styles: ['compare.css'],
+      scripts: ['compare.js'],
     }),
   };
 }

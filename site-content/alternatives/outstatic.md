@@ -33,7 +33,7 @@ tools included. Markstage is pre-release.
 
 ## Where Outstatic is stronger
 
-- **MDX.** Outstatic edits MDX; Markstage does not.
+- **MDX.** Outstatic edits MDX; Markstage does not yet (MDX editing is coming in 0.4.0, [roadmap](/roadmap/#mdx)).
 - **A hosted plan.** Outstatic Pro runs the dashboard for you.
 - **Setup speed.** Its site promises a CMS on your repo in about five minutes.
 

@@ -25,7 +25,7 @@ real design, with no seat fees. Markstage is pre-release.
 | Visual editing | On the real page | Presentation tool with overlays, on a server-rendered Astro site |
 | Where content lives | Markdown and JSON in your git repository | Sanity's hosted Content Lake |
 | Astro | `@markstage/astro`; the live site stays static | Official `@sanity/astro` integration |
-| Real-time collaboration | No: locks and a three-way merge | Yes: a real-time content database; comments and tasks on Growth |
+| Real-time collaboration | No: locks and a three-way merge (live co-editing is [planned](/roadmap/#co-editing)) | Yes: a real-time content database; comments and tasks on Growth |
 | Price | Free to self-host | Free (up to 20 seats); Growth $15 per seat a month |
 | Roles | Five built in, plus custom roles | 2 on Free, 5 on Growth, custom on Enterprise |
 | Staging | Local, staging and production, included | 2 datasets; extra datasets $999 each a month |

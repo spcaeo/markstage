@@ -45,7 +45,7 @@ next to the code, and where staging, roles and single sign-on should come includ
 ## Moving from Ghost to Markstage
 
 Ghost exports posts, pages, tags, tiers and settings as one JSON file (Settings, then Advanced, then
-Import/Export), and members as a CSV file. Markstage has no Ghost importer yet. Its import API takes entries and
+Import/Export), and members as a CSV file. Markstage has no Ghost importer yet; one is coming in 0.4.0 ([roadmap](/roadmap/#import)). Today its import API takes entries and
 media as JSON: a dry run first, then the run, as drafts, and running it again only updates what changed (it
 remembers each source id, such as the Ghost post id). Turn each Ghost post into the import's shape, with its body
 as Markdown, and the pictures come in through the same import.

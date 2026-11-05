@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -157,6 +158,31 @@
       <h1>A Ghost alternative for Astro sites</h1>
       <p class="lead left">Markstage vs Ghost for Astro: writers edit on the site's real design, content stays as files in git, self-hosted with no MySQL. Facts checked 4 Nov 2026.</p>
       <p class="small muted">Facts about Ghost checked on <time datetime="2026-11-04">2026-11-04</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and Ghost at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="ghost" data-k="publishing lead">
+        <div class="pcard-top"><span class="tile publishing" aria-hidden="true">Gh</span><div><p class="pcard-name">Ghost</p><p class="pcard-kind">Publishing platform</p></div></div>
+        <p class="pcard-what">A publishing platform with newsletters, memberships and paid subscriptions built in; headless with Astro.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Headless: written in Ghost's own editor <sup class="fn"><a href="../../compare/full/#fn-go-feat" aria-label="Source 94">94</a></sup> <sup class="fn"><a href="../../compare/full/#fn-go-astro" aria-label="Source 100">100</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">MySQL database, read by the Content API <sup class="fn"><a href="../../compare/full/#fn-go-ubuntu" aria-label="Source 97">97</a></sup> <sup class="fn"><a href="../../compare/full/#fn-go-content" aria-label="Source 98">98</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Ubuntu with Ghost-CLI, or Docker (preview) <sup class="fn"><a href="../../compare/full/#fn-go-install" aria-label="Source 96">96</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free software; Ghost(Pro) Starter $18/mo ($15 yearly)</span> <sup class="fn"><a href="../../compare/full/#fn-go-price" aria-label="Source 93">93</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">MIT</span> <sup class="fn"><a href="../../compare/full/#fn-go-gh" aria-label="Source 92">92</a></sup></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>Ghost is a mature publishing platform with its own editor, themes, newsletters and paid memberships. Many Astro
 sites use it headless: writers work in Ghost's admin, and Astro reads the posts through Ghost's Content API.
@@ -174,7 +200,7 @@ next to the code, and where staging, roles and single sign-on should come includ
 <ul><li><strong>Newsletters, memberships and paid subscriptions</strong> in the same tool as the posts.</li><li><strong>A hosted service.</strong> Ghost(Pro) runs it for you; Markstage needs a server you look after.</li><li><strong>Years of use and a large community,</strong> with a theme marketplace and many integrations.</li><li><strong>A permissive licence.</strong> Ghost's code is under the MIT licence.</li></ul>
 <h2 id="moving-from-ghost-to-markstage">Moving from Ghost to Markstage</h2>
 <p>Ghost exports posts, pages, tags, tiers and settings as one JSON file (Settings, then Advanced, then
-Import/Export), and members as a CSV file. Markstage has no Ghost importer yet. Its import API takes entries and
+Import/Export), and members as a CSV file. Markstage has no Ghost importer yet; one is coming in 0.4.0 (<a href="../../roadmap/#import">roadmap</a>). Today its import API takes entries and
 media as JSON: a dry run first, then the run, as drafts, and running it again only updates what changed (it
 remembers each source id, such as the Ghost post id). Turn each Ghost post into the import's shape, with its body
 as Markdown, and the pictures come in through the same import.</p>
@@ -235,6 +261,7 @@ others as a hosted service without a commercial licence.</p>
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

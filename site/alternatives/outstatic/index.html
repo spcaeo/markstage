@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -149,6 +150,31 @@
       <h1>An Outstatic alternative for Astro sites</h1>
       <p class="lead left">Markstage vs Outstatic: both git-based and free to self-host. Markstage edits on your Astro site's real design and includes roles. Checked 3 Nov 2026.</p>
       <p class="small muted">Facts about Outstatic checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and Outstatic at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="outstatic" data-k="git">
+        <div class="pcard-top"><span class="tile git" aria-hidden="true">Ou</span><div><p class="pcard-name">Outstatic</p><p class="pcard-kind">Git-based editor</p></div></div>
+        <p class="pcard-what">A dashboard editor for Markdown and MDX that commits to GitHub.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Dashboard editor <sup class="fn"><a href="../../compare/full/#fn-os-home" aria-label="Source 51">51</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">GitHub <sup class="fn"><a href="../../compare/full/#fn-os-price" aria-label="Source 52">52</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-os-price" aria-label="Source 52">52</a></sup></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free self-hosted; Pro $9.99/user/mo</span> <sup class="fn"><a href="../../compare/full/#fn-os-price" aria-label="Source 52">52</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">FSL-1.1-ALv2</span> <span class="note">Source-available; becomes Apache 2.0 two years after each release <sup class="fn"><a href="../../compare/full/#fn-os-lic" aria-label="Source 53">53</a></sup></span></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>Outstatic gives Markdown and MDX files a real editing dashboard, with content kept in your GitHub repository. Its
 Pro plan adds hosted publishing, email and Google sign-in, roles and AI. Markstage is self-hosted only, edits on
@@ -161,7 +187,7 @@ tools included. Markstage is pre-release.</p>
 <h2 id="side-by-side">Side by side</h2>
 <div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Outstatic</th></tr></thead><tbody><tr><td>Editing</td><td>On the real page</td><td>A dashboard editor with custom fields</td></tr><tr><td>Formats</td><td>Markdown and JSON</td><td>Markdown and MDX</td></tr><tr><td>Git</td><td>A git repository on your own server</td><td>GitHub</td></tr><tr><td>Sign-in without GitHub</td><td>Included: email and password, single sign-on</td><td>Pro: email magic link and Google</td></tr><tr><td>Commit author</td><td>The person who saved</td><td>Edits through email or Google sign-in commit as the Outstatic Bot</td></tr><tr><td>Roles</td><td>Five built in, plus custom roles</td><td>Team roles on Pro</td></tr><tr><td>Price</td><td>Free to self-host</td><td>Free self-hosted; Pro $9.99 per user a month</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>FSL-1.1-ALv2 (source-available; each release becomes Apache 2.0 after two years)</td></tr></tbody></table></div>
 <h2 id="where-outstatic-is-stronger">Where Outstatic is stronger</h2>
-<ul><li><strong>MDX.</strong> Outstatic edits MDX; Markstage does not.</li><li><strong>A hosted plan.</strong> Outstatic Pro runs the dashboard for you.</li><li><strong>Setup speed.</strong> Its site promises a CMS on your repo in about five minutes.</li></ul>
+<ul><li><strong>MDX.</strong> Outstatic edits MDX; Markstage does not yet (MDX editing is coming in 0.4.0, <a href="../../roadmap/#mdx">roadmap</a>).</li><li><strong>A hosted plan.</strong> Outstatic Pro runs the dashboard for you.</li><li><strong>Setup speed.</strong> Its site promises a CMS on your repo in about five minutes.</li></ul>
 <h2 id="moving-from-outstatic-to-markstage">Moving from Outstatic to Markstage</h2>
 <p>Your Markdown files are in your repository already. Add their folders as collections in <code>markstage.config.mjs</code>
 and add the <code>@markstage/astro</code> integration. Keep MDX files where they are, or convert them to Markdown. Invite your
@@ -204,6 +230,7 @@ signed-in person is the git author of each save.</p>
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

@@ -53,6 +53,17 @@ const PAIRS = [
   ['logo-letter', 'logo-tile', 4.5],
   ['brand', 'bg', 3], // a filled button stands out from the page
   ['accent', 'stage', 3], // the brass floor line on the stage
+  // the comparison's mark badges (site/compare.css), and Markstage's highlighted column
+  ['yes-ink', 'yes-bg', 4.5],
+  ['part-ink', 'part-bg', 4.5],
+  ['no-ink', 'no-bg', 4.5],
+  ['unk-ink', 'unk-bg', 4.5],
+  ['ink', 'ms-col', 4.5],
+  ['ink-2', 'ms-col', 4.5],
+  ['ink-3', 'ms-col', 4.5],
+  ['brand-ink', 'ms-col', 4.5],
+  ['ink-3', 'bg-2', 4.5], // notes on a zebra row
+  ['ink', 'brand-soft', 4.5], // a product's monogram tile, Markstage's card
 ];
 
 describe('brand colours', () => {

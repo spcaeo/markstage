@@ -39,7 +39,7 @@ pre-release.
 
 - **MDX.** TinaCMS edits MDX; Markstage edits Markdown and JSON only.
 - **A hosted option.** TinaCloud runs the backend for you. Markstage needs a server you look after.
-- **Many frameworks.** TinaCMS supports more than Astro. Markstage's only adapter today is Astro.
+- **Many frameworks.** TinaCMS supports more than Astro. Markstage has one adapter today, Astro; adapters beyond Astro are planned ([roadmap](/roadmap/#adapters)).
 - **A large community.** TinaCMS has about 13.9k stars on GitHub and years of use.
 
 ## Moving from TinaCMS to Markstage
@@ -64,8 +64,9 @@ editing needs server output and an adapter, or every editable region wrapped in 
 
 ### Can Markstage edit MDX like TinaCMS?
 
-No. Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS or
-Keystatic fits better.
+Not yet. Today Markstage edits Markdown with front matter and JSON. If your site depends on MDX components, TinaCMS
+or Keystatic fits better. MDX editing is coming in 0.4.0, with the prose editable and the code locked
+([roadmap](/roadmap/#mdx)).
 
 ### Do I need a database to self-host?
 

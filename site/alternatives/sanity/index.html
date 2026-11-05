@@ -31,6 +31,7 @@
     <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
     <link rel="preload" href="../../fonts/big-shoulders-display-800.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="../../compare.css" />
 
     <script src="../../enhance.js" defer></script>
     <script type="application/ld+json">
@@ -149,6 +150,31 @@
       <h1>A Sanity alternative for Astro sites</h1>
       <p class="lead left">Markstage vs Sanity for Astro: visual editing with content as files in your own git repository, self-hosted, no seat fees. Facts checked 3 Nov 2026.</p>
       <p class="small muted">Facts about Sanity checked on <time datetime="2026-11-03">2026-11-03</time>, from its own website. Markstage is not affiliated with it.</p>
+      <ul class="pcards pair" aria-label="Markstage and Sanity at a glance">
+      <li class="pcard ms" data-p="markstage" data-k="ms">
+        <div class="pcard-top"><span class="tile ms" aria-hidden="true"><svg class="logo" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false"><path class="lt" d="M0 26V13C0 5.8 7.2 1 16 1s16 4.8 16 12v13a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6z"/><path class="la" fill="none" stroke-opacity=".28" stroke-width="1.1" d="M4.5 28.5V14c0-5 5.1-8.7 11.5-8.7S27.5 9 27.5 14v14.5"/><ellipse class="lp" cx="16" cy="25.4" rx="9.6" ry="2.1"/><path class="ll" fill="none" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round" d="M10 22.4v-9.6l6 6.6 6-6.6v9.6"/></svg></span><div><p class="pcard-name">Markstage</p><p class="pcard-kind">Visual editor</p></div></div>
+        <p class="pcard-what">A visual editor for Astro: writers edit on the site’s real design; content stays Markdown and JSON in git.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">The site's own components and CSS; text and rich text typed on the page, other fields in a side panel. Components mark their fields with a helper <sup class="fn"><a href="../../compare/full/#fn-ms-arch" aria-label="Source 4">4</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 7">7</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 17">17</a></sup></span></dd></div>
+        </dl>
+      </li>
+      <li class="pcard" data-p="sanity" data-k="hosted">
+        <div class="pcard-top"><span class="tile hosted" aria-hidden="true">Sa</span><div><p class="pcard-name">Sanity</p><p class="pcard-kind">Hosted CMS</p></div></div>
+        <p class="pcard-what">A customisable Studio on a hosted, real-time content database.</p>
+        <dl class="facts">
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Presentation tool with overlays, on a server-rendered Astro site <sup class="fn"><a href="../../compare/full/#fn-sa-astro" aria-label="Source 71">71</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Hosted Content Lake <sup class="fn"><a href="../../compare/full/#fn-sa-price" aria-label="Source 70">70</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Content is hosted <sup class="fn"><a href="../../compare/full/#fn-sa-price" aria-label="Source 70">70</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free; Growth $15 per seat/mo</span> <sup class="fn"><a href="../../compare/full/#fn-sa-price" aria-label="Source 70">70</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Studio: MIT; Content Lake hosted</span> <sup class="fn"><a href="../../compare/full/#fn-sa-gh" aria-label="Source 72">72</a></sup></dd></div>
+        </dl>
+      </li>
+      </ul>
+      <p class="small muted pair-note">From <a href="../../compare/full/">the full comparison</a>; each number links to its source.</p>
       <div class="prose">
 <p>Sanity pairs a customisable Studio with a hosted, real-time content database (the Content Lake), visual editing
 through its Presentation tool, and an official Astro integration. Markstage keeps content as files in git on your
@@ -159,7 +185,7 @@ want to shape the editing app in code.</p>
 <p><strong>Markstage</strong> suits Astro sites whose content is pages and posts, kept as Markdown and JSON in git, edited on the
 real design, with no seat fees. Markstage is pre-release.</p>
 <h2 id="side-by-side">Side by side</h2>
-<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Sanity</th></tr></thead><tbody><tr><td>Visual editing</td><td>On the real page</td><td>Presentation tool with overlays, on a server-rendered Astro site</td></tr><tr><td>Where content lives</td><td>Markdown and JSON in your git repository</td><td>Sanity's hosted Content Lake</td></tr><tr><td>Astro</td><td><code>@markstage/astro</code>; the live site stays static</td><td>Official <code>@sanity/astro</code> integration</td></tr><tr><td>Real-time collaboration</td><td>No: locks and a three-way merge</td><td>Yes: a real-time content database; comments and tasks on Growth</td></tr><tr><td>Price</td><td>Free to self-host</td><td>Free (up to 20 seats); Growth $15 per seat a month</td></tr><tr><td>Roles</td><td>Five built in, plus custom roles</td><td>2 on Free, 5 on Growth, custom on Enterprise</td></tr><tr><td>Staging</td><td>Local, staging and production, included</td><td>2 datasets; extra datasets $999 each a month</td></tr><tr><td>Single sign-on</td><td>OpenID Connect, included</td><td>SAML on Enterprise</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>Studio: MIT; Content Lake: hosted service</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Markstage</th><th scope="col">Sanity</th></tr></thead><tbody><tr><td>Visual editing</td><td>On the real page</td><td>Presentation tool with overlays, on a server-rendered Astro site</td></tr><tr><td>Where content lives</td><td>Markdown and JSON in your git repository</td><td>Sanity's hosted Content Lake</td></tr><tr><td>Astro</td><td><code>@markstage/astro</code>; the live site stays static</td><td>Official <code>@sanity/astro</code> integration</td></tr><tr><td>Real-time collaboration</td><td>No: locks and a three-way merge (live co-editing is <a href="../../roadmap/#co-editing">planned</a>)</td><td>Yes: a real-time content database; comments and tasks on Growth</td></tr><tr><td>Price</td><td>Free to self-host</td><td>Free (up to 20 seats); Growth $15 per seat a month</td></tr><tr><td>Roles</td><td>Five built in, plus custom roles</td><td>2 on Free, 5 on Growth, custom on Enterprise</td></tr><tr><td>Staging</td><td>Local, staging and production, included</td><td>2 datasets; extra datasets $999 each a month</td></tr><tr><td>Single sign-on</td><td>OpenID Connect, included</td><td>SAML on Enterprise</td></tr><tr><td>Licence</td><td>Elastic License 2.0 (source-available)</td><td>Studio: MIT; Content Lake: hosted service</td></tr></tbody></table></div>
 <h2 id="where-sanity-is-stronger">Where Sanity is stronger</h2>
 <ul><li><strong>Real-time collaboration</strong> on a hosted content database.</li><li><strong>Structured content</strong> for many channels, queried by API.</li><li><strong>A customisable Studio,</strong> built in code, with a large plugin ecosystem.</li><li><strong>AI and agent tools</strong> on its platform, and Content Releases on its Enterprise plan.</li></ul>
 <h2 id="moving-from-sanity-to-markstage">Moving from Sanity to Markstage</h2>
@@ -207,6 +233,7 @@ Markstage, TinaCMS and CloudCannon edit on the page.</p>
             <a href="../../glossary/">Glossary</a>
             <a href="../../why/">Why we built it</a>
             <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
           </div>
           <div>
             <p class="footer-head">Docs</p>

@@ -1,0 +1,693 @@
+/* The comparison pages (/compare/, /compare/full/, the "Markstage vs X" pair on /alternatives/<x>/ and /roadmap/):
+   mark badges, product cards, the verdict tiles, grouped tables with a sticky header row and first column, the
+   filter, and the roadmap list. Colours are the tokens of styles.css; brand.test.mjs checks each pair used here in
+   both themes. site/compare.js adds the filter; without it every card and cell is shown. */
+
+[hidden] {
+  display: none !important;
+}
+
+.doc.wide.compare {
+  max-width: 1240px;
+}
+
+.compare.full .prose > p,
+.compare.full .prose > ul:not(.mk-legend),
+.compare.full .prose > blockquote,
+.compare > section > p {
+  max-width: 860px;
+}
+
+.compare h2 {
+  margin-top: 48px;
+}
+
+/* the short verdict: "Pick X if ..." */
+.vtiles {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.vtile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.vtile p {
+  margin: 0;
+}
+
+.vtile.ms {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  color: var(--ink);
+}
+
+.vtile-name {
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-bottom: 6px !important;
+}
+
+.vtile-name strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 26px;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+.vtile-name a {
+  color: var(--ink);
+  text-decoration-color: var(--line-2);
+}
+
+/* marks: glyph and word in a pill */
+.mk {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px 0 6px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 650;
+  line-height: 1.7;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
+.mk-g {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.mk.yes {
+  color: var(--yes-ink);
+  background: var(--yes-bg);
+}
+
+.mk.part {
+  color: var(--part-ink);
+  background: var(--part-bg);
+}
+
+.mk.no {
+  color: var(--no-ink);
+  background: var(--no-bg);
+}
+
+.mk.unk {
+  color: var(--unk-ink);
+  background: var(--unk-bg);
+}
+
+.mk.na {
+  color: var(--ink-3);
+  border: 1px dashed var(--line-2);
+}
+
+.mk-none {
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-style: italic;
+}
+
+.val {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.note {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.mk-legend {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* the roadmap badge beside a mark: what Markstage does today stays the mark */
+.soon-wrap {
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.soon {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.7;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.soon.in-progress {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.soon.planned {
+  background: var(--bg-2);
+  color: var(--ink-2);
+  border: 1px dashed var(--line-2);
+}
+
+a.soon:hover {
+  text-decoration: underline;
+}
+
+a.soon.in-progress:hover {
+  color: var(--on-accent);
+}
+
+/* product cards */
+.pcards {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: grid;
+  gap: 14px;
+}
+
+.pcards.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.pcards.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pcards.pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.pcard {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.pcard.ms {
+  background: var(--ms-col);
+  border-color: var(--brand);
+  box-shadow: inset 0 0 0 1px var(--brand);
+}
+
+.pcard-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.03em;
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.tile.hosted {
+  background: var(--bg-2);
+  color: var(--ink);
+}
+
+.tile.app {
+  background: var(--code-bg);
+  color: var(--ink-2);
+}
+
+.tile.publishing {
+  background: var(--brand-soft);
+  color: var(--ink);
+}
+
+.tile.ms {
+  border: 0;
+  background: none;
+}
+
+.tile.ms .logo {
+  width: 44px;
+  height: 44px;
+}
+
+.pcard .pcard-name {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.pcard-kind {
+  margin: 3px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.pcard-what {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: 7.2em minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.fact dt {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ink-3);
+}
+
+.fact dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pcard-link {
+  margin: auto 0 0;
+  padding-top: 4px;
+  font-size: 14.5px;
+  font-weight: 650;
+}
+
+.kind-group {
+  margin-top: 28px;
+}
+
+.kind-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.kind-count {
+  font: 650 13px/1.6 var(--font);
+  color: var(--ink-3);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 9px;
+}
+
+.kind-group > p {
+  margin-top: 0;
+}
+
+/* the filter: segments, "only rows where they differ", and a count; its state is in the address */
+.cmp-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 16px 0;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.full .cmp-filter {
+  position: sticky;
+  top: 72px;
+  z-index: 6;
+  box-shadow: var(--shadow);
+}
+
+.cmp-filter-label {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--ink-2);
+}
+
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 3px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.seg-btn {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.seg-btn:hover {
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.seg-btn[aria-pressed='true'] {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+
+.diff-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.diff-switch input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--brand);
+}
+
+.cmp-filter-count {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.cmp-empty {
+  margin-top: -8px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+/* the tables: scroll inside their box, header row and first column stay in view */
+.cmp-wrap {
+  overflow: auto;
+  max-height: min(78vh, 1100px);
+  margin: 12px 0 24px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overscroll-behavior-x: contain;
+}
+
+/* the short page's lead table fits its box on a wide screen: shown whole, not in a scroll box of its own */
+@media (min-width: 900px) {
+  .compare:not(.full) .cmp-wrap {
+    max-height: none;
+  }
+}
+
+.cmp {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.cmp caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.cmp th,
+.cmp td {
+  min-width: 150px;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  background: var(--bg);
+}
+
+.cmp thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--bg-2);
+  border-bottom: 2px solid var(--line-2);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cmp thead th a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.cmp thead th a:hover {
+  text-decoration: underline;
+}
+
+.cmp .feat {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 200px;
+  max-width: 240px;
+  font-weight: 650;
+  border-right: 1px solid var(--line);
+}
+
+.cmp thead .feat {
+  z-index: 4;
+}
+
+.cmp tbody tr[data-row]:nth-child(odd) > * {
+  background: var(--bg-2);
+}
+
+.cmp .ms,
+.cmp tbody tr[data-row] > .ms {
+  background: var(--ms-col);
+  border-left: 2px solid var(--brand);
+  border-right: 2px solid var(--brand);
+}
+
+.cmp thead th.ms {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+
+.cmp tbody tr[data-row]:hover > * {
+  background: var(--brand-soft);
+}
+
+/* on a wide screen Markstage's column stays in view too, beside the feature names */
+@media (min-width: 900px) {
+  .cmp .feat {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .cmp .ms {
+    position: sticky;
+    left: 200px;
+    z-index: 2;
+  }
+
+  .cmp thead th.ms {
+    z-index: 4;
+  }
+}
+
+.cmp .grp th {
+  padding: 16px 12px 6px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line-2);
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--brand-ink);
+}
+
+.cmp .grp th span {
+  position: sticky;
+  left: 12px;
+}
+
+.cmp sup.fn a {
+  font-size: 0.72em;
+}
+
+/* "Markstage in one table" */
+.facts-table th[scope='row'] {
+  width: 210px;
+}
+
+/* what's coming, and /roadmap/ */
+.rm-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+}
+
+.rm-groups h3 {
+  margin-top: 8px;
+}
+
+.rm-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 16px;
+  display: grid;
+  gap: 10px;
+}
+
+main > section > .rm-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rm-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.rm-item:target {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px var(--brand);
+}
+
+.rm-item p {
+  margin: 0;
+}
+
+.rm-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.rm-item p + p {
+  margin-top: 4px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.pair-note {
+  margin-top: 0;
+}
+
+@media (max-width: 1100px) {
+  .pcards.four,
+  .vtiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .pcards.three,
+  main > section > .rm-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rm-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .pcards.four,
+  .pcards.three,
+  .pcards.pair,
+  .vtiles,
+  main > section > .rm-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .full .cmp-filter {
+    position: static;
+  }
+
+  .facts-table th[scope='row'] {
+    width: 36%;
+  }
+
+  .cmp-filter-count {
+    margin-left: 0;
+  }
+
+  .cmp th,
+  .cmp td {
+    min-width: 136px;
+  }
+
+  .cmp .feat {
+    min-width: 120px;
+    max-width: 140px;
+  }
+
+  .cmp-wrap {
+    max-height: 72vh;
+  }
+}
