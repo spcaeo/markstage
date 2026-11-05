@@ -68,7 +68,7 @@ jobs:
         env:
           MARKSTAGE_TIME_ZONE: America/Toronto  # the release line's time, in the maintainers' zone (EST/EDT)
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - id: deployment
