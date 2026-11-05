@@ -1,7 +1,8 @@
-// AI suggestions (docs/API-AI.md): alt text for an image, a search title and description, a promotion plan's
-// summary, a rewrite of a selection (rewrite, shorten, fix, a tone), and a translation draft of a title and
-// description into one of the site's locales. The model is Anthropic's, an OpenAI-compatible endpoint's or a local
-// Ollama's (provider.mjs).
+// AI suggestions (docs/API-AI.md): alt text for an image, a search title and description (or a fix of one of them),
+// a promotion plan's summary, a rewrite of a selection (rewrite, shorten, fix, a tone), a translation draft of a title
+// and description into one of the site's locales, internal links for an article from the site's link index, and a
+// fix for a heading out of order or vague link words (seo-kinds.mjs). The model is Anthropic's, an OpenAI-compatible
+// endpoint's or a local Ollama's (provider.mjs).
 //
 //   GET  /ai           {on, why, reason, envVar, provider, model, kinds, limits: {perMinute, perDay}}; ?check=1
 //                      (administrators) also {health: {ok, words, modelFound}}: one call to the provider's models list
@@ -34,7 +35,8 @@ export function createAi(app, deps = {}) {
   const busy = new Map();
   const limitedAt = new Map();
 
-  const kindsFor = (user) => KINDS.filter((k) => (k !== 'summary' || atLeast(user, 'editor')) && (k !== 'translate' || (app.config.locales?.list.length ?? 0) > 1));
+  // a summary is for editors and up; a translation needs a second locale; links need the site's link index (topics)
+  const kindsFor = (user) => KINDS.filter((k) => (k !== 'summary' || atLeast(user, 'editor')) && (k !== 'translate' || (app.config.locales?.list.length ?? 0) > 1) && (k !== 'links' || !!app.links?.enabled));
 
   async function info(ctx) {
     const s = provider.status();

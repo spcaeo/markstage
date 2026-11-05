@@ -3,7 +3,9 @@
 //     the alt text in the image block's settings panel (&at=panel);
 //   - alt text for an image setting in Post settings (s=1&suggest=alt&field=<key>): under the field's alt text;
 //   - the search title and description in the SEO check (side=seo&suggest=seo): under the search result;
-//   - a region's title and description (s=1&suggest=translate&loc=<code>): under that region's fields.
+//   - a region's title and description (s=1&suggest=translate&loc=<code>): under that region's fields;
+//   - links to the site's pages (s=1&suggest=links): in Post settings → Topic and links (links.ts);
+//   - a fix for one problem the SEO check found (side=seo&suggest=fix&fix=<id>): under that problem (fixes.ts).
 // A card is made once while the URL asks for it, so a redraw of what it sits in does not ask again. Accepting is a
 // change like typing: the canvas's undo (⌘Z) takes back an image's alt text; a setting goes into the unsaved changes
 // with a toast to undo it; ⌘S saves it all through the one save path (locks, validation).
@@ -15,8 +17,12 @@ import * as router from '../router';
 import type { FrontmatterEdits } from '../settings/state';
 import { mayChange } from '../field-access';
 import { figureParts } from '../images';
+import { linkWords } from '../link-words';
+import { linksOf } from '../seo/text';
 import { suggestCard, type Card, type CardSpec, type SuggestField } from './card';
-import type { SuggestBody } from './api';
+import { aiInfo, type AiInfo, type AiKind, type SuggestBody } from './api';
+import { fixKind, fixSpec, type SeoNow } from './fixes';
+import { linksCard } from './links';
 import { rewriteHelp } from './rewrite';
 
 export interface AiEditorDeps {
@@ -37,7 +43,7 @@ export type SlotSpec = Omit<CardSpec, 'close'>;
 /** A suggestion's card, for the entry the URL names (another entry's card is another card) */
 const keyOf = (s: router.Suggest) => {
   const r = router.route();
-  return `${r.collection}/${r.id}|${'img' in s ? `alt:img:${s.img}${s.at ? `:${s.at}` : ''}` : 'field' in s ? `alt:field:${s.field}` : 'loc' in s ? `translate:${s.loc}` : s.kind}`;
+  return `${r.collection}/${r.id}|${'img' in s ? `alt:img:${s.img}${s.at ? `:${s.at}` : ''}` : 'field' in s ? `alt:field:${s.field}` : 'loc' in s ? `translate:${s.loc}` : 'fix' in s ? `fix:${s.fix}` : s.kind}`;
 };
 const same = (a: router.Suggest | null, b: router.Suggest) => !!a && keyOf(a) === keyOf(b);
 
@@ -93,6 +99,9 @@ export function aiEditor(d: AiEditorDeps) {
 
   /** The card for `s` while the URL asks for it (made once), else null; any other card goes. */
   function slot(s: router.Suggest, spec: () => SlotSpec): HTMLElement | null {
+    return slotCard(s, () => suggestCard({ ...spec(), close }));
+  }
+  function slotCard(s: router.Suggest, make: () => Card): HTMLElement | null {
     const key = keyOf(s);
     if (!same(router.route().suggest, s) || !loaded()) {
       cards.get(key)?.destroy();
@@ -100,10 +109,25 @@ export function aiEditor(d: AiEditorDeps) {
       return null;
     }
     let c = cards.get(key);
-    if (!c) cards.set(key, (c = suggestCard({ ...spec(), close })));
+    if (!c) cards.set(key, (c = make()));
     else c.sync();
     return c.el;
   }
+
+  // what the server offers: the buttons of the newer kinds (links, a fix) are not there while AI is off or the
+  // server does not offer their kind; a URL that asks anyway opens the card, which says why, as every AI card does
+  let info: AiInfo | null = null;
+  let asking = false;
+  const offered = (kind: AiKind) => !!info?.on && info.kinds.includes(kind);
+  const askInfo = () => {
+    if (info || asking) return;
+    asking = true;
+    void aiInfo().then((i) => {
+      info = i;
+      asking = false;
+      d.redraw();
+    });
+  };
 
   /** Settings accepted: one unsaved change per key, with a toast to take them back. */
   function acceptEdits(pairs: [string, string][], words: string): string | null {
@@ -176,6 +200,7 @@ export function aiEditor(d: AiEditorDeps) {
       const now = s ? keyOf(s) : '';
       canvasCard();
       rewrite.follow();
+      if (loaded()) askInfo();
       if (now === shown) return;
       shown = now;
       for (const [key, c] of cards) if (key !== now) (c.destroy(), cards.delete(key));
@@ -269,6 +294,65 @@ export function aiEditor(d: AiEditorDeps) {
       return card ? [card] : [];
     },
     seoAsk: () => router.go({ suggest: { kind: 'seo' } }, true),
+
+    /** "Suggest a fix" for a problem the SEO check found (fixes.ts): whether the server offers its kind, its URL, its card */
+    fixOffered: (id: string) => offered(fixKind(id)),
+    fixAsk: (id: string) => router.go({ suggest: { kind: 'fix', fix: id } }, true),
+    fix(id: string, seo: () => SeoNow): HTMLElement | null {
+      const s: router.Suggest = { kind: 'fix', fix: id };
+      const key = keyOf(s);
+      // made here, not in slotCard, since a problem that is gone has no card: the URL closes and says so
+      if (same(router.route().suggest, s) && loaded() && !cards.has(key)) {
+        const spec = fixSpec(id, { getEditor: d.getEditor, where: () => where(), title: d.title, readOnly, acceptEdits, seo });
+        if (typeof spec === 'string') {
+          router.go({ suggest: null });
+          toast(spec, 'info');
+          return null;
+        }
+        cards.set(key, suggestCard({ ...spec, close }));
+      }
+      return slotCard(s, () => cards.get(key)!);
+    },
+    /** the SEO check drew its problems: a fix the URL asks for that none of them is (fixed already) closes */
+    fixesShown(ids: string[]): void {
+      const s = router.route().suggest;
+      if (s?.kind !== 'fix' || !loaded() || ids.includes(s.fix)) return;
+      router.go({ suggest: null });
+      toast('That problem is not on the page any more.', 'info');
+    },
+
+    /** AI link suggestions beside the page's own (settings/topic-box.ts): offered, asked for, its card */
+    links: {
+      offered: () => offered('links'),
+      ask: () => router.go({ suggest: { kind: 'links' } }, true),
+      card: (): HTMLElement | null =>
+        slotCard({ kind: 'links' }, () =>
+          linksCard({
+            close,
+            body: () => {
+              const ed = d.getEditor();
+              const doc = ed?.state.doc;
+              return {
+                kind: 'links',
+                ...where()!,
+                text: (ed?.getText({ blockSeparator: '\n\n' }) ?? '').slice(0, 20_000),
+                linked: doc ? [...new Set(linksOf(doc).filter((l) => l.kind === 'site').map((l) => l.href))].slice(0, 500) : [],
+              };
+            },
+            add: (l) => {
+              const no = readOnly(['body']);
+              if (no) return no;
+              const ed = d.getEditor();
+              if (!ed) return 'The page is not open.';
+              const r = linkWords(ed, l.words, l.url);
+              if (r === 'missing') return `“${l.words}” is not in the text unlinked any more.`;
+              if (r === 'locked') return 'That block is locked, so a link can’t be added there.';
+              toast(`Linked “${l.words}” to “${l.title}”. ⌘Z takes it back; ⌘S saves it.`, 'ok', { action: { label: 'Undo', run: () => void ed.chain().focus().undo().run() } });
+              return null;
+            },
+          }),
+        ),
+    },
 
     /** a region's own title and description (settings/locales.ts): `fields` maps title/description to their keys */
     translate(locale: { code: string; label: string }, fields: { name: string; key: string; label: string; from(): string }[]) {

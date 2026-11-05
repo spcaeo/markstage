@@ -1,12 +1,14 @@
 // One AI suggestion, the same wherever it is asked for (alt text, search title and description, a plan's summary, a
-// region's translation): the current value next to the suggested one (with its copy icon), and Accept, Edit then
-// accept, Dismiss. While it is asked: "Asking the AI…". When it can't be: off (the env var to set, by name),
+// region's translation, a fix for a problem the SEO check found): the current value next to the suggested one (with
+// its copy icon), or for a fix the change as a diff (taken out struck through, put in underlined), and Accept, Edit
+// then accept, Dismiss (Reject for a fix). While it is asked: "Asking the AI…". When it can't be: off (the env var to set, by name),
 // too many asked for (try again in N seconds), or failed, each in plain words. Accepting hands the values to the
 // place that asked (its own save path: locks, validation, Undo); a refusal shows its words here.
 import '../styles/ai.css';
 import { copyable } from '../copy';
 import { ic } from '../icons';
 import { aiInfo, offTrouble, suggest, trouble, type AiTrouble, type SuggestBody, type Suggestion } from './api';
+import { changeWords, wordDiff } from './diff';
 
 export interface SuggestField {
   /** the suggestion's key: alt, title, description, text */
@@ -31,6 +33,12 @@ export interface CardSpec {
   close(): void;
   /** where the focus goes when the card closes with it (default: the button that asked, so ⌘Z there works) */
   refocus?(): void;
+  /** a fix: each field's change shows as a diff against the value now, and Dismiss is Reject */
+  diff?: boolean;
+  /** the answer as the fields take it (text for each), when the server's has other values (a heading's level) */
+  shape?(raw: Record<string, unknown>): Suggestion;
+  /** a line under the suggestion (what accepting keeps and what it does not) */
+  note?: string;
 }
 
 export interface Card {
@@ -103,6 +111,9 @@ export function suggestCard(spec: CardSpec): Card {
   let editing = false;
   let waitTimer = 0;
   const nows = new Map<string, HTMLElement>();
+  /** the values now when the suggestion was drawn: a fix's diff is drawn again when one changes */
+  const nowsOf = () => spec.fields.map((f) => f.now()).join('\u0000');
+  let shownNow = '';
 
   const now = (f: SuggestField, into: HTMLElement) => {
     const v = f.now().trim();
@@ -127,7 +138,7 @@ export function suggestCard(spec: CardSpec): Card {
     try {
       const s = await suggest(spec.body());
       if (!alive || n !== asked) return;
-      got = s.suggestion;
+      got = spec.shape ? spec.shape(s.suggestion as Record<string, unknown>) : s.suggestion;
       model = s.model;
       draw();
     } catch (err) {
@@ -191,11 +202,15 @@ export function suggestCard(spec: CardSpec): Card {
         label.htmlFor = fid;
         newRow.append(label, newVal);
         newVal.append(input);
+      } else if (spec.diff) {
+        newVal.append(diffView(f.now().trim(), got[f.name], f.label));
+        newRow.append(mk('span', 'ms-ai__tag', 'Change'), newVal);
       } else {
         newVal.append(copyable(got[f.name], { label: `the suggested ${f.label.toLowerCase()}`, className: 'ms-ai__text ms-ai__suggested' }));
         newRow.append(mk('span', 'ms-ai__tag', 'Suggested'), newVal);
       }
-      box.append(nowRow, newRow);
+      // a fix's diff holds the value now (struck through where it changes): no second row for it
+      box.append(...(spec.diff && !editing ? [newRow] : [nowRow, newRow]));
       out.push(box);
     }
     const why = mk('p', 'ms-ai__why');
@@ -227,8 +242,10 @@ export function suggestCard(spec: CardSpec): Card {
         }),
       );
     }
-    acts.append(mk('span', 'ms-ai__grow'), btn('ms-btn--quiet', 'Suggest again', 'aiRetry', () => void ask()), btn('ms-btn--quiet', 'Dismiss', 'aiDismiss', () => spec.close()));
+    acts.append(mk('span', 'ms-ai__grow'), btn('ms-btn--quiet', 'Suggest again', 'aiRetry', () => void ask()), btn('ms-btn--quiet', spec.diff ? 'Reject' : 'Dismiss', 'aiDismiss', () => spec.close()));
+    if (spec.note) out.push(mk('p', 'ms-ai__note', spec.note));
     out.push(why, acts, mk('p', 'ms-ai__note', `Written by AI${model ? ` (${model})` : ''}: read it before you accept. Nothing changes until you do.`));
+    shownNow = nowsOf();
     body.replaceChildren(...out);
   }
 
@@ -239,6 +256,7 @@ export function suggestCard(spec: CardSpec): Card {
   return {
     el,
     sync: () => {
+      if (spec.diff && got && !editing && nowsOf() !== shownNow && !el.contains(document.activeElement)) return draw();
       for (const f of spec.fields) {
         const into = nows.get(f.name);
         if (into) now(f, into);
@@ -255,6 +273,24 @@ export function suggestCard(spec: CardSpec): Card {
       else back?.focus();
     },
   };
+}
+
+/** A fix's change as a diff (words taken out struck through, put in underlined), with the copy icon of the new value. */
+function diffView(before: string, after: string, label: string): HTMLElement {
+  const parts = wordDiff(before, after);
+  const view = copyable(after, { label: `the suggested ${label.toLowerCase()}`, className: 'ms-ai__text ms-ai__suggested ms-ai-rw__diffwrap' });
+  const text = view.querySelector('.ms-copyable__text')!;
+  text.className = 'ms-copyable__text ms-ai-rw__diff';
+  text.setAttribute('title', changeWords(parts));
+  text.replaceChildren(
+    ...parts.map((p) => {
+      if (p.op === 'same') return document.createTextNode(p.text);
+      const x = mk(p.op === 'del' ? 'del' : 'ins', `ms-ai-rw__${p.op}`, p.text);
+      x.title = p.op === 'del' ? 'Taken out' : 'Put in';
+      return x;
+    }),
+  );
+  return view;
 }
 
 /** The nearest button that asks for a suggestion around `el` (what it sits in was drawn again since it was asked). */

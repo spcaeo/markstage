@@ -204,7 +204,7 @@ describe('translation drafts keep the site’s spelling', () => {
   after(() => srv?.close());
 
   test('translate is offered on a site with locales', async () => {
-    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'translate', 'rewrite']);
+    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'translate', 'rewrite', 'fix']);
   });
 
   test('the draft goes through the locale’s spelling, field by field', async () => {

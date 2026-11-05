@@ -3,11 +3,13 @@
 // widths, the focus keyphrase, the headings, the links, the images and the words. From the built page (the last
 // saved version, seo/google.ts): what Google reads in its head and structured data, and the share image as each
 // place cuts it. Every problem says what to do; a click on one shows its block in the text. "Suggest title and
-// description" asks the AI for the search title and description (ai/editor.ts, ?suggest=seo), under the result.
+// description" asks the AI for the search title and description (ai/editor.ts, ?suggest=seo), under the result, and
+// "Suggest a fix" on a problem asks it for a fix of that one, shown as a diff under it (ai/fixes.ts, ?suggest=fix).
 import '../styles/seo.css';
 import { Extension, type Editor } from '@tiptap/core';
 import { suggestButton } from '../ai/card';
 import type { AiEditor } from '../ai/editor';
+import type { SeoNow } from '../ai/fixes';
 import { previewUrl, type Entry } from '../api';
 import { copyable } from '../copy';
 import { ic } from '../icons';
@@ -20,7 +22,7 @@ import { crumbs, drawGoogle, drawShare, live } from './built';
 import { readBuilt, type BuiltPage } from './google';
 import { titleIsH1 } from './h1';
 import { headings, imageFindings, imagesOf, keyphrase, linkFindings, linksOf, wordCount, type Finding } from './text';
-import { meter, note, rows, section, setCount } from './view';
+import { meter, note, rows, section, setCount, type FixHooks } from './view';
 import { cutTo, DESCRIPTION_PX, descriptionWidth, TITLE_PX, titleWidth } from './width';
 
 export interface SeoDeps {
@@ -44,6 +46,9 @@ export interface SeoDeps {
   ai?: AiEditor;
 }
 
+/** Under these widths a title or description is short (px): the meters turn amber, and a fix makes it fuller. */
+const TITLE_SHORT = 280;
+const DESCRIPTION_SHORT = 430;
 const str = (v: unknown) => (typeof v === 'string' ? v.trim() : Array.isArray(v) ? String(v[0] ?? '').trim() : '');
 
 export class SeoPanel {
@@ -59,6 +64,8 @@ export class SeoPanel {
   private builtFor = '';
   private token = 0;
   private aiAsk: HTMLButtonElement | null = null;
+  /** the page shows its title as its H1 (null: not known yet), as the headings were last read */
+  private h1: boolean | null = null;
 
   constructor(
     readonly el: HTMLElement,
@@ -196,6 +203,26 @@ export class SeoPanel {
     return { title: seo?.title, description: seo?.description ?? (excerpt && 'key' in excerpt ? excerpt.key : undefined) };
   }
 
+  /** The search result now and where a fix goes (ai/fixes.ts): what the fix cards read when asked and accepted. */
+  private seoNow = (): SeoNow => {
+    const s = this.search();
+    const tw = titleWidth(s.title);
+    const dw = descriptionWidth(s.description);
+    return {
+      ...s,
+      keys: this.aiKeys(),
+      titleProblem: tw > TITLE_PX ? 'title-long' : tw < TITLE_SHORT ? 'title-short' : null,
+      descriptionProblem: !s.description ? 'description-missing' : dw > DESCRIPTION_PX ? 'description-long' : dw < DESCRIPTION_SHORT ? 'description-short' : null,
+      titleIsH1: this.h1,
+    };
+  };
+
+  /** The rows' "Suggest a fix" and its card (none without AI in the editor). */
+  private fixHooks(): FixHooks | undefined {
+    const ai = this.d.ai;
+    return ai && { offered: (id) => ai.fixOffered(id), ask: (id) => ai.fixAsk(id), card: (id) => ai.fix(id, this.seoNow), seen: [] };
+  }
+
   /** Puts the caret in the block a finding is about, to fix it there (the URL says which block). */
   private go = (block: number) => {
     const editor = this.d.getEditor();
@@ -212,11 +239,13 @@ export class SeoPanel {
     if (!this.isOpen || !editor || !entry) return;
     const doc = editor.state.doc;
     const s = this.search();
+    const fix = this.fixHooks();
+    const keys = this.aiKeys();
+    // the ask buttons and the cards are drawn again as they are: what had the focus in them keeps it (⌘Z there works)
+    const focused = this.body.contains(document.activeElement) ? (document.activeElement as HTMLElement) : null;
 
     // the search result, cut where Google cuts it
     const r = this.secs.result;
-    // the ask button and the card are drawn again as they are: what had the focus in them keeps it (⌘Z there works)
-    const focused = r.body.contains(document.activeElement) ? (document.activeElement as HTMLElement) : null;
     r.body.replaceChildren();
     const tw = titleWidth(s.title);
     const dw = descriptionWidth(s.description);
@@ -228,30 +257,31 @@ export class SeoPanel {
       Object.assign(h('span', 'ms-seo-serp__title'), { textContent: cutTo(s.title, TITLE_PX, titleWidth) || 'No title' }),
       Object.assign(h('span', 'ms-seo-serp__desc'), { textContent: cutTo(s.description, DESCRIPTION_PX, descriptionWidth) || 'No description: Google writes one from the text.' }),
     );
-    const t = meter('Title', tw, TITLE_PX, 280);
-    const de = meter('Description', dw, DESCRIPTION_PX, 430);
+    const t = meter('Title', tw, TITLE_PX, TITLE_SHORT);
+    const de = meter('Description', dw, DESCRIPTION_PX, DESCRIPTION_SHORT);
     const result: Finding[] = [];
-    if (t.level === 'error') result.push({ level: 'warn', text: `The title is ${tw - TITLE_PX} px too wide: Google cuts it (as above).` });
-    if (t.level === 'warn') result.push({ level: 'warn', text: 'The title is short: there is room to say more of what the page offers.' });
-    if (!s.description) result.push({ level: 'warn', text: 'No meta description: Google picks words from the text.' });
-    else if (de.level === 'error') result.push({ level: 'warn', text: `The description is ${dw - DESCRIPTION_PX} px too wide: Google cuts it.` });
-    else if (de.level === 'warn') result.push({ level: 'warn', text: 'The description is short: Google may write its own.' });
+    // a fix sets the SEO field: none to set, no fix
+    const tf = keys.title ? 'title' : undefined;
+    const df = keys.description ? 'description' : undefined;
+    if (t.level === 'error') result.push({ level: 'warn', text: `The title is ${tw - TITLE_PX} px too wide: Google cuts it (as above).`, fix: tf });
+    if (t.level === 'warn') result.push({ level: 'warn', text: 'The title is short: there is room to say more of what the page offers.', fix: tf });
+    if (!s.description) result.push({ level: 'warn', text: 'No meta description: Google picks words from the text.', fix: df });
+    else if (de.level === 'error') result.push({ level: 'warn', text: `The description is ${dw - DESCRIPTION_PX} px too wide: Google cuts it.`, fix: df });
+    else if (de.level === 'warn') result.push({ level: 'warn', text: 'The description is short: Google may write its own.', fix: df });
     const edit = Object.assign(h('button', 'ms-btn ms-btn--sm ms-btn--quiet'), { type: 'button', textContent: 'Edit in Post settings' });
     edit.addEventListener('click', () => this.d.openSettings());
     r.body.append(serp, t.el, de.el);
-    rows(r.body, result);
+    rows(r.body, result, undefined, fix);
     const tools = h('div', 'ms-seo-tools');
     tools.append(edit);
     r.body.append(tools);
     const ai = this.d.ai;
-    const keys = this.aiKeys();
     if (ai && (keys.title || keys.description)) {
       // the same button each time it is drawn: the card gives the focus back to it
       this.aiAsk ??= suggestButton('Suggest title and description', () => ai.seoAsk(), 'ms-btn--sm');
       tools.append(this.aiAsk);
       r.body.append(...ai.seo(keys));
     }
-    if (focused?.isConnected && document.activeElement !== focused) focused.focus({ preventScroll: true });
     this.found.result = result;
 
     // the focus keyphrase
@@ -269,10 +299,11 @@ export class SeoPanel {
     // the headings, as an outline; the built page says whether the layout shows the title as the H1
     const own: string[] = [];
     doc.forEach((n) => void (n.type.name === 'heading' && n.attrs.level === 1 && own.push(n.textContent)));
-    const hd = headings(doc, { text: this.d.title(), h1: titleIsH1(this.built?.h1 ?? null, own, this.d.title(), this.d.titleIsH1()) });
+    this.h1 = titleIsH1(this.built?.h1 ?? null, own, this.d.title(), this.d.titleIsH1());
+    const hd = headings(doc, { text: this.d.title(), h1: this.h1 });
     const hs = this.secs.headings.body;
     hs.replaceChildren();
-    rows(hs, hd.findings, this.go);
+    rows(hs, hd.findings, this.go, fix);
     const tree = h('ol', 'ms-seo-tree');
     for (const x of hd.list) {
       const li = h('li', 'ms-seo-tree__item');
@@ -299,7 +330,7 @@ export class SeoPanel {
         'ms-seo-counts',
       ),
     );
-    rows(ls, lf, this.go);
+    rows(ls, lf, this.go, fix);
     this.found.links = lf;
 
     // the images: their descriptions and names, and how big they are against how big they show
@@ -307,7 +338,7 @@ export class SeoPanel {
     const imf = [...imageFindings(images), ...this.measureImages(editor)];
     const is = this.secs.images.body;
     is.replaceChildren(note(images.length ? `${images.length} image${images.length === 1 ? '' : 's'} in the text.` : 'No images in the text.', 'ms-seo-counts'));
-    rows(is, imf, this.go);
+    rows(is, imf, this.go, fix);
     this.found.images = imf;
 
     // the words
@@ -318,6 +349,10 @@ export class SeoPanel {
     rows(ws, wf);
     this.found.words = wf;
     this.counts();
+    const again = focused && !focused.isConnected && focused.dataset.aiFix ? this.body.querySelector<HTMLElement>(`[data-ai-fix="${focused.dataset.aiFix}"]`) : focused;
+    if (again?.isConnected && document.activeElement !== again) again.focus({ preventScroll: true });
+    // a fix the URL asks for whose problem is not drawn (fixed already) closes
+    if (fix) this.d.ai?.fixesShown(fix.seen);
   }
 
   /** Images much larger than they show, or heavy files (what the browser loaded for the canvas). */

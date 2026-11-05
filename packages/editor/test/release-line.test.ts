@@ -24,3 +24,12 @@ test('one release line per screen: the page hides its own while the drawer shows
 test('the virtual module stamps the release line for dev and build-editor alike', () => {
   assert.ok(astro('client.mjs').includes("if (name === 'release') return `export default ${js(releaseInfo("), 'client.mjs answers virtual:markstage/release');
 });
+
+test('the line wraps between its parts and is never cut: whole parts, no nowrap on the drawer’s foot', () => {
+  // seen at build 510: the drawer's foot was nowrap and cut the zone to "10:17 PM MS"
+  assert.ok(src('release.ts').includes("RELEASE.line.split(' · ')"), 'each part is its own span');
+  assert.match(src('admin/admin.css').replace(/\s+/g, ' '), /\.ms-release > span \{ white-space: nowrap; \}/);
+  const foot = /\.ms-nav__foot \{([^}]*)\}/.exec(src('styles/host.css'))?.[1] ?? '';
+  assert.ok(foot, 'host.css styles the drawer foot');
+  assert.doesNotMatch(foot, /white-space:\s*nowrap/, 'the drawer foot may wrap');
+});

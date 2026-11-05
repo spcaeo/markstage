@@ -55,10 +55,14 @@ describe('AI suggestions with the stub provider', () => {
   test('GET /ai says it is on, and lists the kinds this person may ask for', async () => {
     const e = await ed.get('/ai');
     assert.equal(e.status, 200);
-    assert.deepEqual({ on: e.json.on, why: e.json.why, envVar: e.json.envVar, provider: e.json.provider, kinds: e.json.kinds }, { on: true, why: null, envVar: 'MARKSTAGE_AI_KEY', provider: 'stub', kinds: ['alt', 'seo', 'summary', 'rewrite'] });
+    assert.deepEqual({ on: e.json.on, why: e.json.why, envVar: e.json.envVar, provider: e.json.provider, kinds: e.json.kinds }, { on: true, why: null, envVar: 'MARKSTAGE_AI_KEY', provider: 'stub', kinds: ['alt', 'seo', 'summary', 'rewrite', 'fix'] });
     assert.deepEqual(e.json.limits, { perMinute: 600, perDay: 100_000 });
     // a one-locale site has nothing to translate into; a promotion summary is for editors and up
-    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'rewrite']);
+    assert.deepEqual((await alice.get('/ai')).json.kinds, ['alt', 'seo', 'rewrite', 'fix']);
+    // links need the site's link index: this site keeps no topics, so they are not offered, and asking is refused free
+    const links = await suggest(alice, { kind: 'links', collection: 'posts', id: 'hello-world' });
+    assert.deepEqual([links.status, links.json.error], [422, 'no-topics']);
+    assert.equal(srv.app.db.prepare("SELECT COUNT(*) AS n FROM audit WHERE action = 'ai.suggest'").get().n, 0);
   });
 
   test('alt text for an image, by each way the site writes its address', async () => {

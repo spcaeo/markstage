@@ -294,5 +294,7 @@ to it opens it.
 1. Click Suggest beside what you want written: alt text (on an image’s Alt line, in an image’s settings, under a cover’s alt text, or under a picture’s alt text on a page), Suggest title and description in the SEO check, Draft translation under a region in Post settings, or Summarize changes beside a promotion’s reason.
 2. The suggestion shows next to what is there now. Accept uses it, Edit then accept lets you change it first, Dismiss leaves everything as it was.
 3. To improve words you wrote, select them inside one paragraph, heading or list item and press Improve with AI in the bar over them (⌥F10 reaches the bar from the keys). Pick Rewrite, Shorten, Fix spelling and grammar, or a tone: the change shows beside the words, taken out struck through and put in underlined. Accept, Edit then accept, or Reject.
-4. Nothing changes until you accept, and ⌘S saves it as any change. ⌘Z, wherever you accepted it, or Undo on the note, takes it back.
-5. If it says suggestions are off, it says why: the person who runs the server sets the key it names (MARKSTAGE_AI_KEY), or names the model to use.
+4. For links to your own pages, open Post settings → Topic and links and press Suggest links with AI: each suggestion names a page of the site, the words to link and why. Add link links those words on the page; Dismiss drops it.
+5. In the SEO check, press Suggest a fix under a problem it found (a title or description too long or short, a heading out of order, link words such as “click here”, an image with no alt text). The fix shows as a change, taken out struck through and put in underlined: Accept, Edit then accept, or Reject.
+6. Nothing changes until you accept, and ⌘S saves it as any change. ⌘Z, wherever you accepted it, or Undo on the note, takes it back.
+7. If it says suggestions are off, it says why: the person who runs the server sets the key it names (MARKSTAGE_AI_KEY), or names the model to use.

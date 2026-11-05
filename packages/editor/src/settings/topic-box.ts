@@ -1,9 +1,11 @@
 // The topic part of a page's settings (docs/API-LINKS.md), under the Page box: the topic the page is in (its group,
 // and whether it leads the group or is the topic's main page), put in straight away (it is kept in the topic's file,
 // not the page's), then its links: how many pages link to it, the pages it should link to (with "Link these words"
-// on the canvas) and the pages that should link to it (Accept changes that page; Skip is remembered). Owners,
-// administrators and editors put pages in topics; everyone sees the suggestions. Hidden where the server keeps no
-// topics (astro dev).
+// on the canvas) and the pages that should link to it (Accept changes that page; Skip is remembered), and under the
+// first, "Suggest links with AI" (ai/links.ts, ?s=1&suggest=links) when the server offers it. Owners, administrators
+// and editors put pages in topics; everyone sees the suggestions. Hidden where the server keeps no topics (astro dev).
+import { suggestButton } from '../ai/card';
+import type { AiEditor } from '../ai/editor';
 import { ApiError } from '../api';
 import { ic } from '../icons';
 import { h } from '../panel-form';
@@ -20,6 +22,8 @@ export interface TopicBoxCtx {
   id: () => string | null;
   /** links the words on the open page's canvas (Markdown pages) */
   linkHere?: (s: Suggestion) => boolean;
+  /** AI link suggestions (ai/editor.ts links) */
+  ai?: AiEditor['links'];
 }
 
 const EDITORS = ['owner', 'administrator', 'editor'];
@@ -56,6 +60,18 @@ export function topicBox(ctx: TopicBoxCtx): DrawnField & { recheck: () => void; 
   let sugg: { in: Suggestion[]; out: Suggestion[] } | null = null;
   let loading = false;
   let failed = '';
+
+  // the AI's links, under "Pages to link to": the button while the server offers them, the card while the URL asks
+  const aiBox = h('div', 'ms-topicbox__ai');
+  const aiAsk = ctx.ai && suggestButton('Suggest links with AI', ctx.ai.ask, 'ms-btn--sm');
+  const aiHead = t('h3', 'ms-topicbox__sub', 'Suggested by AI');
+  const placeAi = () => {
+    const card = ctx.ai && ref() ? ctx.ai.card() : null;
+    const want = [...(aiAsk && ctx.ai!.offered() && ref() ? [aiHead, aiAsk] : card ? [aiHead] : []), ...(card ? [card] : [])];
+    aiBox.hidden = !want.length;
+    // the card is moved only when it must be: what has the focus in it keeps it
+    if (want.length !== aiBox.children.length || want.some((x, i) => aiBox.children[i] !== x)) aiBox.replaceChildren(...want);
+  };
 
   const current = () => list.find((x) => x.id === topicSel.s.value) ?? null;
   const drawPlace = () => {
@@ -133,6 +149,8 @@ export function topicBox(ctx: TopicBoxCtx): DrawnField & { recheck: () => void; 
       links.append(ul);
     };
     section('Pages to link to', page.topic ? 'It links to the pages it should.' : 'Put it in a topic to see the pages it should link to.', sugg.out);
+    links.append(aiBox);
+    placeAi();
     section('Pages that should link here', 'No other page talks about it without a link.', sugg.in);
     const all = h('a', 'ms-topicbox__all');
     all.href = `#/links?view=page&ref=${encodeURIComponent(ref()!)}`;
@@ -164,5 +182,5 @@ export function topicBox(ctx: TopicBoxCtx): DrawnField & { recheck: () => void; 
 
   const off = onTopicsChanged(() => void topics().then((ts) => ((list = ts.items), drawPlace())));
   void load();
-  return { el, sync: () => {}, focus: () => topicSel.s.focus(), recheck: () => void load(), destroy: off };
+  return { el, sync: placeAi, focus: () => topicSel.s.focus(), recheck: () => void load(), destroy: off };
 }

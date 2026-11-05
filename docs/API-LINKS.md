@@ -15,8 +15,8 @@ map of every link in the site's text and finds the fixes both ways:
 What an editor sees:
 
 - **Page settings → Topic and links** (under the Page box): the page's topic, group and role, put in straight away;
-  how many pages link here; "Pages to link to" (with **Link these words** on the canvas) and "Pages that should link
-  here" (with **Accept** and **Skip**).
+  how many pages link here; "Pages to link to" (with **Link these words** on the canvas), "Suggested by AI" (below)
+  and "Pages that should link here" (with **Accept** and **Skip**).
 - **More → Topic map** (`#/topic-map`): each topic as a **Journey** (which page links to which, with the link words;
   below) and as a board (**Arrange**). On the board, drag pages between the main page, the pages without a group,
   each group's lead and pages, and "Not in a topic", or use a card's **Move to…** list.
@@ -107,6 +107,12 @@ on a page that already links there.
   the page has no such sentence yet, it asks for one to be written with those words.
 - **Pages that should link here** (incoming): sentences on other pages that talk about this one, best first (pages of
   the same topic and group first).
+- **Suggested by AI** (when AI is on, docs/API-AI.md `links`): **Suggest links with AI** asks the model to pick up to
+  five pages from this index for the open text, with the words to link and one line on why. The pages are the
+  index's, never addresses the model made up, and the server checks each one: the page is there, live or a draft
+  this person may see (marked Draft), not linked from this page yet, and the words are in the text. Each has
+  **Add link** (links the first place those words stand unlinked on the canvas: one change, ⌘Z takes it back, ⌘S
+  saves it) and **Dismiss**. Its address: `?s=1&suggest=links`.
 
 ### The site's own finder: `related`
 

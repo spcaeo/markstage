@@ -121,8 +121,9 @@
         <div class="prose">
 <p>Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). A person in the editor asks a
 model for words they then read, change and save themselves: an image's alt text, a page's search title and
-description, a promotion plan's summary, a draft of a title and description for another of the site's locales, or
-better words for a few they selected on the page (rewrite, shorten, fix the spelling and grammar, change the tone).
+description, a promotion plan's summary, a draft of a title and description for another of the site's locales,
+better words for a few they selected on the page (rewrite, shorten, fix the spelling and grammar, change the tone),
+links from the page to the site's own pages, or a fix for a problem the SEO check found.
 The model is the owner's choice: Anthropic, any OpenAI-compatible endpoint, or Ollama on the server's own machine
 (&quot;Providers&quot; below).
 Server code: <code>packages/server/src/ai/</code>.</p>
@@ -153,7 +154,8 @@ suggestion, so nothing is spent) and says whether the named model is in it, for 
 model “llama3.2”. The owner pulls it there (ollama pull llama3.2) or names another in ai.model.&quot; Its words go
 through the scrubber like every error. Each check is one <code>ai.health</code> audit row (the provider, the model, whether
 the model was found). Anyone else: <code>403</code>.</li><li><code>kinds</code>: what this person may ask for here. <code>summary</code> is listed for editors and up. <code>translate</code> is listed when the
-site has more than one locale.</li><li>A browser session only. A command-line token and an AI assistant's (MCP) token are refused (<code>403</code>): an agent has
+site has more than one locale. <code>links</code> is listed when the site keeps a link index (<code>topics</code> in markstage.config,
+docs/API-LINKS.md).</li><li>A browser session only. A command-line token and an AI assistant's (MCP) token are refused (<code>403</code>): an agent has
 its own model already.</li></ul>
 <h2 id="kinds">Kinds</h2>
 <p>Sizes are in characters. Too long is <code>413 too-large</code> with <code>field</code> and <code>max</code>, and nothing is sent to the model.</p>
@@ -169,7 +171,12 @@ that is not an image: <code>422 image-type</code>.</li></ul>
 <h3 id="seo-a-search-title-and-description"><code>seo</code>: a search title and description</h3>
 <p><code>{kind: 'seo', collection, id, title?, text?}</code> → <code>suggestion: {title, description}</code></p>
 <ul><li>The entry must be one this person may read.</li><li><code>title</code> (at most 1,000) and <code>text</code> (at most 20,000): what the editor has now, unsaved. Without them, the entry's
-saved title and its text (a Markdown entry's body; a JSON entry's text values) are used, cut at 20,000.</li><li>The model is also told the search title and description the entry has now.</li></ul>
+saved title and its text (a Markdown entry's body; a JSON entry's text values) are used, cut at 20,000.</li><li>The model is also told the search title and description the entry has now.</li><li><strong>A fix for one problem</strong> (the SEO check's &quot;Suggest a fix&quot;): add <code>problem</code>, one of <code>title-long</code>, <code>title-short</code>,
+<code>description-missing</code>, <code>description-long</code>, <code>description-short</code>, and what the editor has now, unsaved, as
+<code>searchTitle</code> and <code>description</code> (at most 1,000 each). The answer then has only the one key the problem is about
+(<code>{title}</code> or <code>{description}</code>). A <code>-long</code> answer must be shorter than what is there, a <code>-short</code> one longer, or it is
+dropped (<code>502 ai-failed</code>, &quot;The suggestion was no shorter than…&quot;). A problem about an empty field that is not
+<code>description-missing</code>: <code>422 invalid</code>.</li></ul>
 <h3 id="summary-a-promotion-plan-in-plain-words"><code>summary</code>: a promotion plan in plain words</h3>
 <p><code>{kind: 'summary', plan}</code> → <code>suggestion: {text}</code></p>
 <ul><li>Editors and up; others <code>403</code>. A plan names every file it moves.</li><li><code>plan</code>: a plan's id (<code>GET env/plans</code>). None: <code>404</code>. Still preparing: <code>422 plan-not-ready</code>.</li><li>The model gets what the plan summary of docs/API-ENV.md gets: the facts JSON and the changed files' names, never a
@@ -190,6 +197,32 @@ what changed). Nothing saves by itself. A selection whose link or formatting cov
 accepting keeps the words, not those. Each state has its URL: <code>?suggest=rewrite&amp;sel=&lt;from&gt;-&lt;to&gt;</code> (the choices),
 <code>&amp;how=&lt;mode&gt;</code> (the suggestion); Back and Forward walk them. The button is not there while AI is off or the
 server does not offer <code>rewrite</code>; a link that asks anyway opens the card, which says why, as every AI card does.</li></ul>
+<h3 id="links-links-from-this-page-to-the-sites-own-pages"><code>links</code>: links from this page to the site's own pages</h3>
+<p><code>{kind: 'links', collection, id, text?, linked?, max?}</code> → <code>suggestion: {links: [{words, to, title, url, status,
+reason}], dropped}</code></p>
+<ul><li>Only on a site that keeps a link index (<code>topics</code>, docs/API-LINKS.md); elsewhere <code>422 no-topics</code>, before the model is
+asked. The entry must be one this person may read.</li><li><code>text</code> (at most 20,000): the page's words as the editor has them now, unsaved; else its saved text. <code>linked</code> (at most
+500 addresses): where the editor's text links now, so those pages are not suggested again. <code>max</code>: 1 to 10, 5 when
+left out.</li><li><strong>The pages come from the index, never from the model.</strong> The model gets a list of at most 60 pages of the site: not
+this one, with an address, not <code>noindex</code>, not linked from this page already (in the index or in <code>linked</code>), and
+readable by this person (a draft only for its owner and for editors and up, the rule of &quot;Who sees what&quot;). Pages whose
+title words the text uses, and pages of the same topic, come first. None left: <code>422 no-pages</code>.</li><li><strong>Each answer is checked on the server</strong>: the page is one of those offered; the words are in the text (a whole-word
+match, any case) and are not vague (&quot;click here&quot;, &quot;read more&quot;); no page and no words twice. A suggestion that fails
+is left out and counted in <code>dropped</code>. <code>words</code> come back as the text has them; <code>to</code> is the page's ref
+(<code>posts/canvas</code>), <code>url</code> its address and <code>status</code> <code>live</code> or <code>draft</code>.</li><li>Nothing is linked by this route. In the editor (Post settings → Topic and links, &quot;Suggested by AI&quot;, URL
+<code>?s=1&amp;suggest=links</code>), Add link links the first place the words stand unlinked: one change on the canvas, ⌘Z takes
+it back, ⌘S saves it through the normal save (which writes only that link).</li></ul>
+<h3 id="fix-a-fix-for-a-heading-or-for-vague-link-words"><code>fix</code>: a fix for a heading or for vague link words</h3>
+<p><code>{kind: 'fix', collection, id, problem, …}</code> → <code>suggestion</code> as below. The entry must be one this person may read. A
+search title or description is the <code>seo</code> kind with its <code>problem</code>; missing alt text is the <code>alt</code> kind.</p>
+<ul><li><code>problem: 'heading'</code>, with <code>headings</code> (the page's outline, 1 to 300 <code>{level, text}</code>, the text at most 1,000 each),
+<code>index</code> (the heading to fix, from 0) and <code>after</code> (the words under it, at most 2,000) → <code>{level, text}</code>. The level
+must keep the outline in order: from 1 (2 when another H1 is there) to one below the heading before it. A heading
+that is in order already and has words: <code>422 in-order</code>. An answer outside that range is dropped (<code>502</code>).</li><li><code>problem: 'link-text'</code>, with <code>sentence</code> (at most 1,000), <code>words</code> (the link's words, in the sentence) and <code>href</code> →
+<code>{sentence, words}</code>: the sentence again, with link words that name the page. The model is told the page's title
+when the link index knows it and this person may read it. The words must be in the sentence and not vague, and the
+sentence may not grow much; else the answer is dropped (<code>502</code>).</li><li>In the editor each fix has its URL (<code>?side=seo&amp;suggest=fix&amp;fix=&lt;id&gt;</code>, docs/SEO.md) and shows as a diff with Accept,
+Edit then accept and Reject. Accepting is one change: ⌘Z takes it back, ⌘S saves it.</li></ul>
 <h3 id="translate-a-draft-for-another-locale"><code>translate</code>: a draft for another locale</h3>
 <p><code>{kind: 'translate', collection, id, locale, fields?: {title?, description?}}</code> → <code>suggestion</code> with the same keys</p>
 <ul><li><code>locale</code>: one of the site's locales (<code>locales</code> in markstage.config, docs/CONFIG.md &quot;Locales and hreflang&quot;). Another:
@@ -208,7 +241,7 @@ up.</p>
 Over: <code>429 ai-rate</code> with <code>Retry-After</code>, <code>retryAfter</code> seconds, <code>limit: 'minute' | 'day'</code> and <code>max</code>. The refusal is
 audited as <code>ai.limited</code>, at most once a minute per person.</li><li>An ask that is refused before the model is asked (rights, sizes, shape, the spelling module, off) does not count.</li></ul>
 <h2 id="errors">Errors</h2>
-<div class="table-wrap"><table><thead><tr><th scope="col" class="num">Status</th><th scope="col"><code>error</code></th><th scope="col">When</th></tr></thead><tbody><tr><td class="num"><code>503</code></td><td><code>ai-off</code></td><td>No key (neither the variable nor a readable key file): <code>envVar: 'MARKSTAGE_AI_KEY'</code>. Or no model named for <code>openai</code> or <code>ollama</code>: <code>reason: 'model'</code>. <code>message</code> is the <code>why</code> of <code>GET ai</code>.</td></tr><tr><td class="num"><code>429</code></td><td><code>ai-rate</code></td><td>This person's limit, or the provider is busy with the site's key (<code>retryAfter</code> from its <code>Retry-After</code>, else 30).</td></tr><tr><td class="num"><code>502</code></td><td><code>ai-failed</code></td><td>The provider failed, timed out, refused the key (&quot;The owner checks MARKSTAGE_AI_KEY or ai.keyFile.&quot;), does not have the model (<code>openai</code>, <code>ollama</code>: the words name it), declined, said nothing, or answered in another shape. Fixed words, never the provider's own.</td></tr><tr><td class="num"><code>403</code></td><td><code>forbidden</code></td><td>A summary below editor; a token instead of a session.</td></tr><tr><td class="num"><code>404</code></td><td><code>not-found</code></td><td>The entry, image or plan is not there or not available to this person.</td></tr><tr><td class="num"><code>413</code></td><td><code>too-large</code></td><td>A field over its size (<code>field</code>, <code>max</code>).</td></tr><tr><td class="num"><code>422</code></td><td><code>invalid</code>, <code>image-type</code>, <code>locale</code>, <code>plan-not-ready</code></td><td>A wrong kind or field, a file that is not an image, a locale or field the site does not have, a plan still preparing.</td></tr><tr><td class="num"><code>500</code></td><td><code>spelling</code></td><td>The locale's spelling module did not load.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th scope="col" class="num">Status</th><th scope="col"><code>error</code></th><th scope="col">When</th></tr></thead><tbody><tr><td class="num"><code>503</code></td><td><code>ai-off</code></td><td>No key (neither the variable nor a readable key file): <code>envVar: 'MARKSTAGE_AI_KEY'</code>. Or no model named for <code>openai</code> or <code>ollama</code>: <code>reason: 'model'</code>. <code>message</code> is the <code>why</code> of <code>GET ai</code>.</td></tr><tr><td class="num"><code>429</code></td><td><code>ai-rate</code></td><td>This person's limit, or the provider is busy with the site's key (<code>retryAfter</code> from its <code>Retry-After</code>, else 30).</td></tr><tr><td class="num"><code>502</code></td><td><code>ai-failed</code></td><td>The provider failed, timed out, refused the key (&quot;The owner checks MARKSTAGE_AI_KEY or ai.keyFile.&quot;), does not have the model (<code>openai</code>, <code>ollama</code>: the words name it), declined, said nothing, or answered in another shape. Fixed words, never the provider's own.</td></tr><tr><td class="num"><code>403</code></td><td><code>forbidden</code></td><td>A summary below editor; a token instead of a session.</td></tr><tr><td class="num"><code>404</code></td><td><code>not-found</code></td><td>The entry, image or plan is not there or not available to this person.</td></tr><tr><td class="num"><code>413</code></td><td><code>too-large</code></td><td>A field over its size (<code>field</code>, <code>max</code>).</td></tr><tr><td class="num"><code>422</code></td><td><code>invalid</code>, <code>image-type</code>, <code>locale</code>, <code>plan-not-ready</code>, <code>no-topics</code>, <code>no-pages</code>, <code>in-order</code></td><td>A wrong kind or field, a file that is not an image, a locale or field the site does not have, a plan still preparing; links on a site with no link index, or with no page left to suggest; a heading that is in order already.</td></tr><tr><td class="num"><code>500</code></td><td><code>spelling</code></td><td>The locale's spelling module did not load.</td></tr></tbody></table></div>
 <h2 id="what-is-kept-and-what-is-never">What is kept, and what is never</h2>
 <ul><li><strong>The audit.</strong> Every ask the model gets is one <code>ai.suggest</code> row: who, the kind, the target (<code>posts/hello-world</code>,
 the image's repo path, or the plan id), the provider, the model, and <code>inputTokens</code> and <code>outputTokens</code>. A failed one
@@ -229,12 +262,14 @@ provider's <code>429</code> is <code>429 ai-rate</code>; its other failures are 
 <p>An image goes as each API takes one: a base64 image block (Anthropic), an <code>image_url</code> data URL (OpenAI-compatible),
 or the message's <code>images</code> (Ollama). A promotion's plain-words summary (docs/API-ENV.md) uses the same provider.</p>
 <p>Tests: <code>ai.test.mjs</code> (the stub provider: kinds, the readable rule, the summary for editors, sizes, limits, the audit,
-off, nothing committed, tokens refused, each rewrite mode), <code>ai-provider.test.mjs</code> (the Anthropic provider with a
+off, nothing committed, tokens refused, each rewrite mode), <code>ai-seo.test.mjs</code> (links and fixes: the pages offered,
+the readable rule for drafts, the checks on each answer with a fake fetch, each problem, the limits and the audit),
+<code>ai-provider.test.mjs</code> (the Anthropic provider with a
 fake fetch: the request, each failure, the key file, a planted key never out, from the environment or the file;
 translation drafts and the spelling) and <code>ai-providers.test.mjs</code> (the OpenAI-compatible and Ollama providers with a
 fake fetch: the request's shape, streaming off, images, Azure's header, no key at a loopback address and never for
 Ollama, no model named, each failure, a timeout, the address rules, the health check for owners and administrators
-only, and a rewrite and a promotion summary through the server). In a browser: <code>e2e/ai-rewrite.e2e.mjs</code>. No test
+only, and a rewrite and a promotion summary through the server). In a browser: <code>e2e/ai-rewrite.e2e.mjs</code>, <code>e2e/ai-seo.e2e.mjs</code>. No test
 calls a real API or reads a key from the machine it runs on.</p>
         </div>
         <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/API-AI.md" target="_blank" rel="noopener">docs/API-AI.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>

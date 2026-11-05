@@ -2,8 +2,9 @@
 
 Part of the API contract (docs/API.md: its conventions, prefix and errors apply here). A person in the editor asks a
 model for words they then read, change and save themselves: an image's alt text, a page's search title and
-description, a promotion plan's summary, a draft of a title and description for another of the site's locales, or
-better words for a few they selected on the page (rewrite, shorten, fix the spelling and grammar, change the tone).
+description, a promotion plan's summary, a draft of a title and description for another of the site's locales,
+better words for a few they selected on the page (rewrite, shorten, fix the spelling and grammar, change the tone),
+links from the page to the site's own pages, or a fix for a problem the SEO check found.
 The model is the owner's choice: Anthropic, any OpenAI-compatible endpoint, or Ollama on the server's own machine
 ("Providers" below).
 Server code: `packages/server/src/ai/`.
@@ -64,7 +65,8 @@ The server's `config.json` may tune it (all optional):
   through the scrubber like every error. Each check is one `ai.health` audit row (the provider, the model, whether
   the model was found). Anyone else: `403`.
 - `kinds`: what this person may ask for here. `summary` is listed for editors and up. `translate` is listed when the
-  site has more than one locale.
+  site has more than one locale. `links` is listed when the site keeps a link index (`topics` in markstage.config,
+  docs/API-LINKS.md).
 - A browser session only. A command-line token and an AI assistant's (MCP) token are refused (`403`): an agent has
   its own model already.
 
@@ -95,6 +97,12 @@ Sizes are in characters. Too long is `413 too-large` with `field` and `max`, and
 - `title` (at most 1,000) and `text` (at most 20,000): what the editor has now, unsaved. Without them, the entry's
   saved title and its text (a Markdown entry's body; a JSON entry's text values) are used, cut at 20,000.
 - The model is also told the search title and description the entry has now.
+- **A fix for one problem** (the SEO check's "Suggest a fix"): add `problem`, one of `title-long`, `title-short`,
+  `description-missing`, `description-long`, `description-short`, and what the editor has now, unsaved, as
+  `searchTitle` and `description` (at most 1,000 each). The answer then has only the one key the problem is about
+  (`{title}` or `{description}`). A `-long` answer must be shorter than what is there, a `-short` one longer, or it is
+  dropped (`502 ai-failed`, "The suggestion was no shorter than…"). A problem about an empty field that is not
+  `description-missing`: `422 invalid`.
 
 ### `summary`: a promotion plan in plain words
 
@@ -126,6 +134,44 @@ Sizes are in characters. Too long is `413 too-large` with `field` and `max`, and
   accepting keeps the words, not those. Each state has its URL: `?suggest=rewrite&sel=<from>-<to>` (the choices),
   `&how=<mode>` (the suggestion); Back and Forward walk them. The button is not there while AI is off or the
   server does not offer `rewrite`; a link that asks anyway opens the card, which says why, as every AI card does.
+
+### `links`: links from this page to the site's own pages
+
+`{kind: 'links', collection, id, text?, linked?, max?}` → `suggestion: {links: [{words, to, title, url, status,
+reason}], dropped}`
+
+- Only on a site that keeps a link index (`topics`, docs/API-LINKS.md); elsewhere `422 no-topics`, before the model is
+  asked. The entry must be one this person may read.
+- `text` (at most 20,000): the page's words as the editor has them now, unsaved; else its saved text. `linked` (at most
+  500 addresses): where the editor's text links now, so those pages are not suggested again. `max`: 1 to 10, 5 when
+  left out.
+- **The pages come from the index, never from the model.** The model gets a list of at most 60 pages of the site: not
+  this one, with an address, not `noindex`, not linked from this page already (in the index or in `linked`), and
+  readable by this person (a draft only for its owner and for editors and up, the rule of "Who sees what"). Pages whose
+  title words the text uses, and pages of the same topic, come first. None left: `422 no-pages`.
+- **Each answer is checked on the server**: the page is one of those offered; the words are in the text (a whole-word
+  match, any case) and are not vague ("click here", "read more"); no page and no words twice. A suggestion that fails
+  is left out and counted in `dropped`. `words` come back as the text has them; `to` is the page's ref
+  (`posts/canvas`), `url` its address and `status` `live` or `draft`.
+- Nothing is linked by this route. In the editor (Post settings → Topic and links, "Suggested by AI", URL
+  `?s=1&suggest=links`), Add link links the first place the words stand unlinked: one change on the canvas, ⌘Z takes
+  it back, ⌘S saves it through the normal save (which writes only that link).
+
+### `fix`: a fix for a heading or for vague link words
+
+`{kind: 'fix', collection, id, problem, …}` → `suggestion` as below. The entry must be one this person may read. A
+search title or description is the `seo` kind with its `problem`; missing alt text is the `alt` kind.
+
+- `problem: 'heading'`, with `headings` (the page's outline, 1 to 300 `{level, text}`, the text at most 1,000 each),
+  `index` (the heading to fix, from 0) and `after` (the words under it, at most 2,000) → `{level, text}`. The level
+  must keep the outline in order: from 1 (2 when another H1 is there) to one below the heading before it. A heading
+  that is in order already and has words: `422 in-order`. An answer outside that range is dropped (`502`).
+- `problem: 'link-text'`, with `sentence` (at most 1,000), `words` (the link's words, in the sentence) and `href` →
+  `{sentence, words}`: the sentence again, with link words that name the page. The model is told the page's title
+  when the link index knows it and this person may read it. The words must be in the sentence and not vague, and the
+  sentence may not grow much; else the answer is dropped (`502`).
+- In the editor each fix has its URL (`?side=seo&suggest=fix&fix=<id>`, docs/SEO.md) and shows as a diff with Accept,
+  Edit then accept and Reject. Accepting is one change: ⌘Z takes it back, ⌘S saves it.
 
 ### `translate`: a draft for another locale
 
@@ -165,7 +211,7 @@ up.
 | `403` | `forbidden` | A summary below editor; a token instead of a session. |
 | `404` | `not-found` | The entry, image or plan is not there or not available to this person. |
 | `413` | `too-large` | A field over its size (`field`, `max`). |
-| `422` | `invalid`, `image-type`, `locale`, `plan-not-ready` | A wrong kind or field, a file that is not an image, a locale or field the site does not have, a plan still preparing. |
+| `422` | `invalid`, `image-type`, `locale`, `plan-not-ready`, `no-topics`, `no-pages`, `in-order` | A wrong kind or field, a file that is not an image, a locale or field the site does not have, a plan still preparing; links on a site with no link index, or with no page left to suggest; a heading that is in order already. |
 | `500` | `spelling` | The locale's spelling module did not load. |
 
 ## What is kept, and what is never
@@ -204,10 +250,12 @@ An image goes as each API takes one: a base64 image block (Anthropic), an `image
 or the message's `images` (Ollama). A promotion's plain-words summary (docs/API-ENV.md) uses the same provider.
 
 Tests: `ai.test.mjs` (the stub provider: kinds, the readable rule, the summary for editors, sizes, limits, the audit,
-off, nothing committed, tokens refused, each rewrite mode), `ai-provider.test.mjs` (the Anthropic provider with a
+off, nothing committed, tokens refused, each rewrite mode), `ai-seo.test.mjs` (links and fixes: the pages offered,
+the readable rule for drafts, the checks on each answer with a fake fetch, each problem, the limits and the audit),
+`ai-provider.test.mjs` (the Anthropic provider with a
 fake fetch: the request, each failure, the key file, a planted key never out, from the environment or the file;
 translation drafts and the spelling) and `ai-providers.test.mjs` (the OpenAI-compatible and Ollama providers with a
 fake fetch: the request's shape, streaming off, images, Azure's header, no key at a loopback address and never for
 Ollama, no model named, each failure, a timeout, the address rules, the health check for owners and administrators
-only, and a rewrite and a promotion summary through the server). In a browser: `e2e/ai-rewrite.e2e.mjs`. No test
+only, and a rewrite and a promotion summary through the server). In a browser: `e2e/ai-rewrite.e2e.mjs`, `e2e/ai-seo.e2e.mjs`. No test
 calls a real API or reads a key from the machine it runs on.

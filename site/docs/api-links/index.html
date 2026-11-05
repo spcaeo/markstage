@@ -128,8 +128,8 @@ adds the link on that page as a normal save (one commit, Undo); <strong>Skip</st
 without being edited.</li><li><strong>Health:</strong> what is weak or wrong in the site's links, worst first, with one-click fixes.</li></ul>
 <p>What an editor sees:</p>
 <ul><li><strong>Page settings → Topic and links</strong> (under the Page box): the page's topic, group and role, put in straight away;
-how many pages link here; &quot;Pages to link to&quot; (with <strong>Link these words</strong> on the canvas) and &quot;Pages that should link
-here&quot; (with <strong>Accept</strong> and <strong>Skip</strong>).</li><li><strong>More → Topic map</strong> (<code>#/topic-map</code>): each topic as a <strong>Journey</strong> (which page links to which, with the link words;
+how many pages link here; &quot;Pages to link to&quot; (with <strong>Link these words</strong> on the canvas), &quot;Suggested by AI&quot; (below)
+and &quot;Pages that should link here&quot; (with <strong>Accept</strong> and <strong>Skip</strong>).</li><li><strong>More → Topic map</strong> (<code>#/topic-map</code>): each topic as a <strong>Journey</strong> (which page links to which, with the link words;
 below) and as a board (<strong>Arrange</strong>). On the board, drag pages between the main page, the pages without a group,
 each group's lead and pages, and &quot;Not in a topic&quot;, or use a card's <strong>Move to…</strong> list.</li><li><strong>More → Links</strong> (<code>#/links</code>): the <strong>Link inbox</strong> (every open suggestion, grouped by the page the link goes to),
 <strong>Health</strong>, <strong>Pages</strong> (links in, out and outside per page) and <strong>Skipped</strong>.</li><li><strong>The publish sheet</strong>: a Links row (how many pages could link here, what this page should link to), and the page
@@ -184,7 +184,12 @@ on a page that already links there.</p>
 <ul><li><strong>Pages to link to</strong> (outgoing): the topic's main page, the group's lead, the service page, then two or three pages
 of the same group or topic. Each says why (&quot;its topic’s main page&quot;) and shows the sentence the words fit in; when
 the page has no such sentence yet, it asks for one to be written with those words.</li><li><strong>Pages that should link here</strong> (incoming): sentences on other pages that talk about this one, best first (pages of
-the same topic and group first).</li></ul>
+the same topic and group first).</li><li><strong>Suggested by AI</strong> (when AI is on, docs/API-AI.md <code>links</code>): <strong>Suggest links with AI</strong> asks the model to pick up to
+five pages from this index for the open text, with the words to link and one line on why. The pages are the
+index's, never addresses the model made up, and the server checks each one: the page is there, live or a draft
+this person may see (marked Draft), not linked from this page yet, and the words are in the text. Each has
+<strong>Add link</strong> (links the first place those words stand unlinked on the canvas: one change, ⌘Z takes it back, ⌘S
+saves it) and <strong>Dismiss</strong>. Its address: <code>?s=1&amp;suggest=links</code>.</li></ul>
 <h3 id="the-sites-own-finder-related">The site's own finder: <code>related</code></h3>
 <p>A site can add words that name a page from its own tools. With <code>topics.related: {command: [&quot;node&quot;,
 &quot;scripts/related.mjs&quot;]}</code>, when someone looks at a page's suggestions the server runs the command (no shell, in the

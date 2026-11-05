@@ -432,3 +432,14 @@
   align-items: center;
   gap: 6px;
 }
+/* "Suggest a fix" (ai/fixes.ts) on its own line under the problem, and its card under the row */
+.ms-seo-row:has(.ms-seo-row__more) {
+  flex-wrap: wrap;
+}
+.ms-seo-row__more {
+  flex-basis: 100%;
+  padding-left: 20px;
+}
+.ms-seo-sec__body > .ms-ai {
+  margin: 4px 0 8px 20px;
+}

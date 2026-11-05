@@ -281,3 +281,70 @@
 .ms-ai-rw__del + .ms-ai-rw__add {
   margin-left: 3px;
 }
+
+/* The AI's link suggestions (ai/links.ts), in Post settings → Topic and links: each page with its address, why, the
+   words to link, and Add link or Dismiss. */
+.ms-ai-links__lead {
+  margin: 0;
+  color: var(--ms-muted);
+}
+.ms-ai-links__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-ai-links__item {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--ms-line);
+  border-radius: 6px;
+  background: var(--ms-paper-3);
+}
+.ms-ai-links__item.is-done {
+  border-color: var(--ms-ok);
+}
+.ms-ai-links__to {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  min-width: 0;
+}
+.ms-ai-links__title {
+  font-weight: 600;
+}
+.ms-ai-links__draft {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--ms-warn-tint);
+  color: var(--ms-warn-ink);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.ms-ai-links__url {
+  min-width: 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+}
+.ms-ai-links__why {
+  margin: 0;
+}
+.ms-ai-links__words {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.ms-ai-links__words .ms-copyable__text {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--ms-accent-tint);
+}
+.ms-ai-links__added {
+  color: var(--ms-ok-ink);
+  font-weight: 600;
+}

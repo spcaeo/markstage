@@ -70,13 +70,21 @@ The header's **SEO** button (`?side=seo`) opens the SEO check in the right colum
   open); the focus keyphrase (config `seo.keyphrase`) in the search title, H1, first paragraph, address,
   description and a subheading, with its density (a keyphrase whose words are in the text but never together says
   "The full phrase isn't in the text; its words are"); the headings outline (click to go) with a second H1, a
-  skipped level and empty headings; links (to no page, to a draft, `http://`, none to the site) with "Mark nofollow
-  links" (`nf=1`); images (no alt, a vague file name, far larger than shown, over 300 KB); words and reading time.
+  skipped level and empty headings; links (to no page, to a draft, `http://`, vague words such as "click here" or
+  "read more", none to the site) with "Mark nofollow links" (`nf=1`); images (no alt, a vague file name, far larger than shown, over 300 KB); words and reading time.
 - **From the built page** (read again after each save): title, description, canonical, robots; each rich-result
   JSON-LD item as a card with Google's required and recommended properties (the BlogPosting headline against the
   H1 included), the other items by name with their JSON to copy, and links to the Rich Results Test and the Schema
   validator; the share image cut at 1.91:1, 2:1 and square, with its shape measured. Whether the title is the H1
   comes from the built page, so "no main heading" is said only when the page has none.
+- **Suggest a fix** (when AI is on, docs/API-AI.md): under a problem the AI can help with, a button asks for a fix:
+  a search title too long or too short, a description missing, too long or too short, a heading out of order or
+  empty, vague link words, an image with no alt text. The fix shows under the problem as a diff (taken out struck
+  through, put in underlined) with Accept, Edit then accept and Reject. Nothing changes until the writer accepts;
+  accepting is one change (⌘Z takes it back) and ⌘S saves it like any edit. Each fix has its URL
+  (`?side=seo&suggest=fix&fix=title`, `description`, `heading-<block>`, `link-<block>-<n>`, `alt-<n>`), and Back and
+  Forward walk them. A link to a fix whose problem is gone closes and says so. With AI off there is no button; a link
+  that asks anyway says why.
 - **Link options** (new tab, nofollow, sponsored, ugc) are in the link field.
 - **At publish**: duplicates, orphan pages and broken links come from the server's checks and show in the publish
   sheet.

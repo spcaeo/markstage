@@ -4,6 +4,24 @@ What changed in each Markstage release, in plain words. The newest is first. Ver
 [semantic versioning](https://semver.org); while Markstage is 0.x, a minor version may change how things work.
 docs/RELEASES.md says how a release is made.
 
+## Unreleased
+
+### Added
+
+- AI link suggestions (Post settings › Topic and links › Suggest links with AI, on a site that keeps topics): up to
+  five pages of the site's own link index to link from the open article, each with the words to link and one line on
+  why. The server checks every suggestion before a writer sees it: the page is there, live or a draft the writer may
+  see, not linked from this page yet, and the words are in the text; anything else is left out and counted. Add link
+  links the words on the canvas as one change (⌘Z takes it back, ⌘S saves only that link); Dismiss drops it.
+- Suggest a fix in the SEO check: for a search title or description that is too long or too short, a missing
+  description, a heading out of order or empty, vague link words such as "click here", or an image with no alt text.
+  The fix shows under the problem as a diff with Accept, Edit then accept and Reject, and the server drops an answer
+  that would not fix the problem (a "shorter" title that is not shorter, a heading level still out of order).
+- The SEO check now names vague link words ("click here", "read more"), with the same list as the link map's Health.
+- Each new state has its URL (`?s=1&suggest=links`, `?side=seo&suggest=fix&fix=<id>`); Back and Forward walk them.
+  With AI off the buttons are not there, and a link that asks anyway says why. API: the `links` and `fix` kinds, and
+  `problem` on the `seo` kind (docs/API-AI.md).
+
 ## 0.4.0 (4 November 2026)
 
 Everything the 0.3.0 roadmap listed for 0.4.0: MDX editing; imports from WordPress, Ghost and Prismic (the WordPress

@@ -216,6 +216,9 @@ describe('admin screens in a browser', { skip }, () => {
     // the footer line, once: the drawer's foot beside an open drawer, else the screen's own (import.e2e.mjs walks them)
     await page.locator('.ms-release:visible').filter({ hasText: /^v\d+\.\d+\.\d+ · build \d+ · / }).waitFor();
     assert.equal(await page.locator('.ms-release:visible').count(), 1);
+    // never cut: the whole line shows, wrapped between its parts if the drawer is narrow
+    const cut = await page.locator('.ms-release:visible').evaluate((f) => f.scrollWidth > f.clientWidth + 1);
+    assert.equal(cut, false, 'the release line is cut off');
     await page.getByRole('button', { name: 'Sign out' }).click();
     await page.waitForURL(/#\/sign-in/);
     await page.getByLabel('Email').fill(owner.email);

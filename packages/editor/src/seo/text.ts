@@ -1,5 +1,6 @@
 // What the SEO check reads from the text as it is being written (unsaved changes too): the headings, the focus
-// keyphrase, the links, the images and the words. Pure functions of the canvas document and a few fields; the panel
+// keyphrase, the links (vague link words too), the images and the words. A problem an AI fix can help with names it
+// (`fix`: ai/fixes.ts). Pure functions of the canvas document and a few fields; the panel
 // (seo/index.ts) draws them. The publish sheet's rules (server publish-rules.mjs) judge the saved text the same way.
 import type { Node as PMNode } from '@tiptap/pm/model';
 import { targetOf } from '../link-preview';
@@ -12,6 +13,8 @@ export interface Finding {
   text: string;
   /** the top-level block to go to */
   block?: number;
+  /** the AI fix for it (router.ts FIX): title, description, heading-<block>, link-<block>-<n>, alt-<n> */
+  fix?: string;
 }
 
 const squash = (s: string) => s.replace(/\s+/g, ' ').trim();
@@ -36,9 +39,10 @@ export function headings(doc: PMNode, title: { text: string; h1: boolean | null 
   let h1 = 0;
   for (const h of list) {
     const name = h.text ? `“${cut(h.text)}”` : 'An empty heading';
-    if (!h.text && h.block !== null) findings.push({ level: 'warn', text: 'An empty heading: write it or remove it.', block: h.block });
-    if (h.level === 1 && ++h1 > 1) findings.push({ level: 'warn', text: `${name} is a second main heading (H1). A page has one: make it an H2.`, block: h.block ?? undefined });
-    if (last && h.level > last + 1) findings.push({ level: 'warn', text: `${name} is an H${h.level} right after an H${last}: an H${last + 1} is skipped.`, block: h.block ?? undefined });
+    const fix = h.block === null ? undefined : `heading-${h.block}`;
+    if (!h.text && h.block !== null) findings.push({ level: 'warn', text: 'An empty heading: write it or remove it.', block: h.block, fix });
+    if (h.level === 1 && ++h1 > 1) findings.push({ level: 'warn', text: `${name} is a second main heading (H1). A page has one: make it an H2.`, block: h.block ?? undefined, fix });
+    if (last && h.level > last + 1) findings.push({ level: 'warn', text: `${name} is an H${h.level} right after an H${last}: an H${last + 1} is skipped.`, block: h.block ?? undefined, fix });
     last = h.level;
   }
   if (!h1 && title.h1 === false) findings.push({ level: 'warn', text: 'The page has no main heading (H1).' });
@@ -121,14 +125,20 @@ export interface LinkFound {
   kind: 'site' | 'away' | 'other';
   /** the site page's path (kind 'site') */
   path?: string;
+  /** where its words are in the document */
+  from: number;
+  to: number;
+  /** which link of its block it is (from 1) */
+  n: number;
 }
 
 /** Every link of the text, one per run of linked words (a link split by bold counts once). */
 export function linksOf(doc: PMNode): LinkFound[] {
   const out: LinkFound[] = [];
-  doc.forEach((block, _, i) => {
+  doc.forEach((block, offset, i) => {
     let prev: LinkFound | null = null;
-    block.descendants((n) => {
+    let k = 0;
+    block.descendants((n, pos) => {
       if (!n.isText) {
         if (n.isBlock) prev = null;
         return true;
@@ -139,12 +149,14 @@ export function linksOf(doc: PMNode): LinkFound[] {
         return false;
       }
       const href = String(m.attrs.href ?? '');
+      const from = offset + 1 + pos;
       if (prev && prev.href === href) {
         prev.text += n.text ?? '';
+        prev.to = from + n.nodeSize;
         return false;
       }
       const t = targetOf(href);
-      prev = { href, text: n.text ?? '', rel: String(m.attrs.rel ?? ''), target: String(m.attrs.target ?? ''), block: i, kind: t.kind, path: t.kind === 'site' ? t.path : undefined };
+      prev = { href, text: n.text ?? '', rel: String(m.attrs.rel ?? ''), target: String(m.attrs.target ?? ''), block: i, kind: t.kind, path: t.kind === 'site' ? t.path : undefined, from, to: from + n.nodeSize, n: ++k };
       out.push(prev);
       return false;
     });
@@ -164,9 +176,25 @@ export function linkFindings(links: LinkFound[], page: (path: string) => { draft
       if (p === null) out.push({ level: 'error', text: `${words} links to ${l.path}, where the site has no page.`, block: l.block });
       else if (p?.draft) out.push({ level: 'error', text: `${words} links to ${l.path}, a draft: the link leads nowhere until it is published.`, block: l.block });
     } else if (l.kind === 'away' && /^http:/i.test(l.href)) out.push({ level: 'warn', text: `${words} uses http://, not https://.`, block: l.block });
+    if (l.href.trim() && vagueLink(l.text)) out.push({ level: 'warn', text: `${words} does not say where the link goes: link words that name the page.`, block: l.block, fix: `link-${l.block}-${l.n}` });
   }
   if (!links.some((l) => l.kind === 'site')) out.push({ level: 'warn', text: 'No links to other pages of the site: link two or three related ones.' });
   return out;
+}
+
+/** Link words that do not say where a link goes: the same list as core's link map (link-map.mjs GENERIC_ANCHORS). */
+export const VAGUE_LINK_WORDS = new Set(['click here', 'click', 'here', 'read more', 'read', 'learn more', 'more', 'more info', 'more information', 'find out more', 'continue reading', 'see more', 'view more', 'details', 'this', 'this page', 'link', 'this link', 'go', 'download', 'website', 'page', 'article', 'post', 'source', 'sources', 'view', 'open', 'here.', 'see here', 'this article', 'this post', '(no text)']);
+
+/** Link words as the link map compares them (core's normAnchor), and whether they are vague. */
+export function vagueLink(text: string): boolean {
+  const a = text
+    .replace(/[“”"‘’']/g, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+    .replace(/^[\s»→>\-–—]+|[\s»→>.!…:,;]+$/g, '');
+  return !a || VAGUE_LINK_WORDS.has(a) || /^(page )?\d+$/.test(a);
 }
 
 export interface ImageFound {
@@ -174,6 +202,8 @@ export interface ImageFound {
   alt: string;
   decorative: boolean;
   block: number;
+  /** which image of the text it is (from 1, in order) */
+  n: number;
 }
 
 export function imagesOf(doc: PMNode, decorativeClass: string): ImageFound[] {
@@ -182,7 +212,7 @@ export function imagesOf(doc: PMNode, decorativeClass: string): ImageFound[] {
     const visit = (n: PMNode) => {
       if (n.type.name === 'image') {
         const decorative = String(n.attrs.figure ?? '').split(/\s+/).includes(decorativeClass);
-        out.push({ src: String(n.attrs.src ?? ''), alt: String(n.attrs.alt ?? '').trim(), decorative, block: i });
+        out.push({ src: String(n.attrs.src ?? ''), alt: String(n.attrs.alt ?? '').trim(), decorative, block: i, n: out.length + 1 });
       }
     };
     visit(block);
@@ -206,7 +236,7 @@ export function imageFindings(images: ImageFound[]): Finding[] {
   const out: Finding[] = [];
   for (const im of images) {
     const name = im.src.split('/').pop() || 'An image';
-    if (!im.alt && !im.decorative) out.push({ level: 'error', text: `${name} has no description (alt text): add one, or mark the image decorative.`, block: im.block });
+    if (!im.alt && !im.decorative) out.push({ level: 'error', text: `${name} has no description (alt text): add one, or mark the image decorative.`, block: im.block, fix: `alt-${im.n}` });
     if (vagueName(im.src)) out.push({ level: 'warn', text: `${name}: the file name says nothing about the image. A name like crm-pipeline-board.webp helps image search.`, block: im.block });
   }
   return out;

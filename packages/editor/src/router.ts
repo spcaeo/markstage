@@ -13,7 +13,10 @@
 // what is typed in it), suggest: an AI suggestion is open (ai/editor.ts): suggest=alt&img=<n> for the nth image on
 // the canvas (&at=panel: in the image block's settings panel), suggest=alt&field=<key> for an image setting (with
 // s=1), suggest=seo with the SEO check, and suggest=translate&loc=<code> for a region's title and description (with
-// s=1), and suggest=rewrite&sel=<from>-<to>[&how=<mode>] for the writing help on a selection of the canvas.
+// s=1), suggest=rewrite&sel=<from>-<to>[&how=<mode>] for the writing help on a selection of the canvas,
+// suggest=links (with s=1) for AI link suggestions beside the page's own, and suggest=fix&fix=<problem> (with
+// side=seo) for an AI fix of one problem the SEO check found (ai/fixes.ts: title, description, heading-<block>,
+// link-<block>-<n>, alt-<n>).
 //       #/p/<collection>/<id>?…  a page (JSON entry with a page address) in the pages editor (pages/**): its own params
 //                                 pass through untouched (`extra`); device, landscape, region, theme, view, k and q as above
 //       #/<screen>/<args…>?…      a screen another part registers (host.ts registerScreen: users, media, …); its
@@ -78,7 +81,16 @@ export interface Route {
 }
 
 export type Side = 'outline' | 'seo' | 'help' | 'library';
-export type Suggest = { kind: 'alt'; img: number; at?: 'panel' } | { kind: 'alt'; field: string } | { kind: 'seo' } | { kind: 'translate'; loc: string } | { kind: 'rewrite'; sel: [number, number]; how?: RewriteMode };
+export type Suggest =
+  | { kind: 'alt'; img: number; at?: 'panel' }
+  | { kind: 'alt'; field: string }
+  | { kind: 'seo' }
+  | { kind: 'translate'; loc: string }
+  | { kind: 'rewrite'; sel: [number, number]; how?: RewriteMode }
+  | { kind: 'links' }
+  | { kind: 'fix'; fix: string };
+/** The problems an AI fix is for (ai/fixes.ts): the search title or description, a heading, a link's words, an image's alt. */
+export const FIX = /^(title|description|heading-\d{1,5}|link-\d{1,5}-\d{1,3}|alt-\d{1,5})$/;
 /** The writing help's choices (ai/rewrite.ts): the server's `mode` of a rewrite suggestion. */
 export const REWRITE_MODES = ['rewrite', 'shorten', 'fix', 'tone:friendly', 'tone:formal', 'tone:confident'] as const;
 export type RewriteMode = (typeof REWRITE_MODES)[number];
@@ -103,6 +115,8 @@ function readSuggest(params: URLSearchParams, r: Pick<Route, 'mode' | 'view' | '
   if (kind === 'alt' && r.settings && KEY.test(field)) return { kind, field };
   if (kind === 'seo' && r.side === 'seo') return { kind };
   if (kind === 'translate' && r.settings && LOCALE.test(loc)) return { kind, loc };
+  if (kind === 'links' && r.settings) return { kind };
+  if (kind === 'fix' && r.side === 'seo' && FIX.test(params.get('fix') ?? '')) return { kind, fix: params.get('fix')! };
   // the writing help on a selection of the canvas: sel=<from>-<to> (the selection's positions), how=<mode> once chosen
   const sel = /^(\d{1,7})-(\d{1,7})$/.exec(params.get('sel') ?? '');
   if (kind === 'rewrite' && sel && Number(sel[1]) < Number(sel[2])) {
@@ -116,7 +130,7 @@ function readSuggest(params: URLSearchParams, r: Pick<Route, 'mode' | 'view' | '
 const suggestFits = (r: Route): Route['suggest'] => {
   const s = r.suggest;
   if (!s || r.mode !== 'e' || r.view || r.screen) return null;
-  if (s.kind === 'seo') return r.side === 'seo' && !r.settings ? s : null;
+  if (s.kind === 'seo' || s.kind === 'fix') return r.side === 'seo' && !r.settings ? s : null;
   return 'img' in s || s.kind === 'rewrite' || r.settings ? s : null;
 };
 let compat: string | null = null;
@@ -224,6 +238,7 @@ export function format(r: Route): string {
     if ('loc' in sg) params.set('loc', sg.loc);
     if ('sel' in sg) params.set('sel', `${sg.sel[0]}-${sg.sel[1]}`);
     if ('how' in sg && sg.how) params.set('how', sg.how);
+    if ('fix' in sg) params.set('fix', sg.fix);
   }
   if (r.k) params.set('k', '1');
   if (r.k && r.q) params.set('q', r.q);

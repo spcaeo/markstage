@@ -890,6 +890,10 @@
 .ms-adm--auth .ms-release {
   margin-top: 20px;
 }
+/* each part stays whole; the line wraps between them, never cut (release.ts) */
+.ms-release > span {
+  white-space: nowrap;
+}
 /* one release line per screen: the drawer's own (nav.ts) while it is open beside the page, else the page's; on a
    phone the drawer slides away, so the page keeps its line (test/release-line.test.ts, e2e/import.e2e.mjs) */
 @media (min-width: 721px) {

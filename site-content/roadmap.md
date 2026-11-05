@@ -1,6 +1,6 @@
 ---
 title: "Markstage Roadmap: What Is Being Built Next and Later"
-description: "What the Markstage team is building for the next release and what is planned later: npm packages, AI link and SEO suggestions, live co-editing and more."
+description: "What the Markstage team is building for the next release and what is planned later: npm packages, adapters beyond Astro, live co-editing and more."
 h1: "Markstage roadmap"
 # One source of truth for every "coming" badge on the site and the README's Roadmap section (compare.test.mjs
 # checks both). status: in-progress (being built for the next minor release; the badge names it from package.json),
@@ -80,7 +80,7 @@ items:
   - id: ai-seo
     title: AI link and SEO suggestions
     what: Suggested internal links and fixes for search problems, for a person to accept.
-    status: planned
+    status: shipped
     rows: []
   - id: stable
     title: A stable 1.0

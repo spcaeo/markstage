@@ -264,7 +264,6 @@
   padding: 16px 16px 0;
   color: var(--ms-faint);
   font-size: 11px;
-  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .ms-nav__who {

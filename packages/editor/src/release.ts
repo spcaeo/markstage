@@ -6,11 +6,19 @@ import release from 'virtual:markstage/release';
 
 export const RELEASE: { version: string; commit: string | null; build: number | null; builtAt: string | null; line: string } = release;
 
-/** The footer: small, muted, the line only. */
+/**
+ * The footer: small, muted, the line only. Each part ("v0.4.0", "build 510", the time) is its own unbroken span, so
+ * in the narrow drawer the line wraps between parts instead of being cut ("10:17 PM MS", seen at build 510).
+ */
 export function releaseFooter(): HTMLElement {
   const f = document.createElement('footer');
   f.className = 'ms-release';
-  f.textContent = RELEASE.line;
+  RELEASE.line.split(' · ').forEach((part, i) => {
+    if (i) f.append(' · ');
+    const s = document.createElement('span');
+    s.textContent = part;
+    f.append(s);
+  });
   f.title = RELEASE.commit ? `Markstage ${RELEASE.line} (${RELEASE.commit})` : `Markstage ${RELEASE.line}`;
   return f;
 }

@@ -8,7 +8,9 @@ import { ENV_VAR, offWords, trouble as words, type AiTrouble } from './words';
 
 export { offWords, type AiTrouble };
 
-export type AiKind = 'alt' | 'seo' | 'summary' | 'translate' | 'rewrite';
+export type AiKind = 'alt' | 'seo' | 'summary' | 'translate' | 'rewrite' | 'links' | 'fix';
+/** seo's problems: the one field a fix is for (the SEO check's search result). */
+export type SeoProblem = 'title-long' | 'title-short' | 'description-missing' | 'description-long' | 'description-short';
 
 export interface AiInfo {
   on: boolean;
@@ -23,10 +25,24 @@ export interface AiInfo {
 /** What the suggestion is about, by kind (the server reads the rest itself). */
 export type SuggestBody =
   | { kind: 'alt'; image: string; collection?: string; id?: string }
-  | { kind: 'seo'; collection: string; id: string; title?: string; text?: string }
+  | { kind: 'seo'; collection: string; id: string; title?: string; text?: string; problem?: SeoProblem; searchTitle?: string; description?: string }
   | { kind: 'summary'; plan: string }
   | { kind: 'translate'; collection: string; id: string; locale: string; fields: Record<string, string> }
-  | { kind: 'rewrite'; collection: string; id: string; mode: RewriteMode; text: string };
+  | { kind: 'rewrite'; collection: string; id: string; mode: RewriteMode; text: string }
+  | { kind: 'links'; collection: string; id: string; text: string; linked: string[]; max?: number }
+  | { kind: 'fix'; collection: string; id: string; problem: 'heading'; headings: { level: number; text: string }[]; index: number; after?: string }
+  | { kind: 'fix'; collection: string; id: string; problem: 'link-text'; sentence: string; words: string; href: string };
+
+/** One AI link suggestion (kind `links`): the words of the article to link, and the page, checked by the server. */
+export interface AiLink {
+  words: string;
+  /** the page: "<collection>/<id>" */
+  to: string;
+  title: string;
+  url: string;
+  status: 'published' | 'draft';
+  reason: string;
+}
 
 /** The suggested text, by field: alt, title and description, text. */
 export type Suggestion = Record<string, string>;
@@ -52,6 +68,12 @@ export const offTrouble = (i: AiInfo): AiTrouble => (i.reason && i.reason !== 'k
 export async function suggest(body: SuggestBody): Promise<{ suggestion: Suggestion; model: string | null }> {
   const r = await request<{ suggestion: Suggestion; model?: string }>('ai/suggest', { method: 'POST', body: JSON.stringify(body) });
   return { suggestion: r.suggestion, model: r.model ?? null };
+}
+
+/** The AI's link suggestions for an article, and how many of its ideas the server left out. */
+export async function suggestLinks(body: Extract<SuggestBody, { kind: 'links' }>): Promise<{ links: AiLink[]; dropped: number; model: string | null }> {
+  const r = await request<{ suggestion: { links?: AiLink[]; dropped?: number }; model?: string }>('ai/suggest', { method: 'POST', body: JSON.stringify(body) });
+  return { links: r.suggestion.links ?? [], dropped: r.suggestion.dropped ?? 0, model: r.model ?? null };
 }
 
 /** A refusal or failure of ai/suggest, in plain words; an "off" answer is remembered. */

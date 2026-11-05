@@ -121,7 +121,7 @@ export class SettingsDrawer {
     }
     // its topic and its links (topic-box.ts), next
     if (topicsOn(entry.collection)) {
-      const drawn = topicBox({ collection: entry.collection, id: () => this.entry?.id ?? null, linkHere: (s) => this.linkHere?.(s) ?? false });
+      const drawn = topicBox({ collection: entry.collection, id: () => this.entry?.id ?? null, linkHere: (s) => this.linkHere?.(s) ?? false, ai: this.ai?.links });
       drawn.el.dataset.setting = 'topic-links';
       this.offTopics = drawn.destroy;
       this.fields.push({ def: { type: 'text', key: 'topic-links', label: 'Topic and links' }, drawn });
