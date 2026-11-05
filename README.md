@@ -277,9 +277,22 @@ your browser. Publishing, users and settings answer "Not in the demo" there ([ho
 
 ## Quick start
 
-You need **Node.js 22.13 or newer** and **git**; to add it to your own site, the site needs **Astro 7.4 or newer**.
+You need **Node.js 22.13 or newer** and **git**; to add it to your own site, the site needs **Astro 7.4 or newer**
+(which itself needs Node.js 22.23.4 or newer on the 22 line).
 **Not on npm yet: install from a clone.** The `@markstage/*` packages are not published to npm, so each way below
 starts from a clone of this repository.
+
+**Install from npm (on npm from 0.5.0).** Once 0.5.0 is out, a site needs no clone:
+
+```sh
+npm install @markstage/astro                  # the editor, in astro dev
+npm install @markstage/server                 # the server for a team, beside it
+```
+
+Then add the integration and describe your content as Option 2 shows, and for the server see Option 3 or
+[packages/server](packages/server/README.md). A new site from the starter with its packages from npm:
+`node markstage/scripts/create-site.mjs my-blog --npm` (the starter's files still come from the clone;
+[docs/STARTER.md](docs/STARTER.md)).
 
 **Just looking?** The [live demo](https://spcaeo.github.io/markstage/demo/) runs the editor on the example blog in your browser, nothing to install.
 
@@ -631,11 +644,13 @@ Shipped since 0.4.0, on main:
 
 Being built now, for 0.5.0:
 
-Nothing yet: the next items are picked from the list below, smallest first.
+- **Packages on npm**, so a site installs `@markstage/astro` and `@markstage/server` without a clone. The packages
+  are ready: each ships only what runs (checked on every push), and CI installs them from their tarballs in a new
+  site, builds it, starts the server and saves a post in the editor, on Node 24 and, for everything but Astro's own
+  build, on 22.13 ([docs/PUBLISHING.md](docs/PUBLISHING.md) "npm").
 
 Planned, later:
 
-- **Packages on npm**, so a site installs `@markstage/astro` without a clone.
 - **Adapters beyond Astro.** The core has no framework in it; Astro is the first adapter.
 - **Live co-editing**, with live cursors, beside today's locks and three-way merge.
 - **A stable 1.0**, after deeper quality, security and performance work.

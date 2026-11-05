@@ -20,7 +20,7 @@ import { devApi } from './api.mjs';
 import { entryPageProblems } from './api-pages.mjs';
 import { entryAuthorProblems } from './authors-files.mjs';
 import { CONFIG_KEY } from './authors.mjs';
-import { V, virtualPlugin } from './client.mjs';
+import { V, optimizeDepsFor, virtualPlugin } from './client.mjs';
 import { editButtonScript, loadConfig, normalizeConfig } from './config.mjs';
 
 export { defineConfig } from './config.mjs';
@@ -95,6 +95,8 @@ export default function markstage(options = {}) {
         updateConfig({
           vite: {
             server: { fs: { allow: [root, markstageRoot] } },
+            // installed from npm: core pre-bundled, its CommonJS made ESM (client.mjs optimizeDepsFor)
+            optimizeDeps: optimizeDepsFor(),
             plugins: [
               virtualPlugin(cfg, {
                 name: 'markstage-dev',

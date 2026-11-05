@@ -1,0 +1,107 @@
+# Publishes the four packages to npm when a release tag vX.Y.Z is pushed, in their order (core, editor, astro, server),
+# with npm provenance (each package page links back to this workflow run and commit). docs/PUBLISHING.md "npm".
+#
+# It does nothing until the owner turns it on, once, after the first publish from a laptop:
+#   - the repository variable NPM_PUBLISH = "trusted": npm trusted publishing (OIDC), no token stored anywhere; each
+#     package on npmjs.com names this repository, this file (npm.yml) and the environment "npm" as its publisher;
+#   - or NPM_PUBLISH = "token" and the secret NPM_TOKEN (an npm granular token that may publish @markstage/*).
+# Without NPM_PUBLISH the publish job is skipped and a note says why. It runs only in the public repo
+# (spcaeo/markstage); in any other copy both jobs are skipped.
+#
+# Before anything is published: the tag must be the version of every package, the package guard
+# (scripts/npm-packages.test.mjs) and the install test (scripts/npm-install.mjs, the tarballs in a new site, the
+# server and the editor) must pass. A version already on npm is left as it is, so a re-run finishes what a failed run
+# started. A pre-release tag (vX.Y.Z-rc.1) is published under the dist-tag "next", never "latest".
+name: npm
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  not-set-up:
+    name: npm publishing is not set up
+    if: github.repository == 'spcaeo/markstage' && vars.NPM_PUBLISH != 'trusted' && vars.NPM_PUBLISH != 'token'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Nothing is published
+        run: echo "::notice title=npm::Nothing was published to npm. Set the repository variable NPM_PUBLISH (trusted or token) as docs/PUBLISHING.md says, then re-run this workflow."
+
+  publish:
+    name: Publish @markstage/* to npm
+    if: github.repository == 'spcaeo/markstage' && (vars.NPM_PUBLISH == 'trusted' || vars.NPM_PUBLISH == 'token')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write  # npm provenance, and the trusted publishing exchange
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0  # the release line counts commits for the build number
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: npm can publish with trusted publishing and provenance (11.5.1 or newer)
+        run: |
+          v="$(npm --version)"
+          node -e "const [a,b,c]=process.argv[1].split('.').map(Number); process.exit(a>11||(a===11&&(b>5||(b===5&&c>=1)))?0:1)" "$v" \
+            || { echo "npm $v is older than 11.5.1" >&2; exit 1; }
+      - name: The tag is the version of every package
+        id: facts
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$tag" != "$version" ]; then echo "The tag says $tag but package.json says $version: nothing is published." >&2; exit 1; fi
+          for p in core editor astro server; do
+            pv="$(node -p "require('./packages/$p/package.json').version")"
+            if [ "$pv" != "$version" ]; then echo "packages/$p is $pv, not $version: nothing is published." >&2; exit 1; fi
+          done
+          case "$version" in *-*) dist=next ;; *) dist=latest ;; esac
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "dist=$dist" >> "$GITHUB_OUTPUT"
+      - name: Git identity for the test commits
+        run: |
+          git config --global user.name "Markstage CI"
+          git config --global user.email "ci@example.com"
+      - name: Install (exactly the lockfile)
+        run: npm ci
+      - name: The package guard (what each tarball holds)
+        run: node --test scripts/npm-packages.test.mjs
+      - name: Chromium and its system libraries
+        run: npx playwright install --with-deps chromium
+      - name: The install test (the tarballs in a new site, the server, the editor, a save)
+        run: npm run test:npm-install
+      - name: Publish core, editor, astro, server (with provenance)
+        env:
+          NODE_AUTH_TOKEN: ${{ vars.NPM_PUBLISH == 'token' && secrets.NPM_TOKEN || '' }}
+          VERSION: ${{ steps.facts.outputs.version }}
+          DIST: ${{ steps.facts.outputs.dist }}
+        run: |
+          if [ "${{ vars.NPM_PUBLISH }}" = "token" ] && [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_PUBLISH is token but the secret NPM_TOKEN is empty: nothing is published." >&2; exit 1
+          fi
+          for p in core editor astro server; do
+            if npm view "@markstage/$p@$VERSION" version >/dev/null 2>&1; then
+              echo "@markstage/$p@$VERSION is on npm already: left as it is."
+              continue
+            fi
+            npm publish -w "packages/$p" --access public --provenance --tag "$DIST"
+          done
+      - name: What npm has now
+        env:
+          VERSION: ${{ steps.facts.outputs.version }}
+        run: |
+          for p in core editor astro server; do
+            npm view "@markstage/$p@$VERSION" name version dist.tarball
+          done

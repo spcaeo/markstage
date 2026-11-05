@@ -2,8 +2,28 @@
   "name": "@markstage/core",
   "version": "0.4.0",
   "description": "Markstage core: Markdown <-> editor document with block packs, surgical saves, frontmatter.",
+  "keywords": [
+    "markstage",
+    "markdown",
+    "mdx",
+    "cms",
+    "content",
+    "frontmatter",
+    "remark",
+    "tiptap"
+  ],
+  "homepage": "https://github.com/spcaeo/markstage/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/spcaeo/markstage/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spcaeo/markstage.git",
+    "directory": "packages/core"
+  },
   "license": "Elastic-2.0",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
@@ -35,8 +55,16 @@
       "default": "./src/release.mjs"
     }
   },
+  "files": [
+    "src/",
+    "NOTICE"
+  ],
   "engines": {
     "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "test": "node --test \"test/**/*.test.mjs\""

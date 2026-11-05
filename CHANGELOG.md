@@ -74,7 +74,31 @@ docs/RELEASES.md says how a release is made.
 - A flood of share-link tries no longer fills the database: a refused try is not stored, an IPv6 address counts as
   its /64 (for sign-in misses and wrong tokens too), and passed tries are deleted within a minute.
 
+- The packages are ready for npm (not published yet): each of `@markstage/core`, `editor`, `astro` and `server` has a
+  `files` allow-list, so a tarball holds only what runs, its README, the LICENSE (Elastic License 2.0) and the NOTICE;
+  no tests, e2e tests or fixtures. Before and after, files and size unpacked: core 73 and 553 KB to 47 and 323 KB,
+  astro 35 and 197 KB to 28 and 138 KB, editor 389 and 2.7 MB to 345 and 2.6 MB, server 354 and 3.7 MB to 184 and
+  1.7 MB. Each has npm metadata (repository and directory, homepage, bugs, keywords, `engines.node >=22.13`,
+  `publishConfig` with provenance) and names the others at exactly its own version.
+- A package guard in `npm run test:scripts` packs each package for real and fails on a test or fixture file, anything
+  secret-like, a missing entry point, a package over its size budget, a site's name or wrong metadata. A new CI job,
+  "npm install test" (`npm run test:npm-install`, on Node 24 and 22.13), installs the four tarballs in a new site
+  from the starter and runs `astro build`, `markstage build-editor`, `astro dev`, the server, and a post saved in the
+  editor in Chromium as a git commit. Astro 7.4 itself needs Node 22.23.4 or newer on the 22 line, so on 22.13 its
+  build runs on Node 24 and `astro dev` is left out; the install, the editor build, the server and the save run on
+  22.13.
+- `.github/workflows/npm.yml` publishes the packages on a `v*` tag in the public repo, with provenance, by npm trusted
+  publishing (or a token); it does nothing until the owner turns it on. The first publish, from a laptop, and the
+  one-time setup: docs/PUBLISHING.md "npm".
+- `create-site.mjs --npm`: a new site from the starter that takes `@markstage/astro` from npm instead of `vendor/`
+  (docs/STARTER.md).
+
 ### Fixed
+
+- Installed from npm, two things broke that a linked checkout never shows: the editor in `astro dev` did not open
+  (core's CommonJS, `extend` through unified, reached the browser as it is; the integration now has Vite pre-bundle
+  core when the editor sits in `node_modules`), and the editor's footer said `v0.0.0` (the release line looked for
+  Markstage's package.json beside `node_modules`; it now falls back to the package's own version).
 
 - The canvas in a dark editor drew the page in colours its readers never see: the site's dark colours turned on for
   a page that nothing turns dark for readers (the example blog), and its code blocks as a light box with light text

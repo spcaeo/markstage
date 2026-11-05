@@ -38,7 +38,9 @@ is copied into this repository. At the time of writing the runtime packages are
 MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0, BlueOak-1.0.0, 0BSD, CC0-1.0
 and MPL-2.0 (lightningcss, used unmodified), plus libvips under LGPL-3.0-or-later,
 loaded as a separate prebuilt library by sharp. The editor is built on TipTap and
-ProseMirror (MIT) and CodeMirror (MIT). `npm ls --omit=dev --all` lists them.
+ProseMirror (MIT) and CodeMirror (MIT). MDX files are read with remark-mdx 3.1.1
+(MIT, pinned to that exact version) and the micromark, mdast and acorn packages it
+uses (MIT). `npm ls --omit=dev --all` lists them.
 
 Product and company names mentioned in the documentation (Astro, Keystatic,
 Ghost, WordPress, Gutenberg, Tina, Notion, monday.com, Google, LinkedIn,

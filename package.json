@@ -20,6 +20,7 @@
     "release": "node scripts/release.mjs",
     "create-site": "node scripts/create-site.mjs",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
+    "test:npm-install": "node scripts/npm-install.mjs",
     "prepare": "node -e \"fs.existsSync('scripts/hooks/install.mjs') && import('./scripts/hooks/install.mjs')\"",
     "secrets:scan": "node scripts/hooks/secret-scan.mjs --staged",
     "public:sync": "node scripts/public-sync.mjs",

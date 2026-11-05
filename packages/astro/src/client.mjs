@@ -5,6 +5,7 @@
 //   virtual:markstage/agent      dev only: the preview agent on the site's own pages (same-origin frame)
 //   virtual:markstage/meta       what the editor page's <head> needs (language, site name, favicon, font preloads)
 //   virtual:markstage/page-data  the site's pageData module (data its packs read in the browser)
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { releaseInfo } from '@markstage/core/release';
@@ -61,6 +62,25 @@ export function agentModule() {
     '  document.head.append(style);',
     '}',
   ].join('\n');
+}
+
+/**
+ * Vite's `optimizeDeps` for `astro dev` when Markstage is installed from npm (the editor's real path is inside a
+ * node_modules). Vite pre-bundles only the packages the site's own code imports, and serves a package's imports as
+ * they are; the editor reaches CommonJS through core (unified needs `extend`), which a browser cannot import as it
+ * is. Core is pre-bundled, with its CommonJS made ESM. Linked packages (a checkout next to the site) are the site's
+ * own code to Vite, so this changes nothing for them. scripts/npm-install.mjs opens the editor in `astro dev` from
+ * the tarballs.
+ */
+export function optimizeDepsFor(editorFile = fromHere('@markstage/editor')) {
+  let real = editorFile;
+  try {
+    real = fs.realpathSync(editorFile);
+  } catch {
+    /* as given */
+  }
+  if (!real.split(path.sep).includes('node_modules')) return {};
+  return { include: ['@markstage/astro > @markstage/core'] };
 }
 
 /** What the editor page's <head> needs. */

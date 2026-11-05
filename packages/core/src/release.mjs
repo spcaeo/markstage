@@ -39,7 +39,9 @@ export function releaseTime(iso, timeZone) {
 /** {version, commit, build, builtAt, timeZone, line} for the install at `dir` (the repo root). */
 export function releaseInfo({ dir, env = process.env } = {}) {
   let version = '0.0.0';
-  for (const p of [path.join(dir, 'package.json'), path.join(dir, 'packages/core/package.json')]) {
+  // the checkout's root, its core package, else this package's own (an install from npm: `dir` is then the site's
+  // node_modules, which has neither; the four packages always share one version)
+  for (const p of [path.join(dir, 'package.json'), path.join(dir, 'packages/core/package.json'), new URL('../package.json', import.meta.url)]) {
     try {
       const v = JSON.parse(fs.readFileSync(p, 'utf8')).version;
       if (v) {

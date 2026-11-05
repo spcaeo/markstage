@@ -123,7 +123,8 @@
 script copies it to a folder of your own, ready to write in. Markstage is pre-release: a minor version may still
 change how things work.</p>
 <h2 id="start-a-new-site">Start a new site</h2>
-<p>You need <strong>Node.js 22.13 or newer</strong> and <strong>git</strong>. Three commands:</p>
+<p>You need <strong>Node.js 22.13 or newer</strong> and <strong>git</strong>; the starter's Astro 7.4 itself needs Node.js 22.23.4 or newer on
+the 22 line (any Node 24 is fine). Three commands:</p>
 <pre data-lang="sh"><code class="language-sh">git clone https://github.com/spcaeo/markstage.git
 node markstage/scripts/create-site.mjs my-blog
 cd my-blog &amp;&amp; npm run dev</code></pre>
@@ -134,9 +135,16 @@ cd my-blog &amp;&amp; npm run dev</code></pre>
 <code>npm install</code> and makes the first git commit. <code>--no-install</code> and <code>--no-git</code> skip those two steps. From inside the
 clone, <code>npm run create-site -- ../my-blog</code> does the same.</p>
 <p><strong>Why a clone, and <code>vendor/</code>?</strong> The <code>@markstage/*</code> packages are not on npm yet. Until they are, the new site takes
-them from tarballs in its own <code>vendor/</code> folder (about 1 MB), so it installs on its own, on any machine and in the
-Docker image, with no path back to the clone. Once the packages are on npm, the starter will install them from
-there and <code>vendor/</code> goes away. There is no one-command <code>npm create</code> yet for the same reason.</p>
+them from tarballs in its own <code>vendor/</code> folder (under 1 MB), so it installs on its own, on any machine and in the
+Docker image, with no path back to the clone. There is no one-command <code>npm create</code> yet: the starter's files come
+from the clone.</p>
+<p><strong>From npm instead: <code>--npm</code>.</strong> The packages are on npm from 0.5.0. With that release out, add <code>--npm</code>:</p>
+<pre data-lang="sh"><code class="language-sh">node markstage/scripts/create-site.mjs my-blog --npm</code></pre>
+<p>The site then takes <code>@markstage/astro</code> from npm at the clone's version (exactly that version: the four packages
+move together), with no <code>vendor/</code> and no overrides, and updates like any npm package. <code>vendor/</code> stays the default
+for now, because it also works for a clone between releases, where the version on npm is older than the code.
+Before 0.5.0 is published, <code>--npm</code> fails at <code>npm install</code> (the packages are not there yet). How the packages are
+made and checked before a publish: <a href="https://github.com/spcaeo/markstage/blob/main/docs/PUBLISHING.md" rel="noopener">PUBLISHING.md</a> &quot;npm&quot;.</p>
 <p>To try the starter without making a site, run it inside the clone: <code>npm install</code>, then <code>npm run dev -w
 examples/starter</code>.</p>
 <h2 id="what-is-in-it">What is in it</h2>
@@ -167,10 +175,14 @@ every page gets a small inline script that shows an &quot;Edit this page&quot; l
 <p>It packs the clone's packages into <code>my-blog/vendor/</code> again (the old tarballs removed) and runs <code>npm install</code>.
 Commit <code>vendor/</code>, <code>package.json</code> and <code>package-lock.json</code>. With the image, keep the site's packages at the image's
 version and delete the <code>node_modules</code> volume so the next start installs them.</p>
+<p>A site made with <code>--npm</code> updates from npm instead: <code>npm install @markstage/astro@&lt;version&gt;</code> in the site (and
+<code>@markstage/server</code> at the same version, if the site has it), then commit <code>package.json</code> and <code>package-lock.json</code>.</p>
 <h2 id="how-it-is-tested">How it is tested</h2>
 <ul><li><code>npm test -w examples/starter</code> (CI, every push): the starter builds with its live posts and the MDX guide and
 without the draft; with an edit button every page gains exactly one inline script; and in <code>astro dev</code> the editor
-page answers at <code>/markstage/</code>, the API lists the four posts and the guide, and the MDX guide opens for editing.</li><li><code>npm run test:scripts</code> covers <code>create-site.mjs</code> (the copy, the tarballs, <code>--update</code>).</li><li>CI's image job makes a real site with <code>create-site.mjs</code>, installed and committed, and runs the Docker image on it
+page answers at <code>/markstage/</code>, the API lists the four posts and the guide, and the MDX guide opens for editing.</li><li><code>npm run test:scripts</code> covers <code>create-site.mjs</code> (the copy, the tarballs, <code>--update</code>, <code>--npm</code>).</li><li>CI's npm install test (<code>npm run test:npm-install</code>) makes a site from the starter with the packages from their npm
+tarballs, builds it, runs <code>astro dev</code> and the server, and saves a post in the editor (<a href="https://github.com/spcaeo/markstage/blob/main/docs/PUBLISHING.md" rel="noopener">PUBLISHING.md</a>
+&quot;npm&quot;).</li><li>CI's image job makes a real site with <code>create-site.mjs</code>, installed and committed, and runs the Docker image on it
 (<a href="../docker/">DOCKER.md</a>, &quot;How it is tested&quot;).</li></ul>
         </div>
         <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/STARTER.md" target="_blank" rel="noopener">docs/STARTER.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>

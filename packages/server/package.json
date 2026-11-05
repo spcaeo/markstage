@@ -2,6 +2,25 @@
   "name": "@markstage/server",
   "version": "0.4.0",
   "description": "Markstage production server: sign-in, roles, content API, publish jobs, revisions, media, audit log.",
+  "keywords": [
+    "markstage",
+    "cms",
+    "server",
+    "git-based-cms",
+    "headless-cms",
+    "markdown",
+    "astro",
+    "self-hosted"
+  ],
+  "homepage": "https://github.com/spcaeo/markstage/tree/main/packages/server#readme",
+  "bugs": {
+    "url": "https://github.com/spcaeo/markstage/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spcaeo/markstage.git",
+    "directory": "packages/server"
+  },
   "license": "Elastic-2.0",
   "type": "module",
   "main": "./src/app.mjs",
@@ -9,11 +28,20 @@
     ".": "./src/app.mjs"
   },
   "bin": {
-    "markstage-server": "./bin/markstage-server.mjs",
-    "markstage-deploy": "./bin/markstage-deploy.mjs"
+    "markstage-server": "bin/markstage-server.mjs",
+    "markstage-deploy": "bin/markstage-deploy.mjs"
   },
+  "files": [
+    "bin/",
+    "src/",
+    "NOTICE"
+  ],
   "engines": {
     "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "start": "node bin/markstage-server.mjs serve",

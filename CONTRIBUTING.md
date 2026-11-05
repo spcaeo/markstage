@@ -31,7 +31,10 @@ Markstage keeps its own data in `node:sqlite`, which is why it needs Node 22.13 
 `examples/blog` is a small Astro site to try the editor on; `examples/starter` is the site people start from
 (docs/STARTER.md), so keep it plain. docs/ARCHITECTURE.md explains the parts; docs/API.md and docs/CONFIG.md
 describe the server routes and the site config. The server image (deploy/Dockerfile) has its own smoke test:
-`node scripts/docker/smoke.mjs --image <image>` (docs/DOCKER.md).
+`node scripts/docker/smoke.mjs --image <image>` (docs/DOCKER.md). The npm packages have two: `npm run test:scripts`
+checks what each tarball holds (scripts/npm-packages.test.mjs), and `npm run test:npm-install` installs the tarballs
+in a new site and builds, serves, edits and saves there (docs/PUBLISHING.md "npm"). A new file a package needs at run
+time goes in its `files` list in package.json, or it is not published.
 
 ## The house rules
 

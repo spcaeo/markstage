@@ -49,8 +49,8 @@ items:
     rows: []
   - id: npm
     title: Packages on npm
-    what: Install @markstage/astro from npm, without a clone of the repository.
-    status: planned
+    what: Install @markstage/astro and @markstage/server from npm, without a clone of the repository.
+    status: in-progress
     rows: []
   - id: server-canvas
     title: The real page on the server, too

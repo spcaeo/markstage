@@ -1,6 +1,7 @@
 # Every push to main and every pull request into it: the repo's checks, every workspace's tests, the runtime tests
-# again on the oldest supported Node (22.13), the server's browser tests, the server image (built and smoke-tested
-# on a site made from the starter), an audit of the runtime dependencies and a secrets scan. CONTRIBUTING.md says what each one guards.
+# again on the oldest supported Node (22.13), the server's browser tests, the npm packages installed in a new site
+# (Node 24 and 22.13), the server image (built and smoke-tested on a site made from the starter), an audit of the
+# runtime dependencies and a secrets scan. CONTRIBUTING.md says what each one guards.
 name: CI
 
 on:
@@ -124,6 +125,45 @@ jobs:
         run: npm run test:e2e -w packages/server
         env:
           MARKSTAGE_E2E_REQUIRED: "1"
+
+  # The npm packages installed for real (scripts/npm-install.mjs, docs/PUBLISHING.md "npm"): the four tarballs `npm
+  # pack` makes, in a new site from the starter (no links), `astro build`, `markstage build-editor`, `astro dev`, the
+  # server, and a post saved in the editor in Chromium as a git commit. On Node 24, and on the oldest Node Markstage
+  # supports (22.13): Astro 7.4 itself needs 22.23.4 or newer on the 22 line, so there `astro build` runs on Node 24
+  # (MARKSTAGE_ASTRO_NODE) and `astro dev` is left out, while the install, the editor build, the server, the editor and
+  # the save run on 22.13. What each tarball holds is checked by scripts/npm-packages.test.mjs (test:scripts above).
+  npm-install:
+    name: npm install test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['24', '22.13.0']
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0  # the release line counts commits for the build number
+      # a Node that Astro allows, for `astro build` on the 22.13 leg
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Remember Node 24 for Astro
+        run: echo "MARKSTAGE_ASTRO_NODE=$(command -v node)" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Git identity for the test commits
+        run: |
+          git config --global user.name "Markstage CI"
+          git config --global user.email "ci@example.com"
+      - name: Install (exactly the lockfile)
+        run: npm ci
+      - name: Chromium and its system libraries
+        run: npx playwright install --with-deps chromium
+      - name: Pack, install in a new site, build, serve, edit and save
+        run: npm run test:npm-install
 
   # The server image (deploy/Dockerfile) on every push and pull request: built for amd64, then started on a new site
   # from the starter, the way docs/DOCKER.md says (health, the editor, sign-in setup, the API, a publish inside the

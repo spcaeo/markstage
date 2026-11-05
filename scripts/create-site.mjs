@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 // A new site from the starter (examples/starter): copies it to a folder of its own, puts this checkout's Markstage
-// packages beside it as tarballs (vendor/, because @markstage/* is not on npm yet), installs it and makes the first
-// git commit. docs/STARTER.md.
+// packages beside it as tarballs (vendor/), installs it and makes the first git commit. With --npm the site takes
+// @markstage/astro from npm instead, at this checkout's version (the packages are on npm from 0.5.0).
+// docs/STARTER.md.
 //
-//   node scripts/create-site.mjs ../my-blog              a new site in ../my-blog
+//   node scripts/create-site.mjs ../my-blog              a new site in ../my-blog, the packages in its vendor/
+//   node scripts/create-site.mjs ../my-blog --npm        the same, the packages from npm
 //   node scripts/create-site.mjs ../my-blog --no-install --no-git
 //   node scripts/create-site.mjs --update ../my-blog     put this checkout's packages in an existing site's vendor/
 //
@@ -66,6 +68,20 @@ export function withVendor(pkg, deps, { name } = {}) {
   return next;
 }
 
+/**
+ * The site's package.json with @markstage/astro from npm at `version` (exactly: the four packages move together) and
+ * no tarballs: the other @markstage packages come with it, and overrides that pointed at vendor/ are dropped.
+ */
+export function withNpm(pkg, version, { name } = {}) {
+  const next = { ...pkg, ...(name ? { name } : {}) };
+  const own = Object.fromEntries(Object.entries(pkg.dependencies ?? {}).filter(([k]) => !k.startsWith('@markstage/')));
+  next.dependencies = Object.fromEntries(Object.entries({ ...own, '@markstage/astro': version }).sort(([a], [b]) => a.localeCompare(b)));
+  const overrides = Object.fromEntries(Object.entries(pkg.overrides ?? {}).filter(([k]) => !k.startsWith('@markstage/')));
+  if (Object.keys(overrides).length) next.overrides = overrides;
+  else delete next.overrides;
+  return next;
+}
+
 const readJson = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
 const writeJson = (f, v) => fs.writeFileSync(f, `${JSON.stringify(v, null, 2)}\n`);
 const step = (text) => console.log(`\n> ${text}`);
@@ -80,13 +96,21 @@ function tryRun(cmd, args, cwd) {
   }
 }
 
-export function createSite(target, { install = true, git = true, name = slug(path.basename(target)) } = {}) {
+export function createSite(target, { install = true, git = true, npm = false, name = slug(path.basename(target)) } = {}) {
   step(`Copying the starter to ${target}`);
   copyStarter(target);
-  step('Packing this checkout of Markstage into vendor/ (the packages are not on npm yet)');
-  const deps = packVendor(target);
   const file = path.join(target, 'package.json');
-  writeJson(file, withVendor(readJson(file), deps, { name }));
+  let deps;
+  if (npm) {
+    const version = readJson(path.join(REPO, 'packages/astro/package.json')).version;
+    step(`Taking @markstage/astro ${version} from npm`);
+    deps = { '@markstage/astro': version };
+    writeJson(file, withNpm(readJson(file), version, { name }));
+  } else {
+    step('Packing this checkout of Markstage into vendor/');
+    deps = packVendor(target);
+    writeJson(file, withVendor(readJson(file), deps, { name }));
+  }
   if (install) {
     step('Installing (npm install)');
     if (!tryRun(NPM, ['install', '--no-audit', '--no-fund'], target)) throw new Error(`npm install failed in ${target}. Fix the error above, then run it there again.`);
@@ -118,14 +142,18 @@ export function updateSite(site, { install = true } = {}) {
 function main(argv) {
   const flags = new Set(argv.filter((a) => a.startsWith('--')));
   const [folder] = argv.filter((a) => !a.startsWith('--'));
-  const known = new Set(['--update', '--no-install', '--no-git']);
+  const known = new Set(['--update', '--no-install', '--no-git', '--npm']);
   const unknown = [...flags].filter((f) => !known.has(f));
   if (!folder || unknown.length) {
-    console.error('Usage: node scripts/create-site.mjs <new folder> [--no-install] [--no-git]\n       node scripts/create-site.mjs --update <site folder> [--no-install]');
+    console.error('Usage: node scripts/create-site.mjs <new folder> [--npm] [--no-install] [--no-git]\n       node scripts/create-site.mjs --update <site folder> [--no-install]');
     return 2;
   }
   const target = path.resolve(process.env.INIT_CWD ?? process.cwd(), folder);
-  const opts = { install: !flags.has('--no-install'), git: !flags.has('--no-git') };
+  const opts = { install: !flags.has('--no-install'), git: !flags.has('--no-git'), npm: flags.has('--npm') };
+  if (flags.has('--update') && opts.npm) {
+    console.error('--update puts tarballs in vendor/. For a site on npm, run npm install @markstage/astro@<version> there.');
+    return 2;
+  }
   try {
     if (flags.has('--update')) updateSite(target, opts);
     else createSite(target, opts);

@@ -2,14 +2,28 @@
   "name": "@markstage/astro",
   "version": "0.4.0",
   "description": "Markstage for Astro: the editor in `astro dev` (no sign-in, 127.0.0.1 only), its production build for a Markstage server (markstage build-editor) and the site config loader.",
+  "keywords": [
+    "markstage",
+    "astro",
+    "astro-integration",
+    "withastro",
+    "cms",
+    "markdown",
+    "mdx",
+    "editor",
+    "git-based-cms"
+  ],
+  "homepage": "https://github.com/spcaeo/markstage/tree/main/packages/astro#readme",
+  "bugs": {
+    "url": "https://github.com/spcaeo/markstage/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spcaeo/markstage.git",
+    "directory": "packages/astro"
+  },
   "license": "Elastic-2.0",
-  "engines": {
-    "node": ">=22.13"
-  },
   "type": "module",
-  "bin": {
-    "markstage": "./bin/markstage.mjs"
-  },
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
@@ -33,6 +47,21 @@
       "default": "./src/topics.mjs"
     },
     "./page.astro": "./src/page.astro"
+  },
+  "bin": {
+    "markstage": "bin/markstage.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "test": "node --test \"test/**/*.test.mjs\""

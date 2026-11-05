@@ -6,7 +6,8 @@ change how things work.
 
 ## Start a new site
 
-You need **Node.js 22.13 or newer** and **git**. Three commands:
+You need **Node.js 22.13 or newer** and **git**; the starter's Astro 7.4 itself needs Node.js 22.23.4 or newer on
+the 22 line (any Node 24 is fine). Three commands:
 
 ```sh
 git clone https://github.com/spcaeo/markstage.git
@@ -23,9 +24,21 @@ Open **http://127.0.0.1:18237/markstage/** and write. The blog itself is at http
 clone, `npm run create-site -- ../my-blog` does the same.
 
 **Why a clone, and `vendor/`?** The `@markstage/*` packages are not on npm yet. Until they are, the new site takes
-them from tarballs in its own `vendor/` folder (about 1 MB), so it installs on its own, on any machine and in the
-Docker image, with no path back to the clone. Once the packages are on npm, the starter will install them from
-there and `vendor/` goes away. There is no one-command `npm create` yet for the same reason.
+them from tarballs in its own `vendor/` folder (under 1 MB), so it installs on its own, on any machine and in the
+Docker image, with no path back to the clone. There is no one-command `npm create` yet: the starter's files come
+from the clone.
+
+**From npm instead: `--npm`.** The packages are on npm from 0.5.0. With that release out, add `--npm`:
+
+```sh
+node markstage/scripts/create-site.mjs my-blog --npm
+```
+
+The site then takes `@markstage/astro` from npm at the clone's version (exactly that version: the four packages
+move together), with no `vendor/` and no overrides, and updates like any npm package. `vendor/` stays the default
+for now, because it also works for a clone between releases, where the version on npm is older than the code.
+Before 0.5.0 is published, `--npm` fails at `npm install` (the packages are not there yet). How the packages are
+made and checked before a publish: [PUBLISHING.md](PUBLISHING.md) "npm".
 
 To try the starter without making a site, run it inside the clone: `npm install`, then `npm run dev -w
 examples/starter`.
@@ -92,11 +105,17 @@ It packs the clone's packages into `my-blog/vendor/` again (the old tarballs rem
 Commit `vendor/`, `package.json` and `package-lock.json`. With the image, keep the site's packages at the image's
 version and delete the `node_modules` volume so the next start installs them.
 
+A site made with `--npm` updates from npm instead: `npm install @markstage/astro@<version>` in the site (and
+`@markstage/server` at the same version, if the site has it), then commit `package.json` and `package-lock.json`.
+
 ## How it is tested
 
 - `npm test -w examples/starter` (CI, every push): the starter builds with its live posts and the MDX guide and
   without the draft; with an edit button every page gains exactly one inline script; and in `astro dev` the editor
   page answers at `/markstage/`, the API lists the four posts and the guide, and the MDX guide opens for editing.
-- `npm run test:scripts` covers `create-site.mjs` (the copy, the tarballs, `--update`).
+- `npm run test:scripts` covers `create-site.mjs` (the copy, the tarballs, `--update`, `--npm`).
+- CI's npm install test (`npm run test:npm-install`) makes a site from the starter with the packages from their npm
+  tarballs, builds it, runs `astro dev` and the server, and saves a post in the editor ([PUBLISHING.md](PUBLISHING.md)
+  "npm").
 - CI's image job makes a real site with `create-site.mjs`, installed and committed, and runs the Docker image on it
   ([DOCKER.md](DOCKER.md), "How it is tested").

@@ -2,16 +2,45 @@
   "name": "@markstage/editor",
   "version": "0.4.0",
   "description": "Markstage editor: the browser client (TipTap 3, vanilla TypeScript) that edits content on the site's own design.",
-  "license": "Elastic-2.0",
-  "engines": {
-    "node": ">=22.13"
+  "keywords": [
+    "markstage",
+    "editor",
+    "tiptap",
+    "prosemirror",
+    "markdown",
+    "mdx",
+    "cms",
+    "wysiwyg"
+  ],
+  "homepage": "https://github.com/spcaeo/markstage/tree/main/packages/editor#readme",
+  "bugs": {
+    "url": "https://github.com/spcaeo/markstage/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spcaeo/markstage.git",
+    "directory": "packages/editor"
+  },
+  "license": "Elastic-2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./pack": "./src/pack.ts",
     "./fidelity": "./scripts/canvas-fidelity.mjs",
     "./styles/*": "./src/styles/*"
+  },
+  "files": [
+    "src/",
+    "scripts/canvas-fidelity.mjs",
+    "scripts/canvas-contrast.mjs",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build:agent": "node scripts/build-agent.mjs",

@@ -574,6 +574,11 @@ was written since), stop the server first and add `--with-data`; the current dat
 **Docker:** pull the new image tag, `docker compose up -d`; to go back, set the previous tag. Back up first
 (`markstage-server backup`, below).
 
+**Installed from npm** (`npm install @markstage/server` in the site; the packages are on npm from 0.5.0): back up,
+then `npm install @markstage/astro@X.Y.Z @markstage/server@X.Y.Z` (always the same version for both), build the
+editor again (`npx markstage build-editor --out …`) and restart. To go back, install the previous version the same
+way. `markstage-server update` is for a git checkout only.
+
 ## Backups
 
 What must survive a lost disk: the data dir (users, sessions, audit, autosaves, media records, protected-page hashes,

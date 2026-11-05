@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
 import { REPO_ROOT } from './build-site.mjs';
-import { NEXT, VERSION, nextRelease } from './roadmap.mjs';
+import { NEXT, VERSION, nextRelease, readRoadmap } from './roadmap.mjs';
 
 const parts = (v) => v.split('.').map(Number);
 const notAfter = (a, b) => {
@@ -21,6 +21,18 @@ test('the next release is the minor after package.json', () => {
   assert.equal(nextRelease('1.9.0'), '1.10.0');
   assert.throws(() => nextRelease('latest'));
   assert.equal(NEXT, nextRelease(VERSION));
+});
+
+test('"on npm from x.y.z" names the next release while the npm item is being built, and a released one after', () => {
+  const item = readRoadmap(path.join(REPO_ROOT, 'site-content'), (b) => b).items.find((i) => i.id === 'npm');
+  assert.ok(item, 'site-content/roadmap.md has the npm item');
+  const files = ['README.md', 'docs/STARTER.md', 'scripts/create-site.mjs'];
+  const found = files.flatMap((f) => [...fs.readFileSync(path.join(REPO_ROOT, f), 'utf8').matchAll(/on npm from v?(\d+\.\d+\.\d+)/gi)].map((m) => ({ f, v: m[1] })));
+  assert.ok(found.some((x) => x.f === 'README.md'), 'README says from which release the packages are on npm');
+  for (const { f, v } of found) {
+    if (item.status === 'shipped') assert.ok(notAfter(v, VERSION), `${f}: "on npm from ${v}", but ${VERSION} is the newest release`);
+    else assert.equal(v, NEXT, `${f}: "on npm from ${v}" while the npm item is ${item.status}; the next release is ${NEXT}`);
+  }
 });
 
 test('no text promises a version that is already out', () => {

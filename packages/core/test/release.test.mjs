@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { releaseInfo, releaseLine, releaseTime } from '../src/release.mjs';
@@ -32,4 +33,13 @@ test('the Docker build passes the facts in the environment; a checkout reads git
   assert.ok(count >= 1);
   assert.equal(g.build, count, 'the commit count');
   assert.match(g.line, /^v\d+\.\d+\.\d+ · build \d+ · \w{3} \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M UTC$/);
+});
+
+test("an install from npm: the folder holds no Markstage package.json, so the version is the package's own", () => {
+  const own = JSON.parse(fs.readFileSync(path.join(repo, 'packages/core/package.json'), 'utf8')).version;
+  // as @markstage/astro and @markstage/server pass a site's node_modules: no git, no Markstage package.json in it
+  const r = releaseInfo({ dir: path.join(repo, 'packages/core/src'), env: { MARKSTAGE_TIME_ZONE: 'UTC' } });
+  assert.equal(r.version, own);
+  assert.notEqual(r.version, '0.0.0');
+  assert.equal(r.line, `v${own}`);
 });

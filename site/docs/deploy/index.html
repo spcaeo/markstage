@@ -495,6 +495,10 @@ older version runs on the newer database. To also put the database back as it wa
 was written since), stop the server first and add <code>--with-data</code>; the current database is copied aside before.</p>
 <p><strong>Docker:</strong> pull the new image tag, <code>docker compose up -d</code>; to go back, set the previous tag. Back up first
 (<code>markstage-server backup</code>, below).</p>
+<p><strong>Installed from npm</strong> (<code>npm install @markstage/server</code> in the site; the packages are on npm from 0.5.0): back up,
+then <code>npm install @markstage/astro@X.Y.Z @markstage/server@X.Y.Z</code> (always the same version for both), build the
+editor again (<code>npx markstage build-editor --out …</code>) and restart. To go back, install the previous version the same
+way. <code>markstage-server update</code> is for a git checkout only.</p>
 <h2 id="backups">Backups</h2>
 <p>What must survive a lost disk: the data dir (users, sessions, audit, autosaves, media records, protected-page hashes,
 <code>config.json</code>) and the site repo (content, uploads, history). Markstage backs up both on a schedule:</p>

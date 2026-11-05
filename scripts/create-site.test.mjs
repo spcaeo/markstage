@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { after, test } from 'node:test';
-import { REPO, STARTER, copyStarter, createSite, slug, updateSite, withVendor } from './create-site.mjs';
+import { REPO, STARTER, copyStarter, createSite, slug, updateSite, withNpm, withVendor } from './create-site.mjs';
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ms-create-site-'));
 after(() => fs.rmSync(tmp, { recursive: true, force: true }));
@@ -24,6 +24,26 @@ test('withVendor: the three packages from vendor/, overrides for the two the int
   assert.equal(pkg.name, 'my-blog');
   assert.deepEqual(pkg.dependencies, { ...deps, astro: '7.4.4' });
   assert.deepEqual(pkg.overrides, { '@markstage/core': 'file:vendor/c.tgz', '@markstage/editor': 'file:vendor/e.tgz' });
+});
+
+test('withNpm: @markstage/astro from npm at exactly this version, no tarballs and no overrides of ours', () => {
+  const vendored = withVendor({ name: 'markstage-starter', dependencies: { '@markstage/astro': '0.3.0', astro: '7.4.4' }, overrides: { sharp: '0.35.5' } }, { '@markstage/astro': 'file:vendor/a.tgz', '@markstage/core': 'file:vendor/c.tgz', '@markstage/editor': 'file:vendor/e.tgz' });
+  const pkg = withNpm(vendored, '0.5.0', { name: 'my-blog' });
+  assert.equal(pkg.name, 'my-blog');
+  assert.deepEqual(pkg.dependencies, { '@markstage/astro': '0.5.0', astro: '7.4.4' });
+  assert.deepEqual(pkg.overrides, { sharp: '0.35.5' });
+  assert.equal(withNpm({ dependencies: {} }, '0.5.0').overrides, undefined);
+});
+
+test('createSite --npm (no install, no git): no vendor/, @markstage/astro at the packages\' version', () => {
+  const site = path.join(tmp, 'from-npm');
+  const { deps } = createSite(site, { npm: true, install: false, git: false });
+  const pkg = JSON.parse(fs.readFileSync(path.join(site, 'package.json'), 'utf8'));
+  assert.deepEqual(deps, { '@markstage/astro': version });
+  assert.equal(pkg.dependencies['@markstage/astro'], version);
+  assert.deepEqual(Object.keys(pkg.dependencies).filter((k) => k.startsWith('@markstage/')), ['@markstage/astro']);
+  assert.equal(pkg.overrides, undefined);
+  assert.ok(!fs.existsSync(path.join(site, 'vendor')));
 });
 
 test('copyStarter leaves out installs and build output, and refuses a folder that is not empty', () => {
