@@ -45,10 +45,12 @@ next to the code, and where staging, roles and single sign-on should come includ
 ## Moving from Ghost to Markstage
 
 Ghost exports posts, pages, tags, tiers and settings as one JSON file (Settings, then Advanced, then
-Import/Export), and members as a CSV file. Markstage has no Ghost importer yet; one is coming in 0.4.0 ([roadmap](/roadmap/#import)). Today its import API takes entries and
-media as JSON: a dry run first, then the run, as drafts, and running it again only updates what changed (it
-remembers each source id, such as the Ghost post id). Turn each Ghost post into the import's shape, with its body
-as Markdown, and the pictures come in through the same import.
+Import/Export), and members as a CSV file. Markstage imports that JSON file, or reads the
+Content API, new after 0.3.0: posts and pages written in Lexical or Mobiledoc become Markdown with their cards,
+feature images, tags, authors and meta titles come along, and the old addresses are sent on to the new pages. A dry
+run shows the whole plan first, everything arrives as a draft, and running it again only updates what changed (it
+remembers each Ghost post id). Cards it cannot convert, such as a signup form, are marked in the text for review.
+Members, tiers and newsletters stay with Ghost. It is tested on sample exports, not yet on many real sites.
 
 Writers then find familiar ideas: author profiles with co-authors, drafts, scheduled publishing, a check before a
 post goes live, roles with the same names, a media library and revisions. Newsletters and paid memberships have no

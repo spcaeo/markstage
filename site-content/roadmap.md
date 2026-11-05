@@ -14,8 +14,8 @@ items:
   - id: import
     title: Import from WordPress, Ghost and Prismic
     what: Bring posts, pages, media, authors and redirects across from WordPress, Ghost or Prismic.
-    status: in-progress
-    rows: [WordPress import]
+    status: shipped
+    rows: []
   - id: server-image
     title: A ready server image
     what: A Docker image of the Markstage server, built and tested by CI.

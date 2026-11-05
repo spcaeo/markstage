@@ -16,50 +16,10 @@ import { HttpError, badRequest, forbidden, newId, nowIso } from '../util.mjs';
 import { imagesOf, parseHtml, toMarkdown } from './html.mjs';
 import { nameOfUrl } from '../media/import.mjs';
 import { IMPORTED } from './url-import.mjs';
+import { closeOf, field } from '../import/convert/xml.mjs';
 
 const MAX_BLOCKS = 500;
 const MAX_FETCH = 50;
-
-/** Where `close` is, from `from`, not counting one inside a CDATA section; -1 when absent. Linear: indexOf only. */
-function closeOf(xml, close, from) {
-  let at = from;
-  for (;;) {
-    const c = xml.indexOf(close, at);
-    const d = xml.indexOf('<![CDATA[', at);
-    if (c < 0) return -1;
-    if (d < 0 || c < d) return c;
-    const e = xml.indexOf(']]>', d + 9);
-    if (e < 0) return -1;
-    at = e + 3;
-  }
-}
-
-const unescapeXml = (t) => t.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&');
-
-/** The text inside a WXR element (the first one), its CDATA sections joined; null when absent. */
-const field = (xml, tag) => {
-  let open = -1;
-  for (let at = 0; ; at = open + 1) {
-    open = xml.indexOf(`<${tag}`, at);
-    if (open < 0) return null;
-    const next = xml[open + tag.length + 1];
-    if (next === '>' || next === ' ' || next === '\t' || next === '\n') break;
-  }
-  const head = xml.indexOf('>', open);
-  if (head < 0) return null;
-  const end = closeOf(xml, `</${tag}>`, head + 1);
-  if (end < 0) return null;
-  const raw = xml.slice(head + 1, end);
-  if (!raw.includes('<![CDATA[')) return unescapeXml(raw.trim());
-  let out = '';
-  for (let at = raw.indexOf('<![CDATA['); at >= 0; at = raw.indexOf('<![CDATA[', at)) {
-    const e = raw.indexOf(']]>', at + 9);
-    if (e < 0) break;
-    out += raw.slice(at + 9, e);
-    at = e + 3;
-  }
-  return out;
-};
 
 /** The reusable blocks of a WXR export: [{id, title, status, html}]. Read with indexOf only (no backtracking). */
 export function blocksOfWxr(xml) {

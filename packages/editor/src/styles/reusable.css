@@ -46,9 +46,7 @@
 }
 .ms-lib__pickind {
   color: var(--ms-accent-deep);
-  font: 600 12px var(--ms-sans);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font: 600 14px var(--ms-sans);
 }
 .ms-lib__txt {
   display: grid;

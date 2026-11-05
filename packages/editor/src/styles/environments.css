@@ -96,10 +96,8 @@ a.ms-envbadge:hover {
   border-radius: 999px;
   background: color-mix(in srgb, var(--ms-env-ribbon, var(--ms-accent)) 14%, var(--ms-paper));
   color: var(--ms-env-ribbon, var(--ms-accent-deep));
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
 }
 .ms-env-pill.is-production {
   background: var(--ms-ok-tint);

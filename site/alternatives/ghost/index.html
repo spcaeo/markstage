@@ -166,18 +166,18 @@
           <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
           <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">One docker run with the server image, Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-docker" aria-label="Source 9">9</a></sup> <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 8">8</a></sup></span></dd></div>
           <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
-          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 19">19</a></sup></span></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 20">20</a></sup></span></dd></div>
         </dl>
       </li>
       <li class="pcard" data-p="ghost" data-k="publishing lead">
         <div class="pcard-top"><span class="tile publishing" aria-hidden="true">Gh</span><div><p class="pcard-name">Ghost</p><p class="pcard-kind">Publishing platform</p></div></div>
         <p class="pcard-what">A publishing platform with newsletters, memberships and paid subscriptions built in; headless with Astro.</p>
         <dl class="facts">
-          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Headless: written in Ghost's own editor <sup class="fn"><a href="../../compare/full/#fn-go-feat" aria-label="Source 96">96</a></sup> <sup class="fn"><a href="../../compare/full/#fn-go-astro" aria-label="Source 102">102</a></sup></span></dd></div>
-          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">MySQL database, read by the Content API <sup class="fn"><a href="../../compare/full/#fn-go-ubuntu" aria-label="Source 99">99</a></sup> <sup class="fn"><a href="../../compare/full/#fn-go-content" aria-label="Source 100">100</a></sup></span></dd></div>
-          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Ubuntu with Ghost-CLI, or Docker (preview) <sup class="fn"><a href="../../compare/full/#fn-go-install" aria-label="Source 98">98</a></sup></span></dd></div>
-          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free software; Ghost(Pro) Starter $18/mo ($15 yearly)</span> <sup class="fn"><a href="../../compare/full/#fn-go-price" aria-label="Source 95">95</a></sup></dd></div>
-          <div class="fact"><dt>Licence</dt><dd><span class="val">MIT</span> <sup class="fn"><a href="../../compare/full/#fn-go-gh" aria-label="Source 94">94</a></sup></dd></div>
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Headless: written in Ghost's own editor <sup class="fn"><a href="../../compare/full/#fn-go-feat" aria-label="Source 97">97</a></sup> <sup class="fn"><a href="../../compare/full/#fn-go-astro" aria-label="Source 103">103</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">MySQL database, read by the Content API <sup class="fn"><a href="../../compare/full/#fn-go-ubuntu" aria-label="Source 100">100</a></sup> <sup class="fn"><a href="../../compare/full/#fn-go-content" aria-label="Source 101">101</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">Ubuntu with Ghost-CLI, or Docker (preview) <sup class="fn"><a href="../../compare/full/#fn-go-install" aria-label="Source 99">99</a></sup></span></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free software; Ghost(Pro) Starter $18/mo ($15 yearly)</span> <sup class="fn"><a href="../../compare/full/#fn-go-price" aria-label="Source 96">96</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">MIT</span> <sup class="fn"><a href="../../compare/full/#fn-go-gh" aria-label="Source 95">95</a></sup></dd></div>
         </dl>
       </li>
       </ul>
@@ -199,10 +199,12 @@ next to the code, and where staging, roles and single sign-on should come includ
 <ul><li><strong>Newsletters, memberships and paid subscriptions</strong> in the same tool as the posts.</li><li><strong>A hosted service.</strong> Ghost(Pro) runs it for you; Markstage needs a server you look after.</li><li><strong>Years of use and a large community,</strong> with a theme marketplace and many integrations.</li><li><strong>A permissive licence.</strong> Ghost's code is under the MIT licence.</li></ul>
 <h2 id="moving-from-ghost-to-markstage">Moving from Ghost to Markstage</h2>
 <p>Ghost exports posts, pages, tags, tiers and settings as one JSON file (Settings, then Advanced, then
-Import/Export), and members as a CSV file. Markstage has no Ghost importer yet; one is coming in 0.4.0 (<a href="../../roadmap/#import">roadmap</a>). Today its import API takes entries and
-media as JSON: a dry run first, then the run, as drafts, and running it again only updates what changed (it
-remembers each source id, such as the Ghost post id). Turn each Ghost post into the import's shape, with its body
-as Markdown, and the pictures come in through the same import.</p>
+Import/Export), and members as a CSV file. Markstage imports that JSON file, or reads the
+Content API, new after 0.3.0: posts and pages written in Lexical or Mobiledoc become Markdown with their cards,
+feature images, tags, authors and meta titles come along, and the old addresses are sent on to the new pages. A dry
+run shows the whole plan first, everything arrives as a draft, and running it again only updates what changed (it
+remembers each Ghost post id). Cards it cannot convert, such as a signup form, are marked in the text for review.
+Members, tiers and newsletters stay with Ghost. It is tested on sample exports, not yet on many real sites.</p>
 <p>Writers then find familiar ideas: author profiles with co-authors, drafts, scheduled publishing, a check before a
 post goes live, roles with the same names, a media library and revisions. Newsletters and paid memberships have no
 Markstage equivalent; keep Ghost or another tool for those.</p>

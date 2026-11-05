@@ -75,6 +75,14 @@ settings are kept exactly as written, and components show as cards on the canvas
 them. A save changes only what the writer changed. A file Markstage cannot read opens read-only in Source mode,
 with a plain message. TinaCMS, Keystatic and Outstatic have edited MDX for longer.
 
+## Can I move a WordPress, Ghost or Prismic site to Markstage?
+
+Yes, new after 0.3.0. Import a site (More tools in the editor) reads a WordPress export or REST API, a Ghost export
+or Content API, or a Prismic repository, and brings over posts, pages, images, authors, categories and tags, search
+titles and descriptions, and the old addresses as redirects. You see the whole plan before anything is written, and
+everything arrives as drafts. Blocks, cards or slices it cannot convert are marked in the text and listed for review.
+The WordPress importer is proven on a real 148-post site's export; Ghost and Prismic are tested on sample exports so far.
+
 ## Can people without a GitHub account edit?
 
 Yes. People sign in to Markstage with an email and password, with optional two-step sign-in, or through your

@@ -13,9 +13,7 @@
 .ms-adm-revgroup {
   margin: 14px 10px 4px;
   color: var(--ms-muted);
-  font: 600 11px/1.4 var(--ms-sans);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font: 600 13px/1.4 var(--ms-sans);
 }
 
 /* a two- or three-way switch (side by side / text; now / later) */
@@ -126,13 +124,7 @@ ins.ms-adm-sbs__w {
   gap: 8px;
   margin: 0 0 6px;
   color: var(--ms-muted);
-  font: 600 11px/1.4 var(--ms-sans);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.ms-adm-sbs__tag .ms-btn {
-  text-transform: none;
-  letter-spacing: 0;
+  font: 600 12.5px/1.4 var(--ms-sans);
 }
 .ms-adm-sbs__fold {
   grid-column: 1 / -1;

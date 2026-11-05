@@ -17,7 +17,7 @@ import { authorsConfig, authoredEntries, createAuthorFiles, postsOf } from './fi
 
 export async function createAuthors(app) {
   const loaded = await authorsConfig(app.config);
-  if (!loaded) return { enabled: false, check: () => {}, routes: (router) => router.add('GET', '/authors', () => {
+  if (!loaded) return { enabled: false, check: () => {}, withPlanned: (planned, fn) => fn(), routes: (router) => router.add('GET', '/authors', () => {
     throw new HttpError(404, 'no-authors', 'This site keeps no author files (site config `authors`).');
   }) };
   const { core, acfg } = loaded;
@@ -208,5 +208,47 @@ export async function createAuthors(app) {
     });
   }
 
-  return { enabled: true, acfg, files, check, routes };
+  /**
+   * Run `fn` while the authors in `planned` (Map slug -> profile) count as the site's: an import's plan checks its
+   * entries against the authors its run will create first. Nothing is written.
+   */
+  async function withPlanned(planned, fn) {
+    const before = pending;
+    pending = new Map([...(before ?? []), ...planned]);
+    try {
+      return await fn();
+    } finally {
+      pending = before;
+    }
+  }
+
+  /**
+   * Many new authors in one commit (an import): [{slug, name, bio?, website?}], each checked as POST /authors checks
+   * one; one whose slug is taken is left out. {created: [slug], commit}. Editors and up.
+   */
+  async function createMany(ctx, list, message) {
+    needManage(ctx, 'add authors');
+    return repoLock.run(async () => {
+      const rels = [];
+      const created = [];
+      for (const a of list) {
+        if (files.exists(a.slug) || !core.AUTHOR_SLUG.test(a.slug)) continue;
+        const p = patchOf({ name: a.name, ...(a.bio ? { bio: a.bio } : {}), ...(a.website ? { website: a.website } : {}) }, true);
+        rels.push(files.write(a.slug, `${JSON.stringify(core.newAuthorData(acfg, a.slug, { ...p, archived: false }), null, 2)}\n`).rel);
+        created.push(a.slug);
+      }
+      if (!rels.length) return { created, commit: null };
+      let commit;
+      try {
+        commit = await git.commit(rels, message, authorOf(ctx.user));
+      } catch (e) {
+        for (const slug of created) files.remove(slug);
+        throw e;
+      }
+      for (const slug of created) audit.log(ctx, 'author.create', { target: `authors/${slug}`, detail: { commit, via: 'import' } });
+      return { created, commit };
+    });
+  }
+
+  return { enabled: true, acfg, core, files, check, routes, withPlanned, createMany, url: (slug) => core.authorUrl(acfg, slug) };
 }

@@ -48,7 +48,7 @@ export const WORDS = new Set([
   'Home', 'Create', 'Pages', 'Blog posts', 'Images & files', 'Site menus', 'Messages', 'Go live', 'Scheduled & history',
   'Site settings', 'Languages', 'People & access', 'Site check-up', 'Backups', 'Trash', 'More tools',
   'Moved addresses', 'Change many at once', 'Reusable sections', 'Page tree', 'Activity', 'Staging & live', 'Categories and tags',
-  'Authors', 'Links between pages', 'Topic map', 'Section gallery', 'Topics',
+  'Authors', 'Links between pages', 'Topic map', 'Section gallery', 'Topics', 'Import a site',
 ]);
 
 /** What a collection is called in the drawer: the pages "Pages", the one kind of writing "Blog posts", the rest its own label. */

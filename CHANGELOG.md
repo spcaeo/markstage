@@ -4,9 +4,25 @@ What changed in each Markstage release, in plain words. The newest is first. Ver
 [semantic versioning](https://semver.org); while Markstage is 0.x, a minor version may change how things work.
 docs/RELEASES.md says how a release is made.
 
-## Unreleased
+## 0.4.0 (4 November 2026)
+
+Everything the 0.3.0 roadmap listed for 0.4.0: MDX editing; imports from WordPress, Ghost and Prismic (the WordPress
+one proven on a real 148-post site's export); a ready server image and a starter site; a live demo in the browser;
+AI writing help, OpenAI-compatible and Ollama providers, and an MCP publish tool behind the publish rules. The site and
+the editor have a new look, and every label is in sentence case.
 
 ### Added
+
+- Import a site from WordPress, Ghost or Prismic in one step (More tools › Import a site, or
+  `markstage-server import`): posts and pages, images and files, authors, categories and tags, search titles and
+  descriptions, and every old address sent on to the new page. WordPress from its export file or REST API (with an
+  application password), Ghost from its export or Content API, Prismic from its API. Gutenberg, classic HTML,
+  Lexical, Mobiledoc and Prismic rich text become clean Markdown; a block, shortcode, card or slice that cannot be
+  converted is marked "Import note:" in the text and listed for review. A dry run shows the whole plan first ("142
+  posts, 18 pages, 1,204 images; 6 slugs already exist; 31 images need alt text; 4 blocks we could not convert");
+  the run is a background job, committed in batches by the person who ran it, and everything arrives as a draft.
+  Running it again changes nothing. Every request goes through the SSRF guard, and a password, key or token is
+  used for the one read and kept nowhere (docs/IMPORT.md).
 
 - A live demo at https://spcaeo.github.io/markstage/demo/: the real editor on the example blog, in the browser
   with no sign-up. A save runs the same Markdown writer as a server and shows the git diff it would commit; edits
@@ -51,6 +67,13 @@ docs/RELEASES.md says how a release is made.
   site's checks run first and a failed one refuses it; then the person's own publish route decides (their role now,
   the promotion rules, the publish rules, the version). Each publish is one commit named "published by an AI agent
   for <person>, via MCP: <token>", audited with `via: 'mcp'`, at most 5 an hour per token. docs/API-MCP.md.
+
+### Changed
+
+- The editor writes every label in sentence case, never in capitals: the drawer's groups ("Content", "Site & team"),
+  card headings like "New AI assistant token", list and palette headings, tags and chips. They keep their place with
+  size, weight and colour instead. A test (scripts/sentence-case.test.mjs) keeps capitals-only styling out of the
+  editor, the Astro package and the server.
 
 ### Fixed
 

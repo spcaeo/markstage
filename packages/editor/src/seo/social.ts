@@ -54,7 +54,7 @@ export function sharePreviews(c: ShareCard): HTMLElement {
       pic.append(img);
     } else pic.textContent = 'No image';
     const text = h('div', 'ms-seo-share__text');
-    if (s.id === 'wide') text.append(Object.assign(h('span', 'ms-seo-share__host'), { textContent: c.host.toUpperCase() }));
+    if (s.id === 'wide') text.append(Object.assign(h('span', 'ms-seo-share__host'), { textContent: c.host }));
     text.append(Object.assign(h('strong', 'ms-seo-share__title'), { textContent: cut(c.title, s.id === 'chat' ? 70 : 90) }));
     if (s.id === 'wide' && c.description) text.append(Object.assign(h('span', 'ms-seo-share__desc'), { textContent: cut(c.description, 110) }));
     if (s.id !== 'wide') text.append(Object.assign(h('span', 'ms-seo-share__host'), { textContent: c.host }));

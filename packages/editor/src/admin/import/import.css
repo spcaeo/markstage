@@ -1,0 +1,85 @@
+/* The Import screen (admin/import/): the three sources, the plan's sentence, the mapping and the review list. */
+.ms-imp-sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.ms-imp-source {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid var(--ms-line);
+  border-radius: 12px;
+  background: var(--ms-paper);
+  color: inherit;
+  text-decoration: none;
+}
+.ms-imp-source strong {
+  font-size: 15px;
+}
+.ms-imp-source span {
+  color: var(--ms-muted);
+  font-size: 13px;
+}
+.ms-imp-source:hover {
+  border-color: var(--ms-accent);
+}
+.ms-imp-source:focus-visible {
+  outline: 2px solid var(--ms-accent);
+  outline-offset: 2px;
+}
+.ms-imp-sentence {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ms-imp-lines {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.ms-imp-mapping {
+  max-width: none;
+}
+.ms-imp-fields summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.ms-imp-keys {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+.ms-imp-key {
+  display: grid;
+  gap: 4px;
+  font-size: 12.5px;
+}
+.ms-imp-review {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-imp-review li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+.ms-imp-review__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* the owner reads sentence case more easily than capitals: the import screens' section headings are not shouted */
+.ms-imp .ms-adm-h3 {
+  color: var(--ms-text);
+  font-size: 14px;
+  letter-spacing: normal;
+  text-transform: none;
+}

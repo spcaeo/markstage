@@ -8,10 +8,10 @@ site. The threat model, every control and the test that proves it are in [docs/S
 <!-- supported-versions:start (written by scripts/release.mjs from package.json; do not edit by hand) -->
 | Version | Security fixes |
 | --- | --- |
-| 0.3.x | Yes |
-| older than 0.3 | No: please update |
+| 0.4.x | Yes |
+| older than 0.4 | No: please update |
 
-Fixes go into the newest 0.3.x release (and `main`). When a newer minor version
+Fixes go into the newest 0.4.x release (and `main`). When a newer minor version
 comes out, this table says how long the one before it still gets fixes. `markstage-server version` says which one
 you run.
 <!-- supported-versions:end -->

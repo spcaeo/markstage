@@ -39,14 +39,19 @@ pre-release.
 
 ## Moving from WordPress to Markstage
 
-Markstage has importers for the parts of a WordPress site that are hardest to move (a fuller WordPress import of
-posts, pages, media, authors and redirects is coming in 0.4.0, [roadmap](/roadmap/#import)):
+Markstage imports a WordPress site, new after 0.3.0:
 
+- **The whole site**, from its export file (`.xml`) or its REST API with an application password: posts and pages
+  (Gutenberg or classic) as Markdown, their images and PDFs, authors, categories and tags, Yoast or Rank Math search
+  titles and descriptions, and every old address (permalinks, `?p=`, attachment pages, uploads) sent on to the new
+  page. A dry run shows the whole plan first, everything arrives as a draft, and blocks or shortcodes it cannot
+  convert are marked in the text for review (docs/IMPORT.md in the repository). It is proven on a real
+  148-post site's export; SVG pictures stay at their old address, so save them as PNG first.
 - **Reusable blocks** (patterns) come in from a WordPress export (`.xml`) or a database dump (`.sql` or `.sql.gz`)
   as shared sections in the Library, with their Gutenberg HTML read into Markdown and the site's blocks.
 - **Old contact form messages** come into the Inbox with `markstage-server forms import-wordpress`.
-- **Posts, pages and media** come in through the import API from JSON: a dry run first, imported as drafts, and
-  idempotent on each source id (such as the WordPress post id).
+- **Anything else** comes in through the import API from JSON: a dry run first, imported as drafts, and
+  idempotent on each source id.
 
 Writers then find familiar ideas: drafts, scheduled publishing, roles with WordPress's names, a media library,
 trash, revisions, password-protected pages and "Additional CSS".

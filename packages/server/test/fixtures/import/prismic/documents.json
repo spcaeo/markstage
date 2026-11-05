@@ -1,0 +1,287 @@
+{
+ "page": 1,
+ "results_per_page": 100,
+ "results_size": 2,
+ "total_results_size": 2,
+ "total_pages": 1,
+ "next_page": null,
+ "prev_page": null,
+ "results": [
+  {
+   "id": "ZkPost1AAACMA001",
+   "uid": "harbour-tour",
+   "url": "/blog/harbour-tour",
+   "type": "blog_post",
+   "href": "https://example-repo.cdn.prismic.io/api/v2/documents/search?ref=ZkM1aBIAACMAsample&q=x",
+   "tags": [
+    "harbours"
+   ],
+   "first_publication_date": "2024-05-02T09:00:00+0000",
+   "last_publication_date": "2024-05-04T09:00:00+0000",
+   "slugs": [
+    "harbour-tour"
+   ],
+   "linked_documents": [],
+   "lang": "en-us",
+   "alternate_languages": [],
+   "data": {
+    "title": [
+     {
+      "type": "heading1",
+      "text": "A harbour tour",
+      "spans": []
+     }
+    ],
+    "excerpt": [
+     {
+      "type": "paragraph",
+      "text": "A walk along the water.",
+      "spans": [],
+      "direction": "ltr"
+     }
+    ],
+    "featured_image": {
+     "dimensions": {
+      "width": 800,
+      "height": 400
+     },
+     "alt": "The harbour at noon",
+     "copyright": null,
+     "url": "https://images.prismic.io/example-repo/harbour.png?auto=format,compress&rect=0,0,800,400&w=800&h=400",
+     "id": "harbour",
+     "edit": {
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+      "background": "transparent"
+     }
+    },
+    "author": "Dana Example",
+    "meta_title": "Harbour tour",
+    "meta_description": "A walk along the harbour, with pictures.",
+    "body": [
+     {
+      "type": "paragraph",
+      "text": "Start at the pier and read about us.",
+      "spans": [
+       {
+        "start": 0,
+        "end": 5,
+        "type": "strong"
+       },
+       {
+        "start": 27,
+        "end": 35,
+        "type": "hyperlink",
+        "data": {
+         "link_type": "Document",
+         "id": "ZkPage1AAACMA002",
+         "type": "page",
+         "uid": "about",
+         "lang": "en-us"
+        }
+       }
+      ],
+      "direction": "ltr"
+     },
+     {
+      "type": "heading2",
+      "text": "What you see",
+      "spans": []
+     },
+     {
+      "type": "list-item",
+      "text": "Boats",
+      "spans": []
+     },
+     {
+      "type": "list-item",
+      "text": "Cranes",
+      "spans": [
+       {
+        "start": 0,
+        "end": 6,
+        "type": "em"
+       }
+      ]
+     },
+     {
+      "type": "image",
+      "dimensions": {
+       "width": 800,
+       "height": 400
+      },
+      "alt": "",
+      "copyright": null,
+      "url": "https://images.prismic.io/example-repo/crane.png?auto=format,compress&rect=0,0,800,400&w=800&h=400",
+      "id": "crane",
+      "edit": {
+       "x": 0,
+       "y": 0,
+       "zoom": 1,
+       "background": "transparent"
+      }
+     },
+     {
+      "type": "paragraph",
+      "text": "More at the port authority.",
+      "spans": [
+       {
+        "start": 8,
+        "end": 26,
+        "type": "hyperlink",
+        "data": {
+         "link_type": "Web",
+         "url": "https://port.example.org/",
+         "target": "_blank"
+        }
+       }
+      ],
+      "direction": "ltr"
+     },
+     {
+      "type": "embed",
+      "text": "",
+      "spans": [],
+      "oembed": {
+       "type": "video",
+       "embed_url": "https://www.youtube.com/watch?v=port42",
+       "provider_name": "YouTube",
+       "html": "<iframe src=\"https://www.youtube.com/embed/port42\"></iframe>"
+      }
+     }
+    ],
+    "slices": [
+     {
+      "slice_type": "text_block",
+      "slice_label": null,
+      "variation": "default",
+      "version": "initial",
+      "id": "text_block$1",
+      "primary": {
+       "text": [
+        {
+         "type": "paragraph",
+         "text": "A slice with words.",
+         "spans": [],
+         "direction": "ltr"
+        }
+       ]
+      },
+      "items": []
+     },
+     {
+      "slice_type": "newsletter_signup",
+      "slice_label": null,
+      "variation": "compact",
+      "version": "initial",
+      "id": "newsletter_signup$2",
+      "primary": {
+       "list_id": "harbour-news"
+      },
+      "items": []
+     }
+    ]
+   }
+  },
+  {
+   "id": "ZkPage1AAACMA002",
+   "uid": "about",
+   "url": "/about",
+   "type": "page",
+   "tags": [],
+   "first_publication_date": "2024-01-01T09:00:00+0000",
+   "last_publication_date": "2024-01-02T09:00:00+0000",
+   "slugs": [
+    "about"
+   ],
+   "linked_documents": [],
+   "lang": "en-us",
+   "alternate_languages": [],
+   "data": {
+    "title": [
+     {
+      "type": "heading1",
+      "text": "About the harbour club",
+      "spans": []
+     }
+    ],
+    "meta_description": "Who runs the harbour club.",
+    "slices": [
+     {
+      "slice_type": "hero",
+      "variation": "default",
+      "version": "initial",
+      "id": "hero$1",
+      "primary": {
+       "heading": [
+        {
+         "type": "heading1",
+         "text": "We love boats",
+         "spans": []
+        }
+       ],
+       "image": {
+        "dimensions": {
+         "width": 800,
+         "height": 400
+        },
+        "alt": "The harbour at noon",
+        "copyright": null,
+        "url": "https://images.prismic.io/example-repo/harbour.png?auto=format,compress&rect=0,0,800,400&w=800&h=400",
+        "id": "harbour",
+        "edit": {
+         "x": 0,
+         "y": 0,
+         "zoom": 1,
+         "background": "transparent"
+        }
+       },
+       "text": [
+        {
+         "type": "paragraph",
+         "text": "Since 1990.",
+         "spans": [],
+         "direction": "ltr"
+        }
+       ]
+      },
+      "items": []
+     },
+     {
+      "slice_type": "text_block",
+      "variation": "default",
+      "version": "initial",
+      "id": "text_block$2",
+      "primary": {
+       "text": [
+        {
+         "type": "paragraph",
+         "text": "Back to the tour.",
+         "spans": [
+          {
+           "start": 8,
+           "end": 16,
+           "type": "hyperlink",
+           "data": {
+            "link_type": "Document",
+            "id": "ZkPost1AAACMA001",
+            "type": "blog_post",
+            "uid": "harbour-tour",
+            "lang": "en-us"
+           }
+          }
+         ],
+         "direction": "ltr"
+        }
+       ]
+      },
+      "items": []
+     }
+    ]
+   }
+  }
+ ],
+ "version": "sample",
+ "license": "All Rights Reserved"
+}

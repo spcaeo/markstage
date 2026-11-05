@@ -87,3 +87,41 @@ problem with one item is that item's (`result.entries[i].problem`); the rest go 
 `{create, update, unchanged, skip, problem}`. Audit: `import.plan` and `import.run` with the counts.
 
 Tests: `import.test.mjs`.
+
+## A whole site
+
+docs/IMPORT.md says what this brings over and how; these are its routes. A source is read once, by the plan, and
+kept with the run as a bundle (never a credential); the run is `POST import/:rid/run` and `GET import/:rid` as above.
+Editors and up.
+
+| Route | What |
+|---|---|
+| `POST import/site` (multipart) | An export: `file`, `source` (`wordpress` or `ghost`), `siteUrl` (Ghost: the old site's address), `mapping` (JSON, optional) -> `201 {run, plan}` |
+| `POST import/site` (JSON) | An API: `{source: 'wordpress', url, user?, password?}`, `{source: 'ghost', url, key}` or `{source: 'prismic', repo, token?, siteUrl?, routes?, fields?, endpoint?}`, each with `mapping?` -> `201 {run, plan}` |
+| `POST import/:rid/replan` | `{mapping}`: the same source planned again (by its maker, while it is planned) -> `201 {run, plan}`; the old run becomes `replaced` |
+
+`run.kind` is `site` and `run.product` the source. The plan (`plan`, also in `GET import/:rid`):
+
+| Key | What |
+|---|---|
+| `product`, `from`, `name`, `site` | the source (`wordpress`, `ghost`, `prismic`), `file` or `api`, the file's or API's name, the old site's address and title |
+| `mapping` | the mapping in full, defaults filled in (docs/IMPORT.md "The mapping") |
+| `collections` | the site's collections with each one's default keys, for a screen to offer |
+| `counts` | `{types, entries, media, authors, redirects, ids, collisions, needsAlt, notConverted, embeds, published, left, unusedMedia, other}` |
+| `items` | each post or page: `{sourceId, type, title, sourceStatus, collection, id, url, action, problem?, collision?, rules?, notes}` |
+| `media` | each picture or file: `{sourceId, url, action: fetch|reuse|skip, path?, problem?, alt}` (the first 2,000) |
+| `authors` | `{sourceId, slug, name, action: create|existing|none}` |
+| `redirects` | `[{from, to}]`, the paths for the site's redirects hook (the first 1,000) |
+| `review` | `[{kind, text, entry?, media?}]`: `alt`, `block`, `shortcode`, `card`, `slice`, `embed`, `html`, `image`, `link`, `file`, `collision`, `cover`, `seo`, `status`, `author` |
+| `hook`, `idsFile` | whether the site has a redirects hook; where the `?p=` / `?page_id=` / `?attachment_id=` links (and the paths, without a hook) are written |
+
+The run's job has the steps `media`, `authors`, `entries` and `redirects`. Its `result`: `{commits, entries, media,
+authors, redirects: {paths, ids, hook, file, commit}, review, counts}`; in `review` each `entry` is
+`{sourceId, collection, id, title}` and each `media` `{sourceId, id}` (the media library's id), to link to.
+
+Errors: `422` with `field` for a wrong source, address, key or mapping key (`types.post`, `fields.posts.excerpt`,
+`onCollision`…); `422 source-refused` when the source did not let us in (the credential is never repeated);
+`400 unsafe-url` for an address the guard refuses; `413 too-large` over 5,000 entries or files; `409 busy` while
+another upload is read.
+
+Tests: `import-wordpress.test.mjs`, `import-sources.test.mjs`, `import-cli.test.mjs`, `import-convert.test.mjs`.

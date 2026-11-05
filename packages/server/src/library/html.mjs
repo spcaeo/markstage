@@ -179,37 +179,50 @@ export function cleanHtml(node, base) {
 const mdEsc = (s) => s.replace(/\\/g, '\\\\').replace(/([*_`[\]<>])/g, '\\$1').replace(/^(\s*)([#>+-]|\d+\.)(\s)/, '$1\\$2$3');
 
 /**
- * A node as Markdown blocks (headings, paragraphs, lists, quotes, code, rules, tables, images). `src(url)` gives the
- * address an image is written with (its place in the site's media), or null to leave it out.
+ * A node as Markdown blocks (headings, paragraphs, lists, quotes, code, rules, tables, images). `src(url, node)` gives
+ * the address an image is written with (its place in the site's media), or null to leave it out; `link(url)` the
+ * address a link is written with (its new page), or null to keep the words alone.
  */
-export function toMarkdown(node, { base, src = (u) => u } = {}) {
+export function toMarkdown(node, { base, src = (u) => u, link = (u) => u } = {}) {
+  // bold inside bold (<strong><strong>x</strong></strong>, which editors leave behind) is still one **x**
+  const depth = { strong: 0, em: 0 };
+  const marked = (kind, mark, kids) => {
+    if (depth[kind]) return kids();
+    depth[kind]++;
+    try {
+      const t = kids().trim();
+      return t ? `${mark}${t}${mark}` : '';
+    } finally {
+      depth[kind]--;
+    }
+  };
   const inline = (n) => {
     if (n.text !== undefined) return mdEsc(n.text.replace(/\s+/g, ' '));
     if (DROP.has(n.tag)) return '';
     const kids = () => (n.children ?? []).map(inline).join('');
     switch (n.tag) {
       case 'strong':
-      case 'b': {
-        const t = kids().trim();
-        return t ? `**${t}**` : '';
-      }
+      case 'b':
+        return marked('strong', '**', kids);
       case 'em':
-      case 'i': {
-        const t = kids().trim();
-        return t ? `*${t}*` : '';
-      }
+      case 'i':
+        return marked('em', '*', kids);
       case 'code':
         return `\`${textOf(n).replace(/`/g, '')}\``;
       case 'br':
         return '  \n';
       case 'a': {
         const t = kids().trim();
-        const href = safeUrl(n.attrs.href, base);
+        // a place on the same page (#section) stays one: resolved against the old address it would leave the page
+        const own = String(n.attrs.href ?? '').trim();
+        if (/^#[^\s<>"'`]+$/.test(own)) return t ? `[${t}](${own.replace(/\)/g, '%29')})` : '';
+        const safe = safeUrl(n.attrs.href, base);
+        const href = safe && link(safe);
         return href && t ? `[${t}](${href.replace(/\)/g, '%29')})` : t;
       }
       case 'img': {
         const u = safeUrl(n.attrs.src, base);
-        const to = u && src(u);
+        const to = u && src(u, n);
         return to ? `![${mdEsc((n.attrs.alt ?? '').replace(/\s+/g, ' ').trim())}](${to})` : '';
       }
       default:
@@ -246,7 +259,7 @@ export function toMarkdown(node, { base, src = (u) => u } = {}) {
       return void blocks.push(`${fence}\n${code}\n${fence}`);
     }
     if (n.tag === 'blockquote') {
-      const inner = toMarkdown({ tag: 'div', attrs: {}, children: n.children ?? [] }, { base, src });
+      const inner = toMarkdown({ tag: 'div', attrs: {}, children: n.children ?? [] }, { base, src, link });
       return inner ? void blocks.push(inner.split('\n').map((l) => (l ? `> ${l}` : '>')).join('\n')) : undefined;
     }
     if (n.tag === 'img') return para(inline(n));

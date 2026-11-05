@@ -203,9 +203,8 @@
 }
 .ms-lh-level {
   color: var(--ms-muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: 12.5px;
+  font-weight: 600;
 }
 .ms-lh-page {
   font-weight: 600;
@@ -321,10 +320,8 @@
 .ms-tb-zone__title {
   margin: 0;
   color: var(--ms-muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 .ms-tb-zone__list {
   display: grid;

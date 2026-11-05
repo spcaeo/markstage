@@ -40,10 +40,8 @@
 }
 .ms-tr-field__tag {
   color: var(--ms-muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 .ms-tr-table td:first-child {
   min-width: 200px;

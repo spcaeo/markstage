@@ -200,7 +200,8 @@ export async function createMarkstage(config, deps = {}) {
   app.translations = createTranslations(app);
   app.translations.routes(api);
   // entries and media from another system's JSON: a plan, then its run (import/)
-  createImport(app, entries).routes(api);
+  app.imports = createImport(app, entries);
+  app.imports.routes(api);
   // webhooks: signed events to the site's own addresses, from the audit (webhooks/)
   app.webhooks = createWebhooks(app);
   app.webhooks.routes(api);

@@ -1,6 +1,6 @@
 {
   "name": "@markstage/astro",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Markstage for Astro: the editor in `astro dev` (no sign-in, 127.0.0.1 only), its production build for a Markstage server (markstage build-editor) and the site config loader.",
   "license": "Elastic-2.0",
   "engines": {
@@ -38,8 +38,8 @@
     "test": "node --test \"test/**/*.test.mjs\""
   },
   "dependencies": {
-    "@markstage/core": "0.3.0",
-    "@markstage/editor": "0.3.0",
+    "@markstage/core": "0.4.0",
+    "@markstage/editor": "0.4.0",
     "yaml": "^2.9.1"
   },
   "peerDependencies": {

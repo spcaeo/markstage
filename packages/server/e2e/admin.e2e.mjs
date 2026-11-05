@@ -213,8 +213,9 @@ describe('admin screens in a browser', { skip }, () => {
     await page.goto(`${BASE}/markstage/#/account`);
     // what the server runs, copyable: the release line (docs/RELEASES.md), and the same line in the footer
     await page.getByText(/^v\d+\.\d+\.\d+ · build \d+ · \w{3} \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M \S+ \([0-9a-f]{12}\)$/).waitFor();
-    // the screen's own footer (the drawer's foot carries the line too)
-    await page.locator('.ms-adm .ms-release').filter({ hasText: /^v\d+\.\d+\.\d+ · build \d+ · / }).waitFor();
+    // the footer line, once: the drawer's foot beside an open drawer, else the screen's own (import.e2e.mjs walks them)
+    await page.locator('.ms-release:visible').filter({ hasText: /^v\d+\.\d+\.\d+ · build \d+ · / }).waitFor();
+    assert.equal(await page.locator('.ms-release:visible').count(), 1);
     await page.getByRole('button', { name: 'Sign out' }).click();
     await page.waitForURL(/#\/sign-in/);
     await page.getByLabel('Email').fill(owner.email);

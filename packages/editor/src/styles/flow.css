@@ -485,8 +485,6 @@
   color: var(--fl-c);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 .ms-fl-goal__title {
   max-height: 36px;

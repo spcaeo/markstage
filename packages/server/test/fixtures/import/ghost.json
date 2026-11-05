@@ -1,0 +1,180 @@
+{
+ "db": [
+  {
+   "meta": {
+    "exported_on": 1715300000000,
+    "version": "5.82.0"
+   },
+   "data": {
+    "posts": [
+     {
+      "id": "6640a1",
+      "uuid": "u1",
+      "title": "Lexical post",
+      "slug": "lexical-post",
+      "lexical": "{\"root\": {\"type\": \"root\", \"version\": 1, \"children\": [{\"type\": \"paragraph\", \"version\": 1, \"children\": [{\"type\": \"text\", \"text\": \"Lexical is the editor now. \", \"format\": 0, \"version\": 1}, {\"type\": \"text\", \"text\": \"Bold\", \"format\": 1, \"version\": 1}, {\"type\": \"text\", \"text\": \" and \", \"format\": 0, \"version\": 1}, {\"type\": \"link\", \"url\": \"__GHOST_URL__/mobiledoc-post/\", \"version\": 1, \"children\": [{\"type\": \"text\", \"text\": \"back\", \"format\": 0, \"version\": 1}]}]}, {\"type\": \"heading\", \"tag\": \"h2\", \"version\": 1, \"children\": [{\"type\": \"text\", \"text\": \"More cards\", \"format\": 0, \"version\": 1}]}, {\"type\": \"image\", \"version\": 1, \"src\": \"__GHOST_URL__/content/images/2024/05/crane.png\", \"alt\": \"A crane\", \"caption\": \"Lifting\"}, {\"type\": \"callout\", \"version\": 1, \"calloutEmoji\": \"\\u26a0\\ufe0f\", \"calloutText\": \"<p>Mind the stairs.</p>\"}, {\"type\": \"codeblock\", \"version\": 1, \"code\": \"const box = 1;\", \"language\": \"js\"}, {\"type\": \"html\", \"version\": 1, \"html\": \"<div>From an HTML card</div>\"}, {\"type\": \"embed\", \"version\": 1, \"url\": \"https://vimeo.com/123\", \"html\": \"<iframe></iframe>\", \"embedType\": \"video\"}, {\"type\": \"bookmark\", \"version\": 1, \"url\": \"https://docs.example.org/move\", \"metadata\": {\"title\": \"Moving checklist\", \"description\": \"Every step.\"}}, {\"type\": \"signup\", \"version\": 1, \"header\": \"Join the list\"}, {\"type\": \"list\", \"listType\": \"number\", \"tag\": \"ol\", \"version\": 1, \"children\": [{\"type\": \"listitem\", \"version\": 1, \"children\": [{\"type\": \"text\", \"text\": \"first\", \"format\": 0, \"version\": 1}]}, {\"type\": \"listitem\", \"version\": 1, \"children\": [{\"type\": \"text\", \"text\": \"second\", \"format\": 2, \"version\": 1}]}]}]}}",
+      "mobiledoc": null,
+      "html": "<p>ignored</p>",
+      "feature_image": "__GHOST_URL__/content/images/2024/05/harbour.png",
+      "type": "post",
+      "status": "published",
+      "visibility": "public",
+      "created_at": "2024-05-01T09:00:00.000Z",
+      "updated_at": "2024-05-03T09:00:00.000Z",
+      "published_at": "2024-05-02T09:00:00.000Z",
+      "custom_excerpt": "Written in Lexical.",
+      "author_id": "1"
+     },
+     {
+      "id": "6640a2",
+      "uuid": "u2",
+      "title": "Mobiledoc post",
+      "slug": "mobiledoc-post",
+      "lexical": null,
+      "mobiledoc": "{\"version\": \"0.3.1\", \"ghostVersion\": \"4.0\", \"atoms\": [], \"markups\": [[\"strong\"], [\"a\", [\"href\", \"__GHOST_URL__/lexical-post/\"]], [\"em\"]], \"cards\": [[\"image\", {\"src\": \"__GHOST_URL__/content/images/2024/05/harbour.png\", \"alt\": \"\", \"caption\": \"The harbour at dawn\"}], [\"gallery\", {\"images\": [{\"fileName\": \"harbour.png\", \"src\": \"__GHOST_URL__/content/images/size/w600/2024/05/harbour.png\", \"width\": 600, \"height\": 400, \"alt\": \"Harbour\"}, {\"fileName\": \"crane.png\", \"src\": \"__GHOST_URL__/content/images/2024/05/crane.png\", \"width\": 600, \"height\": 400}]}], [\"bookmark\", {\"url\": \"https://docs.example.org/guide\", \"metadata\": {\"url\": \"https://docs.example.org/guide\", \"title\": \"A packing guide\", \"description\": \"How to pack a house.\"}}], [\"callout\", {\"calloutEmoji\": \"\\ud83d\\udca1\", \"calloutText\": \"Label every box.\", \"backgroundColor\": \"grey\"}], [\"embed\", {\"url\": \"https://www.youtube.com/watch?v=xyz789\", \"html\": \"<iframe src=\\\"https://www.youtube.com/embed/xyz789\\\"></iframe>\", \"type\": \"video\"}], [\"code\", {\"code\": \"npm run move\\n\", \"language\": \"bash\"}], [\"html\", {\"html\": \"<p>Custom <b>HTML</b></p><script>alert(1)</script>\"}], [\"markdown\", {\"markdown\": \"A **Markdown card** with a [link to the crane](__GHOST_URL__/content/images/2024/05/crane.png).\"}], [\"product\", {\"productTitle\": \"Moving kit\", \"productDescription\": \"Boxes and tape\"}]], \"sections\": [[1, \"p\", [[0, [], 0, \"Mobiledoc was the editor before Lexical. \"], [0, [0], 1, \"Bold\"], [0, [], 0, \" and \"], [0, [1], 1, \"a link\"], [0, [], 0, \".\"]]], [1, \"h2\", [[0, [], 0, \"Cards\"]]], [10, 0], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [3, \"ul\", [[[0, [], 0, \"one\"]], [[0, [2], 1, \"two\"]]]]]}",
+      "html": "<p>ignored</p>",
+      "feature_image": null,
+      "type": "post",
+      "status": "published",
+      "visibility": "members",
+      "created_at": "2024-04-01T09:00:00.000Z",
+      "updated_at": "2024-04-01T09:00:00.000Z",
+      "published_at": "2024-04-01T09:00:00.000Z",
+      "custom_excerpt": null,
+      "author_id": "2"
+     },
+     {
+      "id": "6640a3",
+      "uuid": "u3",
+      "title": "Draft in Ghost",
+      "slug": "draft-in-ghost",
+      "lexical": "{\"root\": {\"type\": \"root\", \"children\": [{\"type\": \"paragraph\", \"children\": [{\"type\": \"text\", \"text\": \"Not yet.\", \"format\": 0, \"version\": 1}]}]}}",
+      "mobiledoc": null,
+      "type": "post",
+      "status": "draft",
+      "visibility": "public",
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-05T09:00:00.000Z",
+      "published_at": null,
+      "author_id": "1"
+     },
+     {
+      "id": "6640a4",
+      "uuid": "u4",
+      "title": "Contact",
+      "slug": "contact",
+      "lexical": "{\"root\": {\"type\": \"root\", \"children\": [{\"type\": \"paragraph\", \"children\": [{\"type\": \"text\", \"text\": \"Write to us.\", \"format\": 0, \"version\": 1}]}]}}",
+      "mobiledoc": null,
+      "type": "page",
+      "status": "published",
+      "visibility": "public",
+      "created_at": "2024-01-01T09:00:00.000Z",
+      "updated_at": "2024-01-01T09:00:00.000Z",
+      "published_at": "2024-01-01T09:00:00.000Z",
+      "author_id": "1"
+     },
+     {
+      "id": "6640a5",
+      "uuid": "u5",
+      "title": "Sent once",
+      "slug": "sent-once",
+      "lexical": null,
+      "mobiledoc": null,
+      "type": "post",
+      "status": "sent",
+      "visibility": "public",
+      "created_at": "2024-01-01T09:00:00.000Z",
+      "updated_at": "2024-01-01T09:00:00.000Z",
+      "published_at": "2024-01-01T09:00:00.000Z",
+      "author_id": "1"
+     }
+    ],
+    "posts_meta": [
+     {
+      "id": "m1",
+      "post_id": "6640a1",
+      "meta_title": "Lexical, explained",
+      "meta_description": "A post written in Ghost's Lexical editor.",
+      "feature_image_alt": "The harbour",
+      "feature_image_caption": null
+     }
+    ],
+    "tags": [
+     {
+      "id": "t1",
+      "name": "Harbours",
+      "slug": "harbours",
+      "visibility": "public"
+     },
+     {
+      "id": "t2",
+      "name": "#internal",
+      "slug": "hash-internal",
+      "visibility": "internal"
+     }
+    ],
+    "posts_tags": [
+     {
+      "id": "pt1",
+      "post_id": "6640a1",
+      "tag_id": "t1",
+      "sort_order": 0
+     },
+     {
+      "id": "pt2",
+      "post_id": "6640a1",
+      "tag_id": "t2",
+      "sort_order": 1
+     }
+    ],
+    "users": [
+     {
+      "id": "1",
+      "name": "Alice Example",
+      "slug": "alice",
+      "email": "alice@example.com",
+      "bio": "Writes about harbours.",
+      "website": "https://alice.example.com",
+      "profile_image": null
+     },
+     {
+      "id": "2",
+      "name": "Casey Writer",
+      "slug": "casey",
+      "email": "casey@example.com",
+      "bio": null,
+      "website": null,
+      "profile_image": null
+     }
+    ],
+    "posts_authors": [
+     {
+      "id": "pa1",
+      "post_id": "6640a1",
+      "author_id": "1",
+      "sort_order": 0
+     },
+     {
+      "id": "pa2",
+      "post_id": "6640a2",
+      "author_id": "2",
+      "sort_order": 0
+     },
+     {
+      "id": "pa3",
+      "post_id": "6640a2",
+      "author_id": "1",
+      "sort_order": 1
+     }
+    ],
+    "settings": [
+     {
+      "id": "s1",
+      "key": "title",
+      "value": "Example Harbour Blog"
+     }
+    ]
+   }
+  }
+ ]
+}

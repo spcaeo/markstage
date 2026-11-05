@@ -28,7 +28,17 @@ function make(a, answer, env = {}) {
   return { p, calls };
 }
 /** A fetch that never answers until the timeout aborts it, as a slow server does. */
-const hangs = (init) => new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(init.signal.reason)));
+// A provider that never answers. AbortSignal.timeout's timer does not hold the process open (it is unref'd), and a fake
+// fetch has no socket that would, so on Node 22 the test runner saw an empty event loop and cancelled the test before
+// the timeout fired. The interval stands in for the socket a real request keeps open, until the abort.
+const hangs = (init) =>
+  new Promise((_, reject) => {
+    const socket = setInterval(() => {}, 1000);
+    init.signal.addEventListener('abort', () => {
+      clearInterval(socket);
+      reject(init.signal.reason);
+    });
+  });
 
 describe('an OpenAI-compatible endpoint, with a fake fetch', () => {
   const key = fakeKey();

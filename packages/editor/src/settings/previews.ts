@@ -81,7 +81,7 @@ export function socialField(f: { label: string; title: string; description: stri
     else pic.textContent = 'No image';
     const text = h('div', 'ms-card__text');
     text.append(
-      Object.assign(h('span', 'ms-card__host'), { textContent: new URL(site()).host.toUpperCase() }),
+      Object.assign(h('span', 'ms-card__host'), { textContent: new URL(site()).host }),
       Object.assign(h('span', 'ms-card__title'), { textContent: cut(get(f.title) || get(fb.seoTitle) || get(fb.title), 90) }),
       Object.assign(h('span', 'ms-card__desc'), { textContent: cut(get(f.description) || get(fb.seoDescription) || get(fb.excerpt), 120) }),
     );

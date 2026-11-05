@@ -135,9 +135,7 @@ main {
 .group__title {
   margin: 0 0 14px;
   color: var(--muted);
-  font: 600 13px/1.4 var(--sans);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font: 600 14px/1.4 var(--sans);
 }
 .card h3 {
   margin: 4px 0 6px;

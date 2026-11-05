@@ -1,6 +1,6 @@
 {
   "name": "@markstage/server",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Markstage production server: sign-in, roles, content API, publish jobs, revisions, media, audit log.",
   "license": "Elastic-2.0",
   "type": "module",
@@ -22,7 +22,7 @@
     "test:e2e": "node e2e/run.mjs"
   },
   "dependencies": {
-    "@markstage/core": "0.3.0"
+    "@markstage/core": "0.4.0"
   },
   "optionalDependencies": {
     "sharp": "^0.35.5"

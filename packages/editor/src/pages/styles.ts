@@ -17,7 +17,7 @@ export const PAGE_CSS = `
 .msp-wait__spin{width:18px;height:18px;border:2px solid var(--ms-line);border-top-color:var(--ms-accent);border-radius:50%;animation:msp-spin .8s linear infinite}
 @keyframes msp-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.msp-wait__spin{animation:none}}
-.msp-outline__title{margin:0;padding:16px 16px 6px;color:var(--ms-faint);font:500 10.5px var(--ms-mono);letter-spacing:.06em;text-transform:uppercase}
+.msp-outline__title{margin:0;padding:16px 16px 6px;color:var(--ms-muted);font:600 12px var(--ms-sans)}
 .msp-outline__list,.msp-outline__slot{padding:0 8px}
 .msp-outline__end{padding:6px 8px 56px}
 .msp-outline__add{display:flex;width:100%;justify-content:center}
@@ -42,7 +42,7 @@ export const PAGE_CSS = `
 .msp-picker__pic svg{display:block;width:72px;height:48px}
 .msp-picker__none{grid-column:1/-1;margin:0;color:var(--ms-muted);font-size:12px}
 .msp-picker__lib{display:grid;grid-template-columns:subgrid;grid-column:1/-1;gap:6px;padding-top:6px;border-top:1px solid var(--ms-line)}
-.msp-picker__group{grid-column:1/-1;margin:0;color:var(--ms-faint);font:500 10.5px var(--ms-mono);letter-spacing:.06em;text-transform:uppercase}
+.msp-picker__group{grid-column:1/-1;margin:0;color:var(--ms-muted);font:600 12px var(--ms-sans)}
 .msp-picker__pic img{display:block;width:72px;height:48px;object-fit:cover;border-radius:4px}
 .msp-picker__name{text-align:center}
 .msp-picker__synced{display:block;color:var(--ms-accent-deep);font-size:10.5px;font-weight:600}

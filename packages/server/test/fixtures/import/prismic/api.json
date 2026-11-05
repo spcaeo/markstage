@@ -1,0 +1,33 @@
+{
+ "refs": [
+  {
+   "id": "master",
+   "ref": "ZkM1aBIAACMAsample",
+   "label": "Master",
+   "isMasterRef": true
+  }
+ ],
+ "bookmarks": {},
+ "types": {
+  "blog_post": "Blog post",
+  "page": "Page"
+ },
+ "languages": [
+  {
+   "id": "en-us",
+   "name": "English - United States"
+  }
+ ],
+ "tags": [
+  "harbours"
+ ],
+ "forms": {},
+ "oauth_initiate": "https://example-repo.prismic.io/auth",
+ "oauth_token": "https://example-repo.prismic.io/auth/token",
+ "version": "sample",
+ "license": "All Rights Reserved",
+ "experiments": {
+  "draft": [],
+  "running": []
+ }
+}

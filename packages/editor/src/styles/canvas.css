@@ -70,9 +70,7 @@
   border-radius: 5px 5px 5px 0;
   background: var(--ms-accent);
   color: #fff;
-  font: 500 10.5px/1.6 var(--ms-mono);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font: 600 11.5px/1.6 var(--ms-sans);
   pointer-events: none;
   box-shadow: 0 4px 10px -4px rgb(97 97 255 / 0.7);
   border: 0;
@@ -228,10 +226,8 @@
 }
 .ms-insert__group {
   padding: 8px 8px 4px;
-  color: var(--ms-faint);
-  font: 500 10.5px var(--ms-mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  color: var(--ms-muted);
+  font: 600 12px var(--ms-sans);
 }
 .ms-insert__item {
   display: flex;

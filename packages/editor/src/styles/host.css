@@ -235,9 +235,7 @@
   border-radius: 17px;
   background: none;
   color: var(--ms-muted);
-  font: 600 11.5px/1 var(--ms-sans);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font: 600 13px/1 var(--ms-sans);
   text-align: left;
   cursor: pointer;
 }

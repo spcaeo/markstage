@@ -166,11 +166,9 @@
 }
 .ms-adm-h3 {
   margin: 18px 0 8px;
-  color: var(--ms-muted);
-  font-size: 11.5px;
+  color: var(--ms-text);
+  font-size: 14.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 .ms-adm-lead {
   margin: 0;
@@ -669,10 +667,8 @@
 .ms-adm-cmp__tag {
   float: right;
   color: var(--ms-faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 .ms-adm-cmp__text {
   margin: 0;
@@ -893,6 +889,13 @@
 }
 .ms-adm--auth .ms-release {
   margin-top: 20px;
+}
+/* one release line per screen: the drawer's own (nav.ts) while it is open beside the page, else the page's; on a
+   phone the drawer slides away, so the page keeps its line (test/release-line.test.ts, e2e/import.e2e.mjs) */
+@media (min-width: 721px) {
+  .ms-app.has-nav:not(.nav-folded) .ms-adm > .ms-release {
+    display: none;
+  }
 }
 
 /* ---------- plain notices (plain.ts): the detail for administrators under a fold ---------- */

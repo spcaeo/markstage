@@ -149,6 +149,14 @@
         },
         {
           "@type": "Question",
+          "name": "Can I move a WordPress, Ghost or Prismic site to Markstage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, new after 0.3.0. Import a site (More tools in the editor) reads a WordPress export or REST API, a Ghost export or Content API, or a Prismic repository, and brings over posts, pages, images, authors, categories and tags, search titles and descriptions, and the old addresses as redirects. You see the whole plan before anything is written, and everything arrives as drafts. Blocks, cards or slices it cannot convert are marked in the text and listed for review. The WordPress importer is proven on a real 148-post site's export; Ghost and Prismic are tested on sample exports so far."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "Can people without a GitHub account edit?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -269,6 +277,11 @@ a component's simple settings (text, numbers, on/off) in a side panel. Imports, 
 settings are kept exactly as written, and components show as cards on the canvas rather than as the site renders
 them. A save changes only what the writer changed. A file Markstage cannot read opens read-only in Source mode,
 with a plain message. TinaCMS, Keystatic and Outstatic have edited MDX for longer.</p></div>
+        <div class="qa" id="can-i-move-a-wordpress-ghost-or-prismic-site-to-markstage"><h3>Can I move a WordPress, Ghost or Prismic site to Markstage?</h3><p>Yes, new after 0.3.0. Import a site (More tools in the editor) reads a WordPress export or REST API, a Ghost export
+or Content API, or a Prismic repository, and brings over posts, pages, images, authors, categories and tags, search
+titles and descriptions, and the old addresses as redirects. You see the whole plan before anything is written, and
+everything arrives as drafts. Blocks, cards or slices it cannot convert are marked in the text and listed for review.
+The WordPress importer is proven on a real 148-post site's export; Ghost and Prismic are tested on sample exports so far.</p></div>
         <div class="qa" id="can-people-without-a-github-account-edit"><h3>Can people without a GitHub account edit?</h3><p>Yes. People sign in to Markstage with an email and password, with optional two-step sign-in, or through your
 single sign-on provider (OpenID Connect). Each save is still a git commit in their own name.</p></div>
         <div class="qa" id="is-markstage-ready-for-production"><h3>Is Markstage ready for production?</h3><p>Markstage is pre-release and in active development. It is built and tested against a real 460-page Astro site, but

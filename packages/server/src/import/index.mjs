@@ -6,6 +6,8 @@
 //   POST /import/:rid/run        {} -> 202 {run, job}
 //   GET  /import/:rid            {run, plan, result}
 //   GET  /import                 {items: [run]}
+//   POST /import/site            a whole WordPress, Ghost or Prismic site (site/index.mjs, docs/IMPORT.md): its plan
+//   POST /import/:rid/replan     a site import's plan made again with another mapping
 //
 // Each entry goes through the editor's own create and save (rights, links, raw HTML, locks, synced copies, the
 // page's address, the site's validate; drafts in a status collection), each media file through the upload's pipeline
@@ -14,6 +16,8 @@ import path from 'node:path';
 import { can } from '../roles.mjs';
 import { HttpError, conflict, forbidden, newId, notFound, nowIso, sha1 } from '../util.mjs';
 import { checkPayload, makePlan, planView } from './plan.mjs';
+import { createSiteImport } from './site/index.mjs';
+import { createSiteRun } from './site/run.mjs';
 
 const EXPIRES_MS = 60 * 60 * 1000;
 const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
@@ -49,7 +53,8 @@ export function createImport(app, entries) {
   const runView = (r) => {
     const by = r.created_by ? app.users.get(r.created_by) : null;
     const expired = r.status === 'planned' && app.clock() >= Date.parse(r.expires_at);
-    return { id: r.id, source: r.source, status: expired ? 'expired' : r.status, createdAt: r.created_at, expiresAt: r.expires_at, by: by ? { id: by.id, name: by.name } : null, job: r.job_id, finishedAt: r.finished_at };
+    const site = /^(wordpress|ghost|prismic)-[0-9a-f]{8}$/.exec(r.source);
+    return { id: r.id, kind: site ? 'site' : 'json', ...(site ? { product: site[1] } : {}), source: r.source, status: expired ? 'expired' : r.status, createdAt: r.created_at, expiresAt: r.expires_at, by: by ? { id: by.id, name: by.name } : null, job: r.job_id, finishedAt: r.finished_at };
   };
 
   /** POST /import: the plan, kept for an hour to be run as it is by the person who made it. */
@@ -76,6 +81,7 @@ export function createImport(app, entries) {
     if (r.status !== 'planned') throw conflict(`This import is ${r.status} already.`, { status: r.status });
     const payload = JSON.parse(r.payload);
     db.prepare("UPDATE import_runs SET status = 'running' WHERE id = ?").run(r.id);
+    if (payload.kind === 'site') return startSite(ctx, r, payload);
     const job = app.jobs.enqueue({
       kind: 'import',
       user: ctx.user,
@@ -100,6 +106,28 @@ export function createImport(app, entries) {
           result = { ...result, counts };
           db.prepare('UPDATE import_runs SET status = ?, result = ?, finished_at = ? WHERE id = ?').run(result.entries.length || result.media.length ? 'done' : 'failed', JSON.stringify(result), nowIso(app.clock()), r.id);
           audit.log(ctx, 'import.run', { target: r.id, detail: { source: payload.source, counts } });
+        }
+      },
+    });
+    db.prepare('UPDATE import_runs SET job_id = ? WHERE id = ?').run(job, r.id);
+    ctx.status = 202;
+    return { run: runView(load(r.id)), job: { id: job } };
+  }
+
+  /** A site import's run (site/run.mjs), as a job: media, authors, entries, redirects. */
+  function startSite(ctx, r, stored) {
+    const job = app.jobs.enqueue({
+      kind: 'import',
+      user: ctx.user,
+      target: `import ${stored.product}`,
+      notice: { text: (error) => `The import from ${stored.product} did not finish. ${error}` },
+      run: async (step) => {
+        let result = null;
+        try {
+          result = await site.run(ctx, r.id, stored, step);
+        } finally {
+          db.prepare('UPDATE import_runs SET status = ?, result = ?, finished_at = ? WHERE id = ?').run(result ? 'done' : 'failed', result ? JSON.stringify(result) : null, nowIso(app.clock()), r.id);
+          audit.log(ctx, 'import.run', { target: r.id, detail: { source: r.source, counts: result?.counts ?? null } });
         }
       },
     });
@@ -164,12 +192,16 @@ export function createImport(app, entries) {
     return { items: db.prepare('SELECT * FROM import_runs ORDER BY created_at DESC LIMIT 50').all().map(runView) };
   }
 
+  const site = createSiteRun(app, entries, { mediaAt, remember });
+  const siteRoutes = createSiteImport(app, entries, { mediaAt, load, runView, may });
+
   function routes(api) {
+    siteRoutes.routes(api);
     api.add('POST', '/import', plan);
     api.add('GET', '/import', list);
     api.add('GET', '/import/:rid', get);
     api.add('POST', '/import/:rid/run', start);
   }
 
-  return { routes };
+  return { routes, site, planSite: siteRoutes.planSource, start };
 }

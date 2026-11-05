@@ -63,9 +63,13 @@ function swapMedia(v, swap, depth = 0) {
  * The plan: {entries: [{sourceId, collection, id, action, problem?, rules?}], media: [{sourceId, url, action, path?,
  * problem?}], counts}, and for the run each entry's text and each media's source. `mediaAt(m)`: where a media file
  * would be on the site: {path} (repo-relative). `stored`: the media were fetched already (the run's entries step).
- * action: entries create | update | unchanged | skip (with why); media fetch | reuse | skip.
+ * `fallback` (a site import's): Map(media sourceId -> its old address), written in place of a media file that was not
+ * brought in, so one missing picture does not stop its page (the entry lists it under `kept`). An entry with
+ * `replace: true` (a site import, when the person chose to replace what has its address) saves over the entry
+ * already at its id, as an update. action: entries create | update | unchanged | skip (with why); media fetch |
+ * reuse | skip.
  */
-export async function makePlan(app, ctx, entries, payload, { mediaAt, stored = false }) {
+export async function makePlan(app, ctx, entries, payload, { mediaAt, stored = false, fallback = null }) {
   const { store, db, converter } = app;
   const { source, overwrite, mediaAs } = payload;
   const map = (kind, sid) => db.prepare('SELECT * FROM import_map WHERE source = ? AND kind = ? AND source_id = ?').get(source, kind, sid);
@@ -124,6 +128,10 @@ export async function makePlan(app, ctx, entries, payload, { mediaAt, stored = f
     const was = map('entry', e.sourceId);
     let id;
     let current = null;
+    if (!was && e.replace && e.id && ID.test(e.id) && store.exists(c, e.id) && !claimed.has(`${c.id}/${e.id}`)) {
+      id = e.id;
+      current = store.read(c, id);
+    }
     if (was) {
       id = was.target;
       try {
@@ -140,15 +148,22 @@ export async function makePlan(app, ctx, entries, payload, { mediaAt, stored = f
       if (e.id !== undefined && !ID.test(e.id)) throw bad('id: lowercase letters, digits and hyphens.');
       id = id ?? e.id ?? freeId(c, slugify((f.slug && fm[f.slug]) || title));
       if (store.exists(c, id) || claimed.has(`${c.id}/${id}`)) throw new HttpError(409, 'id-taken', `Another entry already has the address ${c.id}/${id}.`);
+      // the create's own rule (entries.mjs authorFor), said by the plan so the run does what the plan says
+      const named = f.author ? fm[f.author] : null;
+      if (c.hasStatus && f.author && !(typeof named === 'string' && named.trim()) && !(ctx.user.authorSlug ?? c.defaultAuthor)) {
+        throw new HttpError(422, 'no-author', 'It has no author, and new entries need one. Link your account to an author (Users, your account, Author), or set a defaultAuthor for this collection.');
+      }
     }
     claimed.add(`${c.id}/${id}`);
     // where the entry's file is (for media paths relative to it), then its words with the media in place
     const fileRel = path.relative(app.config.contentRoot, path.join(c.absDir, `${id}${c.ext}`)).split(path.sep).join('/');
     const missing = new Set();
+    const kept = new Set();
     const swap = (s) =>
       s
         .replace(TOKEN, (all, sid) => {
           const p = placeOf.get(sid);
+          if (!p && fallback?.has(sid)) return kept.add(sid), fallback.get(sid);
           if (!p) return missing.add(sid), all;
           return mediaAs === 'relative' ? path.posix.relative(path.posix.dirname(fileRel), p.path) : app.mediaPrepare.urlOf(p.path);
         });
@@ -191,7 +206,7 @@ export async function makePlan(app, ctx, entries, payload, { mediaAt, stored = f
     }
     await entries.validate(c, id, after);
     const rules = (app.publishRules?.verdicts?.(c, id, after) ?? []).map(({ rule, level, message }) => ({ rule, level, message }));
-    return { id, action: current ? 'update' : 'create', text: after, inputHash, c, ...(rules.length ? { rules } : {}) };
+    return { id, action: current ? 'update' : 'create', text: after, inputHash, c, ...(rules.length ? { rules } : {}), ...(kept.size ? { kept: [...kept] } : {}) };
   }
 
   function freeId(c, base) {

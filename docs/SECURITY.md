@@ -245,7 +245,7 @@ docs/API-AI.md. Tests: `ai.test.mjs`, `ai-provider.test.mjs`.
 
 ### Importing
 
-docs/API-IMPORT.md. Tests: `import.test.mjs`.
+docs/API-IMPORT.md and docs/IMPORT.md. Tests: `import.test.mjs`, `import-*.test.mjs`.
 
 | Control | How | Proof |
 |---|---|---|
@@ -254,6 +254,9 @@ docs/API-IMPORT.md. Tests: `import.test.mjs`.
 | Idempotent, never over a person | Remembered by source and source id with the file's sha1 as written; unchanged is left alone; a file a person changed or deleted since is skipped unless `overwrite: true` | "again with the same payload…", "a changed source updates…" |
 | Media | Fetched through the Library's SSRF guard (a private or metadata address is a problem, never fetched), then the upload's pipeline (sniffed, no SVG, re-encoded) | "problems are per item…" (169.254.169.254 refused) |
 | Cost | At most 500 entries and 200 media files a payload, 1 MB a body, the server's body limit; editors and up | "…wrong shapes are 422 naming the field" |
+| A whole site: SSRF | Every API answer and picture through the same guard, also after a redirect; answers must be JSON (20 MB, 20 s each; 64 MB and 5 minutes a read; 50 pages of a list), pictures an image or PDF type, then sniffed and re-encoded | `import-sources.test.mjs`: "private, loopback and link-local addresses are refused, also after a redirect, and never contacted", "pictures at private addresses, behind a redirect to one, or that are not pictures are not brought in" |
+| A whole site: credentials | An application password, Content API key or Prismic token is used for the plan's one read only, sent to the source's origin only, replaced by `[hidden]` in any error, never stored (the run uses the bundle the plan read); the command line takes it from a file or `MARKSTAGE_IMPORT_SECRET`, never an argument | `import-sources.test.mjs`: "…read once, used for that read only, kept nowhere" (every database table and data-dir log searched), "a wrong key is refused in words…"; `import-cli.test.mjs`: "secrets never on the command line" |
+| A whole site: dry run and re-runs | The plan writes and fetches nothing beyond the source; a second run of the same source changes and fetches nothing; content becomes Markdown with scripts, forms and frames dropped and noted | `import-wordpress.test.mjs`: "the dry run writes nothing…", "again: nothing changes…"; `import-convert.test.mjs`: "nothing that runs comes in…" |
 
 ### Webhooks
 

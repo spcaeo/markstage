@@ -59,7 +59,7 @@ The rows a team usually decides on. Each cell is the same, with the same source,
 | Environments or staging | ✓ <sub>Local, staging, production; free</sub> [^ms-env] | ? [^wp-lic] | ? [^go-price] | ◐ <sub>Paid option on Platinum ($675); 2 on Enterprise</sub> [^pr-price] |
 | Releases (publish many changes at once) | ✓ <sub>With a preview and share links</sub> [^ms-releases] | ? [^wp-lic] | ? [^go-feat] | ✓ [^pr-pb] |
 | Forms inbox | ✓ [^ms-inbox] | ? [^wp-lic] | ? [^go-feat] | ✗ [^pr-price] |
-| WordPress import | ◐ <sub>Reusable blocks and old contact messages from a WordPress export or dump; posts and media through the JSON import</sub> [^ms-library] [^ms-import] | – | ✓ <sub>Built-in importer for a WordPress XML export</sub> [^go-wp] | ◐ <sub>A general Migration API</sub> [^pr-price] |
+| WordPress import | ✓ <sub>A WordPress export or the REST API: posts, pages, media, authors, categories, tags, SEO fields and old addresses as redirects; a dry run first; proven on a real 148-post site's export (SVG pictures stay at their old address)</sub> [^ms-site-import] [^ms-library] | – | ✓ <sub>Built-in importer for a WordPress XML export</sub> [^go-wp] | ◐ <sub>A general Migration API</sub> [^pr-price] |
 | Self-host | ✓ [^ms-deploy] | ✓ [^wp-astro] | ✓ <sub>Ubuntu with Ghost-CLI, or Docker (preview)</sub> [^go-install] | ✗ [^pr-price] |
 | Price to start | Free [^ms-readme] | Free software; you pay for hosting [^wp-lic] | Free software; Ghost(Pro) Starter $18/mo ($15 yearly) [^go-price] | Free; Starter $10/mo per repository, yearly [^pr-price] |
 | Licence | Elastic License 2.0 <sub>Source-available, free to self-host</sub> [^ms-licence] | GPLv2 or later [^wp-lic] | MIT [^go-gh] | Closed, hosted service [^pr-price] |
@@ -168,7 +168,7 @@ integration.
 | Real-time collaboration | ✗ <sub>Locks and a three-way merge</sub> [^ms-readme] | ? [^wp-lic] | ? [^go-feat] | ? [^pr-price] | ? [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ✓ <sub>Real-time content database; comments and tasks on Growth</sub> [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ? [^st-price] | ? [^sm-price] |
 | MCP server for AI agents | ✓ [^ms-mcp] | ? [^wp-lic] | ? [^go-feat] | ✓ <sub>Claude and ChatGPT plugins</sub> [^pr-price] | ✓ [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ✓ [^sa-price] | ? [^cf-price] | ◐ <sub>Built-in MCP servers from Pro; custom ones on Team</sub> [^bu-price] | ? [^pa-gh] | ? [^st-price] | ? [^sm-price] |
 | Forms inbox | ✓ [^ms-inbox] | ? [^wp-lic] | ? [^go-feat] | ✗ [^pr-price] | ✗ [^em-gh] | ? [^sc-docs] | ✗ [^sb-price] | ✗ [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ✗ [^st-price] | ✓ <sub>Core: one form</sub> [^sm-price] |
-| WordPress import | ◐ <sub>Reusable blocks and old contact messages from a WordPress export or dump; posts and media through the JSON import</sub> [^ms-library] [^ms-deploy] [^ms-import] | – | ✓ <sub>Built-in importer for a WordPress XML export</sub> [^go-wp] | ◐ <sub>A general Migration API</sub> [^pr-price] | ✓ <sub>Import wizard</sub> [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ? [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ◐ <sub>General data import</sub> [^st-price] | ? [^sm-price] |
+| WordPress import | ✓ <sub>A WordPress export or the REST API: posts, pages, media, authors, categories, tags, SEO fields and old addresses as redirects; a dry run first; proven on a real 148-post site's export (SVG pictures stay at their old address)</sub> [^ms-site-import] [^ms-library] [^ms-deploy] | – | ✓ <sub>Built-in importer for a WordPress XML export</sub> [^go-wp] | ◐ <sub>A general Migration API</sub> [^pr-price] | ✓ <sub>Import wizard</sub> [^em-gh] | ? [^sc-docs] | ? [^sb-price] | ? [^sa-price] | ? [^cf-price] | ? [^bu-price] | ? [^pa-gh] | ◐ <sub>General data import</sub> [^st-price] | ? [^sm-price] |
 
 ### Hosting, price and licence
 
@@ -267,6 +267,7 @@ Hygraph, Kontent.ai and others) are hosted or database CMSs that compare to Mark
 [^ms-mcp]: **Markstage**: [MCP server](API-MCP.md)
 [^ms-library]: **Markstage**: [Library and WordPress import](API-LIBRARY.md)
 [^ms-import]: **Markstage**: [Import API](API-IMPORT.md)
+[^ms-site-import]: **Markstage**: [Importing a site from WordPress, Ghost or Prismic](IMPORT.md); tested on a real 148-post WordPress site's export on 2026-11-04 ("Proof on a real site" there)
 [^ms-licence]: **Markstage**: [Licence](../LICENSE)
 [^ti-price]: **TinaCMS**: [pricing](https://tina.io/pricing)
 [^ti-astro]: **TinaCMS**: [Astro guide](https://tina.io/docs/frameworks/astro)

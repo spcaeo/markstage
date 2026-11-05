@@ -59,6 +59,7 @@ own guide to the screens is [WRITING.md](WRITING.md).
 | site health | Site check-up | backups, restore drill | Backups; Restore |
 | library, reusable blocks | Reusable sections | topic map, links | Links between pages |
 | find and replace, bulk | Change many at once | trash | Trash |
+| importer, migration | Import a site | dry run | The plan (nothing is written yet) |
 
 Roles, in plain words: Viewer (looks), Writer (edits own drafts), Translator (one language), Editor (all content,
 sends to staging), Manager (approves, goes live, people), Owner (everything, settings, backups).

@@ -18,6 +18,7 @@ import { mountBulk } from './bulk';
 import { mountEntries } from './entries';
 import { mountMedia } from './media';
 import { mountHealth } from './health';
+import { mountImport } from './import/index';
 import { mountJobs } from './jobs';
 import { mountPublish } from './publish';
 import { mountRedirects } from './redirects';
@@ -47,6 +48,7 @@ registerScreen({ name: 'authors', label: 'Authors', icon: 'user', nav: null, gro
 // the site's topics and its internal links (docs/API-LINKS.md): everyone may look; editors and above change topics
 registerScreen({ name: 'topic-map', label: 'Topic map', icon: 'layers', nav: null, group: 'tools', menuLabel: 'Topic map', mount: mountTopics });
 registerScreen({ name: 'links', label: 'Links between pages', icon: 'link', nav: null, group: 'tools', menuLabel: 'Links between pages', mount: mountLinks });
+registerScreen({ name: 'import', label: 'Import a site', icon: 'upload', nav: null, group: 'tools', menuLabel: 'Import a site', roles: EDITORS, mount: mountImport });
 registerScreen({ name: 'taxonomy', label: 'Categories and tags', icon: 'list', nav: null, group: 'tools', roles: EDITORS, mount: mountTaxonomy });
 registerScreen({ name: 'users', label: 'People & access', icon: 'users', nav: 'admin', group: 'site', menuLabel: 'People & access', roles: MANAGERS, mount: mountUsers });
 registerScreen({ name: 'health', label: 'Site check-up', icon: 'shield', nav: 'admin', group: 'site', menuLabel: 'Site check-up', roles: MANAGERS, mount: mountHealth });

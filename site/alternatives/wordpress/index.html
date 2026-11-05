@@ -158,18 +158,18 @@
           <div class="fact"><dt>Content in git</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
           <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <span class="note">One docker run with the server image, Docker Compose, or systemd and nginx <sup class="fn"><a href="../../compare/full/#fn-ms-docker" aria-label="Source 9">9</a></sup> <sup class="fn"><a href="../../compare/full/#fn-ms-deploy" aria-label="Source 8">8</a></sup></span></dd></div>
           <div class="fact"><dt>Price to start</dt><dd><span class="val">Free to self-host</span> <sup class="fn"><a href="../../compare/full/#fn-ms-readme" aria-label="Source 3">3</a></sup></dd></div>
-          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 19">19</a></sup></span></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">Elastic License 2.0</span> <span class="note">Source-available, free to self-host <sup class="fn"><a href="../../compare/full/#fn-ms-licence" aria-label="Source 20">20</a></sup></span></dd></div>
         </dl>
       </li>
       <li class="pcard" data-p="wordpress" data-k="publishing lead">
         <div class="pcard-top"><span class="tile publishing" aria-hidden="true">WP</span><div><p class="pcard-name">WordPress</p><p class="pcard-kind">Publishing platform</p></div></div>
         <p class="pcard-what">A publishing platform with a very large ecosystem of themes and plugins; headless with Astro.</p>
         <dl class="facts">
-          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Headless: written in WordPress's admin <sup class="fn"><a href="../../compare/full/#fn-wp-astro" aria-label="Source 92">92</a></sup></span></dd></div>
-          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Read by REST API <sup class="fn"><a href="../../compare/full/#fn-wp-astro" aria-label="Source 92">92</a></sup></span></dd></div>
-          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-wp-astro" aria-label="Source 92">92</a></sup></dd></div>
-          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free software; you pay for hosting</span> <sup class="fn"><a href="../../compare/full/#fn-wp-lic" aria-label="Source 90">90</a></sup></dd></div>
-          <div class="fact"><dt>Licence</dt><dd><span class="val">GPLv2 or later</span> <sup class="fn"><a href="../../compare/full/#fn-wp-lic" aria-label="Source 90">90</a></sup></dd></div>
+          <div class="fact"><dt>Edits on the real page</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Headless: written in WordPress's admin <sup class="fn"><a href="../../compare/full/#fn-wp-astro" aria-label="Source 93">93</a></sup></span></dd></div>
+          <div class="fact"><dt>Content in git</dt><dd><span class="mk no"><span class="mk-g" aria-hidden="true">✗</span><span class="mk-l">No</span></span> <span class="note">Read by REST API <sup class="fn"><a href="../../compare/full/#fn-wp-astro" aria-label="Source 93">93</a></sup></span></dd></div>
+          <div class="fact"><dt>Self-host</dt><dd><span class="mk yes"><span class="mk-g" aria-hidden="true">✓</span><span class="mk-l">Yes</span></span> <sup class="fn"><a href="../../compare/full/#fn-wp-astro" aria-label="Source 93">93</a></sup></dd></div>
+          <div class="fact"><dt>Price to start</dt><dd><span class="val">Free software; you pay for hosting</span> <sup class="fn"><a href="../../compare/full/#fn-wp-lic" aria-label="Source 91">91</a></sup></dd></div>
+          <div class="fact"><dt>Licence</dt><dd><span class="val">GPLv2 or later</span> <sup class="fn"><a href="../../compare/full/#fn-wp-lic" aria-label="Source 91">91</a></sup></dd></div>
         </dl>
       </li>
       </ul>
@@ -189,11 +189,15 @@ pre-release.</p>
 <h2 id="where-wordpress-is-stronger">Where WordPress is stronger</h2>
 <ul><li><strong>The ecosystem:</strong> themes, plugins, hosts and people who know it.</li><li><strong>Everything in one place</strong> when WordPress also draws the site.</li><li><strong>Memberships, comments and e-commerce</strong> through plugins.</li></ul>
 <h2 id="moving-from-wordpress-to-markstage">Moving from WordPress to Markstage</h2>
-<p>Markstage has importers for the parts of a WordPress site that are hardest to move (a fuller WordPress import of
-posts, pages, media, authors and redirects is coming in 0.4.0, <a href="../../roadmap/#import">roadmap</a>):</p>
-<ul><li><strong>Reusable blocks</strong> (patterns) come in from a WordPress export (<code>.xml</code>) or a database dump (<code>.sql</code> or <code>.sql.gz</code>)
-as shared sections in the Library, with their Gutenberg HTML read into Markdown and the site's blocks.</li><li><strong>Old contact form messages</strong> come into the Inbox with <code>markstage-server forms import-wordpress</code>.</li><li><strong>Posts, pages and media</strong> come in through the import API from JSON: a dry run first, imported as drafts, and
-idempotent on each source id (such as the WordPress post id).</li></ul>
+<p>Markstage imports a WordPress site, new after 0.3.0:</p>
+<ul><li><strong>The whole site</strong>, from its export file (<code>.xml</code>) or its REST API with an application password: posts and pages
+(Gutenberg or classic) as Markdown, their images and PDFs, authors, categories and tags, Yoast or Rank Math search
+titles and descriptions, and every old address (permalinks, <code>?p=</code>, attachment pages, uploads) sent on to the new
+page. A dry run shows the whole plan first, everything arrives as a draft, and blocks or shortcodes it cannot
+convert are marked in the text for review (docs/IMPORT.md in the repository). It is proven on a real
+148-post site's export; SVG pictures stay at their old address, so save them as PNG first.</li><li><strong>Reusable blocks</strong> (patterns) come in from a WordPress export (<code>.xml</code>) or a database dump (<code>.sql</code> or <code>.sql.gz</code>)
+as shared sections in the Library, with their Gutenberg HTML read into Markdown and the site's blocks.</li><li><strong>Old contact form messages</strong> come into the Inbox with <code>markstage-server forms import-wordpress</code>.</li><li><strong>Anything else</strong> comes in through the import API from JSON: a dry run first, imported as drafts, and
+idempotent on each source id.</li></ul>
 <p>Writers then find familiar ideas: drafts, scheduled publishing, roles with WordPress's names, a media library,
 trash, revisions, password-protected pages and &quot;Additional CSS&quot;.</p>
 <h2 id="frequently-asked-questions">Frequently asked questions</h2>

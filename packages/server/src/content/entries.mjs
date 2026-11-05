@@ -322,15 +322,62 @@ export function createEntries(app) {
     throw new HttpError(422, 'no-author', 'New entries need an author. Link your account to an author (Users, your account, Author), or set a defaultAuthor for this collection.');
   }
 
-  /** Build the text of a new entry and create it (draft in a status collection). */
-  async function createEntry(ctx, c, { id, title, frontmatter = {}, doc, data, source }, action = 'entry.create') {
+  /** Create an entry from what the New sheet (or a duplicate, an import) sends: a draft in a status collection. */
+  async function createEntry(ctx, c, args, action = 'entry.create') {
+    precheck(ctx, c, args.id);
+    return repoLock.run(async () => {
+      const { entryId, text } = await newEntryText(ctx, c, args);
+      const written = store.write(c, entryId, text);
+      const commit = await git.commit([written.rel], `Create ${c.id}/${entryId}`, authorOf(ctx.user));
+      audit.log(ctx, action, { target: `${c.id}/${entryId}`, detail: { commit } });
+      return entryId;
+    });
+  }
+
+  function precheck(ctx, c, id) {
     if (!canCreate(ctx.user, c)) throw forbidden('Your role cannot create entries here.');
     if (id !== undefined && !ID.test(String(id))) throw invalid({ id: 'Use lowercase letters, digits and hyphens.' });
+    if (c.hasStatus && !atLeast(ctx.user, 'editor') && !ctx.user.authorSlug) throw forbidden('Your account has no author name yet. Ask an administrator to set one.');
+  }
+
+  /**
+   * Many new entries in one commit (an import's batch): [{c, id, source}] each built and checked as createEntry
+   * builds and checks one, under one hold of the repo. One that is refused is a problem and the rest go on; the
+   * written ones are committed together with `message`, audited one by one as `action`. {created: [{c, id, rel}],
+   * problems: [{index, message}], commit}.
+   */
+  async function createMany(ctx, list, { message, action = 'entry.import' }) {
+    return repoLock.run(async () => {
+      const created = [];
+      const problems = [];
+      for (const [index, args] of list.entries()) {
+        try {
+          precheck(ctx, args.c, args.id);
+          const { entryId, text } = await newEntryText(ctx, args.c, args);
+          created.push({ c: args.c, id: entryId, rel: store.write(args.c, entryId, text).rel });
+        } catch (e) {
+          if (!(e instanceof HttpError)) throw e;
+          problems.push({ index, message: e.extra?.fields ? Object.values(e.extra.fields)[0] : e.message });
+        }
+      }
+      if (!created.length) return { created, problems, commit: null };
+      let commit;
+      try {
+        commit = await git.commit(created.map((x) => x.rel), message, authorOf(ctx.user));
+      } catch (e) {
+        for (const x of created) store.removeRel(x.rel);
+        throw e;
+      }
+      for (const x of created) audit.log(ctx, action, { target: `${x.c.id}/${x.id}`, detail: { commit } });
+      return { created, problems, commit };
+    });
+  }
+
+  /** The text of a new entry and its id, checked as a save is (the repo lock is held by the caller). */
+  async function newEntryText(ctx, c, { id, title, frontmatter = {}, doc, data, source }) {
     const f = c.fields;
     const own = !atLeast(ctx.user, 'editor');
-    if (c.hasStatus && own && !ctx.user.authorSlug) throw forbidden('Your account has no author name yet. Ask an administrator to set one.');
-
-    return repoLock.run(async () => {
+    {
       let text;
       let fm;
       if (typeof source === 'string') {
@@ -382,11 +429,8 @@ export function createEntries(app) {
       guard(ctx, c, null, text, { rawHtml: canRawHtml(ctx.user) }, { allowStatus: true, out: checked });
       if (checked.synced?.stamp) text = app.library.synced.stamp(c, text);
       await validate(c, entryId, text);
-      const written = store.write(c, entryId, text);
-      const commit = await git.commit([written.rel], `Create ${c.id}/${entryId}`, authorOf(ctx.user));
-      audit.log(ctx, action, { target: `${c.id}/${entryId}`, detail: { commit } });
-      return entryId;
-    });
+      return { entryId, text };
+    }
   }
 
   function routes(router) {
@@ -537,7 +581,7 @@ export function createEntries(app) {
     return c.format === 'md' ? converter.setFrontmatter(source, { draft: null, publishAt: null, protected: null }) : converter.applyJsonChanges(source, STATUS_KEYS.map((path) => ({ path, delete: true })), c);
   }
 
-  return { routes, saveEntry, createEntry, textFromBody, view, parse, guard, validate, assertEditable, permissions, authorOf, injectionChanged };
+  return { routes, saveEntry, createEntry, createMany, textFromBody, view, parse, guard, validate, assertEditable, permissions, authorOf, injectionChanged };
 }
 
 /** `now` written the way `was` is: a date, or a date and time in UTC with "Z" or "+00:00"; null for anything else. */

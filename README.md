@@ -386,9 +386,11 @@ Only what the code has today, each with its own doc.
 - **AI suggestions.** Alt text, search titles and descriptions, a promotion plan's summary and translation drafts from
   Anthropic's Messages API, with your own key in the server's environment; a suggestion never saves itself
   ([docs/API-AI.md](docs/API-AI.md)).
-- **Imports.** Entries and media as JSON, planned first and idempotent on the source's ids
-  ([docs/API-IMPORT.md](docs/API-IMPORT.md)); WordPress reusable blocks into the Library
-  ([docs/API-LIBRARY.md](docs/API-LIBRARY.md)).
+- **Imports.** A whole site from WordPress (an export or the REST API), Ghost (an export or the Content API) or
+  Prismic: posts, pages, images, authors, categories and tags, search fields and the old addresses as redirects,
+  with a dry run first and every item as a draft ([docs/IMPORT.md](docs/IMPORT.md)). Entries and media as JSON,
+  planned first and idempotent on the source's ids ([docs/API-IMPORT.md](docs/API-IMPORT.md)); WordPress reusable
+  blocks into the Library ([docs/API-LIBRARY.md](docs/API-LIBRARY.md)).
 - **Integration fields.** A settings field whose options come from any JSON address, fetched on a schedule by the
   server ([docs/API-INTEGRATIONS.md](docs/API-INTEGRATIONS.md)).
 
@@ -596,15 +598,17 @@ for a selection, which a person reads, changes and saves ([docs/API-AI.md](docs/
 New since 0.3.0, on main: MDX editing, with the words typed on the page and the code kept as written
 ([docs/MDX.md](docs/MDX.md)); a [live demo](https://spcaeo.github.io/markstage/demo/) of the editor on a sample blog,
 with no sign-up; a ready server image, built and smoke-tested by CI and published to the GitHub Container Registry
-with each release ([docs/DOCKER.md](docs/DOCKER.md)); and a starter site, an Astro blog with Markstage set up, to start
+with each release ([docs/DOCKER.md](docs/DOCKER.md)); a starter site, an Astro blog with Markstage set up, to start
 a new site from ([docs/STARTER.md](docs/STARTER.md)); AI writing help on the page, to rewrite, shorten, fix or change the
 tone of a selection, accepted or rejected by the writer ([docs/API-AI.md](docs/API-AI.md)); more AI providers, any
-OpenAI-compatible endpoint and Ollama beside Anthropic; and an MCP publish tool, which an owner or administrator
-allows, where the site's checks and publish rules decide as they do for a person ([docs/API-MCP.md](docs/API-MCP.md)).
+OpenAI-compatible endpoint and Ollama beside Anthropic; an MCP publish tool, which an owner or administrator
+allows, where the site's checks and publish rules decide as they do for a person ([docs/API-MCP.md](docs/API-MCP.md));
+and Import from WordPress, Ghost and Prismic: posts, pages, media, authors and redirects, with a dry run first
+([docs/IMPORT.md](docs/IMPORT.md)).
 
 Being built now, for 0.4.0:
 
-- **Import from WordPress, Ghost and Prismic.** Posts, pages, media, authors and redirects.
+Nothing else for now: everything planned for 0.4.0 is on main.
 
 Planned, later:
 

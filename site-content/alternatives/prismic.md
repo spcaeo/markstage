@@ -46,12 +46,12 @@ Prismic's prices are per repository per month, paid yearly.
 
 ## Moving from Prismic to Markstage
 
-Prismic content has to become files. An importer for Prismic is coming in 0.4.0 ([roadmap](/roadmap/#import)).
-Today, Markstage's import API takes entries and media as JSON: a dry run first, then
-the run, as drafts, and running it again only updates what changed (it remembers each source id). Each slice type
-becomes a section type in your Astro components and Markstage block pack, so writers keep building pages from the
-same sections. To get your content out, read your documents through Prismic's API and write them in the import's
-JSON shape.
+Prismic content has to become files. Markstage reads a repository through Prismic's API, new after 0.3.0:
+each custom type goes to a collection, rich text becomes Markdown, images come through the Prismic CDN, and each
+slice type you map becomes a section of your page; the rest are marked for review. A dry run shows the whole plan
+first, everything arrives as a draft, and running it again only updates what changed (it remembers each document
+id). Each slice type becomes a section type in your Astro components and Markstage block pack, so writers keep
+building pages from the same sections. It is tested on recorded API answers, not yet on many real repositories.
 
 ## Frequently asked questions
 
