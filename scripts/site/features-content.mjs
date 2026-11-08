@@ -32,6 +32,7 @@ export const FEATURE_GROUPS = [
     lead: 'Pages, posts and pictures, edited where they appear, with parts to use again.',
     items: [
       { id: 'canvas', title: 'Edit on the real page', text: 'Each entry is drawn inside its real page, with the site’s components, CSS and column width. JSON pages too, with each section’s fields in a side panel.', doc: 'docs/writing/', shot: 'canvas', top: true },
+      { id: 'server-canvas', title: 'The real page on your server too', text: 'With the canvas in its page turned on, the editor on a Markstage server draws each article inside the site’s last build of it: header, columns, footer and colours, as in astro dev. A draft not built yet opens on a plain sheet, with a note that says why.', doc: 'docs/canvas-fidelity/#on-a-server' },
       { id: 'boxes', title: 'Your site’s own boxes', text: 'FAQ, tips, steps and the other boxes your site defines are drawn as the page shows them; you type straight into them.', doc: 'docs/writing/#block' },
       { id: 'library', title: 'A Library of parts', text: 'Page templates, sections and snippets in folders. A synced item is edited once and every page that uses it follows.', doc: 'docs/api-library/', shot: 'library', top: true },
       { id: 'drop', title: 'Drag a section onto the live page', text: 'On a page made of sections, drag one from the Library onto the page itself; a line says where it will land, and Undo takes it out again.', doc: 'docs/writing/#snippet' },
@@ -63,6 +64,7 @@ export const FEATURE_GROUPS = [
       { id: 'presence', title: 'See who else is editing', text: 'A line under the header says when someone else has the page open, and saves still check the version.', doc: 'docs/api/' },
       { id: 'inbox', title: 'Forms in your own inbox', text: 'The site’s forms post to Markstage on your own host: spam checks, limits, team mail and a daily digest.', doc: 'docs/api-inbox/', shot: 'inbox', top: true },
       { id: 'webhooks', title: 'Webhooks and imports', text: 'Signed webhooks for saves, publishes and new media; entries and media imported from JSON, with a dry run first.', doc: 'docs/api-webhooks/' },
+      { id: 'multi-process', title: 'More than one server process', text: 'Run several server processes on one data dir, behind one address. Sign-in limits, edit locks, jobs and saves are shared, and when one process stops another takes over its timers.', doc: 'docs/scaling/' },
     ],
   },
   {

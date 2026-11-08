@@ -13,6 +13,13 @@ items:
     what: An item with no comparison row.
     status: planned
     rows: []
+  - id: fixture-shipped
+    title: A fixture that shipped
+    what: An item on main, not released yet, linked to its doc.
+    status: shipped
+    shipped: next
+    doc: docs/writing/
+    rows: []
 ---
 
 A fixture roadmap for the test build.

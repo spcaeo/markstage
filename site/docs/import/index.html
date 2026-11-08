@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Import a Site from WordPress, Ghost or Prismic | Markstage</title>
+    <meta name="description" content="Bring a whole site to Markstage: posts, pages, media, authors, categories and old addresses, with the full plan first and the import run in the background." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/import/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Import a Site from WordPress, Ghost or Prismic | Markstage" />
+    <meta property="og:description" content="Bring a whole site to Markstage: posts, pages, media, authors, categories and old addresses, with the full plan first and the import run in the background." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/import/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Import a Site from WordPress, Ghost or Prismic | Markstage" />
+    <meta name="twitter:description" content="Bring a whole site to Markstage: posts, pages, media, authors, categories and old addresses, with the full plan first and the import run in the background." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Importing a site from WordPress, Ghost or Prismic",
+          "item": "https://spcaeo.github.io/markstage/docs/import/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Import a Site from WordPress, Ghost or Prismic",
+      "description": "Bring a whole site to Markstage: posts, pages, media, authors, categories and old addresses, with the full plan first and the import run in the background.",
+      "url": "https://spcaeo.github.io/markstage/docs/import/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/scaling/">Several server processes on one data dir</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/import/" aria-current="page">Importing a site from WordPress, Ghost or Prismic</a></li><li><a href="../../docs/operations/">Running a site, task by task</a></li><li><a href="../../docs/canvas-fidelity/">The canvas and the real page</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Importing a site from WordPress, Ghost or Prismic</li></ol></nav>
+        <h1>Importing a site from WordPress, Ghost or Prismic</h1>
+        <p class="lead left">Bring a whole site to Markstage: posts, pages, media, authors, categories and old addresses, with the full plan first and the import run in the background.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#the-steps">The steps</a></li><li><a href="#what-comes-over">What comes over</a></li><li><a href="#proof-on-a-real-site">Proof on a real site</a></li><li><a href="#the-mapping">The mapping</a></li><li><a href="#running-it-again">Running it again</a></li><li><a href="#the-moved-addresses">The moved addresses</a></li><li><a href="#safety">Safety</a></li><li><a href="#from-the-command-line">From the command line</a></li><li><a href="#tests">Tests</a></li></ul></nav>
+        <div class="prose">
+<p>Markstage brings a whole site over in one step: its posts and pages, images and files, authors, categories and tags,
+search titles and descriptions, and every old address, sent on to the new page. You see the full plan first, with
+nothing written; then the import runs in the background, in changes you can read one by one in the site's history.</p>
+<p>Where: the editor's <strong>More tools › Import a site</strong> (<code>#/import</code>, editors and up), or <code>markstage-server import</code> on the
+server. The routes are in docs/API-IMPORT.md (&quot;A whole site&quot;). Server code: <code>packages/server/src/import/</code>
+(<code>convert/</code> reads each format, <code>site/</code> plans and runs).</p>
+<p>Markstage is pre-release. The importers are tested on export files and API answers made from each product's public
+documentation (<code>packages/server/test/fixtures/import/</code>), and the WordPress importer on one real site's export
+(&quot;Proof on a real site&quot; below). Ghost and Prismic have not yet been tried on a real site. Check the review list after
+an import, and tell us what did not come over well.</p>
+<h2 id="the-steps">The steps</h2>
+<ol><li><strong>Choose where it comes from</strong>: WordPress, Ghost or Prismic.</li><li><strong>Give the source</strong>: upload its export file, or give its API's details.
+<ul><li>WordPress: the export file (Tools › Export › All content, an <code>.xml</code> file), or the site's REST API
+(<code>/wp-json/wp/v2</code>). Drafts and private posts need a user name and an <strong>application password</strong> (Users ›
+Profile › Application Passwords).</li><li>Ghost: the export file (Settings › Labs › Export your content, a <code>.json</code> file) with the old site's address
+(an export does not say where the site was), or the Content API with a custom integration's key.</li><li>Prismic: the repository's name, an access token if it is private, and, if you want the old addresses sent on,
+each custom type's old address pattern (<code>blog_post=/blog/{uid}/, page=/{uid}/</code>).</li></ul></li><li><strong>Read the plan.</strong> One line says it all, for example &quot;142 posts, 18 pages, 1,204 images; 6 slugs already exist
+(kept both); 31 images need alt text; 4 blocks we could not convert&quot;. Below it: what would be created, updated or
+left alone, the new authors, the old addresses, and tabs for each list (Pages and posts, Images and files, To
+review, Old addresses). Change where things go and plan again as often as you like. Nothing is written.</li><li><strong>Run the import.</strong> It runs as a background job (Scheduled &amp; history follows it), in four steps, each its own
+change in the site's history, by you:
+<ul><li>images and files, 50 to a change (&quot;Import 50 media files from WordPress (batch 1 of 3)&quot;);</li><li>the new authors, in one change;</li><li>the posts and pages, 25 new ones to a change; an update (a second run) one change each;</li><li>the moved addresses, in one change.</li></ul></li><li><strong>Read the report and the review list</strong>: each note links to the page or picture to look at.</li></ol>
+<p>Everything comes in as a <strong>draft</strong> in a collection with drafts. A page that was published on the old site is listed
+as such; publish it when it is checked. The moved addresses go live with the next publish.</p>
+<h2 id="what-comes-over">What comes over</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">WordPress</th><th scope="col">Ghost</th><th scope="col">Prismic</th></tr></thead><tbody><tr><td>Posts and pages</td><td>posts and pages (other post types are counted and left out)</td><td>posts and pages</td><td>documents of every custom type; each type goes to the collection you choose</td></tr><tr><td>The text</td><td>Gutenberg blocks and classic HTML, as clean Markdown</td><td>Lexical and Mobiledoc, as clean Markdown</td><td>rich text as Markdown; slices as sections where you map them</td></tr><tr><td>Pictures and files</td><td>the pictures the pages use, at their original size (not the <code>-300x200</code> copies), and PDFs they link to</td><td>the pictures, at their original size (not <code>/size/w600/</code>)</td><td>the pictures, from the Prismic CDN, keeping their crop</td></tr><tr><td>Alt text</td><td>the attachment's alt text, else the image's own</td><td>the card's alt, the feature image's alt</td><td>the image's alt</td></tr><tr><td>Authors</td><td>each post's author, made an author of the site when it has none by that slug</td><td>the post's authors (the first is its author)</td><td>an <code>author</code> text field</td></tr><tr><td>Categories and tags</td><td>both (not &quot;Uncategorized&quot;)</td><td>tags (not internal <code>#</code> tags)</td><td>tags</td></tr><tr><td>Search title and description</td><td>Yoast or Rank Math, their variables filled in</td><td>meta title and description</td><td><code>meta_title</code> and <code>meta_description</code></td></tr><tr><td>Cover picture</td><td>the featured image</td><td>the feature image</td><td><code>featured_image</code> (or <code>image</code>, <code>cover</code>, <code>hero_image</code>)</td></tr><tr><td>Dates</td><td>published and updated</td><td>published and updated</td><td>first and last publication</td></tr><tr><td>Old addresses</td><td>the permalink, <code>?p=</code>, <code>?page_id=</code>, attachment pages, <code>?attachment_id=</code>, the uploads paths</td><td>the address pattern you give (default <code>/{slug}/</code>), <code>/author/&lt;slug&gt;/</code></td><td>the pattern you give per type</td></tr></tbody></table></div>
+<p>What becomes a note instead (in the text as &quot;Import note: …&quot;, and in the review list):</p>
+<ul><li><strong>WordPress</strong>: dynamic blocks drawn by WordPress when the page is shown (latest posts, a search box, a calendar);
+a plugin's block with no HTML of its own; a reusable block (<code>wp:block</code>); shortcodes other than <code>[caption]</code>,
+<code>[gallery]</code>, <code>[embed]</code>, <code>[video]</code>, <code>[audio]</code> and <code>[playlist]</code> (their inner text is kept).</li><li><strong>Ghost</strong>: cards other than image, gallery, bookmark, callout, embed, code, HTML, Markdown, divider, button, toggle,
+header, video, audio and file (a signup or product card, for example); a members-only post is noted, since here it
+becomes a normal page once published; a post that was only sent as an email comes in as a draft.</li><li><strong>Prismic</strong>: a slice with no words and no section mapped for it.</li><li><strong>Everywhere</strong>: an embed (a video, a map, a tweet) becomes a link to it; a script, a form, a style or an iframe is
+left out and noted; a picture from another site stays a link to that site; a link to an old page that was not
+imported keeps its old address.</li></ul>
+<h2 id="proof-on-a-real-site">Proof on a real site</h2>
+<p>On 2026-11-04 the WordPress importer ran on the export of a real business site: 148 posts and 17 pages written in
+the block editor, with 1,513 tables, 1,264 FAQ toggles, 438 call-to-action boxes, code, quotes and a Rank Math SEO
+plugin. The export was turned into the file Tools › Export writes and imported into a copy of examples/blog, with the
+old site's uploads served from a local folder. The site itself is not named here, and nothing of it is in the
+repository.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col"></th></tr></thead><tbody><tr><td>Entries</td><td>165 created, 0 failed (148 posts, 17 pages)</td></tr><tr><td>Images and files</td><td>223 brought in, 0 missing</td></tr><tr><td>Old addresses</td><td>594 paths sent to the new pages, 388 <code>?p=</code> / <code>?page_id=</code> / <code>?attachment_id=</code> links kept</td></tr><tr><td>Blocks we could not convert</td><td>0</td></tr><tr><td>Notes to review</td><td>243 SVG pictures still on the old site, 149 JSON-LD blocks left out, 153 pictures without alt text, 4 links to pages that were not imported, 7 other things left out (3 Custom HTML blocks with a script or form, 2 styles, a form, an SVG drawing), 2 pictures on another site</td></tr><tr><td>Time</td><td>7 s for the plan, 31 s for the run; the same import again: under 2 s, nothing changed, nothing fetched</td></tr></tbody></table></div>
+<p>Five posts were checked by hand against their HTML: headings, lists, tables, links (to other posts and to places on
+the same page), pictures, code, quotes, FAQ toggles, and the front matter (title, dates, author, categories, tags,
+the search title and description). What it found was fixed, each with a test (<code>import-real-cases.test.mjs</code>): links to
+a place on the same page, bold inside bold, FAQ questions, <code>[patterns]</code> in code taken as shortcodes, an author the
+export does not list, and a plan that promised what the run then refused.</p>
+<p>What it does not show yet: the export had no embeds (videos, maps), and its posts were the HTML WordPress shows, not
+the block markup Tools › Export writes, which the fixtures cover. SVG pictures are never brought in (they can carry
+scripts): save them as PNG or WebP before the old site goes away.</p>
+<h2 id="the-mapping">The mapping</h2>
+<p>Each field goes to the key your collection uses, read from the site's own config: its title, date, author, tags and
+excerpt roles (<code>fields</code>), its first image setting (the cover and its alt), a <code>categories</code> tags setting, and its
+<code>seo</code> setting. A JSON collection takes the text as <code>body</code>, the old address in its <code>url</code> field, and mapped slices as
+<code>sections</code>. The plan's &quot;Where it goes&quot; shows every key, and any can be changed (or left out) before planning again.</p>
+<pre data-lang="json"><code class="language-json">{
+  &quot;types&quot;: { &quot;post&quot;: &quot;posts&quot;, &quot;page&quot;: &quot;pages&quot;, &quot;product&quot;: null },
+  &quot;fields&quot;: { &quot;posts&quot;: { &quot;excerpt&quot;: &quot;summary&quot;, &quot;seoTitle&quot;: &quot;seo.title&quot;, &quot;categories&quot;: null } },
+  &quot;onCollision&quot;: &quot;both&quot;,
+  &quot;drafts&quot;: &quot;skip&quot;,
+  &quot;media&quot;: &quot;used&quot;,
+  &quot;slices&quot;: { &quot;hero&quot;: { &quot;section&quot;: &quot;hero&quot;, &quot;fields&quot;: { &quot;heading&quot;: &quot;primary.heading&quot;, &quot;image&quot;: &quot;primary.image&quot; } } },
+  &quot;permalink&quot;: { &quot;post&quot;: &quot;/blog/{slug}/&quot; }
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Key</th><th scope="col">What</th></tr></thead><tbody><tr><td><code>types</code></td><td>each kind of item to a collection id, or <code>null</code> to leave it out. Default: posts to <code>posts</code> (or the first Markdown collection with drafts), pages to <code>pages</code>, a Prismic type to the collection of its own name.</td></tr><tr><td><code>fields</code></td><td>per collection, each of <code>title</code>, <code>date</code>, <code>updated</code>, <code>author</code>, <code>tags</code>, <code>categories</code>, <code>excerpt</code>, <code>cover</code>, <code>coverAlt</code>, <code>seoTitle</code>, <code>seoDescription</code>, <code>body</code>, <code>url</code>, <code>sections</code> to a key (dotted for nested), or <code>null</code></td></tr><tr><td><code>onCollision</code></td><td>an address already taken: <code>both</code> (the new one gets <code>-2</code>), <code>skip</code> (the new one is left out) or <code>replace</code> (it is saved over what is there, through the editor's save: locks and checks hold)</td></tr><tr><td><code>drafts</code></td><td>drafts and private posts, for a collection without drafts: <code>skip</code> or <code>include</code></td></tr><tr><td><code>media</code></td><td><code>used</code> (the pictures the pages show and link to) or <code>all</code> (every file in the export)</td></tr><tr><td><code>slices</code></td><td>Prismic slice types to sections of a JSON collection: <code>{section, fields: {key: 'primary.x' or 'items'}}</code>; a heading alone becomes its words, other rich text Markdown, a picture <code>{src, alt}</code></td></tr><tr><td><code>permalink</code></td><td>Ghost's old address pattern per kind: <code>{slug}</code>, <code>{year}</code>, <code>{month}</code>, <code>{day}</code></td></tr></tbody></table></div>
+<h2 id="running-it-again">Running it again</h2>
+<p>An import remembers what it made by the source's own ids (a WordPress post id, a Ghost id, a Prismic document id),
+for that site. Running the same source again changes nothing and fetches nothing. A post changed at the source is
+updated; a new one is added. A page someone changed in Markstage since is left alone and listed, never overwritten.</p>
+<h2 id="the-moved-addresses">The moved addresses</h2>
+<p>Every old address of a page, a picture and an author is sent on to its new one. Paths go to the site's redirects
+hook (docs/API.md, &quot;The redirects hook&quot;), so they appear in Moved addresses and go live with the next publish. A
+static host cannot match an address by its query, so WordPress's <code>?p=12</code>, <code>?page_id=3</code> and <code>?attachment_id=41</code> links
+are kept in <code>markstage/import/&lt;source&gt;.json</code> in the site's repository, for the site (or its host's rules) to use; a
+site with no redirects hook finds its paths there too. An address a page of the site already answers is never
+redirected.</p>
+<h2 id="safety">Safety</h2>
+<ul><li><strong>Only public addresses are read.</strong> Every request (the API, each picture) goes through the server's SSRF guard:
+http and https only, ports 80 and 443, the address checked after DNS and again at every redirect, so loopback,
+private, link-local (169.254.169.254) and other reserved addresses are refused, never contacted (docs/SECURITY.md
+&quot;Fetching from the web&quot;).</li><li><strong>Limits.</strong> An API answer at most 20 MB and 20 seconds, a whole read at most 64 MB and 5 minutes, 50 pages of 100
+per list; at most 5,000 entries and 5,000 files an import; an upload as big as the media import allows (64 MB by
+default, <code>library.importMaxBytes</code>); a picture as big as an upload (<code>media.maxBytes</code>), 15 seconds each.</li><li><strong>Content types are checked.</strong> An API answer must be JSON; a picture must say it is an image or a PDF, and then the
+upload's pipeline sniffs it (never SVG) and re-encodes it.</li><li><strong>Nothing that runs comes in.</strong> HTML is read into Markdown: scripts, styles, forms, frames and event attributes
+are dropped (and noted), links keep http(s), mailto, tel or relative addresses only.</li><li><strong>A credential is used once.</strong> An application password, a Content API key or a Prismic token is used for the one
+read the plan makes, sent only to the source's own address (a redirect elsewhere is asked without it), taken out
+of any error, and kept nowhere: not in the database, a log, the audit or the plan. On the command line it is read
+from a file or <code>MARKSTAGE_IMPORT_SECRET</code>, never an argument. Delete the application password at the source when
+the import is done.</li><li><strong>The editor's rules.</strong> Each entry is created or saved as the editor does it: your rights, links, raw HTML, locks,
+the site's own checks. Editors and up; each step is audited (<code>import.plan</code>, <code>import.run</code>, <code>entry.import</code>,
+<code>author.create</code>).</li></ul>
+<h2 id="from-the-command-line">From the command line</h2>
+<p>On the server itself, as an account named by <code>--as</code>, with the same plan and run (no upload limit):</p>
+<pre data-lang="sh"><code class="language-sh">markstage-server import wordpress ./example.WordPress.2024-05-10.xml --dry --as editor@example.com
+markstage-server import wordpress ./example.WordPress.2024-05-10.xml --as editor@example.com
+markstage-server import wordpress --url https://www.example.com --user editor --password-file ./app-password.txt --as editor@example.com
+markstage-server import ghost ./example.ghost.2024-05-10.json --site-url https://blog.example.com --as editor@example.com
+markstage-server import ghost --url https://blog.example.com --key-file ./content-key.txt --as editor@example.com
+markstage-server import prismic --repo example-repo --token-file ./token.txt --routes ./routes.json --as editor@example.com</code></pre>
+<p>Options: <code>--mapping &lt;file.json&gt;</code>, <code>--on-collision both|skip|replace</code>, <code>--drafts skip|include</code>, <code>--dry</code> (the plan in
+words, nothing written; the plan also opens in the Import screen at <code>#/import/&lt;id&gt;</code>).</p>
+<h2 id="tests">Tests</h2>
+<p><code>packages/server/test/import-convert.test.mjs</code> (each converter), <code>import-wordpress.test.mjs</code> (the WXR plan, run,
+second run, collisions, mapping), <code>import-sources.test.mjs</code> (Ghost's export and Content API, Prismic's recorded
+answers, WordPress's REST API, the SSRF and credential checks), <code>import-cli.test.mjs</code>, and
+<code>e2e/import.e2e.mjs</code> (the Import screen on a copy of examples/blog with the WXR fixture).</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/IMPORT.md" target="_blank" rel="noopener">docs/IMPORT.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../starter/"><span class="small muted">Previous</span>The starter site</a>
+          <a class="next" href="../operations/"><span class="small muted">Next</span>Running a site, task by task</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Markstage Roadmap: What Is Being Built Next and Later</title>
-    <meta name="description" content="What the Markstage team is building for the next release and what is planned later: npm packages, adapters beyond Astro, live co-editing and more." />
+    <title>Markstage Roadmap: What Shipped, What Is Next and Later</title>
+    <meta name="description" content="What Markstage has shipped, by release, what is being built for the next one and what is planned later: npm packages, adapters beyond Astro, co-editing." />
     <link rel="canonical" href="https://spcaeo.github.io/markstage/roadmap/" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Markstage" />
-    <meta property="og:title" content="Markstage Roadmap: What Is Being Built Next and Later" />
-    <meta property="og:description" content="What the Markstage team is building for the next release and what is planned later: npm packages, adapters beyond Astro, live co-editing and more." />
+    <meta property="og:title" content="Markstage Roadmap: What Shipped, What Is Next and Later" />
+    <meta property="og:description" content="What Markstage has shipped, by release, what is being built for the next one and what is planned later: npm packages, adapters beyond Astro, co-editing." />
     <meta property="og:url" content="https://spcaeo.github.io/markstage/roadmap/" />
     <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
     <meta property="og:image:width" content="1200" />
@@ -20,8 +20,8 @@
     <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Markstage Roadmap: What Is Being Built Next and Later" />
-    <meta name="twitter:description" content="What the Markstage team is building for the next release and what is planned later: npm packages, adapters beyond Astro, live co-editing and more." />
+    <meta name="twitter:title" content="Markstage Roadmap: What Shipped, What Is Next and Later" />
+    <meta name="twitter:description" content="What Markstage has shipped, by release, what is being built for the next one and what is planned later: npm packages, adapters beyond Astro, co-editing." />
     <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
     <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
     <link rel="icon" href="../favicon.ico" sizes="32x32" />
@@ -59,7 +59,7 @@
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "Markstage roadmap",
-      "description": "What the Markstage team is building for the next release and what is planned later: npm packages, adapters beyond Astro, live co-editing and more.",
+      "description": "What Markstage has shipped, by release, what is being built for the next one and what is planned later: npm packages, adapters beyond Astro, co-editing.",
       "url": "https://spcaeo.github.io/markstage/roadmap/",
       "dateModified": "2026-11-03",
       "about": {
@@ -105,7 +105,7 @@
       <h1>Markstage roadmap</h1>
       <div class="prose">
 <p>Markstage is pre-release (0.x): a minor version may still change how things work. This page lists what is being
-built now for the next release and what is planned after it. We promise no dates beyond that.</p>
+built now for the next release, what has shipped, and what is planned after it. We promise no dates beyond that.</p>
 <p>Every &quot;Coming in&quot; or &quot;Planned&quot; badge on the comparison pages links here. The mark beside it is always what
 Markstage does today.</p>
 <p>Have a need that is not here? <a href="https://github.com/spcaeo/markstage/issues/new/choose" rel="noopener">Open a feature request</a>.</p>
@@ -114,6 +114,29 @@ Markstage does today.</p>
         <h2 id="rm-in-progress">Being built now, for 0.5.0</h2>
         <ul class="rm-list">
           <li class="rm-item" id="npm"><p class="rm-head"><strong>Packages on npm</strong> <span class="soon in-progress" data-item="npm">Coming in 0.5.0</span></p><p>Install @markstage/astro and @markstage/server from npm, without a clone of the repository.</p></li>
+        </ul>
+      </section>
+      <section aria-labelledby="rm-shipped">
+        <h2 id="rm-shipped">Shipped</h2>
+        <h3 id="rm-shipped-next">Since 0.4.0, on main</h3>
+        <p class="rm-note">Built and tested on main; they come out with the next release.</p>
+        <ul class="rm-list">
+          <li class="rm-item" id="server-canvas"><p class="rm-head"><strong><a href="../docs/canvas-fidelity/#on-a-server">The real page on the server, too</a></strong></p><p>The built editor on a server draws each article inside its real page, as astro dev does today.</p></li>
+          <li class="rm-item" id="ai-translate"><p class="rm-head"><strong><a href="../docs/api-translations/#ai-drafts-of-a-whole-site">AI translation of a whole site</a></strong></p><p>Draft every page of a site in another language in one run, for people to review.</p></li>
+          <li class="rm-item" id="ai-seo"><p class="rm-head"><strong><a href="../docs/api-ai/#kinds">AI link and SEO suggestions</a></strong></p><p>Suggested internal links and fixes for search problems, for a person to accept.</p></li>
+          <li class="rm-item" id="multi-process"><p class="rm-head"><strong><a href="../docs/scaling/">More than one server process</a></strong></p><p>Several server processes on one data dir, on one machine, sharing the sign-in and share-link limits, the locks and the jobs.</p></li>
+        </ul>
+        <h3 id="rm-shipped-0-4-0">In 0.4.0</h3>
+        <p class="rm-note">Released 4 November 2026.</p>
+        <ul class="rm-list">
+          <li class="rm-item" id="mdx"><p class="rm-head"><strong><a href="../docs/mdx/">MDX editing</a></strong></p><p>Edit the prose of MDX files on the page; code and components stay locked, shown as cards.</p></li>
+          <li class="rm-item" id="import"><p class="rm-head"><strong><a href="../docs/import/">Import from WordPress, Ghost and Prismic</a></strong></p><p>Bring posts, pages, media, authors and redirects across from WordPress, Ghost or Prismic.</p></li>
+          <li class="rm-item" id="server-image"><p class="rm-head"><strong><a href="../docs/docker/">A ready server image</a></strong></p><p>A Docker image of the Markstage server, built and tested by CI.</p></li>
+          <li class="rm-item" id="starter-site"><p class="rm-head"><strong><a href="../docs/starter/">A starter site</a></strong></p><p>An Astro blog with Markstage already set up, to start a new site from.</p></li>
+          <li class="rm-item" id="live-demo"><p class="rm-head"><strong><a href="../demo/">A live demo</a></strong></p><p>Try the editor on a sample blog in your browser, with no sign-up.</p></li>
+          <li class="rm-item" id="ai-writing"><p class="rm-head"><strong><a href="../features/#ai-rewrite">AI writing help on the page</a></strong></p><p>Rewrite, shorten or fix the grammar of a selection; the writer accepts or rejects each change, and nothing saves by itself.</p></li>
+          <li class="rm-item" id="ai-providers"><p class="rm-head"><strong><a href="../features/#ai-providers">More AI providers</a></strong></p><p>Any OpenAI-compatible endpoint, and local models such as Ollama, beside Anthropic.</p></li>
+          <li class="rm-item" id="mcp-publish"><p class="rm-head"><strong><a href="../docs/api-mcp/#publishing">An MCP publish tool</a></strong></p><p>An AI agent may ask to publish, and the site's publish rules decide, as they do for a person.</p></li>
         </ul>
       </section>
       <section aria-labelledby="rm-planned">

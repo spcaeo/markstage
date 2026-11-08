@@ -486,6 +486,13 @@ Skald as a lead. Its secret comes from the environment the same way: `SKALD_LEAD
 from Skald's Settings → Leads & integrations; `leads.env` picks another prefix). Without it nothing is sent and Site
 health says so.
 
+**The human check** (optional). A form with `human` (docs/CONFIG.md "Forms") asks Cloudflare Turnstile about the
+page's pass before it stores a message. Its secret comes from the environment the same way: `TURNSTILE_SECRET` (the
+widget's secret key from Cloudflare's dashboard, Turnstile; `human.env` picks another prefix). The site key is
+public and sits in the site's config. Without the secret every message goes through with "let through without the
+human check" in its history, so a missing secret never loses a lead. The site's CSP must allow
+`https://challenges.cloudflare.com` in `script-src` and `frame-src`.
+
 **The visitor's approximate place** (optional). With a city database on the server, each message gets a place from
 the visitor's address ("Toronto, Ontario, Canada"), looked up here when it comes in: nothing is sent anywhere, and
 nothing the browser says is used. Any MaxMind DB City file works; the default is DB-IP's free "IP to City Lite"

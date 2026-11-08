@@ -22,6 +22,10 @@
 //                                           (forms/leads.mjs), signed with <env>_SECRET from the environment; vid and
 //                                           test name posted values (the visitor id the page sends, and "1" for a
 //                                           team's own test lead)
+//       human: { kind: 'turnstile', siteKey: '0x…', env: 'TURNSTILE', field: 'cf-turnstile-response', action: 'contact' },
+//                                           opt-in: Cloudflare Turnstile's human check (forms/human.mjs): a message
+//                                           without a good pass is kept as spam; the secret is <env>_SECRET in the
+//                                           environment, the site key (public) is what the page shows the widget with
 //     },
 //   }
 const FORM_ID = /^[a-z][a-z0-9-]{0,39}$/;
@@ -81,6 +85,26 @@ function leadsOf(c, where, has, fail) {
     return v;
   };
   return { kind: 'skald', url: url.href, action, env, vid: posted('vid'), test: posted('test') };
+}
+
+/** forms.<id>.human: the human check (Cloudflare Turnstile only for now). The secret is named here, never given. */
+function humanOf(c, where, has, fail) {
+  if (c === undefined || c === null) return null;
+  if (typeof c !== 'object' || Array.isArray(c)) fail(`${where}.human must be an object: { kind: 'turnstile', siteKey }.`);
+  const known = ['kind', 'siteKey', 'env', 'field', 'action'];
+  for (const k of Object.keys(c)) if (!known.includes(k)) fail(`${where}.human.${k}: unknown (${known.join(', ')}). The secret comes from the environment.`);
+  if (c.kind !== 'turnstile') fail(`${where}.human.kind must be 'turnstile'.`);
+  if (typeof c.siteKey !== 'string' || !/^[0-9A-Za-z_-]{10,100}$/.test(c.siteKey)) fail(`${where}.human.siteKey must be the widget's site key (the public one, e.g. "0x4AAAA…"), never its secret.`);
+  // a site key is 24 characters, a secret 35: a secret pasted here would be published with the site's repo
+  if (c.siteKey.length > 30) fail(`${where}.human.siteKey looks like the secret key (it is too long for a site key). The secret goes only in the server's environment (${c.env ?? 'TURNSTILE'}_SECRET).`);
+  const env = c.env ?? 'TURNSTILE';
+  if (typeof env !== 'string' || !ENV_PREFIX.test(env)) fail(`${where}.human.env must be the prefix of the environment variable (capitals, digits and _), e.g. "TURNSTILE" for TURNSTILE_SECRET.`);
+  const field = c.field ?? 'cf-turnstile-response';
+  if (typeof field !== 'string' || !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(field) || has(field)) fail(`${where}.human.field must be the name of a posted value that is not a field.`);
+  // the widget's action, when the page sets one: a pass made for another action is refused
+  const action = c.action ?? null;
+  if (action !== null && (typeof action !== 'string' || !/^[A-Za-z0-9_-]{1,32}$/.test(action))) fail(`${where}.human.action must be the widget's action (letters, digits, _ and -, at most 32), e.g. "contact".`);
+  return { kind: 'turnstile', siteKey: c.siteKey, env, field, action };
 }
 
 const text = (v, what, fail, max = 2000) => {
@@ -159,6 +183,7 @@ function formOf(id, f, fail) {
     keepDays: f.keepDays === undefined || f.keepDays === null ? null : num('keepDays', null, 1, 36500),
     crm: crmOf(f.crm, where, has, fields, fail),
     leads: leadsOf(f.leads, where, has, fail),
+    human: humanOf(f.human, where, has, fail),
   };
 }
 

@@ -26,4 +26,5 @@ editor build or a stale image is caught at once.
     git push origin main v0.3.0
 
 The script bumps every package (and the `@markstage/*` ranges between them), refreshes `package-lock.json`, commits
-"Release v0.3.0" and tags it. Sites move their `markstage.pin` to that commit as usual.
+"Release v0.3.0" and tags it. It also puts the roadmap's items on main (`shipped: next` in site-content/roadmap.md)
+into the release, and turns the README's "Shipped since 0.2.0, on main:" into "Shipped in 0.3.0:". Sites move their `markstage.pin` to that commit as usual.

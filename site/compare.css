@@ -634,6 +634,13 @@ main > section > .rm-list {
   color: var(--ink-2);
 }
 
+/* /roadmap/'s Shipped section: a heading per release, with one line under it */
+.rm-note {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
 .pair-note {
   margin-top: 0;
 }

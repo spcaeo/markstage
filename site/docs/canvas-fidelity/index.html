@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Markstage Canvas Inside the Real Page</title>
+    <meta name="description" content="How the Markstage canvas sits inside the page readers get, with its header, columns and colours, in astro dev and on a server, and the test that keeps it so." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/canvas-fidelity/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="The Markstage Canvas Inside the Real Page" />
+    <meta property="og:description" content="How the Markstage canvas sits inside the page readers get, with its header, columns and colours, in astro dev and on a server, and the test that keeps it so." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/canvas-fidelity/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Markstage Canvas Inside the Real Page" />
+    <meta name="twitter:description" content="How the Markstage canvas sits inside the page readers get, with its header, columns and colours, in astro dev and on a server, and the test that keeps it so." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "The canvas and the real page",
+          "item": "https://spcaeo.github.io/markstage/docs/canvas-fidelity/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "The Markstage Canvas Inside the Real Page",
+      "description": "How the Markstage canvas sits inside the page readers get, with its header, columns and colours, in astro dev and on a server, and the test that keeps it so.",
+      "url": "https://spcaeo.github.io/markstage/docs/canvas-fidelity/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/scaling/">Several server processes on one data dir</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/import/">Importing a site from WordPress, Ghost or Prismic</a></li><li><a href="../../docs/operations/">Running a site, task by task</a></li><li><a href="../../docs/canvas-fidelity/" aria-current="page">The canvas and the real page</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">The canvas and the real page</li></ol></nav>
+        <h1>The canvas and the real page</h1>
+        <p class="lead left">How the Markstage canvas sits inside the page readers get, with its header, columns and colours, in astro dev and on a server, and the test that keeps it so.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#what-was-wrong">What was wrong</a></li><li><a href="#the-options">The options</a></li><li><a href="#how-it-works-canvas-shell-true">How it works (canvas.shell: true)</a></li><li><a href="#on-a-server">On a server</a></li><li><a href="#what-it-does-not-do-yet">What it does not do yet</a></li><li><a href="#the-guard">The guard</a></li></ul></nav>
+        <div class="prose">
+<p>The canvas is where a writer edits an entry. It should look like the page a reader gets: the same column, the same
+type, the same things in the margin, at every window width, and it should keep looking like it when the site's layout
+changes, without anyone copying CSS into the editor by hand.</p>
+<p>This note says why it did not, which ways of fixing it were weighed, what was built (<code>canvas.shell</code>), how it works,
+what it does not do yet, and the guard that keeps it honest.</p>
+<h2 id="what-was-wrong">What was wrong</h2>
+<p>With the site's stylesheets loaded (<code>css</code>) and its classes on the canvas (<code>canvas.articleClass</code>, <code>canvas.bodyClass</code>),
+the canvas still drew the text on the editor's own sheet of paper. On a real site with a reading layout (a 680px
+column, a rail beside it, notes hung in the right margin from 1280px up) that meant, at a 1440px window:</p>
+<ul><li>the column was the sheet's width (903px), not the page's (680px), so every line broke somewhere else;</li><li>the text was 17px on a 28.9px line, not 18px on 30.96px: the page's own breakpoints were measured on the window,
+and the rules that set the size hang off the page's <code>&lt;html data-frame=…&gt;</code>, which the canvas did not have;</li><li>notes the page hangs in the margin sat in the text as boxes, because the margin is drawn by the page's grid;</li><li>no site header, no rail, no table of contents: the page around the text was missing, so a writer could not see
+how much room a paragraph really takes;</li><li>the text was the source as written. A site's build may change it on the way out (respelling, smart quotes,
+heading links, reading time), and the canvas did not show that, nor say it.</li></ul>
+<p>The fidelity guard (below) measured it on three long posts of that site: every one failed at both widths, with
+paragraphs up to 5025px lower on the canvas than on the page at 1440 and up to 16065px at 390.</p>
+<h2 id="the-options">The options</h2>
+<h3 id="a-the-page-shell-the-canvas-inside-the-entrys-real-page">(a) The page shell: the canvas inside the entry's real page</h3>
+<p>The editor reads the entry's real page (the dev server's HTML, same origin), keeps the page around the text, and puts
+the canvas where the page's text element was. The page's CSS is rewritten so it reaches only that copy, and its
+breakpoints are measured on the canvas's width, not the window's. Everything that is not the canvas is shown but
+cannot be clicked.</p>
+<ul><li>Exact: the column, rail, grid, header and margin notes are the site's own markup and CSS. When the layout changes,
+the canvas changes with it on the next load. Nothing is copied by hand.</li><li>Editing stays as it is: one document, one ProseMirror, the same toolbar, handles, packs and shortcuts.</li><li>Panels still work: open the Outline and the canvas narrows; the page follows its own breakpoints at that width.</li><li>Costs: CSS rewriting (on the sheet's blocks, read with strings, comments and nesting respected), and some care
+where the editor's markup differs from the page's (a paragraph inside a list item, a line break typed in the
+source). Scripts of the page do not run (but its first <code>&lt;head&gt;</code> scripts, sandboxed: step 4).</li></ul>
+<h3 id="b-a-split-view-the-canvas-beside-the-live-preview">(b) A split view: the canvas beside the live preview</h3>
+<p>Keep the canvas as it is and show the real page (the preview, <code>API-PREVIEW.md</code>) beside it, scrolled in step.</p>
+<ul><li>Exact on the right-hand side, with the build's own output, scripts and all.</li><li>But the writer edits in one place and checks in another: the canvas itself stays wrong, half the screen goes to
+the preview, and scrolling in step is never exact when the two lay text out differently. The preview also only
+shows what was saved (or what a build of the draft gives, seconds later).</li><li>Good as a tool beside (a), not instead of it.</li></ul>
+<h3 id="c-the-sites-css-plus-the-frames-attributes-only">(c) The site's CSS plus the frame's attributes only</h3>
+<p>Keep the sheet of paper, but put the page's <code>&lt;html&gt;</code> and <code>&lt;body&gt;</code> attributes (<code>data-frame</code>, <code>lang</code>) on the canvas and
+size the sheet to the page's column.</p>
+<ul><li>Small, and it fixes the type size on simple sites.</li><li>But it stops at what attributes can say: the column width still has to be told to the editor, notes still cannot
+hang in a margin the canvas does not have, the rail and header are still missing, and the breakpoints are still
+the window's. Every layout change means a matching change in the editor's config or a pack's CSS: the thing this
+work is meant to stop.</li></ul>
+<h3 id="recommendation-a">Recommendation: (a)</h3>
+<p>Only (a) makes the canvas the page, and keeps it so on its own. (b) is worth adding later as &quot;open the preview beside
+it&quot; for what (a) cannot show (scripts, the build's last word); (c) is a subset of (a).</p>
+<h2 id="how-it-works-canvas-shell-true">How it works (<code>canvas.shell: true</code>)</h2>
+<p>Code: <code>packages/editor/src/canvas-shell/</code> (<code>page.ts</code>, <code>css.ts</code>, <code>dom.ts</code>), styles in <code>styles/shell.css</code>.</p>
+<ol><li><strong>Read the page.</strong> When an entry opens (and again after a save), the editor fetches the entry's page from the dev
+server: same origin only. It reads the page's <code>&lt;link rel=stylesheet&gt;</code> and <code>&lt;style&gt;</code> CSS too. On a server the
+page and its stylesheets come from the server's last build of the entry, as data (&quot;On a server&quot;, below).</li><li><strong>Find the text.</strong> The element with <code>canvas.bodyClass</code> is the text; the nearest <code>canvas.articleClass</code> around it is
+the article.</li><li><strong>Make it safe.</strong> Scripts, frames, objects, <code>&lt;base&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;style&gt;</code>, <code>on*</code> attributes, <code>autofocus</code>
+and <code>javascript:</code> / <code>vbscript:</code> / <code>data:text/html</code> links are removed. What is left is inert (<code>inert</code>): it can be
+seen, not clicked, focused or typed in.</li><li><strong>Stand-ins for <code>&lt;html&gt;</code> and <code>&lt;body&gt;</code>.</strong> A <code>div.ms-pg</code> carries the page's <code>&lt;html&gt;</code> attributes (<code>data-frame</code>,
+<code>lang</code>, a theme), and a <code>div.ms-pg-body</code> the <code>&lt;body&gt;</code> ones. The page's body content goes inside. The attributes are
+the ones the page's first scripts leave (<code>first-paint.ts</code>): a site's <code>&lt;head&gt;</code> often sets a <code>js</code> class and the
+visitor's theme before the first paint, and its CSS shows or hides parts on them (a theme switch shown only with
+scripts on). Those inline classic scripts of <code>&lt;head&gt;</code> (no modules, nothing with <code>src</code>, no JSON) run in a frame of
+their own: <code>sandbox=&quot;allow-scripts&quot;</code> (no origin: no access to the editor, its storage or cookies) and a content
+security policy that runs inline scripts and loads nothing (no analytics or tag manager starts from the editor).
+A last script reports <code>&lt;html&gt;</code>'s and <code>&lt;body&gt;</code>'s attributes; event-handler attributes are dropped. Without an answer
+within 2 s the page's own attributes are used. Then the page's colours, as its readers get them (&quot;Colours&quot;, below).</li><li><strong>The canvas in place of the text.</strong> The page's text element is replaced by the editor's canvas. The editor's
+head (title, byline, cover…) takes the place of the page's own: page elements before the text whose first class
+the head also draws, and the page's first heading of the title's tag, are hidden (<code>ms-pg-covered</code>). A title inside
+a header of the page's (the starter's <code>header.post__head &gt; time + h1 + p</code>) is found there too, and the editor's
+head goes in its place, between what the page draws around it. The editor's wrappers have no box of their own (<code>display: contents</code>), so the canvas's children are where the page's were.</li><li><strong>Scope classes.</strong> Frameworks that scope CSS per component mark elements with an empty attribute or a class
+(<code>data-astro-cid-…</code>, <code>svelte-…</code>). Those are copied from the page's text element and head onto the editor's, so
+the scoped rules reach them.</li><li><strong>The CSS, rewritten.</strong> Each sheet's rules are read from its text (<code>parseRules</code>: blocks, strings, comments and
+nesting respected, every declaration kept as written) and written back. Not with the browser's CSSOM: it keeps a
+shorthand written with <code>var()</code> as one pending value, and when a later declaration sets one of its longhands the
+others come back empty (<code>border: 1px solid var(--line); border-left: 2px solid var(--accent)</code> read back as the
+left border only: a card on the page had a frame its canvas copy did not):
+<ul><li><code>html</code> becomes <code>:where(.ms-pg):is(div)</code> and <code>:root</code> becomes <code>.ms-pg</code>, with the same weight; <code>body</code> becomes
+<code>:where(.ms-pg-body):is(div)</code>. Every other selector gets <code>:where(.ms-pg) </code> in front (and a second form for a
+selector about the stand-in itself, <code>[data-theme=dark] .x</code>), so it reaches only the shell, at its own weight.</li><li>Width media queries become container queries on the canvas: <code>@media (min-width: 1280px)</code> is
+<code>@container ms-vp (min-width: 1280px)</code>, where <code>ms-vp</code> is the canvas's scroll area. <code>em</code> and <code>rem</code> in them are
+turned into px (16px), as media queries read them. Other features (<code>prefers-reduced-motion</code>, <code>hover</code>) stay
+media queries; <code>print</code> rules are left out.</li><li><code>vw</code> becomes <code>calc(N * var(--ms-vw))</code>, and <code>--ms-vw</code> is kept at one hundredth of the canvas's width.</li><li><code>@supports</code>, <code>@layer</code>, <code>@container</code> and <code>@starting-style</code> are rewritten inside; <code>@font-face</code> and <code>@keyframes</code>
+are kept; <code>@import</code>, <code>@page</code>, <code>@charset</code> and <code>@namespace</code> are dropped.
+The result is one <code>&lt;style&gt;</code> at the end of the editor's head, cached by a hash of the page's CSS.</li></ul></li><li><strong>What the editor's markup does differently.</strong> In the shell only:
+<ul><li>lines break as the page breaks them (<code>white-space: pre-wrap</code>, not ProseMirror's <code>break-spaces</code>);</li><li>a line break typed in the source inside a paragraph is a space, as on the page (decoration <code>.ms-soft</code>; the text
+keeps it, so the file is saved as written);</li><li>the items of a tight list hold their text with no paragraph margins (decoration <code>.ms-tight</code>);</li><li>a code block wraps or scrolls as the site's do (the page's <code>pre</code> is asked);</li><li>a field typed in place keeps the wrapping of the site's element around it;</li><li>the empty cover drop zone is not drawn: a cover the post does not have takes no room. It is added in Post
+settings (the byline and date open them).</li></ul></li><li><strong>Overlays.</strong> What the page fixes over the window (a cookie bar, a chat button) is hidden.</li><li><strong>The editor's own copy of the site's CSS, fenced.</strong> The editor loads the site's <code>css</code> for itself too (packs,
+dialogs, the canvas without the shell), unscoped. Inside the shell that copy was wrong twice over: its <code>html</code> and
+<code>:root</code> are the editor's (<code>:root:not([data-theme=dark]) .logo-night { display: none }</code> hid the page's night logo
+in a dark canvas, since the editor's <code>&lt;html&gt;</code> never has the site's theme attribute), and its media queries
+measure the browser's window, not the canvas. The integration imports each file with <code>?ms-site</code>; <code>fence.ts</code>
+rewrites those <code>&lt;style&gt;</code>s (and again whenever the dev server replaces one) so every rule matches outside the
+shell only: <code>.a &gt; .b::before</code> becomes <code>.a &gt; .b:where(:not(.ms-pg, .ms-pg *))::before</code>, no weight added. Inside
+the shell only the scoped copy of the page's own CSS applies. The built editor (on a server) gets the same fence
+when it is built (<code>markstage build-editor</code>).</li><li><strong>Nothing of the editor's changes how a block looks.</strong> The canvas's clearfix (<code>::after { display: table }</code>) kept
+the last block's bottom margin inside the text, where the page lets it run out: everything after the text (an
+author box, related posts, the footer) was that margin lower (48px on the pilot site). In the shell it is gone. The
+outline of the block being edited follows the block's own corners (no radius of the editor's or a pack's).</li></ol>
+<h3 id="parts-of-the-page-that-follow-the-text-editorpack-shell">Parts of the page that follow the text (<code>EditorPack.shell</code>)</h3>
+<p>The page around the canvas is as last saved. Some of it is worked out from the text: a contents list from the
+headings, a reading time. A block pack keeps those live with <code>shell(ctx)</code> (<code>pack.ts</code>, <code>ShellCtx</code>). It is called when
+the page is drawn, a moment after the text or a setting changes, and as the canvas scrolls, with:</p>
+<ul><li><code>root</code>: the page around the canvas, to find the site's own parts in;</li><li><code>headings</code>: the document's headings (level, text, and the heading on the canvas), and <code>text</code>: its words;</li><li><code>entry.frontmatter</code>: the settings as they are now, unsaved changes too (a &quot;Show contents&quot; switch);</li><li><code>live(el)</code>: that part of the page can be clicked and focused (the rest stays inert); a link in it never leaves the
+editor, its click is the pack's;</li><li><code>scrollTo(el)</code>: scrolls the canvas to a heading, below what the page keeps at its top (its <code>scroll-padding-top</code>);</li><li><code>scroller</code>: the canvas's scrolling box, where the page's own script would read the window (the item being read,
+the minutes left).</li></ul>
+<p>The pack draws the part with the site's own markup and classes, so the site's CSS draws it as on the page. A site
+that lets a post turn such a part off gives it a <code>switch</code> setting (<code>CONFIG.md</code>), reads the key in its layout, and the
+pack reads the same key from <code>entry.frontmatter</code>. The example blog does this for its list of contents
+(<code>examples/blog/markstage/contents.ts</code>, &quot;Show contents&quot;).</p>
+<h3 id="colours-the-page-as-readers-see-it">Colours: the page as readers see it</h3>
+<p>The canvas shows the page as a reader whose system is in the editor's colour scheme sees it: never the editor's own
+colours, in light or dark (<code>canvas-shell/scheme.ts</code>).</p>
+<ul><li><strong>The site's dark colours</strong> (config <code>themes.dark</code>) are turned on in a dark editor only when the page turns dark by
+itself for a reader in a dark system: its CSS has a <code>prefers-color-scheme: dark</code> rule, or a script of its reads the
+system's scheme. A site whose dark colours nothing on the page turns on (the example blog: <code>data-theme=&quot;dark&quot;</code>,
+which only the screen check sets) stays light in a dark editor, as its readers get it. One the page's own first
+scripts turned on stays. The screen check's Light / Dark switch still shows the site's dark colours on demand.</li><li><strong>What the page leaves to the browser stays the browser's</strong>: the text colour (<code>CanvasText</code>), the scheme of its
+controls (light, or the page's <code>&lt;meta name=&quot;color-scheme&quot;&gt;</code>), its font, and the window's background (the page's
+<code>&lt;html&gt;</code> background, else its <code>&lt;body&gt;</code>'s, else <code>Canvas</code>, as the browser paints it). Before, a page with no text
+colour of its own took the editor's (light text in a dark editor), and the window around a narrow body was the
+editor's dark grey.</li><li><strong>Code blocks take the page's code colours</strong>: a highlighter gives the page's code blocks their colours inline
+(Astro's Shiki: <code>pre.astro-code</code> with <code>background-color</code> and <code>color</code>); the canvas's code blocks are the editor's,
+without them, so they get the same two colours, as an inline style weighs on the page. Before, a dark editor
+drew the page's light code box with the page's light text colour (1.2:1).</li></ul>
+<p>The guard checks it in both themes: every run of text on the canvas at least 4.5:1 against what is behind it (&quot;The
+guard&quot;, below).</p>
+<h3 id="what-the-build-does-to-the-text-what-readers-see">What the build does to the text: &quot;What readers see&quot;</h3>
+<p>A site's build may change the text between the file and the page. The canvas never changes the source to look like
+the page: what is edited is what is saved. Two things show the difference instead:</p>
+<ul><li><strong>&quot;What readers see&quot;</strong> (bottom right of the canvas; <code>?readers=1</code> in the URL, so it can be linked). It shows the
+page's own text, as last saved, in place of the canvas: respelled words, typographic quotes, heading links, the
+reading time the site worked out. A note says so: &quot;As last saved, with what the site does to the text.&quot; With
+unsaved changes: &quot;As last saved: your unsaved changes are not in it.&quot; The button again goes back to editing.</li><li><strong>Pack decorations</strong> for what the build adds as markup, not as text (a heading's link button, a label): a block
+pack draws them on the canvas with <code>decorate</code> (<code>pack.ts</code>), outside the document, so the lines break where the
+page's do. A pack's head can also reuse the page's own drawing of a part of the head with <code>ctx.page(selector)</code>
+(<code>HeadCtx.page</code>, a copy of the page's element, as last saved), so a byline row with what the site works out is
+the site's, with only the editable parts (author, date) replaced.</li></ul>
+<h2 id="on-a-server">On a server</h2>
+<p>In <code>astro dev</code> the shell reads the entry's page from the dev server, on the editor's own origin. The built editor
+served by <code>@markstage/server</code> (<code>editorDir</code>, <code>markstage build-editor</code>) has no such page on its origin: the site is
+built by the publish job and served elsewhere, and the preview has an origin of its own, on purpose (<code>API-PREVIEW.md</code>:
+the site's scripts run there, never where the editor's session is). So the server hands the page over <strong>as data</strong>:</p>
+<pre><code>GET /markstage/api/preview/:collection/:id/shell      (signed in)
+→ { html, sheets: [{ path, text }], from: &quot;site&quot; | &quot;draft&quot;, builtAt, path, frame }</code></pre>
+<p>and the shell treats it exactly as it treats the dev server's page: from step 2 on, nothing changes (find the text,
+remove scripts and handlers, make it inert, scope the CSS, put the canvas in place of the text).</p>
+<p><strong>For the writer.</strong> On a server the canvas sits in the entry's real page too: the site's header, columns, frame
+and footer, at the page's widths and breakpoints, with &quot;What readers see&quot;. The page around the text is <strong>the last
+build</strong> of it, not the last save: after a save the canvas still shows the new text, and the frame changes with the
+site's next build (a publish, or a share link's build of the draft). &quot;What readers see&quot; says so: &quot;As the site's
+build of Nov 5, 10:42 has it: later changes are not in it.&quot; A draft no build has yet (a new post, a draft never
+shared) opens on the sheet of paper as before, with a quiet note at the bottom right: &quot;The page around the text
+shows here after the site's next build.&quot;</p>
+<p><strong>Which build.</strong> The newest of the ones that have the entry's page (its address, <code>/posts/hello/</code> →
+<code>posts/hello/index.html</code>):</p>
+<ul><li>the site's own output, <code>verify.public</code> in <code>config.json</code> (the folder the publish job builds into and checks); for a
+protected page, <code>verify.private</code>. A redirect stub there (an entry that moved) is not its page;</li><li>the draft's preview build: the one a share link of the draft makes, &quot;as if published&quot;
+(<code>API-RELEASES.md</code>, <code>&lt;data dir&gt;/releases/builds/e_&lt;collection&gt;_&lt;id&gt;</code>), once it has finished.</li></ul>
+<p>No new setting: without <code>verify.public</code> the server says so in the note, and the canvas is the sheet of paper.</p>
+<p><strong>Its stylesheets.</strong> The page's <code>&lt;link rel=stylesheet&gt;</code> to a <code>.css</code> file of the <strong>same build folder</strong> are read and
+sent with it, by path (<code>/_astro/post.css</code>); the editor finds each link's text by that path. A link to another host
+(<code>https://cdn…</code>, <code>//cdn…</code>, <code>file:</code>) is left out and never fetched. <code>&lt;style&gt;</code> blocks are in the HTML already. The
+fonts and images the page and its CSS name by their built address (<code>/_astro/x.woff2</code>) are answered on the CMS
+origin from <code>verify.public</code>, to signed-in people only, images and fonts only (<code>site-files.mjs</code>).</p>
+<p><strong>The first <code>&lt;head&gt;</code> scripts.</strong> Step 4 runs them in a sandboxed frame. In <code>astro dev</code> that frame is a <code>srcdoc</code>; on a
+server it would take on the editor page's CSP, which allows no inline script, so the server has a frame page for it,
+<code>GET /markstage/shell-frame</code>: an empty page whose own header says <code>sandbox allow-scripts</code> (no origin: no cookies,
+no storage, no access to the editor, whatever loads it), <code>default-src 'none'</code> (nothing is loaded) and
+<code>frame-ancestors 'self'</code>. The editor sends it the head (<code>postMessage</code>); the frame writes it and reports
+<code>&lt;html&gt;</code>'s and <code>&lt;body&gt;</code>'s attributes, as the <code>srcdoc</code> does.</p>
+<p><strong>The editor's copy of the site's CSS (step 10)</strong> is fenced at build time on a server: <code>markstage build-editor</code>
+runs the same <code>fenceSheet</code> on each <code>?ms-site</code> file after Vite has compiled it (imports inlined), so the bundled copy
+matches outside the shell only, as it does in <code>astro dev</code>.</p>
+<h3 id="its-safety-rules">Its safety rules</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Rule</th><th scope="col">How</th><th scope="col">Proof</th></tr></thead><tbody><tr><td>No site script runs on the CMS origin</td><td>The page comes as JSON (<code>Content-Type: application/json</code>, the API's <code>default-src 'none'</code> CSP, <code>nosniff</code>): never a page on the CMS origin. The editor parses it with <code>DOMParser</code> (nothing runs or loads), then the same <code>sanitize</code> as in dev removes every script, frame, <code>&lt;base&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;style&gt;</code>, <code>on*</code> attribute and <code>javascript:</code> link before any of it is in the editor's document, and makes the rest inert. Head scripts run only in the sandboxed frame (<code>sandbox allow-scripts</code>, no <code>allow-same-origin</code>, by the frame's attribute and by its own header)</td><td><code>shell-page.test.mjs</code> &quot;the frame the first  scripts run in…&quot;; <code>canvas-server.e2e.mjs</code> &quot;the page's scripts never run on the CMS origin…&quot; (a script, an <code>onerror</code> handler and a cookie read in the built page: none ran in the editor, the head script ran in the frame with no cookies)</td></tr><tr><td>The same sanitising as in dev</td><td>One code path from the parsed document on (<code>page.ts</code> <code>open</code>): only where the HTML and CSS texts come from differs</td><td>the e2e above, and the fidelity guard on the server</td></tr><tr><td>No file outside the build folder</td><td>The page and each stylesheet through <code>staticFileIn</code> (<code>static-file.mjs</code>): no <code>..</code> (also encoded), and the real path, links followed, inside the folder's real path. Stylesheets <code>.css</code> only, the page <code>.html</code> only; the entry's address must start with one <code>/</code></td><td><code>shell-page.test.mjs</code> &quot;never a file outside the build folder…&quot;, &quot;an entry whose address leaves the site or the folder…&quot;</td></tr><tr><td>No request leaves the server (no SSRF)</td><td>Nothing is fetched by address: a link to another host is left out; <code>@import</code> and <code>url()</code> in the CSS are text, never followed by the server. In the editor, <code>@import</code> is dropped (step 7) and the CMS's CSP (<code>img-src</code>, <code>font-src</code>, <code>connect-src 'self'</code>) keeps <code>url()</code> on its own origin</td><td><code>shell-page.test.mjs</code> &quot;no request leaves the server…&quot; (a stand-in host counts zero requests); the e2e counts zero too</td></tr><tr><td>Only the web's addresses</td><td><code>sanitize</code> keeps an address only when it is relative, a <code>#fragment</code>, http(s), mailto or tel (an image's source also <code>data:image/…</code>), read as a browser reads it: ASCII whitespace and control characters taken out first, so <code>java&amp;#9;script:</code>, <code>&amp;#1;javascript:</code> and a newline in a <code>formaction</code> are dropped too. SVG <code>set</code> and <code>animate*</code> (which could write a <code>javascript:</code> address after the page is drawn) are dropped. In the page around the canvas no link, image-map area or form button leaves the editor, and no form is sent</td><td><code>shell-sanitize.test.ts</code> (the review's payloads, in Chromium with no CSP, clicked: nothing runs, nothing navigates)</td></tr><tr><td>Size limits</td><td>The page's size from a stat first: over 4 MB it is never read (<code>413 too-large</code>, the sheet of paper), not even to see whether it is a redirect stub; a stub check reads a file's first 4,000 characters only. Each stylesheet at most 2 MB, 8 MB in all; the page's links are read up to the first 64 distinct <code>.css</code> files (a Set, one pass: 60,000 links cost milliseconds)</td><td><code>shell-review.test.mjs</code> 1 and 2; <code>shell-page.test.mjs</code> &quot;a redirect stub is not the page; size limits…&quot;</td></tr><tr><td>Who</td><td>Signed in, any role: whoever may read the entry (every signed-in role reads every entry, <code>SECURITY.md</code> &quot;Known limits&quot;). Signed out: <code>401</code>. A collection that is not the site's, or an entry not in it: <code>404</code></td><td><code>shell-page.test.mjs</code> &quot;signed out: 401…&quot;, &quot;…every role that may read it has it&quot;</td></tr><tr><td>Kept, and where</td><td>On the server by the files' size and time: at most 32 answers and 64 MB. Never on the browser's disk (<code>Cache-Control: no-store</code>: a draft's or a protected page's HTML does not stay after sign-out); the editor keeps the last 4 in memory and asks with <code>If-None-Match</code> (the answer's <code>etag</code>), so an open or a save that finds the same build is a <code>304</code></td><td><code>shell-review.test.mjs</code> 3; <code>shell-page.test.mjs</code> &quot;a repeat is a 304 (ETag)…&quot;</td></tr></tbody></table></div>
+<p>Nothing new is written to the audit log: reading an entry is not audited either.</p>
+<h2 id="what-it-does-not-do-yet">What it does not do yet</h2>
+<ul><li><strong>Scripts after the first paint.</strong> Only the page's first <code>&lt;head&gt;</code> scripts run (sandboxed, step 4). What later
+scripts do (cards that slide in on scroll, a &quot;Read more&quot; under a clamped bio, a menu that closes) is drawn by the
+site's block pack in its resting state, from the same markup (<code>EditorPack.shell</code>, and the pack's node views for
+blocks of the text): the pilot site's <code>markstage/blocks/settled.ts</code> marks every <code>[data-reveal]</code> in and shows &quot;Read more&quot;
+when the bio is clamped. &quot;What readers see&quot; is the same page.</li><li><strong>Images before they load.</strong> The page's images carry their width and height (the build knows them); the canvas's
+are the source's (<code>![alt](src)</code>), so until an image has loaded it takes no room and the text below it sits higher.
+Once loaded it is the page's size. The guard measures both with their images loaded.</li><li><strong>The editor's own copy of the site CSS.</strong> <code>css</code> is still loaded for the editor as before (packs and dialogs use
+it), unscoped. A rule there that depends on the window's width can still reach the editor while a panel narrows
+the canvas. It has not mattered so far; a site can scope it.</li><li><strong>Not the build's last word.</strong> The canvas is the page as last saved, with the edited text in place. What the build
+would make of the unsaved text shows after a save, in &quot;What readers see&quot;.</li><li><strong>On a server, the last build.</strong> The page around the text is the newest build that has the entry (above), so a
+change to the site's layout shows after its next build, and a draft that was never built has no page around it.
+The server does not start a build for the canvas.</li><li><strong>On a server, images on another host.</strong> The CMS's CSP allows images from its own origin only, so an image whose
+source is on another host (<code>![](https://…)</code>) takes no room on the canvas (with or without the shell); on the page
+it does. The guard runs on posts whose images are the site's own.</li><li><strong>Later, maybe:</strong> a snapshot <code>&lt;iframe&gt;</code> of the page for exact script-made states, side by side (option b).</li></ul>
+<h2 id="the-guard">The guard</h2>
+<p><code>packages/editor/scripts/canvas-fidelity.mjs</code> (also <code>@markstage/editor/fidelity</code>) opens an entry in the canvas and
+its real page at the same window width, measures both, and fails when they differ:</p>
+<ul><li>the frame: the page's <code>&lt;html&gt;</code> <code>data-*</code> attributes and <code>lang</code>, on the stand-in;</li><li>the text column: edges, height, font size, line height;</li><li>each paragraph, list, quotation and code block directly in the text, each h2 and h3, table, figure, caption, image
+and embed at any depth, and each of the site's own <code>parts</code> (<code>[name, selector]</code>, e.g. a note hung in the margin):
+edges, width, height, font size, line height, and its top measured from the top of the column;</li><li>every block of the text, whatever it is (<code>block</code>: a card, a callout, a block of the site's HTML): its box and its
+look (colour, background, corners, border);</li><li>the title: edges, size, and where it sits above the column;</li><li>the head (<code>head</code>): each box in the article above the text (title, byline, cover) and each image in it, box and look;</li><li>what follows the text in the article (<code>after</code>: an author box, related posts), its top from the text's bottom;</li><li>the page around the article (<code>frame</code>): every element of it (the site header with its logo, menu, buttons and theme
+switch, the side column, the footer), box and look. Elements are paired by tag and classes (state classes like
+<code>is-in</code> aside), so one the canvas lacks or adds is named (&quot;the page's fieldset.theme is not on the canvas&quot;), not a
+shift of everything after it. Tops of what comes after the text are measured from the text's bottom; the side
+column, as tall as the text, has no height compared. What the page lays over the window (<code>position: fixed</code>) and
+the editor's own controls (<code>data-ms-ui</code>, a control of <code>ms-</code> classes only) are left out;</li><li>each of the site's <code>frameParts</code> found in the page around the text (<code>[name, selector]</code>, e.g. the items of a contents
+list in the side column): how many are shown, their edges, size and top.</li></ul>
+<p>And in every run, <strong>contrast</strong> (<code>scripts/canvas-contrast.mjs</code>, <code>contrastIn</code>): every run of text on the canvas
+(paragraphs, headings, lists, quotations, code, tables, links) and in the article around it (the title, the head,
+what follows the text) must have a WCAG contrast of at least 4.5:1 against what is really behind it: the first
+background that is not transparent, walking up through the page shell to the editor, partly transparent ones laid
+over what is under them. Nothing light on light, nothing dark on dark. The report gives the lowest ratio per kind.</p>
+<p>Each run is one width, one theme (<code>themes</code>: <code>light</code>, <code>dark</code>, the browser's colour scheme, which the editor and the
+page both follow) and one side panel (<code>sides</code>: <code>''</code>, or <code>outline</code>, <code>seo</code>… which narrows the canvas; the page is then
+measured in a window as wide as the canvas). Lefts are measured from the page's left edge (the stand-in's on the
+canvas). Both sides are measured with their images loaded.</p>
+<p><code>checkSwitch({ base, entry, label, hides })</code> checks a Post settings switch that takes a part of the page away: with
+the entry on the canvas it counts the shown <code>hides</code>, turns the switch off (none may be left), and on again (the
+same number). Nothing is saved.</p>
+<p>A length may be off by <code>tolerance</code> px (2), a font size by 0.1px, a line height by 0.5px, a look not at all; tops and
+heights use <code>topTolerance</code>
+(default the same), raise it only for a site whose build respells words and so moves a line break. The page is
+measured with reduced motion and after scrolling through once, so what slides in on scroll has come to rest; then it
+is back at its top, and so is any box that scrolled with it.</p>
+<pre><code>node packages/editor/scripts/canvas-fidelity.mjs --base http://127.0.0.1:4321 \
+  --entry posts/hello=/blog/hello/ --widths 1440,390 --themes light,dark --sides ,outline --body-class &quot;post__body&quot; \
+  --part note=.note --frame-part contents='.contents a' [--shots &lt;dir&gt;]</code></pre>
+<p>or from a test:</p>
+<pre data-lang="js"><code class="language-js">import { checkFidelity, report } from '@markstage/editor/fidelity';
+const results = await checkFidelity({ base, entries: [{ entry: 'posts/hello', page: '/blog/hello/' }], bodyClass: 'post__body' });
+assert.ok(results.every((r) =&gt; r.ok), report(results));</code></pre>
+<p>On a server, <code>--base</code> is the Markstage server (the built editor), <code>--page-base</code> the built site as readers get it,
+and <code>--storage-state</code> a signed-in browser's state (Playwright's <code>storageState</code> file); from a test, <code>pageBase</code> and
+<code>storageState</code>:</p>
+<pre><code>node packages/editor/scripts/canvas-fidelity.mjs --base https://cms.example.com --page-base https://www.example.com \
+  --storage-state signed-in.json --entry posts/hello=/blog/hello/ --widths 1440,390 --body-class &quot;post__body&quot;</code></pre>
+<p>Run it after any layout change on the site. Markstage runs it at 1440 and 390, light and dark, on the example blog in
+<code>astro dev</code> (<code>packages/server/e2e/canvas-shell.e2e.mjs</code>) and on a server, the blog built by Astro and the editor by
+<code>markstage build-editor</code> (<code>packages/server/e2e/canvas-server.e2e.mjs</code>), and on the starter in <code>astro dev</code>
+(<code>canvas-starter.e2e.mjs</code>): every measure 0px off, every run of text at least 4.5:1. The blog's dark colours are
+reached by an attribute only, so it is light in both themes; the starter follows the reader's system, so it is dark
+in a dark editor: the two cases of &quot;Colours&quot; above. The live demo is checked the same way in both themes
+(<code>demo.e2e.mjs</code>).</p>
+<h3 id="before-and-after-on-a-real-site-three-long-posts-1440-and-390">Before and after, on a real site (three long posts, 1440 and 390)</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Before (sheet of paper)</th><th scope="col">After (<code>canvas.shell</code>)</th></tr></thead><tbody><tr><td>Text column at 1440</td><td>268.5 to 1171.5 (903px), 17/28.9px; page 384 to 1064 (680px), 18/30.96px</td><td>384 to 1064, 18/30.96px</td></tr><tr><td>Text column at 390</td><td>80 to 310; page 16 to 374</td><td>16 to 374, 17/28.9px</td></tr><tr><td>Margin notes at 1440</td><td>up to 831.5px off to the left, in the text</td><td>in the margin, 0px off</td></tr><tr><td>Worst paragraph top</td><td>5025px off at 1440, 16065px at 390</td><td>0px</td></tr><tr><td>Result</td><td>6 of 6 runs fail</td><td>6 of 6 runs pass, every measure 0px off</td></tr><tr><td>Side column at 1440</td><td>no side column</td><td>the contents list (3, 21 and 7 items, drawn by the site's pack from the canvas's headings) and &quot;x min left&quot;, 0px off</td></tr></tbody></table></div>
+<p>On the example blog (<code>examples/blog</code>, a two-column guide with a list, quotation, code block, table and raw HTML) the
+guard passes at both widths with every measure 0px off.</p>
+<h3 id="round-two-everything-around-the-text">Round two: everything around the text</h3>
+<p>The guard above measured the text only, so it passed while the page around it still differed. Measured again on the
+same site, with the guard as it is now (everything around the text too, in light and dark), before and after:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">What</th><th scope="col">Before</th><th scope="col">After</th><th scope="col">Why it differed</th></tr></thead><tbody><tr><td>Header at 1512</td><td>no theme switch (94px on the page), the menu's right end 110px further right</td><td>the page's</td><td>the page's <code>&lt;head&gt;</code> adds <code>js</code> to <code>&lt;html&gt;</code> and its CSS shows the switch only then; the shell ran no scripts (step 4)</td></tr><tr><td>Header logo, dark</td><td>none (154px on the page)</td><td>the page's</td><td>the editor's unscoped copy of the site's CSS asked the editor's <code>&lt;html&gt;</code> for the theme (step 10)</td></tr><tr><td>Author box</td><td>255.9px high (284.2 on the page): no &quot;Read more&quot;</td><td>284.2</td><td>a later script shows &quot;Read more&quot; under a clamped bio: drawn at rest by the site's pack</td></tr><tr><td>Everything after the text</td><td>48px lower (18px on a post ending in a table)</td><td>0</td><td>the canvas's clearfix kept the last block's bottom margin (step 11)</td></tr><tr><td>&quot;Key takeaways&quot; box</td><td>14px corners (2px on the page)</td><td>2px</td><td>the editor's and the pack's radius on the box being edited (step 11)</td></tr><tr><td>A call-to-action card after the text</td><td>no top, right or bottom border</td><td>the page's</td><td>the CSSOM lost <code>border: 1px solid var(--line)</code> before <code>border-left</code> (step 7)</td></tr><tr><td>Body images</td><td>0px off once loaded</td><td>0px off once loaded</td><td>no difference; before it loads an image takes no room on the canvas (&quot;Images before they load&quot;)</td></tr></tbody></table></div>
+<p>Four long posts at 1280, 1440, 1512 and 1920, light and dark, and at 1512 with the Outline open: every run passes
+with every measure 0px off, but one post whose source has a block of HTML the editor cannot draw (a <code>&lt;/div&gt;</code> with
+text right after it, no blank line): the canvas shows that block as source, 147.6px shorter, and the guard says so.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/CANVAS-FIDELITY.md" target="_blank" rel="noopener">docs/CANVAS-FIDELITY.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../operations/"><span class="small muted">Previous</span>Running a site, task by task</a>
+          <a class="next" href="../environments/"><span class="small muted">Next</span>Environments: local, staging, production</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

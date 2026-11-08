@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Running a Site with Markstage: Every Task</title>
+    <meta name="description" content="Every everyday task of running a site with Markstage, from the editor: images, finding and changing posts, publishing, people, locks, health and alerts." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/operations/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Running a Site with Markstage: Every Task" />
+    <meta property="og:description" content="Every everyday task of running a site with Markstage, from the editor: images, finding and changing posts, publishing, people, locks, health and alerts." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/operations/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Running a Site with Markstage: Every Task" />
+    <meta name="twitter:description" content="Every everyday task of running a site with Markstage, from the editor: images, finding and changing posts, publishing, people, locks, health and alerts." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Running a site, task by task",
+          "item": "https://spcaeo.github.io/markstage/docs/operations/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Running a Site with Markstage: Every Task",
+      "description": "Every everyday task of running a site with Markstage, from the editor: images, finding and changing posts, publishing, people, locks, health and alerts.",
+      "url": "https://spcaeo.github.io/markstage/docs/operations/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/scaling/">Several server processes on one data dir</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/import/">Importing a site from WordPress, Ghost or Prismic</a></li><li><a href="../../docs/operations/" aria-current="page">Running a site, task by task</a></li><li><a href="../../docs/canvas-fidelity/">The canvas and the real page</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Running a site, task by task</li></ol></nav>
+        <h1>Running a site, task by task</h1>
+        <p class="lead left">Every everyday task of running a site with Markstage, from the editor: images, finding and changing posts, publishing, people, locks, health and alerts.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#images-and-files">Images and files</a></li><li><a href="#writing-and-finding">Writing and finding</a></li><li><a href="#publishing-and-the-live-site">Publishing and the live site</a></li><li><a href="#people-access-and-safety">People, access and safety</a></li><li><a href="#keeping-it-healthy">Keeping it healthy</a></li><li><a href="#order-move-delete-and-hierarchy">Order, move, delete and hierarchy</a></li><li><a href="#locks">Locks</a></li><li><a href="#never-lose-typing">Never lose typing</a></li><li><a href="#messages-and-alerts-all-in-one-place">Messages and alerts, all in one place</a></li></ul></nav>
+        <div class="prose">
+<p>How to do each everyday task of running a site, from the editor. The aim for each one: a writer or site owner with no
+technical background can do it <strong>from the editor</strong>, with no terminal, no file paths and no developer, and it works
+the same in dev (<code>astro dev</code>) and on the server, unless a row says otherwise. Where a task is not built yet, the row
+says so. The writer's own guide, with the keys, is <a href="../writing/">WRITING.md</a>.</p>
+<h2 id="images-and-files">Images and files</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">How</th></tr></thead><tbody><tr><td>Change the cover</td><td>On the canvas: hover the cover, then Replace, Crop, Alt, Focal point or Remove.</td></tr><tr><td>Change an image in the text</td><td>Select it: Replace, crop, caption, alt.</td></tr><tr><td>Media library</td><td>The Media screen (<code>#/media</code>, also in the More menu), in dev and on the server: every file with where it is used and its alt text.</td></tr><tr><td>Replace an image everywhere it is used</td><td>From the media library: a plan lists every entry and each use, then one commit makes the change; live entries are rebuilt, and a failed deploy puts it back.</td></tr><tr><td>Phone photos (HEIC), huge files, PDFs and other downloads</td><td>PDFs are stored and downloaded as attachments. A file over the limit is refused with its size and the limit. HEIC becomes JPEG when the server's <code>sharp</code> has HEIC support; otherwise the answer says how to send a JPEG instead (<a href="../deploy/">DEPLOY.md</a>).</td></tr><tr><td>Image alt across the site</td><td>A badge on each image without alt text, and a &quot;Without alt text&quot; filter in the media library.</td></tr></tbody></table></div>
+<h2 id="writing-and-finding">Writing and finding</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">How</th></tr></thead><tbody><tr><td>Find a post</td><td>⌘K opens the palette; the lists have filters (status, author, topic, updated) kept in the address.</td></tr><tr><td>Find and replace across the whole site</td><td>The Replace screen (<code>#/replace</code>) previews every place first, then makes one commit; each entry is checked like a save by that person.</td></tr><tr><td>Find and replace in the open article</td><td>⌘F (find) or ⌥⌘F (replace) opens a bar under the header: every match marked, &quot;3 of 12&quot;, Enter and Shift+Enter to step, Match case, Whole word; Replace and Replace all (one ⌘Z), formatting kept. It is all in the address (<code>find=</code>, <code>with=</code>, <code>rep=1</code>, <code>fc=1</code>, <code>fw=1</code>). A save is a diff of only the replaced words.</td></tr><tr><td>Change many posts at once (topic, category, author, unpublish)</td><td>The Bulk screen (<code>#/bulk</code>) sets a field, adds or removes a tag, unpublishes or moves to trash, with a before and after summary.</td></tr><tr><td>New post, duplicate, from a template</td><td>New → Start from: Blank or a template from the Library.</td></tr><tr><td>Delete and undo a delete</td><td>Deleted entries go to Trash (<code>#/trash</code>), which restores them as drafts; administrators delete for good.</td></tr></tbody></table></div>
+<h2 id="publishing-and-the-live-site">Publishing and the live site</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">How</th></tr></thead><tbody><tr><td>Know what is live and what is only saved</td><td>Each entry says &quot;Not live yet&quot; until it is published. In dev mode, after the first save: &quot;Saved on this computer, not live yet. It goes live when the site is published.&quot;</td></tr><tr><td>Publish, schedule, unpublish</td><td>From the publish sheet. A scheduled time missed while the server was down runs at the next start and says how late. An entry the publish rules stop goes back to draft, and its editors are told.</td></tr><tr><td>A publish failed</td><td>A notice for whoever started it, shown until they have seen it, in the notices bar under the editor's header; plus email, Slack or a webhook as set in Settings → Alerts.</td></tr><tr><td>Undo a bad release of the site</td><td>Site health → &quot;Roll back to the release before&quot; (administrators only, audited).</td></tr><tr><td>CDN cache after publish</td><td>An optional purge command runs after each deploy with the changed addresses (<a href="../deploy/">DEPLOY.md</a>).</td></tr><tr><td>Redirects</td><td>The Redirects screen (<code>#/redirects</code>) lists, adds, removes and tests them hop by hop on the site's own address; loops, chains, rules that never run, missing targets and duplicates are flagged, and a move repoints chains. Changing a site's redirects needs the site's redirects hook.</td></tr><tr><td>Edit the page I am looking at on the site</td><td>An opt-in &quot;Edit this page&quot; link in a corner of every built page, only for people signed in to Markstage (<code>editButton</code>, <a href="../api-edit/">API-EDIT.md</a>); it opens that page's entry. A bookmarklet does the same on any site (account menu → &quot;Edit button on your site&quot;). Visitors download a few hundred bytes more and nothing else changes for them.</td></tr><tr><td>See every kind of section the site has</td><td>Library → Section gallery (<code>#/gallery</code>): each section type and variation drawn alone by the site's own components at 1440 and 390, light or dark, from the first page that uses it or with sample words.</td></tr><tr><td>Put several changes live together, now or at a time</td><td>Releases (<code>#/releases</code>): More → &quot;Add to a release…&quot; puts a page in, with its unsaved changes. A release shows the rules' answer in words, approvals, its preview, Publish now, Schedule…, and Roll back… once live. Share it… makes a link for people without an account (<a href="../api-releases/">API-RELEASES.md</a>).</td></tr></tbody></table></div>
+<h2 id="people-access-and-safety">People, access and safety</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">How</th></tr></thead><tbody><tr><td>Invite, roles, 2FA, sessions</td><td>The Users screen: invite, give a role, require two-step sign-in, sign out a session.</td></tr><tr><td>Two people on one post</td><td>While an entry is open, a line under the header says who else is editing it (&quot;Olive Owner is editing this (since 15:31)&quot;) with Take over; the person taken over from is told, with Take it back. A second tab of your own says so too. Saves by two people merge block by block (see &quot;Never lose typing&quot;).</td></tr><tr><td>Session ends mid-edit</td><td>Every change is also kept in a local recovery copy in the browser, offered when the entry is opened again; saves made offline retry by themselves. A request that finds no session brings &quot;Sign in again&quot; over the editor, and once signed in, the failed save runs again.</td></tr><tr><td>Locked out</td><td>An owner or administrator resets anyone below them from Users; Users recommends a second administrator while only one person can manage users. The owner can also be reset from a terminal on the server.</td></tr><tr><td>Backups</td><td>Scheduled: a copy of the database, a git bundle, the config and a checksum manifest, the newest N kept, with an optional command to ship them off the server. &quot;Back up now&quot; and &quot;Last backup&quot; are on Site health; the restore drill is in <a href="../deploy/">DEPLOY.md</a>.</td></tr></tbody></table></div>
+<h2 id="keeping-it-healthy">Keeping it healthy</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Task</th><th scope="col">How</th></tr></thead><tbody><tr><td>Site health</td><td>The Site health screen: last deploy and backup, forms that can or cannot send, and the checks the server runs (<a href="../deploy/">DEPLOY.md</a>).</td></tr><tr><td>Updating Markstage itself</td><td>The running version and commit are shown in your account menu; <code>markstage-server update --check</code>, <code>--to</code> and <code>--rollback</code> in a terminal, with the database copied aside first.</td></tr><tr><td>Help for writers</td><td>? (anywhere but in text) or More → How do I… opens a guide in the right column: tasks in a writer's words, a search, steps and keys, and &quot;Show me&quot;, which rings the control it is about. <a href="../writing/">WRITING.md</a> is the same guide as a page.</td></tr><tr><td>Look and feel (light and dark)</td><td>The editor follows the site's own Light, Dark or System switch through the <code>themes</code> config.</td></tr><tr><td>Numbers in tables</td><td>In every table of the editor and its screens, a column of numbers (counts, money, %, sizes, durations, &quot;3 of 12&quot;) is right-aligned with tabular figures; text, dates, addresses, phones and IPs stay left.</td></tr></tbody></table></div>
+<h2 id="order-move-delete-and-hierarchy">Order, move, delete and hierarchy</h2>
+<p>One way to reorder things everywhere, so a writer learns it once:</p>
+<ul><li><strong>Drag</strong> by a grip (⋮⋮) that shows on hover and focus, with a drop line, auto-scroll near edges, and Escape to cancel.</li><li><strong>Keyboard</strong>: Alt+↑ / Alt+↓ moves the focused item; in a tree, Alt+→ / Alt+← indents and outdents; Delete removes
+(with Undo in a note, never a confirm dialog for one item); ⌘D duplicates.</li><li><strong>Menu</strong> on the grip: Move up, Move down, Move to top or bottom, Move to… (a picker, for long lists and other
+parents), Duplicate, Delete.</li><li><strong>Several at once</strong>: ⌘-click or Shift-click to select several, then move or delete them together.</li><li>Every move is one undo step and one surgical save; screen readers hear &quot;moved to position 3 of 8&quot;.</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">Where</th><th scope="col">How</th></tr></thead><tbody><tr><td>Blocks in an article</td><td>On the canvas, Alt+↑/↓ moves the block the caret is in, or every block the selection spans; the grip menu has the moves that apply, Duplicate, and Delete with Undo. The <strong>Outline</strong> (header button, <code>?side=outline</code>) lists every block, grouped by heading: moving or deleting a heading takes its section along, a section folds (<code>fold=2,5</code> in the address) and &quot;Headings only&quot; (<code>heads=1</code>) hides the rest. A section holding a move-locked box stays put. Each move is one ⌘Z and saves as a diff of only that move; moving back is byte-identical.</td></tr><tr><td>Items inside a box (FAQ questions, steps, pros and cons, takeaways, stats, cards)</td><td>On the canvas, the grip is on the item under the pointer, with the same menu and drag; Alt+↑/↓ moves the item the caret is in. In the side panel: drag, Alt+↑/↓, Move to…, Add one after, Duplicate, Delete with Undo. A box keeps its fixed order (pros before cons) and at least one item.</td></tr><tr><td>Table rows and columns</td><td>Alt+↑/↓ in a cell moves its row; the table menu has Move row up or down, Move column left or right, Duplicate row, and Sort by this column; the header row stays on top.</td></tr><tr><td>Nested lists</td><td>A list item has its own grip (a drag takes its children along) with Indent and Outdent; Tab and Shift+Tab indent and outdent while typing.</td></tr><tr><td>Page sections, and lists in page fields (cards, logos, credentials, testimonials, use cases)</td><td>The same grip, keys and menu in the page outline and the side panel.</td></tr><tr><td>Site menus (main navigation, dropdowns, footer links)</td><td>The Menus screen. Menus are content files whose items point at a page, so moving a page never breaks them.</td></tr><tr><td>Page hierarchy (sections and their pages, hubs and their page lists)</td><td>The Pages tree (<code>#/tree/&lt;collection&gt;</code>): each page under the page its address starts with, grouped and in order; drag, Alt+↑/↓ or Move to… write the order numbers that change, in one commit, with Undo. Moving many pages with their links and redirects is one server route (up to 200 moves in one commit). Moving a page under another page in the tree (a new address) is not built yet.</td></tr><tr><td>Topic clusters (a pillar page and its articles)</td><td>The Groups screen (<code>#/groups/&lt;collection&gt;</code>, config <code>groups</code>): a cluster's articles in its hub's order; drag, Alt+↑/↓ or the grip menu save the order, with Undo. Move to another topic… shows a dry run (new address, redirects, links that follow), then makes one commit.</td></tr><tr><td>Categories, tags, authors</td><td>The Categories and tags screen (<code>#/taxonomy</code>): rename everywhere (a name already in use merges), delete with reassignment, one commit with Undo.</td></tr><tr><td>Media library</td><td>Select many on &quot;Not used&quot; and delete them in one commit, with Undo. To move a file that is in use, use Replace everywhere.</td></tr><tr><td>Library (templates, sections, snippets)</td><td><code>#/library</code>: kinds as filters, folders, a card per item, and a drawer with the pages that use a synced item. Save a section or a whole page to the Library; start a new entry from a template; drag a Library section into an article, the page outline or onto the page itself, where a line shows where it lands. A synced item changed on one page offers Apply to N pages (one commit), Undo my changes, or Detach here. Import… takes a pack, parts of a web page, a WordPress file or media in bulk, as a dry run first. Arrange (<code>arrange=1</code>) puts the whole Library in order (<a href="../api-library/">API-LIBRARY.md</a>).</td></tr><tr><td>Redirects</td><td>The Redirects screen lists them with change and remove.</td></tr><tr><td>Gallery images, dashboard sorting</td><td>Not built yet: dragging images inside a gallery block, and sorting the dashboard lists by any column.</td></tr></tbody></table></div>
+<p>Every move is tested the same way: a browser test moves an item, saves, and shows the file changed only by that move;
+then moves it back and shows the file byte-identical to before.</p>
+<h2 id="locks">Locks</h2>
+<p>Some sections must not be deleted or moved by accident (a legal notice, the FAQ, the contact block). Like
+WordPress's block locking, Markstage locks parts of articles and pages.</p>
+<ul><li><strong>Three lock levels</strong>, combinable: <em>can't move</em>, <em>can't delete</em>, <em>can't edit</em>. Plus two whole-entry locks:
+<em>layout locked</em> (text editable, but blocks and sections can't be added, removed or reordered) and <em>read-only</em>.</li><li><strong>Who</strong>: the Owner, Administrators and Editors lock and unlock; Authors and Contributors see a lock badge with
+&quot;Locked by : can't be moved or deleted&quot;, and the grip menu shows those actions greyed with the reason.</li><li><strong>Where it is stored</strong>, so it lives in git with the content:
+<ul><li>pages (JSON): a <code>_lock</code> key on the section or list item (<code>{move, remove, edit}</code>), ignored by the site and by
+Keystatic (<code>fields.ignored</code>, like <code>protected</code>); whole-entry locks as a top-level <code>_lock</code>;</li><li>articles (Markdown): a box carries <code>data-lock=&quot;move remove&quot;</code> on its HTML; other blocks are locked by heading
+section in the front matter (<code>locks: [{heading: &quot;Frequently asked questions&quot;, move: true, remove: true}]</code>),
+because a plain paragraph has nowhere to hold an attribute;</li><li>site rules in config (<code>locks: {pages: {credentials: ['move','remove']}, articles: {faq: ['remove']}}</code>), for
+things that must always stay, shown as &quot;Locked by the site&quot;.</li></ul></li><li><strong>Enforced on the server</strong>, not only hidden on screen: a save that moves, removes or edits a locked block is
+refused (<code>423 locked</code>, naming the block), for every role, until someone allowed unlocks it. Audited.</li><li><strong>Moving around locks</strong>: other blocks can be dragged past a locked one; the drop line says when a drop is not
+allowed.</li><li><strong>In the editor</strong>:
+<ul><li>a padlock pill (&quot;Locked&quot;, or &quot;Locked by the site&quot;) just above the top right corner of every locked box or
+heading section, shown to every role, with the reason in its tooltip; the Outline, the Pages tree and the
+Library carry the same pill; an open padlock (&quot;Lock&quot;) shows on hover for those who may lock;</li><li>a click opens what is locked and by whom; editors and up get &quot;Can't be moved / deleted / changed&quot; switches and
+Unlock, or &quot;Unlock on this page&quot; for a site rule (only the parts that differ from the rule are kept in the
+entry; &quot;Lock again (the site's rule)&quot; removes them, so the file is byte-identical), plus &quot;Change the rule for
+every page&quot; (Settings → Locks) for the owner and administrators; authors and contributors read the reason and
+&quot;Ask an editor to unlock it&quot;. The open popover is in the address (<code>lock=&lt;block&gt;</code>);</li><li>the grip menu has Lock… and Unlock… for the same roles; a block locked against edits can't be typed in;</li><li><strong>Settings → Locks</strong> (<code>#/settings/locks</code>, owner and administrators): the site rules as a list, a row per box
+and section type with its three switches; in <code>astro dev</code> it shows the config's rules read-only;</li><li>page sections: the same pill under the section's title and the same popover (<code>?lock=&lt;section&gt;</code>).</li></ul></li></ul>
+<h2 id="never-lose-typing">Never lose typing</h2>
+<ul><li><strong>Every change is kept locally</strong> in a recovery copy in the browser, per entry and version, and offered when the
+entry is opened again (&quot;Unsaved changes from 12:41: Restore / Discard&quot;), in dev and on the server. Saves made
+offline retry by themselves when the connection is back.</li><li><strong>A save that meets someone else's save merges</strong> block by block (base, mine, theirs): different blocks merge by
+themselves (&quot;Merged with Olive's changes&quot;); the same block shows both side by side to pick or combine.</li><li>Reloading with unsaved work asks first, and a failed save keeps the text and says so in plain words.</li></ul>
+<h2 id="messages-and-alerts-all-in-one-place">Messages and alerts, all in one place</h2>
+<p>One mail account sends everything, one Inbox holds every message, and every person chooses what reaches them
+(<a href="../api-inbox/">API-INBOX.md</a>).</p>
+<p><strong>Site forms, served by Markstage</strong></p>
+<ul><li>A form route, <code>POST /forms/&lt;id&gt;</code>, with its fields, required fields and limits in the config's <code>forms</code>. It keeps
+what a site's contact form usually needs: the fields the form asks for (name, email, phone, message and any
+others), the referrer, landing page and campaign (UTM), an approximate place from the IP when a city database is
+installed, and a daily limit per visitor.</li><li>Done safely: the IP is the connection's (a trusted proxy header only), never a value the browser sends; a
+honeypot field, a minimum fill time and a start time the page must send, and an opt-in invisible human check
+(Cloudflare Turnstile) instead of a picture puzzle; the form's origin is checked; messages are stored
+outside git, with a retention period in config.</li><li>Mail: a thank-you reply to the visitor (its text editable in Settings) and a &quot;New message&quot; alert to the team.</li><li>History: old WordPress contact messages come in from a database dump with
+<code>markstage-server forms import-wordpress</code> (<a href="../deploy/">DEPLOY.md</a>, &quot;Forms&quot;), so the Inbox starts with every
+past message.</li></ul>
+<p><strong>Inbox</strong> (<code>#/inbox</code>, editors and up)</p>
+<ul><li>Every form message, newest first, with search and filters (form, service, status, date) in the address.</li><li>Open one in a drawer, with every value copyable.</li><li>Mark it handled or spam, add a note, give it to a person; export as CSV.</li></ul>
+<p><strong>Alerts</strong> (Settings → Alerts, <code>#/settings/alerts</code>, owner and administrators)</p>
+<ul><li><strong>Channels:</strong> email (with the sender name, for example &quot;Example Co Site&quot;), Slack and a webhook, each with Send a
+test. Their secrets come only from the environment or files outside the repo.</li><li><strong>Every alert kind as a row:</strong> a new form message, publish failed, deploy failed, backup failed, a scheduled
+entry held or late, the site rolled back, site health found a broken page or link, a lock changed, a user invited
+or a role changed, a sign-in from a new device. For each kind: on or off, who gets it (roles and named people,
+plus extra addresses such as a sales inbox), and which channels it uses.</li><li><strong>My alerts</strong>, in each person's menu: opt in or out of each kind they may receive; email now, a daily digest, or
+the editor only. Safety alerts (a failed backup, a sign-in from a new device to their own account) can't be
+turned off.</li><li><strong>Mail names the site, not the engine:</strong> the subject reads &quot;Example Co: …&quot;.</li><li><strong>Audit:</strong> every settings change is audited. The rules live in a data file the server writes, not in code.</li></ul>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/OPERATIONS.md" target="_blank" rel="noopener">docs/OPERATIONS.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../import/"><span class="small muted">Previous</span>Importing a site from WordPress, Ghost or Prismic</a>
+          <a class="next" href="../canvas-fidelity/"><span class="small muted">Next</span>The canvas and the real page</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

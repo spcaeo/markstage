@@ -7,8 +7,7 @@
  * The user-facing docs, in the order of the docs index. `file` is in docs/; `title` is the page's H1 and `seo` its
  * <title> (at most 60 characters; " | Markstage" is added when it fits and the name is not in it already); `summary` is the meta description (110 to 160 characters);
  * `toc: false` leaves out the page's "On this page" list.
- * Left out on purpose (internal plans and checklists): EDITOR-SCENARIOS, EDITOR-UX, UX-BENCHMARK, FROM-PRISMIC,
- * PUBLISHING, RELEASES, OPERATIONS, SEO, CANVAS-FIDELITY and ARCHITECTURE (it still reads as a build plan).
+ * Every other docs/*.md is on SITE_ELSEWHERE or GITHUB_ONLY below, with its reason (roadmap-shipped.test.mjs).
  */
 export const DOC_GROUPS = [
   {
@@ -59,6 +58,27 @@ export const DOC_GROUPS = [
         summary: 'Start a new site from the Markstage starter: a small Astro blog with Markdown posts, an MDX guide and the editor set up, made with one script from a clone.',
       },
       {
+        id: 'import',
+        file: 'IMPORT.md',
+        title: 'Importing a site from WordPress, Ghost or Prismic',
+        seo: 'Import a Site from WordPress, Ghost or Prismic',
+        summary: 'Bring a whole site to Markstage: posts, pages, media, authors, categories and old addresses, with the full plan first and the import run in the background.',
+      },
+      {
+        id: 'operations',
+        file: 'OPERATIONS.md',
+        title: 'Running a site, task by task',
+        seo: 'Running a Site with Markstage: Every Task',
+        summary: 'Every everyday task of running a site with Markstage, from the editor: images, finding and changing posts, publishing, people, locks, health and alerts.',
+      },
+      {
+        id: 'canvas-fidelity',
+        file: 'CANVAS-FIDELITY.md',
+        title: 'The canvas and the real page',
+        seo: 'The Markstage Canvas Inside the Real Page',
+        summary: 'How the Markstage canvas sits inside the page readers get, with its header, columns and colours, in astro dev and on a server, and the test that keeps it so.',
+      },
+      {
         id: 'environments',
         file: 'ENVIRONMENTS.md',
         title: 'Environments: local, staging, production',
@@ -102,6 +122,22 @@ export const DOC_GROUPS = [
 ];
 
 export const DOCS = DOC_GROUPS.flatMap((g) => g.docs);
+
+/** docs/*.md drawn by a page of their own rather than as a doc page: file → that page's site path. */
+export const SITE_ELSEWHERE = { 'COMPARISON.md': 'compare/full/' };
+
+/** docs/*.md kept on GitHub only, each with its reason: notes for the people building Markstage, not for its users. */
+export const GITHUB_ONLY = {
+  'ARCHITECTURE.md': 'The design of the code; it still reads as a build plan.',
+  'DEMO.md': 'How the live demo is built, for contributors; visitors get /demo/, which links to it.',
+  'EDITOR-SCENARIOS.md': 'The redesign’s working list of scenarios and their state.',
+  'EDITOR-UX.md': 'The rulebook the editor’s screens are built to.',
+  'FROM-PRISMIC.md': 'Research notes on what Markstage takes from Prismic.',
+  'PUBLISHING.md': 'How the private repo is published to the public one, and to npm.',
+  'RELEASES.md': 'How a release is cut and how the footer line is made, for maintainers.',
+  'SEO.md': 'A design note, with plans not all built and figures from one site we measured; what writers get is in the Writing guide and AI suggestions.',
+  'UX-BENCHMARK.md': 'Research notes comparing the editor with Ghost.',
+};
 
 /** Install in three steps. `cmd` lines get the shared copy icon. */
 export const INSTALL = [

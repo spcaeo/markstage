@@ -146,7 +146,8 @@ One mail account sends everything, one Inbox holds every message, and every pers
   others), the referrer, landing page and campaign (UTM), an approximate place from the IP when a city database is
   installed, and a daily limit per visitor.
 - Done safely: the IP is the connection's (a trusted proxy header only), never a value the browser sends; a
-  honeypot field and a minimum fill time instead of a CAPTCHA; the form's origin is checked; messages are stored
+  honeypot field, a minimum fill time and a start time the page must send, and an opt-in invisible human check
+  (Cloudflare Turnstile) instead of a picture puzzle; the form's origin is checked; messages are stored
   outside git, with a retention period in config.
 - Mail: a thank-you reply to the visitor (its text editable in Settings) and a "New message" alert to the team.
 - History: old WordPress contact messages come in from a database dump with

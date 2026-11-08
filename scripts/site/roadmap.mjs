@@ -1,6 +1,7 @@
-// The roadmap: site-content/roadmap.md (front matter `items`) is the one list of what is coming. It makes /roadmap/,
-// the "What's coming" section of /compare/ and every "Coming in <next>" / "Planned" badge in the comparison cells,
-// so a badge can only name an item that is on the list (compare.test.mjs also checks the README's Roadmap).
+// The roadmap: site-content/roadmap.md (front matter `items`) is the one list of what is coming and what has shipped.
+// It makes /roadmap/ (shipped items too, by release), the "What's coming" section of /compare/ and every "Coming in
+// <next>" / "Planned" badge in the comparison cells, so a badge can only name an item that is on the list
+// (compare.test.mjs and roadmap-shipped.test.mjs also check the README's Roadmap).
 import fs from 'node:fs';
 import path from 'node:path';
 import { breadcrumbData, breadcrumbs, ICONS, ORGANIZATION, absolute, page } from './layout.mjs';
@@ -27,6 +28,21 @@ export const STATUS = {
   shipped: { label: null, group: 'Shipped' },
 };
 
+/**
+ * The release dates in CHANGELOG.md ("## 0.4.0 (4 November 2026)"), version → date. A shipped item names its release
+ * (`shipped: 0.4.0`), or `next` while it is on main and not released yet.
+ */
+export function releaseDates(changelog) {
+  return new Map([...changelog.matchAll(/^## (\d+\.\d+\.\d+) \(([^)]+)\)/gm)].map((m) => [m[1], m[2]]));
+}
+export const RELEASES = releaseDates(fs.readFileSync(new URL('../../CHANGELOG.md', import.meta.url), 'utf8'));
+
+/** Where a shipped item is explained: its `doc` (a site path) or its line on /features/. */
+export const shippedPath = (item) => item.doc ?? (item.feature ? `features/#${item.feature}` : null);
+
+/** For `npm run release`: the items on main (`shipped: next`) become part of `version`, in roadmap.md's own text. */
+export const stampShipped = (text, version) => text.replace(/^(\s+shipped:[ \t]*)next[ \t]*$/gm, `$1${version}`);
+
 /** site-content/roadmap.md as `{ meta, items, body }`, or null when there is none. */
 export function readRoadmap(contentDir, render) {
   const file = path.join(contentDir, 'roadmap.md');
@@ -36,6 +52,10 @@ export function readRoadmap(contentDir, render) {
   const items = (meta.items ?? []).map((it) => {
     for (const key of ['id', 'title', 'what', 'status']) if (!it[key]) throw new Error(`site-content/roadmap.md: an item needs "${key}"`);
     if (!STATUS[it.status]) throw new Error(`site-content/roadmap.md: ${it.id} has status "${it.status}"`);
+    if (it.status === 'shipped') {
+      if (it.shipped !== 'next' && !/^\d+\.\d+\.\d+$/.test(String(it.shipped ?? ''))) throw new Error(`site-content/roadmap.md: ${it.id} is shipped; say in which release ("shipped: next" while it is on main, or "shipped: x.y.z")`);
+      if (!shippedPath(it)) throw new Error(`site-content/roadmap.md: ${it.id} is shipped; link it to its page ("doc: docs/<id>/") or its feature ("feature: <id>")`);
+    } else if (it.shipped) throw new Error(`site-content/roadmap.md: ${it.id} says "shipped: ${it.shipped}" but its status is ${it.status}`);
     return { ...it, rows: it.rows ?? [] };
   });
   return { meta, items, rendered: render(body) };
@@ -100,7 +120,39 @@ ${groups}
       </section>\n`;
 }
 
-/** /roadmap/: the items, grouped by status, each with an id the badges link to. */
+/**
+ * The shipped items by release, newest first: on main and not released yet ("Since <version>"), then each release.
+ * `id` is the heading's id on /roadmap/.
+ */
+export function shippedGroups(items) {
+  const shipped = items.filter((i) => i.status === 'shipped');
+  const newer = (a, b) => {
+    const [x, y] = [a, b].map((v) => v.split('.').map(Number));
+    return y[0] - x[0] || y[1] - x[1] || y[2] - x[2];
+  };
+  const versions = [...new Set(shipped.map((i) => i.shipped).filter((v) => v !== 'next'))].sort(newer);
+  const groups = [{ release: 'next', title: `Since ${VERSION}, on main`, note: 'Built and tested on main; they come out with the next release.' }];
+  for (const v of versions) groups.push({ release: v, title: `In ${v}`, note: RELEASES.has(v) ? `Released ${RELEASES.get(v)}.` : '' });
+  return groups.map((g) => ({ ...g, id: `rm-shipped-${g.release.replace(/\./g, '-')}`, items: shipped.filter((i) => i.shipped === g.release) })).filter((g) => g.items.length);
+}
+
+const shippedList = (items, root) =>
+  items
+    .map((it) => `          <li class="rm-item" id="${e(it.id)}"><p class="rm-head"><strong><a href="${root}${e(shippedPath(it))}">${e(it.title)}</a></strong></p><p>${e(it.what)}</p></li>`)
+    .join('\n');
+
+/** The Shipped section of /roadmap/: a heading per release, newest first. */
+function shippedSection(items, root) {
+  const groups = shippedGroups(items);
+  if (!groups.length) return '';
+  const parts = groups.map(
+    (g) =>
+      `        <h3 id="${g.id}">${e(g.title)}</h3>\n${g.note ? `        <p class="rm-note">${e(g.note)}</p>\n` : ''}        <ul class="rm-list">\n${shippedList(g.items, root)}\n        </ul>`,
+  );
+  return `      <section aria-labelledby="rm-shipped">\n        <h2 id="rm-shipped">${e(STATUS.shipped.group)}</h2>\n${parts.join('\n')}\n      </section>`;
+}
+
+/** /roadmap/: the items, grouped by status (shipped ones by release), each with an id the badges link to. */
 export function roadmapPage({ roadmap }) {
   const root = '../';
   const path = 'roadmap/';
@@ -109,9 +161,10 @@ export function roadmapPage({ roadmap }) {
     { name: 'Roadmap', path },
   ];
   const { meta, items, rendered } = roadmap;
-  const groups = byStatus(items)
-    .map((g) => `      <section aria-labelledby="rm-${g.status}">\n        <h2 id="rm-${g.status}">${e(STATUS[g.status].group)}</h2>\n        <ul class="rm-list">\n${list(g.items, root)}\n        </ul>\n      </section>`)
-    .join('\n');
+  const section = (g) => `      <section aria-labelledby="rm-${g.status}">\n        <h2 id="rm-${g.status}">${e(STATUS[g.status].group)}</h2>\n        <ul class="rm-list">\n${list(g.items, root)}\n        </ul>\n      </section>`;
+  const [now, later] = ['in-progress', 'planned'].map((s) => byStatus(items).find((g) => g.status === s));
+  // being built now, then what has shipped (newest first), then what is planned later
+  const groups = [now && section(now), shippedSection(items, root), later && section(later)].filter(Boolean).join('\n');
   const body = `    <main id="main" class="wrap doc wide">
       ${breadcrumbs(trail, root)}
       <h1>${e(meta.h1)}</h1>

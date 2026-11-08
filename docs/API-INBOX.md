@@ -55,10 +55,29 @@ limit and the mail. Messages are kept in the data dir, never in the content repo
   minute, held messages go out oldest first while the hour is under the cap again (status `new`, the team mail, the
   thank-you, the CRM and the lead as for any message, "let through" in the history). Nobody can set `held` by hand;
   a person may still mark a held message handled or spam.
-- **Spam:** a filled-in `honeypot` field, or a `started` time (ms) less than `minSeconds` (3) ago: kept with status
-  `spam` and answered like a real message (`200`), so a bot learns nothing; nobody is told or mailed.
+- **Spam:** kept with status `spam` and answered like a real message (`200`), so a bot learns nothing; nobody is
+  told or mailed. The reasons (column `spam`): `honeypot`, the hidden field filled in; `no-page`, the form has a
+  `started` name but the post has no start time (the page's script always sends one, so the post did not come from
+  the page: a script posting straight to the form, Origin forged); `too-fast`, a `started` time less than
+  `minSeconds` (3) ago (a start time up to a day ahead of the server's clock is a visitor's clock running fast and
+  goes through; further ahead is `no-page`); `no-human`, the form has `human` and the post has no good pass (below),
+  the one spam answered `400` instead (see there).
+- **The human check** (`human`, opt-in, Cloudflare Turnstile; forms/human.mjs): the page shows Cloudflare's widget
+  with the public `siteKey`, and the widget posts a one-time pass as `cf-turnstile-response` (`human.field`). Before
+  the message is stored Markstage asks Cloudflare (siteverify, 5 s at most) with `<env>_SECRET` from the environment
+  (`TURNSTILE_SECRET` by default) and the visitor's address. No pass, or one Cloudflare refuses (bad, old, used
+  twice) or one made for another host than `siteHosts`, or for another widget action than `human.action`: kept as
+  `no-human` spam, nobody mailed, and answered `400 {error: "Our spam check did not go through. Please reload the
+  page and send the form again."}`, never a thank-you, because a real visitor may be behind it (a pass that expired
+  while the page slept, a page older than the check); telling a bot so is no help to it, it still needs a pass.
+  Cloudflare's error codes decide, its HTTP status only when it gives none. Cloudflare out of reach, or our secret
+  missing or wrong: the message goes through as usual, so a real visitor is never lost to an outage, and its history
+  says "let through without the human check" and why. Cloudflare is only asked when nothing else gave the bot away, and not at all from an address or network over
+  its day's cap (`429` first).
+  The secret is never logged, audited or kept; Cloudflare's test secrets (`1x…AA` passes, `2x…AA` fails) work on a
+  local machine.
 - **Fields:** only the form's own fields are kept (anything else posted is dropped). Text loses control characters,
-  one-line fields lose line breaks; `required`, `min`, `max`, `type` (`email`, `tel`: 7 to 15 digits, `url`: http(s))
+  one-line fields lose line breaks; `required`, `min`, `max`, `type` (`email`, `tel`: 7 to 15 digits, and a +1 number must have an area code and exchange that can exist, `url`: http(s))
   and `options` are checked: `400 {status: 400, error, fields: {key: message}}`.
 - **Then:** the message is stored, and only then `200 {status: 200, message}` (a page with no script,
   `Sec-Fetch-Mode: navigate`, gets `303` to `thanks`): the answer never waits on mail. Editors and above get a `form.message` notice, and the alert channels carry it: the email is the team mail (every
@@ -159,7 +178,7 @@ signed exactly as Skald's own `skald-lead.cjs` signs it:
   the page posted in `leads.vid`, Skald's `skald('id')`, when it is one), `test: true` (when the page posted `1` in
   `leads.test`: a team's own test, which Skald keeps out of its counts).
 
-Spam (the honeypot, a form sent too fast) never goes, and nothing goes outside production. It runs after the message
+Spam (the honeypot, no start time, a form sent too fast, no human-check pass) never goes, and nothing goes outside production. It runs after the message
 is stored and the visitor answered; a send that fails is tried again like the Odoo push (5, 15, 60, 240, 720 minutes,
 then daily; given up after 12 tries). Each outcome is in the message's history ("sent to Skald as a lead", "not sent
 to Skald as a lead: …"), `GET /inbox/:mid` has `lead` (how it went), and Site health counts the ones that did not

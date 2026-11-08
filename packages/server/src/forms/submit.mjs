@@ -3,8 +3,9 @@
 // in the editor and the alert channels: the team mail carries every field, Reply-To the visitor) and the visitor
 // gets the thank-you mail. In this order:
 //   Origin is one of the site's hosts -> the form exists -> body (64 KB, form or JSON) -> too many from this address
-//   or its network today (429) -> spam checks (honeypot, filled in under minSeconds: kept as spam, answered 200 so a
-//   bot learns nothing) -> the fields (400 with {fields}) -> too many for this email today (perDay, 429) -> stored ->
+//   or its network today (429) -> spam checks (honeypot, filled in under minSeconds, sent without the page's start
+//   time: kept as spam, answered 200 so a bot learns nothing; no good human-check pass: kept as spam, answered 400 "send
+//   it again") -> the fields (400 with {fields}) -> too many for this email today (perDay, 429) -> stored ->
 //   mails. Past the form's hourly cap (perHour, real messages only) a message is stored as `held`: the visitor is
 //   answered as usual, nobody is mailed yet, the administrators hear of it, and retry() lets held messages through
 //   once the hour is under the cap again. So a flood never turns the form off for real visitors.
@@ -15,6 +16,7 @@ import { HttpError, netOf, newId, nowIso } from '../util.mjs';
 import { addressOf, sendMail } from '../notify/smtp.mjs';
 import { createCrm } from './crm.mjs';
 import { createLeads } from './leads.mjs';
+import { checkHuman } from './human.mjs';
 
 // the same message from the same address again within this long is one message
 const SAME_AGAIN_MS = 5 * 60_000;
@@ -33,6 +35,26 @@ const RETRIES = 12;
 const EMAIL = /^[^\s<>@,;"()[\]\\]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
 const PHONE = /^\+?[\d\s().-]{7,20}$/;
 
+/**
+ * A North American number must have an area code and an exchange that can exist: neither starts with 0 or 1, neither
+ * is N11 (211, 911…), and no area code has 9 in the middle (reserved). Bots make up numbers like +1 (890) 755-9294.
+ * Only numbers that are plainly North American are judged; any other passes.
+ */
+export function nanpOk(v) {
+  const digits = String(v).replace(/\D/g, '');
+  const raw = String(v).trim();
+  // +1…, or 1 and a separator, with ten more digits; or the North American way of writing ten: (NXX) NXX-XXXX. Eleven
+  // bare digits starting with 1 are not judged (a Chinese mobile is 1 and ten digits), nor ten bare ones (an Indian one)
+  const plusOne = digits.length === 11 && digits[0] === '1' && (/^\+\s*1/.test(raw) || /^1[\s(.-]/.test(raw));
+  const written = digits.length === 10 && /^\(\d{3}\)\s*\d{3}[\s.-]?\d{4}$/.test(raw);
+  if (!plusOne && !written) return true;
+  const ten = digits.slice(-10);
+  const area = ten.slice(0, 3);
+  const exchange = ten.slice(3, 6);
+  const bad = (n) => n[0] === '0' || n[0] === '1' || (n[1] === '1' && n[2] === '1');
+  return !bad(area) && area[1] !== '9' && !bad(exchange);
+}
+
 /** Text as it may be kept: no control characters; one line unless it is a long text. */
 export function cleanText(v, multiline = false) {
   let s = String(v ?? '').normalize('NFC').replace(/\r\n?/g, '\n');
@@ -50,7 +72,7 @@ export function checkField(f, raw) {
   if (f.type === 'email' && (!EMAIL.test(v) || v.length > 254)) return { error: `${f.label} is not an email address.` };
   if (f.type === 'tel') {
     const digits = v.replace(/\D/g, '').length;
-    if (!PHONE.test(v) || digits < 7 || digits > 15) return { error: `${f.label} is not a phone number.` };
+    if (!PHONE.test(v) || digits < 7 || digits > 15 || !nanpOk(v)) return { error: `${f.label} is not a phone number.` };
   }
   if (f.type === 'url') {
     try {
@@ -92,6 +114,37 @@ const fill = (template, vars) => template.replace(/\{(\w+)\}/g, (m, k) => (k in 
 
 export { netOf };
 
+// why a message was put aside, in the words of its history in the Inbox
+const SPAM_WORDS = {
+  honeypot: () => 'a field people never see was filled in',
+  'too-fast': (form) => `sent within ${form.minSeconds} seconds of the page opening`,
+  'no-page': () => "sent without the page: the form's start time was missing",
+  'no-human': (form, why) => `no good human check: ${why}`,
+};
+
+// a visitor's clock may run this far ahead of the server's; further is not a clock, it is a made-up start time
+const CLOCK_AHEAD_MS = DAY;
+// a post whose human check failed: the visitor is asked to send it again (a real visitor's pass may have expired, or
+// their page is older than the check); it is kept as spam all the same
+const HUMAN_AGAIN = 'Our spam check did not go through. Please reload the page and send the form again.';
+
+/**
+ * Whether the posted values look like a bot, before any outside check: the honeypot filled in; the page's start time
+ * missing (the site's script always sends it, so a post without it did not come from the page) or more than a day
+ * ahead; or sent sooner than minSeconds after it. A start time up to a day ahead of this server's clock is a
+ * visitor's clock running fast, not a bot: let through, never 'too-fast' (a real lead must not be lost to a wrong
+ * clock).
+ */
+export function spamOf(form, posted, now) {
+  if (form.honeypot && cleanText(posted.get(form.honeypot))) return 'honeypot';
+  if (!form.started) return null;
+  const raw = cleanText(posted.get(form.started));
+  const started = raw ? Number(raw) : NaN;
+  if (!Number.isFinite(started) || started <= 0 || started - now > CLOCK_AHEAD_MS) return 'no-page';
+  const took = now - started;
+  return took >= 0 && took < form.minSeconds * 1000 ? 'too-fast' : null;
+}
+
 const TEST_WORDS = 'Test form: not sent. This is not the live site; the message is kept here and nobody was mailed.';
 
 export function createFormSubmit(app, deps = {}) {
@@ -100,6 +153,8 @@ export function createFormSubmit(app, deps = {}) {
   const crm = createCrm(app, deps.crm);
   // a form with leads: its real messages also go to an analytics tool as leads, after they are stored (forms/leads.mjs)
   const leads = createLeads(app, deps.leads);
+  // a form with human: Cloudflare is asked about the page's pass before the message is stored (forms/human.mjs)
+  const human = { env: process.env, fetchImpl: fetch, ...deps.human };
   const forms = () => app.config.forms ?? {};
   const siteName = typeof config.siteName === 'string' && config.siteName.trim() ? config.siteName.trim() : 'the site';
   const origins = new Set(config.siteHosts.flatMap((h) => [`https://${h}`, ...(/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(h) ? [`http://${h}`] : [])]));
@@ -278,16 +333,28 @@ export function createFormSubmit(app, deps = {}) {
       if (!form) throw new HttpError(404, 'not-found', 'There is no such form.');
       const posted = valuesOf(req, await readRaw(req, MAX_BODY));
       const now = clock();
+      // spam: kept aside (as far as it can be read), answered as if it went through. The human check asks Cloudflare,
+      // so it runs here, outside the write transaction, and only when nothing else gave the bot away
+      let spam = spamOf(form, posted, now);
+      let spamWhy = '';
+      let unchecked = null;
+      // over the day's caps already: no call to Cloudflare (read here, counted again in the transaction below)
+      const overCap = () => {
+        const since = nowIso(now - DAY);
+        return ctx.ip && (count('SELECT COUNT(*) AS n FROM form_messages WHERE ip = ? AND at > ?', ctx.ip, since) >= MAX_PER_IP_DAY || netCount(ctx.ip, since) >= MAX_PER_NET_DAY);
+      };
+      if (!spam && form.human && overCap()) throw new HttpError(429, 'too-many', form.limitMessage);
+      if (!spam && form.human) {
+        const h = await checkHuman(form.human, posted.get(form.human.field), { ip: ctx.ip, hosts: config.siteHosts, env: human.env, fetchImpl: human.fetchImpl });
+        if (h.verdict === 'bot') [spam, spamWhy] = ['no-human', h.why];
+        else if (h.verdict === 'unchecked') unchecked = h.why;
+      }
       // the counts and the store are one write transaction: two server processes (or two quick posts) cannot both
       // pass a limit with one message left (docs/SCALING.md)
       const out = tx(db, () => {
         const since = nowIso(now - DAY);
         if (ctx.ip && count('SELECT COUNT(*) AS n FROM form_messages WHERE ip = ? AND at > ?', ctx.ip, since) >= MAX_PER_IP_DAY) throw new HttpError(429, 'too-many', form.limitMessage);
         if (ctx.ip && netCount(ctx.ip, since) >= MAX_PER_NET_DAY) throw new HttpError(429, 'too-many', form.limitMessage);
-
-        // spam: kept aside (as far as it can be read), answered as if it went through
-        const started = Number(form.started ? posted.get(form.started) : NaN);
-        const spam = form.honeypot && cleanText(posted.get(form.honeypot)) ? 'honeypot' : Number.isFinite(started) && started > 0 && now - started < form.minSeconds * 1000 ? 'too-fast' : null;
 
         const values = {};
         const problems = {};
@@ -330,14 +397,15 @@ export function createFormSubmit(app, deps = {}) {
         db.prepare('INSERT INTO form_messages (id, form, at, status, name, email, service, fields, meta, ip, user_agent, spam, place) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
           row.id, form.id, row.at, spam ? 'spam' : held ? 'held' : 'new', form.name ? values[form.name] || null : null, email, form.service ? values[form.service] || null : null, JSON.stringify(values), JSON.stringify(held && lead ? { ...meta, lead } : meta), ctx.ip, ctx.userAgent.slice(0, 300) || null, spam, place,
         );
-        db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(row.id, row.at, spam ? `put aside as spam (${spam === 'honeypot' ? 'a field people never see was filled in' : `sent within ${form.minSeconds} seconds of the page opening`})` : held ? `held: the form got more than ${form.perHour} messages in an hour; the team is told once it calms down` : 'sent from the site');
-        return { row, held, spam, values, meta, lead };
+        db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(row.id, row.at, spam ? `put aside as spam (${SPAM_WORDS[spam](form, spamWhy)})` : held ? `held: the form got more than ${form.perHour} messages in an hour; the team is told once it calms down` : 'sent from the site');
+        if (unchecked) db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(row.id, row.at, `let through without the human check: ${unchecked}`);
+        return { row, held, values, meta, lead };
       });
       if (out.again) {
         answer(req, res, 200, testOnly ? { message: TEST_WORDS, test: true } : { message: form.message }, testOnly ? null : form);
         return true;
       }
-      const { row, held, spam, values, meta, lead } = out;
+      const { row, held, values, meta, lead } = out;
       // stored: from here on the visitor's answer is a success, whatever the mail does
       if (held) tellHeld(form, now);
       else if (!spam && testOnly) {
@@ -346,6 +414,9 @@ export function createFormSubmit(app, deps = {}) {
         db.prepare('INSERT INTO form_events (message_id, at, change) VALUES (?, ?, ?)').run(row.id, row.at, `a test form on ${config.environment.name}: nobody was mailed`);
         app.notices.tell({ kind: 'form.message', level: 'info', text: `Test form on ${config.environment.name}: ${notice(form, values)}`, link: `#/inbox?open=${row.id}`, to: 'editors', editorOnly: true });
       } else if (!spam) deliver(form, row, values, meta, lead);
+      // kept as spam, but a real visitor may be behind it (an expired pass, a page older than the check): never a
+      // thank-you for a message nobody will read
+      if (spam === 'no-human') throw new HttpError(400, 'human-check', HUMAN_AGAIN);
       answer(req, res, 200, testOnly ? { message: TEST_WORDS, test: true } : { message: form.message }, testOnly ? null : form);
     } catch (e) {
       if (!(e instanceof HttpError)) {

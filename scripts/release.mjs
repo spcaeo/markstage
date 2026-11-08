@@ -30,7 +30,7 @@ if (!want) {
   console.error('usage: npm run release -- patch|minor|major|<x.y.z>   (or --security-table)');
   process.exit(2);
 }
-if (run(['status', '--porcelain', '--', 'package.json', 'package-lock.json', 'SECURITY.md', ...[...PACKAGES, ...USERS].map((p) => `${p}/package.json`)])) {
+if (run(['status', '--porcelain', '--', 'package.json', 'package-lock.json', 'SECURITY.md', 'README.md', 'site-content/roadmap.md', ...[...PACKAGES, ...USERS].map((p) => `${p}/package.json`)])) {
   console.error('release: package files have uncommitted changes; commit or drop them first');
   process.exit(1);
 }
@@ -59,6 +59,16 @@ execFileSync('npm', ['install', '--package-lock-only', '--ignore-scripts', '--no
 files.push('package-lock.json');
 writeSecurityTable(next);
 files.push('SECURITY.md');
+// the roadmap's items on main (`shipped: next`) are in this release now, and the README's list of them says so
+// (scripts/site/roadmap-shipped.test.mjs checks the two agree)
+const roadmapFile = path.join(root, 'site-content/roadmap.md');
+if (fs.existsSync(roadmapFile)) {
+  const { stampShipped } = await import('./site/roadmap.mjs');
+  fs.writeFileSync(roadmapFile, stampShipped(fs.readFileSync(roadmapFile, 'utf8'), next));
+  const readme = path.join(root, 'README.md');
+  fs.writeFileSync(readme, fs.readFileSync(readme, 'utf8').replace(`Shipped since ${current}, on main:`, `Shipped in ${next}:`));
+  files.push('site-content/roadmap.md', 'README.md');
+}
 // the public site states the version (JSON-LD softwareVersion): rebuild it so the tagged commit's site/ is current
 // and the site test (site/ equals a fresh build) passes on the tag
 if (fs.existsSync(path.join(root, 'scripts/site/build-site.mjs'))) {
