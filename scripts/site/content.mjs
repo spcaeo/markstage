@@ -130,13 +130,19 @@ export const SITE_ELSEWHERE = { 'COMPARISON.md': 'compare/full/' };
 export const GITHUB_ONLY = {
   'ARCHITECTURE.md': 'The design of the code; it still reads as a build plan.',
   'DEMO.md': 'How the live demo is built, for contributors; visitors get /demo/, which links to it.',
-  'EDITOR-SCENARIOS.md': 'The redesign’s working list of scenarios and their state.',
   'EDITOR-UX.md': 'The rulebook the editor’s screens are built to.',
-  'FROM-PRISMIC.md': 'Research notes on what Markstage takes from Prismic.',
   'PUBLISHING.md': 'How the private repo is published to the public one, and to npm.',
   'RELEASES.md': 'How a release is cut and how the footer line is made, for maintainers.',
   'SEO.md': 'A design note, with plans not all built and figures from one site we measured; what writers get is in the Writing guide and AI suggestions.',
-  'UX-BENCHMARK.md': 'Research notes comparing the editor with Ghost.',
+};
+
+/** docs/*.md that never reach the public repo: the export drops them (public-sync.config.json), so the public copy
+ * has none of them and the site links none. The private repo's test checks this list is exactly the export's docs
+ * drops, so a doc dropped from the export can't stay listed as "on GitHub" and fail the public build. */
+export const PRIVATE_ONLY = {
+  'EDITOR-SCENARIOS.md': 'Internal working notes for the editor redesign.',
+  'FROM-PRISMIC.md': 'Internal planning notes.',
+  'UX-BENCHMARK.md': 'Internal planning notes.',
 };
 
 /** Install in three steps. `cmd` lines get the shared copy icon. */

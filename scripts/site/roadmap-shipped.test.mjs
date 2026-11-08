@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, test } from 'node:test';
 import { buildSite, REPO_ROOT } from './build-site.mjs';
-import { DOCS, GITHUB_ONLY, SITE_ELSEWHERE } from './content.mjs';
+import { DOCS, GITHUB_ONLY, PRIVATE_ONLY, SITE_ELSEWHERE } from './content.mjs';
 import { RELEASES, VERSION, readRoadmap, shippedGroups, shippedPath, stampShipped } from './roadmap.mjs';
 
 const read = (f) => fs.readFileSync(path.join(REPO_ROOT, f), 'utf8');
@@ -115,20 +115,29 @@ describe('every shipped roadmap item is on /roadmap/', () => {
 
 describe('every docs/*.md is on the site, or on GitHub only with a reason', () => {
   const files = fs.readdirSync(path.join(REPO_ROOT, 'docs')).filter((f) => f.endsWith('.md'));
+  // the export's rules: only in the private repo (the public copy has no public-sync.config.json)
+  const exportConfig = path.join(REPO_ROOT, 'public-sync.config.json');
   const onSite = new Set(DOCS.map((d) => d.file));
 
   test('each file is a doc page, drawn by another page, or GitHub-only with its reason', () => {
     for (const f of files) {
-      const where = [onSite.has(f) && 'docs', SITE_ELSEWHERE[f] && 'elsewhere', GITHUB_ONLY[f] !== undefined && 'github'].filter(Boolean);
+      const where = [onSite.has(f) && 'docs', SITE_ELSEWHERE[f] && 'elsewhere', GITHUB_ONLY[f] !== undefined && 'github', PRIVATE_ONLY[f] !== undefined && 'private'].filter(Boolean);
       assert.equal(where.length, 1, `docs/${f}: ${where.length ? `listed twice (${where.join(', ')})` : 'not on the site; add it to DOC_GROUPS in content.mjs, or to GITHUB_ONLY with the reason'}`);
     }
-    for (const [f, reason] of Object.entries(GITHUB_ONLY)) assert.ok(reason && reason.length > 20, `docs/${f}: say why it stays on GitHub`);
+    for (const [f, reason] of Object.entries({ ...GITHUB_ONLY, ...PRIVATE_ONLY })) assert.ok(reason && reason.length > 20, `docs/${f}: say why it stays on GitHub or private`);
   });
 
   test('every listed file exists, and each is built where the list says', () => {
+    // a private-only doc is absent from the public copy by design; everything else must be there in both repos
     for (const f of [...onSite, ...Object.keys(SITE_ELSEWHERE), ...Object.keys(GITHUB_ONLY)]) assert.ok(files.includes(f), `docs/${f} is listed but not there`);
     for (const d of DOCS) assert.ok(page(`docs/${d.id}/index.html`), `docs/${d.id}/ is not built`);
     for (const p of Object.values(SITE_ELSEWHERE)) assert.ok(page(`${p}index.html`), `${p} is not built`);
+  });
+
+  test('the private-only docs are exactly the docs the public export drops', { skip: !fs.existsSync(exportConfig) && 'the public copy has no export rules' }, () => {
+    const drops = JSON.parse(fs.readFileSync(exportConfig, 'utf8')).exclude.map((e) => e.path).filter((p) => /^docs\/[^/*]+\.md$/.test(p)).map((p) => p.slice(5));
+    assert.deepEqual([...drops].sort(), Object.keys(PRIVATE_ONLY).sort(), 'list each docs/*.md the export drops in PRIVATE_ONLY (content.mjs), and only those');
+    for (const f of Object.keys(PRIVATE_ONLY)) assert.ok(files.includes(f), `docs/${f} is in PRIVATE_ONLY but not in this repo`);
   });
 
   test('the canvas note, with its "On a server" section, is a page', () => {
