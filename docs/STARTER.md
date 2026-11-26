@@ -28,7 +28,7 @@ them from tarballs in its own `vendor/` folder (under 1 MB), so it installs on i
 Docker image, with no path back to the clone. There is no one-command `npm create` yet: the starter's files come
 from the clone.
 
-**From npm instead: `--npm`.** The packages are on npm from 0.5.0. With that release out, add `--npm`:
+**From npm instead: `--npm`.** The packages are on npm from 0.6.0. With that release out, add `--npm`:
 
 ```sh
 node markstage/scripts/create-site.mjs my-blog --npm
@@ -37,7 +37,7 @@ node markstage/scripts/create-site.mjs my-blog --npm
 The site then takes `@markstage/astro` from npm at the clone's version (exactly that version: the four packages
 move together), with no `vendor/` and no overrides, and updates like any npm package. `vendor/` stays the default
 for now, because it also works for a clone between releases, where the version on npm is older than the code.
-Before 0.5.0 is published, `--npm` fails at `npm install` (the packages are not there yet). How the packages are
+Before 0.6.0 is published, `--npm` fails at `npm install` (the packages are not there yet). How the packages are
 made and checked before a publish: [PUBLISHING.md](PUBLISHING.md) "npm".
 
 To try the starter without making a site, run it inside the clone: `npm install`, then `npm run dev -w

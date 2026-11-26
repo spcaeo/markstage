@@ -78,6 +78,13 @@ items:
     shipped: 0.5.0
     doc: docs/canvas-fidelity/#on-a-server
     rows: []
+  - id: head-kit
+    title: Markdown for AI tools, feeds and tracking
+    what: A Markdown copy of every page, llms.txt, RSS feeds and analytics tags by ID, set in Site settings.
+    status: shipped
+    shipped: 0.5.0
+    doc: docs/head-kit/
+    rows: []
   - id: adapters
     title: Adapters beyond Astro
     what: The core has no framework in it; more site generators after Astro.

@@ -282,7 +282,7 @@ You need **Node.js 22.13 or newer** and **git**; to add it to your own site, the
 **Not on npm yet: install from a clone.** The `@markstage/*` packages are not published to npm, so each way below
 starts from a clone of this repository.
 
-**Install from npm (on npm from 0.5.0).** Once 0.5.0 is out, a site needs no clone:
+**Install from npm (on npm from 0.6.0).** Once 0.6.0 is out, a site needs no clone:
 
 ```sh
 npm install @markstage/astro                  # the editor, in astro dev
@@ -643,8 +643,12 @@ Shipped in 0.5.0:
   draft, whichever is newer) as data, and the editor removes its scripts and scopes its CSS as it does in dev. A
   draft never built yet opens on the sheet of paper, with a note that says why. The fidelity guard passes on the
   example blog served this way at 1440 and 390 ([docs/CANVAS-FIDELITY.md](docs/CANVAS-FIDELITY.md) "On a server").
+- **Markdown for AI tools, feeds and tracking.** With `head` in markstage.config, the build writes a Markdown copy of
+  every page, the OKF bundle, llms.txt and RSS feeds, and puts one tracking loader for Google Tag Manager, Google
+  Analytics 4, Ahrefs, Skald or Plausible in every page, set by ID in Site settings → Search & AI and Tracking. A page
+  that is not live is never copied, and previews never track ([docs/HEAD-KIT.md](docs/HEAD-KIT.md)).
 
-Being built now, for 0.5.0:
+Being built now, for 0.6.0:
 
 - **Packages on npm**, so a site installs `@markstage/astro` and `@markstage/server` without a clone. The packages
   are ready: each ships only what runs (checked on every push), and CI installs them from their tarballs in a new

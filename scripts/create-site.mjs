@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // A new site from the starter (examples/starter): copies it to a folder of its own, puts this checkout's Markstage
 // packages beside it as tarballs (vendor/), installs it and makes the first git commit. With --npm the site takes
-// @markstage/astro from npm instead, at this checkout's version (the packages are on npm from 0.5.0).
+// @markstage/astro from npm instead, at this checkout's version (the packages are on npm from 0.6.0).
 // docs/STARTER.md.
 //
 //   node scripts/create-site.mjs ../my-blog              a new site in ../my-blog, the packages in its vendor/

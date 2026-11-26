@@ -138,12 +138,12 @@ clone, <code>npm run create-site -- ../my-blog</code> does the same.</p>
 them from tarballs in its own <code>vendor/</code> folder (under 1 MB), so it installs on its own, on any machine and in the
 Docker image, with no path back to the clone. There is no one-command <code>npm create</code> yet: the starter's files come
 from the clone.</p>
-<p><strong>From npm instead: <code>--npm</code>.</strong> The packages are on npm from 0.5.0. With that release out, add <code>--npm</code>:</p>
+<p><strong>From npm instead: <code>--npm</code>.</strong> The packages are on npm from 0.6.0. With that release out, add <code>--npm</code>:</p>
 <pre data-lang="sh"><code class="language-sh">node markstage/scripts/create-site.mjs my-blog --npm</code></pre>
 <p>The site then takes <code>@markstage/astro</code> from npm at the clone's version (exactly that version: the four packages
 move together), with no <code>vendor/</code> and no overrides, and updates like any npm package. <code>vendor/</code> stays the default
 for now, because it also works for a clone between releases, where the version on npm is older than the code.
-Before 0.5.0 is published, <code>--npm</code> fails at <code>npm install</code> (the packages are not there yet). How the packages are
+Before 0.6.0 is published, <code>--npm</code> fails at <code>npm install</code> (the packages are not there yet). How the packages are
 made and checked before a publish: <a href="https://github.com/spcaeo/markstage/blob/main/docs/PUBLISHING.md" rel="noopener">PUBLISHING.md</a> &quot;npm&quot;.</p>
 <p>To try the starter without making a site, run it inside the clone: <code>npm install</code>, then <code>npm run dev -w
 examples/starter</code>.</p>
