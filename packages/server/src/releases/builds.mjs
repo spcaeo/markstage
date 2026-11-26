@@ -72,7 +72,7 @@ export function createReleaseBuilds(app) {
         if (config.commands.build) {
           await step('build', async (log) => {
             log(`$ ${config.commands.build.join(' ')} (built as of ${buildTime})\n`);
-            const { code } = await runCommand(config.commands.build, { cwd: dir, env: { ...config.commands.env, MARKSTAGE_BUILD_TIME: buildTime }, timeoutSeconds: config.commands.timeoutSeconds, onOutput: log });
+            const { code } = await runCommand(config.commands.build, { cwd: dir, env: { ...config.commands.env, MARKSTAGE_BUILD_TIME: buildTime, MARKSTAGE_NO_TRACKING: '1' }, timeoutSeconds: config.commands.timeoutSeconds, onOutput: log });
             return code;
           });
         }

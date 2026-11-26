@@ -231,13 +231,14 @@ reads that page from disk and sends it as data; the site's code never runs where
 ### AI agents (the MCP server)
 
 docs/API-MCP.md. Tests: `mcp.test.mjs`, `mcp-roles.test.mjs`, `mcp-roundtrip.test.mjs`, `mcp-cli.test.mjs`,
-`mcp-build.test.mjs`; the token screen `e2e/tokens.e2e.mjs`.
+`mcp-build.test.mjs`, `mcp-media.test.mjs`; the token screen `e2e/tokens.e2e.mjs`.
 
 | Control | How | Proof |
 |---|---|---|
 | Its own token | `mcp:read` / `mcp:draft`, never mixed with `env:` (`400`); `/mcp` only (`403` elsewhere); a CLI token and a browser session are refused on `/mcp` (`403`); made and revoked in a browser session only; in the `Authorization` header only, never a URL; stored as SHA-256 like every personal token | `mcp.test.mjs`: "tokens: only an MCP token…", "an expired token is refused"; `mcp-cli.test.mjs`: the CLI's `login` refuses it |
 | Where it answers | The CMS origin only: the site's hosts and the share origin answer `404` for `/mcp` and every CMS path, whatever the method. A browser `Origin` other than the CMS's is `403`, audited; no `Origin` is fine (no browser sends a bearer token on its own) | "only on the CMS origin…", "Origin: …" |
-| No publishing | No tool publishes, deletes, moves or promotes. `update_entry` saves drafts only (`409 live` otherwise); `create_draft` only where there are drafts (`422 no-drafts`); a live page's change goes into a release that is not scheduled (`409 scheduled`, checked again inside the add), which a person publishes | `mcp-roles.test.mjs`: "an author…", "an editor…", "add_to_release…", "a release scheduled while the agent adds to it…"; `mcp-build.test.mjs`: the example blog built with Astro before and after every write tool is the same, byte for byte (pages, sitemap, feed) |
+| No publishing | No tool publishes, deletes, moves or promotes. `update_entry` and `edit_entry` save drafts only (`409 live` otherwise; `edit_entry` goes through `update_entry`'s and `add_to_release`'s own checks); `create_draft` only where there are drafts (`422 no-drafts`); a live page's change goes into a release that is not scheduled (`409 scheduled`, checked again inside the add), which a person publishes | `mcp-roles.test.mjs`: "an author…", "an editor…", "add_to_release…", "a release scheduled while the agent adds to it…"; `mcp-edit.test.mjs`: "a live entry without a release…"; `mcp-build.test.mjs`: the example blog built with Astro before and after every write tool is the same, byte for byte (pages, sitemap, feed) |
+| Pictures (`add_image`) | The editor's own upload routes as the token's person: type from the bytes, never SVG, no PDF here, re-encoded, `media.maxBytes`, alt text required. An address is fetched through the web fetch guard ("Fetching from the web"), for authors and up only (an import). Without a release it is committed as an upload naming the agent; with one it waits in that unscheduled release and goes live with it; a `public/` media folder always needs a release (`409 served-as-is`). The larger request limit (base64 of `media.maxBytes`) is for a checked `mcp:draft` token only | `mcp-media.test.mjs`: "refused in words…", "an address into the server's own network…" (loopback, link-local, private, a redirect: nothing asked), "the size limit…", "a contributor's agent…", "with a release…", "a site whose media folder is served as it is…" |
 | The person's rights | Every write goes through the editor's own route as the token's person (rights, version, locks, synced copies, links, raw HTML, status keys, `validate`). Reads show only what that person may read, narrower than the editor for authors and contributors (live entries and their own drafts; also a Library item's pages and a release's entries; plans for editors and up; no revisions); an entry they may not read gets the words of one that does not exist | "reads follow the role…", "what else names a draft…", "a contributor…"; `mcp.test.mjs`: "a person with no rights to a draft never learns it is there" |
 | Locked and synced blocks | Stricter than a person's save: any change, removal or detach of a synced block, any change to a locked block, any lock put on or taken off: `423`, nothing written or added | `mcp-roundtrip.test.mjs`: "synced blocks…", "locks…" (core's site-shaped fixture pages, both write tools) |
 | Lossless | Entries are read and written as their files' text; sent back unchanged, nothing is written and no commit is made | "get_entry, then update_entry with what it gave…" (every page and article) |
@@ -431,7 +432,23 @@ so in your privacy notice, or remove those rows and rewrite history by hand.
    collections, build/deploy argv, media, and optionally `protectedPages`.
 2. Run the server as its own user. That user may write the content repo and the data dir, and nothing else.
 3. Put it behind a TLS reverse proxy that passes the `Host` header. Set `trustProxy: true` only when the proxy sets
-   `X-Forwarded-For`.
+   `X-Forwarded-For`. The proxy must also pass a Markstage token through: `Authorization: Bearer mst_…`, or AI
+   agents (`/markstage/api/mcp`) and the command line (`/markstage/api/env`) cannot sign in. If the editor sits behind
+   a browser password (basic auth), do not forward that password: pass only a Markstage bearer token, and turn basic
+   auth off for `/markstage/api/mcp` and `/markstage/api/env`, which the token itself protects. With nginx, for
+   example:
+
+   ```nginx
+   map $http_authorization $markstage_authorization {
+     "~*^Bearer[ \t]+mst_[A-Za-z0-9_-]+$" $http_authorization;
+     default "";
+   }
+   # in the location that proxies to Markstage
+   proxy_set_header Authorization $markstage_authorization;
+   ```
+
+   The sign that the header is lost on the way: a token that works gets "Send a Markstage MCP token" (`/mcp`) or
+   "Please sign in." (`/env`) instead of "Unknown token.".
 4. `markstage-server setup-code`, then sign in at `<publicOrigin>/markstage/#/setup`. Turn on 2FA for the owner.
 5. Make the deploy command atomic. Make the build exit non-zero on failure.
 

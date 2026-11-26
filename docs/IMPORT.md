@@ -9,8 +9,8 @@ server. The routes are in docs/API-IMPORT.md ("A whole site"). Server code: `pac
 (`convert/` reads each format, `site/` plans and runs).
 
 Markstage is pre-release. The importers are tested on export files and API answers made from each product's public
-documentation (`packages/server/test/fixtures/import/`), and the WordPress importer on one real site's export
-("Proof on a real site" below). Ghost and Prismic have not yet been tried on a real site. Check the review list after
+documentation (`packages/server/test/fixtures/import/`), and the WordPress importer on two real sites, one from its export and one through its
+REST API ("Proof on a real site" below). Ghost and Prismic have not yet been tried on a real site. Check the review list after
 an import, and tell us what did not come over well.
 
 ## The steps
@@ -43,13 +43,13 @@ as such; publish it when it is checked. The moved addresses go live with the nex
 
 | | WordPress | Ghost | Prismic |
 |---|---|---|---|
-| Posts and pages | posts and pages (other post types are counted and left out) | posts and pages | documents of every custom type; each type goes to the collection you choose |
+| Posts and pages | posts, pages and every public custom post type (a portfolio, case studies), each to the collection you choose; a child keeps its parent's path | posts and pages | documents of every custom type; each type goes to the collection you choose |
 | The text | Gutenberg blocks and classic HTML, as clean Markdown | Lexical and Mobiledoc, as clean Markdown | rich text as Markdown; slices as sections where you map them |
 | Pictures and files | the pictures the pages use, at their original size (not the `-300x200` copies), and PDFs they link to | the pictures, at their original size (not `/size/w600/`) | the pictures, from the Prismic CDN, keeping their crop |
 | Alt text | the attachment's alt text, else the image's own | the card's alt, the feature image's alt | the image's alt |
 | Authors | each post's author, made an author of the site when it has none by that slug | the post's authors (the first is its author) | an `author` text field |
 | Categories and tags | both (not "Uncategorized") | tags (not internal `#` tags) | tags |
-| Search title and description | Yoast or Rank Math, their variables filled in | meta title and description | `meta_title` and `meta_description` |
+| Search title and description | Yoast or Rank Math, their variables filled in; through the REST API, Rank Math's own head for each page (title, description, robots, share picture, canonical) | meta title and description | `meta_title` and `meta_description` |
 | Cover picture | the featured image | the feature image | `featured_image` (or `image`, `cover`, `hero_image`) |
 | Dates | published and updated | published and updated | first and last publication |
 | Old addresses | the permalink, `?p=`, `?page_id=`, attachment pages, `?attachment_id=`, the uploads paths | the address pattern you give (default `/{slug}/`), `/author/<slug>/` | the pattern you give per type |
@@ -66,6 +66,99 @@ What becomes a note instead (in the text as "Import note: …", and in the revie
 - **Everywhere**: an embed (a video, a map, a tweet) becomes a link to it; a script, a form, a style or an iframe is
   left out and noted; a picture from another site stays a link to that site; a link to an old page that was not
   imported keeps its old address.
+
+## WordPress in depth: custom types, ACF, Rank Math, the public address
+
+**Custom post types.** Through the REST API every public type that `/wp-json/wp/v2/types` lists is read (not media,
+not WordPress's own machinery such as patterns, templates and menus, not a type that is not viewable). An export file
+gives every `post_type` it holds. The plan lists each type with its name, its count and where it goes ("types"), and
+`types` in the mapping sends each one to a collection, or leaves it out with `null`. A type nobody maps is counted
+and left out, as before.
+
+**Real addresses.** Each entry keeps the path its page has on the old site: its permalink when published (so
+`/portal-development/work/clinic-portal/` for a case study under a page), else the type's permalink template with its
+slug, else its parent's path and its slug. A collection with a url field (`fields: {url: 'permalink'}`, for example)
+writes that path into it, and the new page answers at the same address. `"ids": "path"` makes each id from the whole
+path (`portal-development-work-clinic-portal`), so two children with the same slug under different parents do not
+collide. A collection whose address is made from the id (`url: '/blog/{id}/'`) keeps using the slug.
+
+**The block markup itself.** With an application password every list is read with `context=edit` and every status
+(published, scheduled, drafts, pending, private), so the import gets the blocks as they were written (`content.raw`),
+not the theme's HTML. A list WordPress will not give for editing (a host may refuse it) is read as the public sees it,
+and a review note says so. Only GET requests are ever sent.
+
+**ACF fields.** An entry's `acf` object (REST) or its ACF post meta (an export: the meta whose `_name` holds a
+`field_…` key) is offered in the mapping as `acf.<name>`. Map it to a front matter key, for example
+`"acf.contentLayout": "layout"`. An ACF field nobody maps is left out.
+
+**Rank Math's head.** When the site has the `rankmath/v1` REST namespace, the import asks Rank Math for each published
+page's head (`/wp-json/rankmath/v1/getHead?url=<permalink>`, two at a time) and takes the title (`og:title` when there
+is no `<title>`), the description, robots, the share picture (`og:image`, brought in like any picture) and the
+canonical address. Map them with `seoTitle`, `seoDescription`, `seoRobots`, `seoImage` and `canonical`. The head's
+JSON-LD is left out. A page whose head cannot be read keeps its meta fields, with a note.
+
+**The public address.** Many sites run WordPress on one host (`cms.example.com`) and show it on another
+(`www.example.com`). Give the public one as `publicUrl` (or `--public-url`). Every link, canonical and old address on
+the WordPress host is then read as the public one. A link to a page that is imported goes to its new path; a link to
+a page that is not goes to the public address, never to the WordPress host. Pictures written on the public host are
+still fetched from WordPress.
+
+**One part at a time.** `"only": ["/portal-development/"]` (or `--only`) plans just the entries whose path starts with
+one of the paths given. The rest are counted as "outside". Links to them go to the public address now, and to their
+new path once a later part brings them in. Run the parts one after the other with the same mapping.
+
+## Converter rules: a site's own blocks as MDX components
+
+A site built with a page builder or its own CSS classes has patterns Markdown cannot hold: a call-to-action box, an
+FAQ with numbered questions, a row of cards, a list of steps. A rules file says, for one site, which old pattern
+becomes which MDX component and where each of its props comes from. It applies to MDX collections only; in a Markdown
+collection the usual conversion is kept, with a note. A pattern with no rule keeps today's behaviour. Inline
+`<style>`, `<script>` and JSON-LD are always left out and noted.
+
+```json
+{
+  "components": { "CtaBand": { "import": "../../components/blocks/CtaBand.astro" } },
+  "report": ["soa-", "t3-"],
+  "rules": [
+    { "match": "breadcrumb-wrapper", "drop": true },
+    { "match": "t3-head", "keep": true },
+    { "match": "callout_box", "component": "CtaBand", "props": {
+        "heading": { "from": "text", "select": ".call_heading", "required": true },
+        "text": { "from": "markdown", "exclude": ".call_heading, .wp-block-buttons" },
+        "action": { "from": "link", "select": ".wp-block-buttons" } } },
+    { "match": "callout_box", "component": "Callout", "children": { "from": "markdown", "required": true } },
+    { "match": "faq_blog", "component": "Faq", "props": {
+        "heading": { "from": "heading", "select": "h2" },
+        "items": { "from": "qa", "question": "h3", "trimNumber": true, "required": true } } }
+  ]
+}
+```
+
+- **match**: a class (`"callout_box"`), several that must all be there (`["t3-cta", "light"]`), or
+  `{"class": …, "tag": "section"}`. A `*` matches any letters (`"t3-*-awards"`). The first rule that matches and finds
+  every `required` prop wins; when one does not, the next is tried and a note says why.
+- **drop** leaves the wrapper out (a note quotes it when it had words). **keep** says the plain Markdown is right, and
+  hushes notes inside it.
+- **props**: each prop's source, `{"from": …, "select": …, "exclude": …, "required": …}`. `value` (a fixed value),
+  `heading`, `text`, `markdown`, `list`, `link` / `links` (`{href, text}`), `image` / `images` (`{src, alt}`, brought
+  in like any picture), `attr` (`name`), `hasClass` (`name`, true or false), `qa` (question and answer pairs, from
+  `<details>` toggles, or from a `question` selector and what follows each; `trimNumber` takes "1." off), and `items`
+  (each match of `select` with its own `fields`, up to three deep). A selector is a tag, a `.class`, `tag.class`, or
+  several with commas.
+- **children**: the component's inner Markdown; other rules apply inside it.
+- **wordsFrom**: the component draws its words from the site's data (a file named here), so the old words are not
+  checked.
+- **report**: class prefixes of the site's own blocks. A block with one of them and no rule is noted once, with its
+  heading, so you see which patterns still need a rule.
+
+After converting, the old words are compared with the props: words no prop kept are noted ("did not keep some of the
+old words"). Simple text props are written as `heading="…"`, which the editor can change; lists and objects as
+`{…}`, which it shows read-only. Each component's import line is put at the top of the file, from `components`. The
+plan says how many of each component it made ("Converter rules made …").
+
+Give the file as `rules` (the routes, as JSON) or `--rules <file.json>`. It is kept with the run, and planning again
+uses it until another is given. A file that is not right is refused with the place named (422, field `rules`). Keep a
+site's rules file in that site's own repository, next to its migration notes: it names the site's old classes.
 
 ## Proof on a real site
 
@@ -90,7 +183,30 @@ the search title and description). What it found was fixed, each with a test (`i
 a place on the same page, bold inside bold, FAQ questions, `[patterns]` in code taken as shortcodes, an author the
 export does not list, and a plan that promised what the run then refused.
 
-What it does not show yet: the export had no embeds (videos, maps), and its posts were the HTML WordPress shows, not
+### A second site, through the REST API (2026-11-08)
+
+A real healthcare software company's WordPress (WordPress on a CMS host, shown on a public one), read through its
+REST API with an application password: posts, pages and seven custom post types, Rank Math, ACF fields, and a theme
+whose sections are CSS classes. Only GET requests were sent, at most two at a time. The plan for the whole site, with
+the sample rules and `publicUrl`:
+
+| | |
+|---|---|
+| Kinds of content | 5 posts, 21 pages, 112 entries of 7 custom types (19, 36, 7, 25, 8, 11, 6); one more type with none |
+| Entries | 134 to create, 4 left out by the target site's own check (an excerpt over 500 characters) |
+| Images and files | 443 to bring in (711 in the library are not used) |
+| Old addresses | 854 paths, 490 `?p=` / `?page_id=` links |
+| Components | 869 made from the old patterns, of 20 kinds (Callout 260, CtaBand 120, CardGrid 100, CompanyProfile 92, Faq 77 …) |
+| Notes | 2,208: 1,526 SVG pictures still on the old site; 416 from the rules (304 blocks with no rule yet, most of them in four section kinds; about 95 components that did not keep some old words); 216 left out of the HTML (119 JSON-LD, 51 style blocks, 25 SVG drawings, 10 forms, 10 Custom HTML blocks with a form or player); 15 links to blog posts outside the import; 12 shortcodes not converted; 19 pictures without alt text; 3 lists WordPress would not give for editing; 1 set of chat-assistant citation markers |
+| Time | about 40 s for the plan |
+
+One part (the 7 entries of one section, a page and its 6 case studies, under `only`) was then imported into a copy
+of examples/blog in 54 s: 7 entries and 53 pictures in 5 changes. Each file keeps its real path, parses as MDX, and
+has the Rank Math title, description, robots, share picture and canonical (on the public host) and its ACF layout.
+Links to the part's own pages go to their new paths; links to other parts go to the public address. Planning it again
+found all 7 unchanged and the 53 pictures already here.
+
+What it does not show yet: the first export had no embeds (videos, maps), and its posts were the HTML WordPress shows, not
 the block markup Tools › Export writes, which the fixtures cover. SVG pictures are never brought in (they can carry
 scripts): save them as PNG or WebP before the old site goes away.
 
@@ -116,7 +232,10 @@ excerpt roles (`fields`), its first image setting (the cover and its alt), a `ca
 | Key | What |
 |---|---|
 | `types` | each kind of item to a collection id, or `null` to leave it out. Default: posts to `posts` (or the first Markdown collection with drafts), pages to `pages`, a Prismic type to the collection of its own name. |
-| `fields` | per collection, each of `title`, `date`, `updated`, `author`, `tags`, `categories`, `excerpt`, `cover`, `coverAlt`, `seoTitle`, `seoDescription`, `body`, `url`, `sections` to a key (dotted for nested), or `null` |
+| `fields` | per collection, each of `title`, `date`, `updated`, `author`, `tags`, `categories`, `excerpt`, `cover`, `coverAlt`, `seoTitle`, `seoDescription`, `seoRobots`, `seoImage`, `canonical`, `body`, `url`, `sections` and any `acf.<name>` to a key (dotted for nested), or `null` |
+| `publicUrl` | the address readers use, when WordPress runs on another host: links, canonicals and old addresses on the WordPress host are read as this one |
+| `only` | paths (starting with `/`, at most 200): only the entries under them are planned; the rest are counted as outside |
+| `ids` | `slug` (the default) or `path`: each id made from the whole old path, in a collection that keeps the path |
 | `onCollision` | an address already taken: `both` (the new one gets `-2`), `skip` (the new one is left out) or `replace` (it is saved over what is there, through the editor's save: locks and checks hold) |
 | `drafts` | drafts and private posts, for a collection without drafts: `skip` or `include` |
 | `media` | `used` (the pictures the pages show and link to) or `all` (every file in the export) |
@@ -173,12 +292,15 @@ markstage-server import ghost --url https://blog.example.com --key-file ./conten
 markstage-server import prismic --repo example-repo --token-file ./token.txt --routes ./routes.json --as editor@example.com
 ```
 
-Options: `--mapping <file.json>`, `--on-collision both|skip|replace`, `--drafts skip|include`, `--dry` (the plan in
-words, nothing written; the plan also opens in the Import screen at `#/import/<id>`).
+Options: `--mapping <file.json>`, `--on-collision both|skip|replace`, `--drafts skip|include`, `--rules <file.json>`
+(converter rules), `--public-url <address>`, `--only /a/,/b/` (one part of the site), `--dry` (the plan in words,
+nothing written; the plan also opens in the Import screen at `#/import/<id>`).
 
 ## Tests
 
 `packages/server/test/import-convert.test.mjs` (each converter), `import-wordpress.test.mjs` (the WXR plan, run,
 second run, collisions, mapping), `import-sources.test.mjs` (Ghost's export and Content API, Prismic's recorded
-answers, WordPress's REST API, the SSRF and credential checks), `import-cli.test.mjs`, and
+answers, WordPress's REST API, the SSRF and credential checks), `import-cli.test.mjs`, `import-wp-types.test.mjs` (custom types, real paths, `context=edit` and its fallback,
+ACF, Rank Math's head two at a time and GET only, `publicUrl`, `only`, path ids, an export's custom types and ACF
+meta), `import-rules.test.mjs` (the converter rules, each output parsed as MDX), and
 `e2e/import.e2e.mjs` (the Import screen on a copy of examples/blog with the WXR fixture).

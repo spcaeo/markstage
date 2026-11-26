@@ -129,7 +129,16 @@ describe('the MCP server on real site files: lossless, and locked and synced blo
       const u = await agent.tool('update_entry', { collection: 'posts', id, version: e.version, source: e.source.replace(from, to) });
       assert.equal(u.ok, true, `${id}: ${u.text}`);
       assert.equal(u.data.changed, true);
-      assert.equal(read(rel), before.replace(from, to), `${id}: only that word`);
+      // that word, and the modified date (where the post has one) moved to now in the post's format
+      const after = read(rel);
+      const MOD = /^modified: '([^']*)'$/m;
+      const was = before.match(MOD)?.[1];
+      if (was) {
+        const now = after.match(MOD)?.[1];
+        assert.match(now, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00$/, `${id}: the date in the post's format`);
+        assert.ok(Math.abs(Date.parse(now) - Date.now()) < 300_000, `${id}: the date is now (${now})`);
+      }
+      assert.equal(was ? after.replace(MOD, `modified: '${was}'`) : after, before.replace(from, to), `${id}: only that word`);
     }
   });
 

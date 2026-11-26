@@ -75,7 +75,7 @@ items:
     title: The real page on the server, too
     what: The built editor on a server draws each article inside its real page, as astro dev does today.
     status: shipped
-    shipped: next
+    shipped: 0.5.0
     doc: docs/canvas-fidelity/#on-a-server
     rows: []
   - id: adapters
@@ -92,21 +92,21 @@ items:
     title: AI translation of a whole site
     what: Draft every page of a site in another language in one run, for people to review.
     status: shipped
-    shipped: next
+    shipped: 0.5.0
     doc: docs/api-translations/#ai-drafts-of-a-whole-site
     rows: []
   - id: ai-seo
     title: AI link and SEO suggestions
     what: Suggested internal links and fixes for search problems, for a person to accept.
     status: shipped
-    shipped: next
+    shipped: 0.5.0
     doc: docs/api-ai/#kinds
     rows: []
   - id: multi-process
     title: More than one server process
     what: Several server processes on one data dir, on one machine, sharing the sign-in and share-link limits, the locks and the jobs.
     status: shipped
-    shipped: next
+    shipped: 0.5.0
     doc: docs/scaling/
     rows: []
   - id: stable

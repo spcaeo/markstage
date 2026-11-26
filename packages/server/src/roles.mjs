@@ -87,6 +87,8 @@ const ABILITIES = {
   'design.read': 'contributor',
   'design.write': 'administrator',
   'code.inject': 'administrator',
+  // the head kit's settings (Site settings → Search & AI, Tracking): who may change them; everyone who may look at the design reads
+  'head.write': 'administrator',
 };
 
 /** Every ability with the least role that has it (the custom roles' list of what a rule may name). */

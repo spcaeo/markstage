@@ -165,6 +165,17 @@ describe('the MCP server, role by role', () => {
     assert.equal(head(), start);
   });
 
+  test('create_release follows the role: an editor’s agent opens one; an author’s and a contributor’s are refused in words', async () => {
+    const ok = await agent.ed.tool('create_release', { name: 'Editor agent: a reason' });
+    assert.equal(ok.ok, true, ok.text);
+    assert.equal(ok.data.release.status, 'open');
+    for (const who of ['bob', 'carol']) {
+      const no = await agent[who].tool('create_release', { name: `${who}: a reason` });
+      assert.equal(no.ok, false, `${who}: ${no.text}`);
+      assert.match(no.text, /Editors and above/);
+    }
+  });
+
   test('add_to_release: into an open release, recorded as the agent’s; never into a scheduled one, in plain words', async () => {
     const r = await release('Agent changes');
     const hello = readFile(fx, 'src/content/blog/hello-world.md');

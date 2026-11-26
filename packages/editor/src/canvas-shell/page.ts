@@ -445,8 +445,22 @@ export class PageShell {
       },
       scrollTo: (el) => {
         const box = this.d.scroller;
-        const pad = parseFloat(getComputedStyle(this.root!).scrollPaddingTop) || 0;
-        box.scrollTo({ top: box.scrollTop + el.getBoundingClientRect().top - box.getBoundingClientRect().top - pad });
+        const root = this.root!;
+        const aim = () => box.scrollTop + el.getBoundingClientRect().top - box.getBoundingClientRect().top - (parseFloat(getComputedStyle(root).scrollPaddingTop) || 0);
+        box.scrollTo({ top: aim() });
+        // The page may grow just after the click (focus leaving the text redraws it), when the scroll has already
+        // stopped at the old bottom short of the heading: for a moment, aim again whenever the page changes size,
+        // unless the person scrolls by hand meanwhile.
+        const grown = new ResizeObserver(() => {
+          if (Math.abs(aim() - box.scrollTop) > 1) box.scrollTo({ top: aim() });
+        });
+        const stop = () => {
+          grown.disconnect();
+          for (const e of ['wheel', 'touchstart', 'keydown'] as const) box.removeEventListener(e, stop);
+        };
+        for (const e of ['wheel', 'touchstart', 'keydown'] as const) box.addEventListener(e, stop, { passive: true });
+        grown.observe(root);
+        setTimeout(stop, 1000);
       },
     };
     for (const f of shells) {

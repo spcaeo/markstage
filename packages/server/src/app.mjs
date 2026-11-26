@@ -48,6 +48,7 @@ import { createAlerts } from './notify/send.mjs';
 import { preflightRoutes } from './preflight.mjs';
 import { injectRoutes } from './design/inject.mjs';
 import { createDesign } from './design/routes.mjs';
+import { createHead } from './head/routes.mjs';
 import { createEditLink, editLinkRoutes } from './edit-link.mjs';
 import { createStore } from './content/store.mjs';
 import { lightIndexRoutes } from './content/light-index.mjs';
@@ -166,6 +167,8 @@ export async function createMarkstage(config, deps = {}) {
   protectRoutes(api, app, entries, lifecycle.deployJob);
   app.design = createDesign(app);
   app.design.routes(api);
+  app.head = createHead(app);
+  app.head.routes(api);
   injectRoutes(api, app, entries, lifecycle.deployJob);
   app.redirectsHook = createRedirectsHook(app);
   moveRoutes(api, app, entries);
@@ -205,7 +208,7 @@ export async function createMarkstage(config, deps = {}) {
   app.releases.routes(api);
   // the MCP server: an AI agent with a token, through these same routes (mcp/index.mjs)
   app.mcp = createMcp(app, api);
-  api.add('POST', '/mcp', app.mcp.handle, { auth: false, token: true });
+  api.add('POST', '/mcp', app.mcp.handle, { auth: false, token: true, bodyBytes: app.mcp.bodyBytes });
   api.add('GET', '/mcp', app.mcp.explain, { auth: false });
   // AI suggestions: words for a person to read and save, never a commit (ai/index.mjs); deps.ai = {fetch, env}
   app.ai = createAi(app, deps.ai);
@@ -300,7 +303,8 @@ export async function createMarkstage(config, deps = {}) {
         app.audit.log(ctx, 'security.csrf', { ok: false, target: routePath });
         throw forbidden('Missing or wrong CSRF token. Reload the page.');
       }
-      if (unsafe && !route.opts.rawBody) ctx.body = await readJson(req, config.maxBodyBytes);
+      // a route may take more from a checked token (the MCP server: a picture in base64)
+      if (unsafe && !route.opts.rawBody) ctx.body = await readJson(req, route.opts.bodyBytes ? route.opts.bodyBytes(ctx) : config.maxBodyBytes);
 
       const result = await route.handler(ctx);
       // a route that writes its own answer (a file, a CSV) finishes it before it returns: one that set its own type

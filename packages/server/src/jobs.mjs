@@ -335,6 +335,7 @@ export function createJobs(app) {
     buildAndDeploy,
     rollBack,
     markLive,
+    deployed,
     liveHead,
     liveHistory,
     blocked,

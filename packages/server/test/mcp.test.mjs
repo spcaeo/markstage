@@ -82,14 +82,14 @@ describe('the MCP server', () => {
 
   test('read-only by default: without mcp:draft the write tools are not listed, and calling one says why', async () => {
     const names = (await readOnly.rpc('tools/list')).json.result.tools.map((t) => t.name);
-    assert.deepEqual(names, ['site_info', 'list_entries', 'get_entry', 'search', 'list_library', 'get_library_item', 'env_status', 'get_plan', 'list_releases', 'get_release']);
+    assert.deepEqual(names, ['site_info', 'list_entries', 'get_entry', 'search', 'list_library', 'get_library_item', 'env_status', 'get_plan', 'list_releases', 'get_release', 'get_job']);
     const all = (await drafter.rpc('tools/list')).json.result.tools;
-    assert.deepEqual(all.map((t) => t.name).slice(-3), ['create_draft', 'update_entry', 'add_to_release']);
+    assert.deepEqual(all.map((t) => t.name).slice(-6), ['create_draft', 'update_entry', 'edit_entry', 'create_release', 'add_to_release', 'add_image']);
     for (const t of all) {
       assert.equal(t.inputSchema.type, 'object');
       assert.equal(t.inputSchema.additionalProperties, false);
       assert.equal(t.annotations.destructiveHint, false);
-      assert.equal(t.annotations.readOnlyHint, !['create_draft', 'update_entry', 'add_to_release'].includes(t.name));
+      assert.equal(t.annotations.readOnlyHint, !['create_draft', 'update_entry', 'edit_entry', 'create_release', 'add_to_release', 'add_image'].includes(t.name));
     }
     const refused = await readOnly.rpc('tools/call', { name: 'update_entry', arguments: {} });
     assert.equal(refused.json.error.code, -32602);

@@ -103,6 +103,8 @@ export interface ClientConfig {
   locks?: { pages: Record<string, SiteLock>; articles: Record<string, SiteLock> };
   /** a moved entry's old address redirects to the new one (the site's redirects hook) */
   redirects?: boolean;
+  /** the head kit's settings file (Site settings → Search & AI, Tracking); null or absent when the site does not use it */
+  head?: { file: string } | null;
   /** how the site lays a page out around its content (config `frames`): the choices, the key, each collection's default */
   frames?: { key: string; list: FrameInfo[]; defaults: Record<string, string> } | null;
   /** what pages are for (config `pageTypes`): each type's frame, Library template, locks and checks */

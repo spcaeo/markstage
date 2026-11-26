@@ -1,5 +1,5 @@
 // Reading a whole site for the site import (docs/IMPORT.md): an uploaded export (WordPress WXR, Ghost JSON) or an
-// API (WordPress REST with an application password, Ghost's Content API, Prismic's API), into a bundle
+// API (WordPress REST with an application password: wp-api.mjs; Ghost's Content API, Prismic's API), into a bundle
 // (convert/bundle.mjs). Every request goes through the SSRF guard (library/fetch.mjs: public addresses only, checked
 // after DNS and at every redirect, ports 80 and 443), answers must be JSON, each at most 20 MB and 20 s, the whole
 // read at most 64 MB and 5 minutes, at most 50 pages of 100 per list.
@@ -10,7 +10,7 @@ import { safeFetch } from '../../library/fetch.mjs';
 import { HttpError, badRequest } from '../../util.mjs';
 import { fromGhostContentApi, readGhostExport } from '../convert/ghost.mjs';
 import { fromPrismic } from '../convert/prismic.mjs';
-import { fromRest, readWxr } from '../convert/wordpress.mjs';
+import { readWxr } from '../convert/wordpress.mjs';
 
 export const READ_LIMITS = Object.freeze({ answerBytes: 20 * 1024 * 1024, answerMs: 20_000, totalBytes: 64 * 1024 * 1024, totalMs: 5 * 60_000, pages: 50, perPage: 100 });
 const REPO = /^[a-z0-9][a-z0-9-]{0,62}$/;
@@ -58,7 +58,7 @@ export function siteAddress(v, what = 'the site’s address') {
  * A reader with the read's own limits: get(url, {headers}) -> parsed JSON and the answer's headers. Errors are
  * HttpErrors in words, with every secret in `secrets` replaced by [hidden].
  */
-function reader(app, secrets) {
+export function reader(app, secrets) {
   const started = Date.now();
   let total = 0;
   const hide = (s) => secrets.filter(Boolean).reduce((t, x) => t.split(x).join(HIDDEN).split(encodeURIComponent(x)).join(HIDDEN), String(s));
@@ -86,7 +86,7 @@ function reader(app, secrets) {
 }
 
 /** Every page of a list: `page(n)` -> {items, pages?}; stops at an empty page, the last page, or the limit. */
-async function allPages(page) {
+export async function allPages(page) {
   const out = [];
   for (let n = 1; n <= READ_LIMITS.pages; n++) {
     const { items, pages } = await page(n);
@@ -94,25 +94,6 @@ async function allPages(page) {
     if (!items.length || (pages && n >= pages) || items.length < READ_LIMITS.perPage) break;
   }
   return out;
-}
-
-/** WordPress's REST API: {url, user?, password?} (an application password: Users › Profile › Application Passwords). */
-export async function readWordpressApi(app, { url, user, password }) {
-  const base = siteAddress(url);
-  const signed = Boolean(user && password);
-  if (Boolean(user) !== Boolean(password)) throw new HttpError(422, 'invalid', 'Give both the user name and the application password, or neither.', { field: 'password' });
-  const headers = signed ? { Authorization: `Basic ${Buffer.from(`${user}:${String(password).replace(/\s+/g, '')}`).toString('base64')}` } : {};
-  const get = reader(app, [password, String(password ?? '').replace(/\s+/g, ''), headers.Authorization]);
-  const root = (await get(`${base}/wp-json/`, { headers })).json;
-  const list = (path, extra = '') =>
-    allPages(async (n) => {
-      const r = await get(`${base}/wp-json/wp/v2/${path}?per_page=${READ_LIMITS.perPage}&page=${n}${extra}`, { headers });
-      return { items: Array.isArray(r.json) ? r.json : [], pages: Number(r.headers['x-wp-totalpages']) || null };
-    });
-  const edit = signed ? '&context=edit' : '';
-  const status = signed ? '&status=publish,future,draft,pending,private' : '';
-  const [posts, pages, media, users, categories, tags] = [await list('posts', `${edit}${status}`), await list('pages', `${edit}${status}`), await list('media', edit), await list('users', edit), await list('categories'), await list('tags')];
-  return fromRest({ site: { url: root.home ?? root.url ?? base, home: root.url, name: root.name ?? '' }, posts, pages, media, users, categories, tags });
 }
 
 /** Ghost's Content API: {url, key} (Settings › Integrations › a custom integration's Content API key). */

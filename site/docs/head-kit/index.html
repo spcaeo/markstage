@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Markdown Copies, llms.txt, RSS and Analytics in Markstage</title>
+    <meta name="description" content="What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings." />
+    <link rel="canonical" href="https://spcaeo.github.io/markstage/docs/head-kit/" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a0b" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Markstage" />
+    <meta property="og:title" content="Markdown Copies, llms.txt, RSS and Analytics in Markstage" />
+    <meta property="og:description" content="What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings." />
+    <meta property="og:url" content="https://spcaeo.github.io/markstage/docs/head-kit/" />
+    <meta property="og:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:modified_time" content="2026-11-03" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Markdown Copies, llms.txt, RSS and Analytics in Markstage" />
+    <meta name="twitter:description" content="What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings." />
+    <meta name="twitter:image" content="https://spcaeo.github.io/markstage/og/docs.png" />
+    <meta name="twitter:image:alt" content="Markstage documentation: set up, write, deploy and run the editor." />
+    <link rel="icon" href="../../favicon.ico" sizes="32x32" />
+    <link rel="icon" href="../../icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+    <link rel="alternate" type="text/plain" title="Markstage for AI assistants" href="../../llms.txt" />
+    <link rel="preload" href="../../fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../fonts/bricolage-grotesque-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css" />
+
+    <script src="../../enhance.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spcaeo.github.io/markstage/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://spcaeo.github.io/markstage/docs/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Markdown for AI tools, feeds and tracking",
+          "item": "https://spcaeo.github.io/markstage/docs/head-kit/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Markdown Copies, llms.txt, RSS and Analytics in Markstage",
+      "description": "What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings.",
+      "url": "https://spcaeo.github.io/markstage/docs/head-kit/",
+      "inLanguage": "en",
+      "dateModified": "2026-11-03",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Markstage",
+        "url": "https://spcaeo.github.io/markstage/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Space-O Technologies",
+        "url": "https://www.spaceo.ca",
+        "email": "rp@spaceo.ca",
+        "founder": {
+          "@type": "Person",
+          "name": "Rakesh Patel"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="wrap topbar-row">
+        <a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a>
+        <nav id="main-nav" class="main-nav" aria-label="Main">
+          <a href="../../features/">Features</a>
+          <a href="../../ai/">AI &amp; MCP</a>
+          <a href="../../compare/">Compare</a>
+          <a href="../../showcase/">Showcase</a>
+          <a href="../../docs/" aria-current="page">Docs</a>
+        </nav>
+        <div class="topbar-end">
+          <a class="gh-btn" href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener" aria-label="Star Markstage on GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg><span>Star<span class="gh-long"> on GitHub</span></span><span class="gh-count" data-repo="spcaeo/markstage"></span></a>
+          <button type="button" class="menu-btn" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc-layout">
+      <aside class="docs-nav" aria-label="Docs topics"><div class="docs-group"><p class="docs-group-title">Guides</p><ul><li><a href="../../docs/writing/">Writing with Markstage</a></li><li><a href="../../docs/config/">markstage.config: every key</a></li><li><a href="../../docs/head-kit/" aria-current="page">Markdown for AI tools, feeds and tracking</a></li><li><a href="../../docs/deploy/">Deploying Markstage</a></li><li><a href="../../docs/scaling/">Several server processes on one data dir</a></li><li><a href="../../docs/docker/">Markstage with Docker</a></li><li><a href="../../docs/starter/">The starter site</a></li><li><a href="../../docs/import/">Importing a site from WordPress, Ghost or Prismic</a></li><li><a href="../../docs/operations/">Running a site, task by task</a></li><li><a href="../../docs/canvas-fidelity/">The canvas and the real page</a></li><li><a href="../../docs/environments/">Environments: local, staging, production</a></li><li><a href="../../docs/security/">Markstage server: security</a></li></ul></div><div class="docs-group"><p class="docs-group-title">API and integrations</p><ul><li><a href="../../docs/api/">Markstage API (contract)</a></li><li><a href="../../docs/mdx/">Editing MDX</a></li><li><a href="../../docs/api-mcp/">The MCP server: AI agents</a></li><li><a href="../../docs/api-ai/">AI suggestions</a></li><li><a href="../../docs/api-library/">The Library</a></li><li><a href="../../docs/api-releases/">Releases and share links</a></li><li><a href="../../docs/api-env/">Environments API</a></li><li><a href="../../docs/api-links/">Topics and internal links</a></li><li><a href="../../docs/api-page-types/">Page frames and page types</a></li><li><a href="../../docs/api-authors/">Authors</a></li><li><a href="../../docs/api-roles/">Custom roles</a></li><li><a href="../../docs/api-permissions/">Permissions</a></li><li><a href="../../docs/api-sso/">Single sign-on (OpenID Connect)</a></li><li><a href="../../docs/api-webhooks/">Webhooks</a></li><li><a href="../../docs/api-import/">Importing entries and media</a></li><li><a href="../../docs/api-inbox/">Forms, messages and alerts</a></li><li><a href="../../docs/api-translations/">Translation status</a></li><li><a href="../../docs/api-integrations/">Integration fields</a></li><li><a href="../../docs/api-preview/">Preview render</a></li><li><a href="../../docs/api-edit/">Section gallery and “Edit this page”</a></li></ul></div></aside>
+      <article class="doc">
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../">Home</a></li><li><a href="../../docs/">Docs</a></li><li aria-current="page">Markdown for AI tools, feeds and tracking</li></ol></nav>
+        <h1>Markdown for AI tools, feeds and tracking</h1>
+        <p class="lead left">What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings.</p>
+        <nav class="toc" aria-label="On this page"><p class="docs-group-title">On this page</p><ul><li><a href="#turning-it-on">Turning it on</a></li><li><a href="#markdown-copies-of-every-page">Markdown copies of every page</a></li><li><a href="#the-okf-bundle">The OKF bundle</a></li><li><a href="#llms-txt-and-llms-full-txt">llms.txt and llms-full.txt</a></li><li><a href="#feeds">Feeds</a></li><li><a href="#tracking">Tracking</a></li><li><a href="#the-settings-screens-and-api">The settings screens and API</a></li><li><a href="#the-pages-content-security-policy">The page's Content-Security-Policy</a></li></ul></nav>
+        <div class="prose">
+<p>What Markstage puts into every page's head and next to the pages, set by the site's owner in the editor (Site
+settings → Search &amp; AI, Tracking). Design and reasons: <a href="https://github.com/spcaeo/markstage/blob/main/docs/plans/2026-11-26-head-kit-design.md" rel="noopener">plans/2026-11-26-head-kit-design.md</a>.</p>
+<h2 id="turning-it-on">Turning it on</h2>
+<ol><li><p>Add <code>head</code> to <code>markstage.config</code> (all keys optional, docs/CONFIG.md):</p>
+<pre data-lang="js"><code class="language-js">export default defineConfig({
+  siteName: 'Example Co',
+  siteUrl: 'https://www.example.com',
+  head: { file: 'src/site/head.json', main: 'main' },
+  // …collections
+});</code></pre></li><li><p>Build as usual (<code>astro build</code>). The kit runs at the end of the build, over the pages in the output folder, so
+it covers every page: Markdown and MDX entries, pages built from JSON sections and the site's own pages. In
+<code>astro dev</code> and the Markstage preview it adds nothing.</p></li><li><p>The owner sets what it puts out in the editor: <strong>Site settings → Search &amp; AI</strong> and <strong>Site settings → Tracking</strong>.
+Until the settings file exists, the Markdown copies, the OKF bundle and llms.txt are on, with no feeds and no
+tracking. A settings file with a mistake stops the build and lists each problem in plain words.</p></li></ol>
+<p>A file the site already builds itself (its own <code>llms.txt</code> or <code>rss.xml</code>) is kept, and the build log says so, so a site
+can move to the kit one part at a time. Pages marked <code>noindex</code>, the 404 page, redirect pages and paths listed under
+&quot;Pages to leave out&quot; get no Markdown copy and are in no list. The page of an entry that is not live (protected by a password, a draft, or
+scheduled for later) is left out altogether, even when it is still in the output folder when the kit runs (a site
+that moves its protected pages to <code>dist-private/</code> after the build): it gets no copy, is in no list, and the kit does
+not touch it.</p>
+<p>Page addresses with letters outside ASCII work as a server expects: the page <code>/café/</code> gets the file <code>café.md</code>, and
+every link to it is written encoded (<code>/caf%C3%A9.md</code>).</p>
+<p><strong>Previews never track.</strong> The Markstage server builds release previews, branch previews and the checks' work trees
+with <code>MARKSTAGE_NO_TRACKING=1</code>, and the kit then writes no tracking loader, so a visit to a share link or to staging
+never counts in the owner's analytics. Set the same variable in any other build that is not the live site. A page
+that already loads one of the tools itself (a site moving over one part at a time) is named in the build log, since
+each visit there would count twice.</p>
+<h2 id="markdown-copies-of-every-page">Markdown copies of every page</h2>
+<p>Every page the site builds gets a Markdown copy next to it, so an AI tool can read the page without the menus,
+scripts and styles around it.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Page</th><th scope="col">Its Markdown copy</th></tr></thead><tbody><tr><td><code>https://example.com/</code></td><td><code>https://example.com/index.md</code></td></tr><tr><td><code>https://example.com/posts/hello/</code></td><td><code>https://example.com/posts/hello.md</code></td></tr><tr><td><code>https://example.com/fr/a-propos/</code></td><td><code>https://example.com/fr/a-propos.md</code></td></tr></tbody></table></div>
+<p>A page under a language prefix such as <code>/fr/</code> is its own page, with its own copy.</p>
+<p>Each copy starts the same way: the title, the page's address, then the description.</p>
+<pre data-lang="markdown"><code class="language-markdown"># Hello, Example Co | Example Co blog
+
+Canonical: https://example.com/posts/hello/
+
+&gt; How we write posts in Markdown.
+
+## Why
+
+We keep posts as plain files. **Nothing** is hidden.</code></pre>
+<p>Every page's <code>&lt;head&gt;</code> points to its copy, so a tool that knows the page finds it:</p>
+<pre data-lang="html"><code class="language-html">&lt;link rel=&quot;alternate&quot; type=&quot;text/markdown&quot; title=&quot;Markdown version of this page&quot; href=&quot;https://example.com/posts/hello.md&quot;&gt;</code></pre>
+<p>Turn it off with <code>&quot;markdown&quot;: {&quot;pages&quot;: false}</code> in the settings file.</p>
+<h3 id="how-a-copy-is-made">How a copy is made</h3>
+<p>The copy is made from the built page, not from the source file. A post written in Markdown, an MDX page with
+components and a page built from JSON sections are all read the same way, with no code per site, and what an AI tool
+reads is what a visitor sees.</p>
+<ul><li><strong>The content</strong> is the page's <code>&lt;main&gt;</code>. If the site's pages use another box, set <code>head.main</code> in
+<code>markstage.config</code> to one simple selector: a tag, <code>#id</code>, <code>.class</code>, <code>[attr]</code> or <code>[attr=&quot;value&quot;]</code>, or a tag with
+those, such as <code>div#content</code> or <code>[data-content]</code>. With no match the copy uses <code>&lt;body&gt;</code> without its own header,
+footer, <code>&lt;nav&gt;</code> and <code>&lt;aside&gt;</code> (a header inside an <code>&lt;article&gt;</code> or <code>&lt;section&gt;</code> stays).</li><li><strong>Left out always:</strong> scripts, styles, forms and buttons, menus (<code>&lt;nav&gt;</code> and <code>role=&quot;navigation&quot;</code>, <code>banner</code>,
+<code>contentinfo</code>, <code>search</code>), video, audio, SVG and dialogs.</li><li><strong>Links and images are absolute</strong> on the site's address, so a copy works wherever it is read. A link to a place on
+the same page (<code>#why</code>) becomes plain text, because a Markdown copy has no ids. Links that are not web, mail or phone
+addresses (such as <code>javascript:</code>) keep their words and lose the link.</li><li><strong>An image without alt text is left out.</strong> It is decoration, and a tool cannot use it.</li><li><strong><code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code></strong> (a FAQ) become the question in bold, then the answer. A <code>&lt;dl&gt;</code> does the same with
+its terms.</li><li><strong>An <code>&lt;iframe&gt;</code></strong> becomes a link to its address, named by its title (<code>[Product tour](https://video.example.org/...)</code>).</li><li><strong>A card that is one big link</strong> (a link around a heading and a paragraph) keeps the link on its heading, so the
+words are not run together.</li><li><strong>Components</strong> that leave custom elements (such as <code>&lt;astro-island&gt;</code>) or spans around blocks come out as separate
+paragraphs. Spans side by side are separate words.</li><li><strong>Tables</strong> keep their first row as the header, also when it uses <code>&lt;td&gt;</code> and no <code>&lt;th&gt;</code>. A line break or list in a
+cell becomes a space, so a row stays on one line.</li><li><strong>The title is not said twice:</strong> the page's first <code>&lt;h1&gt;</code> is dropped when it only repeats the <code>&lt;title&gt;</code>. With no
+<code>&lt;title&gt;</code>, the <code>&lt;h1&gt;</code> is the title.</li></ul>
+<h3 id="pages-left-out">Pages left out</h3>
+<p>A page is not copied, listed in the OKF bundle or in <code>llms.txt</code> when it is:</p>
+<ul><li>marked <code>noindex</code> (a <code>robots</code> or <code>googlebot</code> meta that says <code>noindex</code> or <code>none</code>),</li><li>the 404 page,</li><li>a redirect page (a <code>&lt;meta http-equiv=&quot;refresh&quot;&gt;</code>),</li><li>a file that is not a page (no <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code> or <code>&lt;body&gt;</code>, such as a search engine's verification file),</li><li>or in <code>markdown.skip</code>: an exact path, or a prefix when it ends in <code>/*</code>.</li></ul>
+<pre data-lang="json"><code class="language-json">{ &quot;markdown&quot;: { &quot;skip&quot;: [&quot;/press/&quot;, &quot;/internal/*&quot;] } }</code></pre>
+<p><code>/press/</code> leaves out that page. <code>/internal/*</code> leaves out <code>/internal/</code> and everything under it. A private page is not
+built into the output folder, so it is never seen here.</p>
+<h3 id="your-own-words">Your own words</h3>
+<p>A site that wants other words in the copies (its own spelling, say) gives <code>head.transform</code> in <code>markstage.config</code>: a
+module whose default export is run on every copy, and the OKF and <code>llms</code> files use its result too.</p>
+<pre data-lang="js"><code class="language-js">// src/site/spelling.mjs
+export default async (markdown, { path, lang }) =&gt; markdown.replace(/\bcolor\b/g, 'colour');</code></pre>
+<h3 id="a-file-the-site-already-has">A file the site already has</h3>
+<p>A copy is never written over a file that is already in the output folder. The build log lists those files, so a site
+can move over one part at a time.</p>
+<h2 id="the-okf-bundle">The OKF bundle</h2>
+<p>The OKF bundle is the same pages in one folder an AI tool can walk without any HTML. Turn it off with
+<code>&quot;markdown&quot;: {&quot;okf&quot;: false}</code>.</p>
+<ul><li><code>/okf/index.md</code> lists every page, under <code># Concepts</code>, one line each: title, link and description.</li><li><code>/okf/&lt;file&gt;.md</code> holds one page: YAML front matter, then the page's Markdown.</li></ul>
+<pre data-lang="markdown"><code class="language-markdown"># Open Knowledge graph Example Co
+
+An OKF v0.1 bundle generated from example.com
+
+# Concepts
+
+* [About](https://example.com/okf/about.md) - Who we are.
+* [Hello, Example Co | Example Co blog](https://example.com/okf/posts-hello.md) - How we write posts in Markdown.</code></pre>
+<pre data-lang="markdown"><code class="language-markdown">---
+title: &quot;Hello, Example Co | Example Co blog&quot;
+url: &quot;https://example.com/posts/hello/&quot;
+description: &quot;How we write posts in Markdown.&quot;
+lang: &quot;en&quot;
+modified: &quot;2026-11-03T10:00:00Z&quot;
+---
+
+# Hello, Example Co | Example Co blog
+
+Canonical: https://example.com/posts/hello/
+
+## Why
+...</code></pre>
+<p><code>description</code>, <code>lang</code> and <code>modified</code> are written only when the page has them (<code>modified</code> comes from the page's
+<code>article:modified_time</code> or the <code>dateModified</code> in its structured data). Strings are quoted, so a colon or a quote in a
+title is safe.</p>
+<h3 id="file-names">File names</h3>
+<p>The name is the page's path joined with <code>-</code>. The home page is <code>homepage</code>. The names are stable: the same site gives the
+same names on every build.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Page</th><th scope="col">File</th></tr></thead><tbody><tr><td><code>/</code></td><td><code>/okf/homepage.md</code></td></tr><tr><td><code>/about/</code></td><td><code>/okf/about.md</code></td></tr><tr><td><code>/posts/hello/</code></td><td><code>/okf/posts-hello.md</code></td></tr><tr><td><code>/fr/a-propos/</code></td><td><code>/okf/fr-a-propos.md</code></td></tr></tbody></table></div>
+<p>Two pages that would get the same name are numbered in path order: <code>/a-b/</code> is <code>a-b</code>, then <code>/a/b/</code> is <code>a-b-2</code>.
+<code>index</code> is kept for the bundle's own index, so a page at <code>/index/</code> is <code>index-2</code>. Names are compared without regard to
+case, because a Mac or Windows disk keeps <code>About.md</code> and <code>about.md</code> as one file.</p>
+<h3 id="links-between-pages">Links between pages</h3>
+<p>A link in a page to another page of the site is written to that page's OKF file, so a tool follows links from file to
+file and never leaves the bundle. A fragment is dropped (the file is the whole page).</p>
+<pre data-lang="markdown"><code class="language-markdown">[the guide](https://example.com/posts/hello/#why)   becomes   [the guide](https://example.com/okf/posts-hello.md)</code></pre>
+<p>A link to something that is not a page in the bundle (a PDF, an image, another site) stays as it is.</p>
+<h2 id="llms-txt-and-llms-full-txt">llms.txt and llms-full.txt</h2>
+<p><code>/llms.txt</code> follows <a href="https://llmstxt.org" rel="noopener">llmstxt.org</a>: the site's name, one line about it, and a link to every page's
+Markdown copy. <code>/llms-full.txt</code> has the Markdown of every page in one file. Turn them off with
+<code>&quot;markdown&quot;: {&quot;llms&quot;: false}</code>.</p>
+<pre data-lang="markdown"><code class="language-markdown"># Example Co
+
+&gt; Plan, track and ship work together.
+
+## Pages
+
+- [Example Co - Project tracking for small teams](https://example.com/index.md): Plan, track and ship work together.
+- [About](https://example.com/about.md): Who we are.
+- [Hello, Example Co | Example Co blog](https://example.com/posts/hello.md): How we write posts in Markdown.
+
+## Optional
+
+- [All pages in one file](https://example.com/llms-full.txt)</code></pre>
+<ul><li>The name is <code>siteName</code> in <code>markstage.config</code>. The line under it is the home page's description (or, with none,
+&quot;The pages of Example Co as Markdown, for AI tools.&quot;).</li><li>Pages are listed in path order, the home page first, with the same pages as the Markdown copies (see &quot;Pages left
+out&quot; above).</li><li>A page with no description has no <code>: ...</code> after its link.</li><li>When the site makes no Markdown copies (<code>&quot;pages&quot;: false</code>), each link goes to the page's own address instead, so
+nothing in the file points at a copy that is not there.</li></ul>
+<p><code>/llms-full.txt</code> is each page's Markdown, one after another, with a line <code>---</code> between them. Each starts with its
+title and <code>Canonical:</code> address, so a tool can tell where a page begins.</p>
+<h2 id="feeds">Feeds</h2>
+<p>Set <code>feeds</code> in the settings file (Site settings → Search &amp; AI). Each feed has an <code>id</code>, a <code>title</code>, a <code>path</code> ending in
+<code>.xml</code>, the <code>collections</code> it lists, an optional <code>description</code> and a <code>limit</code> (1 to 500, default 50).</p>
+<pre data-lang="json"><code class="language-json">{
+  &quot;feeds&quot;: [
+    { &quot;id&quot;: &quot;blog&quot;, &quot;title&quot;: &quot;Example Co blog&quot;, &quot;description&quot;: &quot;News from Example Co&quot;, &quot;path&quot;: &quot;/rss.xml&quot;, &quot;collections&quot;: [&quot;posts&quot;], &quot;limit&quot;: 20 }
+  ]
+}</code></pre>
+<p>The build writes <code>/rss.xml</code> (RSS 2.0) from the entry files, not from the built pages, and puts
+<code>&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot;&gt;</code> in the head of every page.</p>
+<p>What goes in:</p>
+<ul><li><strong>Live entries only.</strong> The same rule the site uses: not a draft, not protected, not scheduled for later. A preview
+build (<code>MARKSTAGE_PREVIEW=1</code>) lists every entry, as the site does.</li><li><strong>Newest first</strong> by the collection's date field, at most <code>limit</code>. An entry with no readable date goes last.</li><li><strong>An entry with no page is left out.</strong> The link comes from the collection's <code>url</code>.</li><li><strong>Many collections in one feed</strong> are merged and sorted together.</li></ul>
+<p>What an item has:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Tag</th><th scope="col">From</th></tr></thead><tbody><tr><td><code>title</code></td><td>the title field (the file name when it is empty)</td></tr><tr><td><code>link</code> and <code>guid</code></td><td>the collection's <code>url</code> on <code>siteUrl</code></td></tr><tr><td><code>pubDate</code></td><td>the date field, as an RFC 822 date in GMT</td></tr><tr><td><code>description</code></td><td>the excerpt field (left out when empty)</td></tr><tr><td><code>category</code></td><td>each tag, once</td></tr><tr><td><code>dc:creator</code></td><td>the author, then the co-authors, by name from their author files (left out when the site keeps no author files or the author is not one of them)</td></tr></tbody></table></div>
+<p>The channel has the feed's title, the home page, the description (the feed's own, else the site name), an
+<code>atom:link rel=&quot;self&quot;</code> to the feed, and <code>lastBuildDate</code> from the newest item. Text is escaped, and characters XML does
+not allow are dropped. The same entries give the same file: nothing depends on the clock.</p>
+<p>If the site builds a file at the feed's path itself, the kit keeps it and says so in the build log.</p>
+<h2 id="tracking">Tracking</h2>
+<p>The owner types an ID per tool in Site settings → Tracking. Markstage writes one small inline script from the IDs
+(<code>&lt;script data-markstage-head&gt;</code>, last in <code>&lt;head&gt;</code>). No pasted code runs. Each ID is checked against its tool's pattern
+when it is saved and again when the page is written, so a value that does not fit never reaches a page.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Tool</th><th scope="col">Setting</th><th scope="col">Example</th><th scope="col">What it loads</th></tr></thead><tbody><tr><td>Google Tag Manager</td><td><code>gtm</code></td><td><code>GTM-ABC1234</code></td><td><code>gtm.js</code> from googletagmanager.com, plus a <code>&lt;noscript&gt;</code> frame right after <code>&lt;body&gt;</code></td></tr><tr><td>Google Analytics 4</td><td><code>ga4</code></td><td><code>G-ABC123DEF4</code></td><td>the gtag snippet and <code>gtag/js</code> from googletagmanager.com</td></tr><tr><td>Ahrefs Web Analytics</td><td><code>ahrefs</code></td><td>the <code>data-key</code> from Ahrefs</td><td><code>analytics.js</code> from analytics.ahrefs.com</td></tr><tr><td>Skald Analytics</td><td><code>skald</code></td><td><code>www.example.com</code></td><td><code>skald.js</code> from app.skaldanalytics.com</td></tr><tr><td>Plausible Analytics</td><td><code>plausible</code></td><td><code>example.com</code></td><td><code>script.js</code> from plausible.io</td></tr></tbody></table></div>
+<p>When it starts:</p>
+<ul><li><strong>Only on a page the visitor sees.</strong> A page the browser prerenders (on a hover, say) waits for <code>prerenderingchange</code>.
+A page nobody opened is never counted.</li><li><strong>Ahrefs, Skald, Plausible and GA4 start at once</strong>, as async scripts. Each script reads its ID from its own tag, so
+the loader sets the attribute before it adds the script.</li><li><strong>Tag Manager waits for the first interaction by default</strong> (<code>gtmLoad: &quot;first-interaction&quot;</code>): the first pointer
+press, key press, scroll or touch, or 3.5 s after the page has loaded when the browser is idle, whichever comes
+first. Set <code>gtmLoad: &quot;at-once&quot;</code> to start it with the others.</li><li><strong>Leave <code>ga4</code> empty when Google Analytics already runs inside your Tag Manager container</strong>, or each visit counts
+twice.</li><li><strong>Nothing runs in <code>astro dev</code>.</strong> The loader is written by the build only.</li></ul>
+<p>The <code>&lt;noscript&gt;</code> frame (for visitors without JavaScript) has no <code>style</code> attribute: it uses <code>hidden</code> and a width and
+height of 0, so a strict policy has nothing to object to. The loader and the frame pass the CSP check
+(<code>cspHashes</code>) with no problems.</p>
+<h2 id="the-settings-screens-and-api">The settings screens and API</h2>
+<p>The owner sets everything above in <strong>Site settings</strong>, two parts that show only on a site with <code>head</code> in
+<code>markstage.config</code> and only to an owner or an administrator (an editor opening their address is told &quot;Not available
+to you&quot;):</p>
+<ul><li><strong>Search &amp; AI</strong> (<code>#/settings/search-ai</code>): three switches (a Markdown copy of every page, the OKF bundle, llms.txt),
+each with one sentence of why and, while it is on, the addresses it makes in full (<code>https://&lt;siteUrl&gt;/index.md</code>,
+<code>/okf/index.md</code>, <code>/llms.txt</code>, <code>/llms-full.txt</code>) with the shared copy and open icons; a list of page paths to leave
+out; the feeds. A feed is a row (title, its address with copy and open); the open one is in the URL
+(<code>#/settings/search-ai?feed=&lt;id&gt;</code>) and shows its form: title, address (ends in <code>.xml</code>), short description, the kinds
+of page it lists (the site's collections, by their labels) and how many items. A feed's <code>id</code> is made from its
+address and never shown.</li><li><strong>Tracking</strong> (<code>#/settings/tracking</code>): one field per tool (Tag Manager, Analytics 4, Ahrefs, Skald, Plausible) with
+its hint under it and the tool's own example as the placeholder. An ID is checked as it is typed with the
+pattern the build uses (the server sends it as the source of a regular expression), the message sits under the
+field and Save waits while any ID is wrong. Then the Tag Manager load choice (&quot;On the first click, key or scroll
+(faster pages)&quot;, the default, or &quot;At once&quot;), and a note that consent banners belong inside the tag manager.</li></ul>
+<p>Each part has one Save and a Discard. A save writes the whole settings file with only that part's keys changed (every
+other key is kept as it was, so the two parts never undo each other), commits it as the person and builds the site;
+the toast has <strong>Undo</strong>, which puts the file back as it was. A server refusal (<code>422</code>) shows under the field it is
+about, and the first feed with a problem opens. If the file changed since the page loaded (<code>409</code>) Save is replaced by
+&quot;Someone else changed these settings; reload to see theirs&quot; and a Reload button. Every state is in the URL: the part,
+and the open feed.</p>
+<p><strong>API.</strong> <code>GET head</code> and <code>PUT head</code> (docs/API.md &quot;Head settings&quot;). The file is <code>head.file</code> (default
+<code>src/site/head.json</code>), written pretty-printed (two spaces, a newline), inside the content repo and never through a
+link. Everyone who may look at the design reads it; <code>head.write</code> (owner, administrator) changes it, audited as
+<code>head.write</code>. A save is checked by core's <code>readHead</code> (the same checks as the build and the editor), committed
+(&quot;Site settings: search and AI&quot;, &quot;…: tracking&quot;, or both), and followed by the build and deploy job a design save
+starts; if that job fails the file is put back.</p>
+<h2 id="the-pages-content-security-policy">The page's Content-Security-Policy</h2>
+<p>When the page has its own <code>&lt;meta http-equiv=&quot;Content-Security-Policy&quot;&gt;</code>, the build adds to it exactly what the
+tracking tags need, and nothing else:</p>
+<ul><li>the <code>'sha256-…'</code> hash of the loader script in <code>script-src</code> (and the origins of the tools' scripts);</li><li>each tool's origins in <code>connect-src</code>, <code>img-src</code> and <code>frame-src</code>.</li></ul>
+<p>A directive the policy does not have is made from <code>default-src</code>, as browsers do. A policy with a bare
+<code>'unsafe-inline'</code> in <code>script-src</code> gets no hash (it would switch <code>'unsafe-inline'</code> off). A page with no CSP <code>&lt;meta&gt;</code> is
+left as it is. Running the build step again changes nothing. This is proven in Chromium under <code>default-src 'self'</code>:
+no violation, the tools' scripts load, and the same loader under a policy that was not widened is blocked.</p>
+<p><strong>A server that sets the policy in an HTTP header</strong> (not a meta tag) must add these itself. The kit cannot change a
+header.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Tool</th><th scope="col">script-src</th><th scope="col">connect-src</th><th scope="col">img-src</th><th scope="col">frame-src</th></tr></thead><tbody><tr><td>Google Tag Manager</td><td><code>https://www.googletagmanager.com</code></td><td><code>https://www.googletagmanager.com</code> <code>https://*.google-analytics.com</code> <code>https://*.google.com</code></td><td><code>https://www.googletagmanager.com</code> <code>https://*.google-analytics.com</code></td><td><code>https://www.googletagmanager.com</code></td></tr><tr><td>Google Analytics 4</td><td><code>https://www.googletagmanager.com</code></td><td><code>https://www.googletagmanager.com</code> <code>https://*.google-analytics.com</code> <code>https://*.google.com</code></td><td><code>https://www.googletagmanager.com</code> <code>https://*.google-analytics.com</code></td><td><code>https://www.googletagmanager.com</code></td></tr><tr><td>Ahrefs</td><td><code>https://analytics.ahrefs.com</code></td><td><code>https://analytics.ahrefs.com</code></td><td>none</td><td>none</td></tr><tr><td>Skald</td><td><code>https://app.skaldanalytics.com</code></td><td><code>https://app.skaldanalytics.com</code></td><td>none</td><td>none</td></tr><tr><td>Plausible</td><td><code>https://plausible.io</code></td><td><code>https://plausible.io</code></td><td>none</td><td>none</td></tr></tbody></table></div>
+<p>Also add the loader's hash to <code>script-src</code>. It is the hash of the text of the script marked <code>data-markstage-head</code>, so
+it changes whenever an ID or <code>gtmLoad</code> changes. Read it from a built page:</p>
+<pre><code>node -e &quot;import('@markstage/core/csp').then(({cspHashes})=&gt;console.log(cspHashes(require('fs').readFileSync('dist/index.html','utf8')).script))&quot;</code></pre>
+<p>(That prints the hash of every inline script on the page; the loader's is one of them.) Tag Manager's frame needs
+<code>frame-src</code> for its <code>&lt;noscript&gt;</code> frame as well.</p>
+<p>Where these come from (read on 26 Nov 2026):</p>
+<ul><li>Google Tag Manager and Google Analytics: Google's guide &quot;Use Tag Manager with a Content Security Policy&quot;,
+developers.google.com/tag-platform/security/guides/csp (Analytics without Ads features).</li><li>Ahrefs, Skald, Plausible: their help pages name no policy. The origins come from reading each script as it is served:
+Ahrefs posts to <code>/api/event</code> on its own origin, Skald sends to <code>/traffic-beacon</code> on its own origin, Plausible posts
+to <code>https://plausible.io/api/event</code>.</li></ul>
+<p><strong>Tags the owner adds inside Tag Manager are not covered.</strong> Google Ads, Floodlight, custom HTML and other vendors need
+their own origins (Google's guide lists Google's), and a Custom JavaScript variable needs <code>'unsafe-eval'</code>. On a site
+with a strict policy, add what the container's tags need to the policy by hand.</p>
+        </div>
+        <p class="small muted">Source: <a href="https://github.com/spcaeo/markstage/blob/main/docs/HEAD-KIT.md" target="_blank" rel="noopener">docs/HEAD-KIT.md</a> on GitHub. Something unclear? <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Open an issue</a>.</p>
+        <nav class="pager" aria-label="More docs">
+          <a class="prev" href="../config/"><span class="small muted">Previous</span>markstage.config: every key</a>
+          <a class="next" href="../deploy/"><span class="small muted">Next</span>Deploying Markstage</a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <p class="footer-brand"><a class="brand" href="../../" aria-label="Markstage, home"><svg class="logo" viewBox="0 0 32 32" width="40" height="40" aria-hidden="true" focusable="false"><rect class="lt" width="32" height="32" rx="9"/><path class="ls" fill="none" stroke-width="4.2" stroke-linecap="round" d="M8.6 23.75 15.9 8.25"/><rect class="lc" x="21" y="8" width="4" height="16" rx="1.4"/></svg><span class="brand-text"><span class="brand-name">markstage</span><span class="brand-tag">Type it. Ship it.</span></span></a></p>
+          <p class="muted">Writers edit your Astro site on its real page; the content stays Markdown and JSON in git. Built by Space-O Technologies for its own site, free to self-host.</p>
+          <p class="muted small">Contact: <span class="copyable"><span class="copyable-value">rp@spaceo.ca</span><button type="button" class="icon-btn copy-btn" data-copy="rp@spaceo.ca" aria-label="Copy email address" title="Copy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg></button><a class="icon-btn" href="mailto:rp@spaceo.ca" target="_blank" rel="noopener" aria-label="Open email address in a new tab" title="Open in a new tab"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></span></p>
+        </div>
+        <nav aria-label="Footer" class="footer-cols">
+          <div>
+            <p class="footer-head">Product</p>
+            <a href="../../features/">Features</a>
+            <a href="../../ai/">AI and MCP</a>
+            <a href="../../demo/">Live demo</a>
+            <a href="../../#install">Install</a>
+            <a href="../../compare/">Compare</a>
+            <a href="../../alternatives/">Alternatives</a>
+            <a href="../../faq/">FAQ</a>
+            <a href="../../glossary/">Glossary</a>
+            <a href="../../why/">Why we built it</a>
+            <a href="../../showcase/">Showcase</a>
+            <a href="../../roadmap/">Roadmap</a>
+          </div>
+          <div>
+            <p class="footer-head">Docs</p>
+            <a href="../../docs/">All docs</a>
+            <a href="../../docs/writing/">Writing with Markstage</a>
+            <a href="../../docs/config/">Site config</a>
+            <a href="../../docs/deploy/">Deploy the server</a>
+            <a href="../../docs/security/">Security</a>
+          </div>
+          <div>
+            <p class="footer-head">Project</p>
+            <a href="https://github.com/spcaeo/markstage" target="_blank" rel="noopener">Source code</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/spcaeo/markstage/blob/main/SECURITY.md" target="_blank" rel="noopener">Report a security problem</a>
+            <a href="https://github.com/spcaeo/markstage/issues" target="_blank" rel="noopener">Issues</a>
+          </div>
+        </nav>
+      </div>
+      <div class="wrap footer-row small muted">
+        <span><a href="https://github.com/spcaeo/markstage/blob/main/LICENSE" target="_blank" rel="noopener">Source-available under the Elastic License 2.0</a>, free to self-host.</span>
+        <span>© 2026 <a href="https://www.spaceo.ca" target="_blank" rel="noopener">Space-O Technologies</a></span>
+        <span class="trademarks">Notion, Ghost, Prismic, WordPress and Astro are trademarks of their owners, named here only to compare; Markstage is not affiliated with them.</span>
+      </div>
+    </footer>
+  </body>
+</html>

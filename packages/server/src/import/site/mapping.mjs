@@ -9,10 +9,16 @@
 //    drafts: 'skip' | 'include',                                 drafts, for a collection that has no drafts
 //    media: 'used' | 'all',                                      the pictures the content uses, or every one
 //    slices: {<slice_type>: {section, fields}},                  Prismic slices as a JSON collection's sections
-//    permalink: {post, page}}                                    Ghost's old address pattern (default /{slug}/)
+//    permalink: {post, page},                                    Ghost's old address pattern (default /{slug}/)
+//    publicUrl: 'https://www.example.com',                      the address readers use, when the source's is another
+//    only: ['/services/'],                                       only the items whose address starts with one of these
+//    ids: 'slug' | 'path'}                                       an entry's id: its slug, or its whole address
+// Besides the roles, `fields` takes `acf.<name>` (WordPress ACF fields) to a key.
 import { HttpError } from '../../util.mjs';
 
-export const ROLES = ['title', 'date', 'updated', 'author', 'tags', 'categories', 'excerpt', 'cover', 'coverAlt', 'seoTitle', 'seoDescription', 'body', 'url', 'sections'];
+export const ROLES = ['title', 'date', 'updated', 'author', 'tags', 'categories', 'excerpt', 'cover', 'coverAlt', 'seoTitle', 'seoDescription', 'seoRobots', 'seoImage', 'canonical', 'body', 'url', 'sections'];
+const ACF = /^acf\.[A-Za-z_][\w-]{0,62}$/;
+export const LIMITS = Object.freeze({ only: 200 });
 const KEY = /^[A-Za-z_][\w-]*(\.[A-Za-z_][\w-]*)*$/;
 const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
 const bad = (words, field) => new HttpError(422, 'invalid', words, { field });
@@ -34,6 +40,10 @@ export function defaultFields(c) {
     coverAlt: img ? img.alt : md ? 'imageAlt' : null,
     seoTitle: c.seo?.title ?? null,
     seoDescription: c.seo?.description ?? null,
+    // no setting names these: a site says where they go (the plan notes what is not kept)
+    seoRobots: null,
+    seoImage: null,
+    canonical: null,
     body: md ? null : 'body',
     url: c.fields.url ?? null,
     sections: md ? null : 'sections',
@@ -65,9 +75,11 @@ export function resolveMapping(collections, bundle, given = {}) {
   for (const id of new Set(Object.values(types).filter(Boolean))) {
     const c = collections.find((x) => x.id === id);
     const mine = { ...defaultFields(c) };
+    // the ACF fields the items of this collection have, offered (left out until a key is given)
+    for (const name of acfNames(bundle, Object.keys(types).filter((t) => types[t] === id))) mine[`acf.${name}`] = null;
     const over = isObj(g.fields?.[id]) ? g.fields[id] : {};
     for (const [role, key] of Object.entries(over)) {
-      if (!ROLES.includes(role)) throw bad(`“${role}” is not a field the import fills (${ROLES.join(', ')}).`, `fields.${id}.${role}`);
+      if (!ROLES.includes(role) && !ACF.test(role)) throw bad(`“${role}” is not a field the import fills (${ROLES.join(', ')}, or acf.<name>).`, `fields.${id}.${role}`);
       if (key !== null && (typeof key !== 'string' || !KEY.test(key))) throw bad(`fields.${id}.${role} is a key such as “seo.title”, or null to leave it out.`, `fields.${id}.${role}`);
       mine[role] = key;
     }
@@ -82,5 +94,33 @@ export function resolveMapping(collections, bundle, given = {}) {
   const slices = isObj(g.slices) ? g.slices : {};
   for (const [t, m] of Object.entries(slices)) if (!isObj(m) || typeof m.section !== 'string') throw bad(`slices.${t} is {section, fields}.`, `slices.${t}`);
   const permalink = isObj(g.permalink) ? Object.fromEntries(['post', 'page'].filter((k) => typeof g.permalink[k] === 'string' && g.permalink[k].startsWith('/')).map((k) => [k, g.permalink[k]])) : {};
-  return { types, fields, onCollision: pick('onCollision', ['both', 'skip', 'replace'], 'both'), drafts: pick('drafts', ['skip', 'include'], 'skip'), media: pick('media', ['used', 'all'], 'used'), slices, permalink };
+  return { types, fields, onCollision: pick('onCollision', ['both', 'skip', 'replace'], 'both'), drafts: pick('drafts', ['skip', 'include'], 'skip'), media: pick('media', ['used', 'all'], 'used'), slices, permalink, publicUrl: publicOf(g.publicUrl), only: onlyOf(g.only), ids: pick('ids', ['slug', 'path'], 'slug') };
+}
+
+/** The ACF field names the items of these types have, in the order first seen. */
+function acfNames(bundle, types) {
+  const out = new Set();
+  for (const i of bundle.items) if (types.includes(i.type) && isObj(i.acf)) for (const k of Object.keys(i.acf)) if (ACF.test(`acf.${k}`)) out.add(k);
+  return [...out];
+}
+
+/** The public address (an origin), checked; null when none is given. */
+function publicOf(v) {
+  if (v === undefined || v === null || v === '') return null;
+  let u;
+  try {
+    u = new URL(String(v).trim());
+  } catch {
+    throw bad('publicUrl is the address readers use, such as https://www.example.com.', 'publicUrl');
+  }
+  if (!['http:', 'https:'].includes(u.protocol) || u.username || u.password || (u.pathname !== '/' && u.pathname !== '')) throw bad('publicUrl is a plain https:// address with no path, such as https://www.example.com.', 'publicUrl');
+  return u.origin;
+}
+
+/** The address prefixes `only` keeps, checked: paths that start with a slash. */
+function onlyOf(v) {
+  if (v === undefined || v === null) return [];
+  const list = typeof v === 'string' ? v.split(',').map((x) => x.trim()).filter(Boolean) : v;
+  if (!Array.isArray(list) || list.length > LIMITS.only || list.some((p) => typeof p !== 'string' || !p.startsWith('/') || p.length > 500)) throw bad(`only is a list of at most ${LIMITS.only} addresses, each starting with / (such as "/services/").`, 'only');
+  return list;
 }

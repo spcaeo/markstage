@@ -70,7 +70,7 @@ export interface Media {
   /** its edits, newest first (GET media/:mid only) */
   derivatives?: { id: string; filename: string }[];
   /** a stock photo's source and photographer */
-  credit?: { provider: string; label: string; id: string; author: string; authorUrl: string | null; sourceUrl: string | null } | null;
+  credit?: { provider: string; label: string; id?: string; author?: string; authorUrl?: string | null; sourceUrl: string | null } | null;
 }
 
 export interface StockPhoto {

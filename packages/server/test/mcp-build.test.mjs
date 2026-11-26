@@ -1,6 +1,8 @@
 // "Nothing an agent does publishes", proved on the example blog (examples/blog) with a real Astro build: the site is
-// built, an MCP session uses every write tool (a new draft, changes to two drafts, a live post's change and a draft
-// put into a release), and the site is built again. The two builds are the same files, byte for byte: no page more
+// built, an MCP session uses every write tool (a new draft, a picture for it, changes to two drafts, a picture that
+// waits in a release, a live post's change that shows it and a draft put into that release), and the site is built
+// again. (The one file more is the draft's picture, which Astro puts in _astro/ for every entry, drafts too: named by
+// no page.) The two builds are the same files, byte for byte: no page more
 // or changed, nothing more in the sitemap or the feed. The agent's commits are in the repo; drafts are not built.
 // Then a person's save of a live post does change the build, so the comparison can see a change.
 // The example has no sitemap or feed, so its copy here gets both, filtered as its pages are (src/lib/live.ts).
@@ -11,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { after, before, describe, test } from 'node:test';
 import { build } from 'astro';
 import { loadCore } from '../src/content/converter.mjs';
-import { as, makeFixture, startServer } from './helpers.mjs';
+import { as, makeFixture, makePng, startServer } from './helpers.mjs';
 import { mcpClient, mcpToken } from './mcp-support.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -92,8 +94,11 @@ describe('nothing an agent does publishes: the example blog, built before and af
     const made = await agent.tool('create_draft', { collection: 'posts', title: 'An agent’s post', markdown: 'Written by an agent, to stay a draft.\n\nA second paragraph.', frontmatter: { description: 'An agent wrote this.' } });
     assert.equal(made.ok, true, made.text);
     const mine = made.data.id;
-    // update_entry, on the new draft and on the example's own draft
-    for (const [id, from, to] of [[mine, 'A second paragraph.', 'A second paragraph, changed by the agent.'], ['a-draft', 'the built site does not.', 'the built site does not. The agent added this.']]) {
+    // add_image: a picture for the new draft, committed to the media folder (src/assets/uploads here)
+    const pic = await agent.tool('add_image', { alt: 'An agent’s picture', data: makePng().toString('base64'), filename: 'agent-picture.png', collection: 'posts' });
+    assert.equal(pic.ok, true, pic.text);
+    // update_entry, on the new draft (with the picture) and on the example's own draft
+    for (const [id, from, to] of [[mine, 'A second paragraph.', `A second paragraph, changed by the agent.\n\n${pic.data.use.markdown.posts}`], ['a-draft', 'the built site does not.', 'the built site does not. The agent added this.']]) {
       const e = (await agent.tool('get_entry', { collection: 'posts', id })).data;
       assert.ok(e.source.includes(from), `${id}: ${e.source}`);
       const u = await agent.tool('update_entry', { collection: 'posts', id, version: e.version, source: e.source.replace(from, to) });
@@ -101,34 +106,57 @@ describe('nothing an agent does publishes: the example blog, built before and af
       assert.equal(u.data.changed, true);
     }
     // add_to_release: a live post's change, and a draft as it is, into an open release
-    const r = (await ed.post('/releases', { name: 'The agent’s release' })).json;
+    // create_release: the agent opens its own release (no person needed), named for why; an empty name is refused
+    const noName = await agent.tool('create_release', { name: '  ' });
+    assert.equal(noName.ok, false, noName.text);
+    assert.match(noName.text, /name/);
+    const made2 = await agent.tool('create_release', { name: 'The agent’s release', description: 'Sources: https://example.com/docs' });
+    assert.equal(made2.ok, true, made2.text);
+    assert.equal(made2.data.release.status, 'open');
+    assert.equal(made2.data.release.description, 'Sources: https://example.com/docs');
+    const r = (await ed.get(`/releases/${made2.data.release.id}`)).json;
+    assert.equal(r.name, 'The agent’s release');
+    // add_image into the release: it waits there, and the live post's change shows it
+    const held = await agent.tool('add_image', { alt: 'A picture for the live post', data: makePng().toString('base64'), filename: 'agent-release-picture.png', release: r.id, collection: 'posts' });
+    assert.equal(held.ok, true, held.text);
     const hello = (await agent.tool('get_entry', { collection: 'posts', id: 'hello-markstage' })).data;
-    const a1 = await agent.tool('add_to_release', { release: r.id, collection: 'posts', id: 'hello-markstage', version: hello.version, source: hello.source.replace('## Text and lists', '## Text and lists, by an agent') });
+    const a1 = await agent.tool('add_to_release', { release: r.id, collection: 'posts', id: 'hello-markstage', version: hello.version, source: hello.source.replace('## Text and lists', `## Text and lists, by an agent\n\n${held.data.use.markdown.posts}`) });
     assert.equal(a1.ok, true, a1.text);
     const a2 = await agent.tool('add_to_release', { release: r.id, collection: 'posts', id: mine, version: (await agent.tool('get_entry', { collection: 'posts', id: mine })).data.version });
     assert.equal(a2.ok, true, a2.text);
 
     // the agent's work is in the repo, as drafts and as a release that is still open
-    assert.equal(Number(fx.git('rev-list', '--count', `${start}..HEAD`).trim()), 3, 'three commits: the new draft and two changes');
+    assert.equal(Number(fx.git('rev-list', '--count', `${start}..HEAD`).trim()), 4, 'four commits: the new draft, its picture and two changes');
+    assert.ok(fs.existsSync(path.join(fx.site, pic.data.path)));
+    assert.equal(fs.existsSync(path.join(fx.site, held.data.path)), false, 'the release’s picture is not in the repo');
     assert.match(read(`src/content/posts/${mine}.md`), /^draft: true$/m);
     assert.match(read(`src/content/posts/${mine}.md`), /changed by the agent/);
     assert.match(read('src/content/posts/a-draft.md'), /The agent added this\./);
     assert.doesNotMatch(read('src/content/posts/hello-markstage.md'), /by an agent/);
     const rel = (await ed.get(`/releases/${r.id}`)).json;
-    assert.deepEqual([rel.status, rel.counts.items], ['open', 2]);
+    assert.deepEqual([rel.status, rel.counts.items, rel.counts.media], ['open', 3, 1]);
     assert.deepEqual(srv.app.db.prepare("SELECT action FROM audit WHERE action LIKE 'release.publish%' OR action = 'entry.publish'").all(), []);
-    const calls = srv.app.db.prepare("SELECT target, ok FROM audit WHERE action = 'mcp.call' AND target IN ('create_draft', 'update_entry', 'add_to_release') ORDER BY id").all();
-    assert.deepEqual(calls.map((c) => [c.target, c.ok]), [['create_draft', 1], ['update_entry', 1], ['update_entry', 1], ['add_to_release', 1], ['add_to_release', 1]]);
+    const calls = srv.app.db.prepare("SELECT target, ok FROM audit WHERE action = 'mcp.call' AND target IN ('create_draft', 'update_entry', 'create_release', 'add_to_release') ORDER BY id").all();
+    assert.deepEqual(calls.map((c) => [c.target, c.ok]), [['create_draft', 1], ['update_entry', 1], ['update_entry', 1], ['create_release', 0], ['create_release', 1], ['add_to_release', 1], ['add_to_release', 1]]);
 
-    // built again: the same site, byte for byte; nothing the agent wrote is in it
+    // built again: the same site, byte for byte; nothing the agent wrote is in it. One file more: Astro processes the
+    // pictures in every entry's Markdown, drafts too, so the draft's picture is in _astro/ under a hashed name, as a
+    // person's draft's would be; no page, the sitemap or the feed names it
     const afterAgent = await built('after-agent');
+    const orphan = Object.keys(afterAgent).filter((f) => !before[f]);
+    assert.equal(orphan.length, 1, orphan.join(', '));
+    assert.match(orphan[0], /^_astro\/agent-picture\.[\w-]+\.png$/);
+    for (const [f, bytes] of Object.entries(afterAgent)) assert.equal(bytes.includes(path.posix.basename(orphan[0])), false, `${f} names the draft's picture`);
+    delete afterAgent[orphan[0]];
     same(before, afterAgent, 'after the agent');
-    for (const [f, bytes] of Object.entries(afterAgent)) for (const w of ['by an agent', 'An agent', 'The agent added this', mine]) assert.equal(bytes.includes(w), false, `${f} has “${w}”`);
+    for (const [f, bytes] of Object.entries(afterAgent)) for (const w of ['by an agent', 'An agent', 'The agent added this', mine, 'agent-picture', 'agent-release-picture']) assert.equal(bytes.includes(w), false, `${f} has “${w}”`);
 
     // the control: a person saves the live post (a save of a live entry goes live), and the build shows it
     const s = (await ed.get('/collections/posts/entries/hello-markstage/source')).json;
     assert.equal((await ed.put('/collections/posts/entries/hello-markstage/source', { version: s.version, source: s.source.replace('title: Hello, Markstage', 'title: Hello again, Markstage') })).status, 200);
     const afterPerson = await built('after-person');
+    assert.ok(afterPerson[orphan[0]], 'the draft’s picture is still there');
+    delete afterPerson[orphan[0]];
     assert.deepEqual(Object.keys(afterPerson).sort(), Object.keys(before).sort());
     const changed = Object.keys(before).filter((f) => !afterPerson[f].equals(before[f])).sort();
     assert.ok(changed.includes('posts/hello-markstage/index.html') && changed.includes('rss.xml') && changed.includes('index.html'), changed.join(', '));

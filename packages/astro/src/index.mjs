@@ -22,6 +22,7 @@ import { entryAuthorProblems } from './authors-files.mjs';
 import { CONFIG_KEY } from './authors.mjs';
 import { V, optimizeDepsFor, virtualPlugin } from './client.mjs';
 import { editButtonScript, loadConfig, normalizeConfig } from './config.mjs';
+import { buildHead } from './head/index.mjs';
 
 export { defineConfig } from './config.mjs';
 
@@ -46,6 +47,8 @@ export function checkPages(cfg) {
 }
 
 export default function markstage(options = {}) {
+  // the site config of a build, for the head kit at its end (null in dev or without markstage.config)
+  let builtConfig = null;
   return {
     name: '@markstage/astro',
     hooks: {
@@ -56,6 +59,7 @@ export default function markstage(options = {}) {
           const built = options.config ? normalizeConfig(options.config, root, { site }) : (await loadConfig(root, undefined, { site }))?.config;
           // the site's pages read their authors through @markstage/astro/authors (authors.mjs)
           if (built) globalThis[CONFIG_KEY] = built;
+          builtConfig = built ?? null;
           if (built?.authors && options.checkAuthors !== false) checkAuthors(built);
           // the site's layout reads each page's frame and type through @markstage/astro/pages (pages.mjs)
           if (built && options.checkPages !== false) checkPages(built);
@@ -110,6 +114,12 @@ export default function markstage(options = {}) {
           },
         });
         logger.info(`Markstage editor: ${cfg.basePath}/ (dev only, this machine only)`);
+      },
+      // the head kit (docs/HEAD-KIT.md): Markdown copies, the OKF bundle, llms.txt, feeds and the tracking loader,
+      // written over the built pages; only with `head` in markstage.config
+      'astro:build:done': async ({ dir, logger }) => {
+        if (!builtConfig?.head || options.head === false) return;
+        await buildHead({ cfg: builtConfig, outDir: fileURLToPath(dir), logger });
       },
     },
   };

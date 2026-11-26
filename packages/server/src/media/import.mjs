@@ -14,6 +14,7 @@ import { HttpError, badRequest, flag, forbidden } from '../util.mjs';
 import { checkUrl, safeFetch } from '../library/fetch.mjs';
 import { TYPES, sniff } from './sniff.mjs';
 import { fileSource, readZip } from './zip.mjs';
+import { webCredit } from './source.mjs';
 
 export const MAX_URLS = 50;
 export const DEFAULT_IMPORT_MAX = 64 * 1024 * 1024;
@@ -77,7 +78,7 @@ export function createMediaImport(app, { storeImage, toPublic }) {
     for (const s of sources) {
       try {
         const buf = await s.read();
-        const row = await storeImage(ctx, buf, s.name, { alt: s.alt ?? '', action: 'media.import', commit: false });
+        const row = await storeImage(ctx, buf, s.name, { alt: s.alt ?? '', action: 'media.import', commit: false, credit: s.url ? webCredit(s.url) : null });
         rows.push(row);
         byLabel.set(s.label, row);
         log(`${s.label}: ${row.path}\n`);
@@ -156,7 +157,7 @@ export function createMediaImport(app, { storeImage, toPublic }) {
       if (ctx.body?.dry) return { items };
       const good = items.filter((i) => !i.problem);
       if (!good.length) throw badRequest('None of these addresses can be fetched.', { items });
-      const sources = good.map((i) => ({ label: i.url, name: nameOfUrl(i.url), read: () => fetchImage(i.url) }));
+      const sources = good.map((i) => ({ label: i.url, url: i.url, name: nameOfUrl(i.url), read: () => fetchImage(i.url) }));
       return { job: { id: enqueue(ctx, 'fetch', sources, { message: (n) => `Import ${plural(n, 'media file')} from the web`, source: `${plural(good.length, 'address', 'addresses')}` }) }, items };
     });
 

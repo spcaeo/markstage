@@ -54,3 +54,10 @@ test('the policy gets them; from default-src when it has no script-src; never ne
   assert.equal(withCspSources('', needs), '');
   assert.equal(withCspSources("script-src 'self' 'sha256-AAA='", needs), "script-src 'self' 'sha256-AAA=' https://cdn.example", 'no doubles');
 });
+
+test('extra origins: a missing frame-src starts from child-src (as browsers fall back), and script-src-elem gets the script needs', () => {
+  assert.equal(withCspSources("default-src 'self'; child-src 'none'", { frameOrigins: ['https://www.googletagmanager.com'] }), "default-src 'self'; child-src 'none'; frame-src https://www.googletagmanager.com");
+  assert.equal(withCspSources("default-src 'self'", { frameOrigins: ['https://a.example.com'] }), "default-src 'self'; frame-src 'self' https://a.example.com");
+  assert.equal(withCspSources("script-src-elem 'self'; script-src 'self'", { script: ["'sha256-x'"], scriptOrigins: ['https://a.example.com'] }), "script-src-elem 'self' 'sha256-x' https://a.example.com; script-src 'self' 'sha256-x' https://a.example.com");
+  assert.equal(withCspSources("default-src 'self'; connect-src 'self'", { connectOrigins: ['https://a.example.com'], imgOrigins: ['https://b.example.com'] }), "default-src 'self'; connect-src 'self' https://a.example.com; img-src 'self' https://b.example.com");
+});

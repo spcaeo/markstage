@@ -15,6 +15,16 @@ import { createMediaImport } from './import.mjs';
 import { replaceRoutes } from './replace.mjs';
 import { indexExistingFiles } from './index-files.mjs';
 import { stockRoutes } from './stock.mjs';
+import { webCredit } from './source.mjs';
+
+const sizeOf = (n) => (n < 1024 * 1024 ? `${Math.ceil(n / 1024)} KB` : `${(n / 1024 / 1024).toFixed(n < 10 * 1024 * 1024 ? 1 : 0)} MB`);
+
+/** A file over the media limit, said with the sizes, so the writer (or an agent) knows how much smaller it must be. */
+export const tooLarge = (sent, max) =>
+  new HttpError(413, 'too-large', `${Number.isFinite(sent) && sent > 0 ? `This file is ${sizeOf(sent)}; the` : 'The'} limit is ${sizeOf(max)}. Export it smaller (a photo at 2560 px wide is plenty) and upload it again.`);
+
+/** What a commit made for an AI agent (the MCP server) adds to its message: the agent and its token's name. */
+export const viaWords = (ctx) => (ctx.via?.kind === 'mcp' ? ` (an AI agent, via MCP: ${ctx.via.tokenName})` : '');
 
 export function mediaRoutes(router, app) {
   const { db, config, store, git, repoLock, audit, codec } = app;
@@ -159,7 +169,7 @@ export function mediaRoutes(router, app) {
       fs.writeFileSync(abs, out.buffer, { flag: 'wx' });
       const rel = store.rel(abs);
       // not committed when the caller commits many files at once (an import)
-      const commit = commitIt ? await git.commit([rel], from ? `Edit ${from.path} as ${rel}` : `Upload ${rel}`, { name: ctx.user.name, email: ctx.user.email }) : null;
+      const commit = commitIt ? await git.commit([rel], `${from ? `Edit ${from.path} as ${rel}` : `Upload ${rel}`}${viaWords(ctx)}`, { name: ctx.user.name, email: ctx.user.email }) : null;
       const id = newId('m');
       db.prepare('INSERT INTO media (id, path, filename, type, width, height, bytes, alt, uploaded_by, uploaded_at, derived_from, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
         id,
@@ -196,14 +206,14 @@ export function mediaRoutes(router, app) {
       try {
         raw = await readRaw(ctx.req, media.maxBytes);
       } catch (e) {
-        // said with the sizes, so the writer knows how much smaller it must be
         if (e.status !== 413) throw e;
-        const sent = Number(ctx.req.headers['content-length']);
-        const mb = (n) => (n < 1024 * 1024 ? `${Math.ceil(n / 1024)} KB` : `${(n / 1024 / 1024).toFixed(n < 10 * 1024 * 1024 ? 1 : 0)} MB`);
-        throw new HttpError(413, 'too-large', `${Number.isFinite(sent) && sent > 0 ? `This file is ${mb(sent)}; the` : 'The'} limit is ${mb(media.maxBytes)}. Export it smaller (a photo at 2560 px wide is plenty) and upload it again.`);
+        throw tooLarge(Number(ctx.req.headers['content-length']), media.maxBytes);
       }
       const alt = ctx.query.get('alt') ?? from?.alt ?? '';
-      const row = await storeImage(ctx, raw, from && !ctx.query.get('keepName') ? `${from.filename.replace(/\.[^.]*$/, '')}-edited` : name, { from, alt, credit: from?.credit ? JSON.parse(from.credit) : null, action: from ? 'media.edit' : 'media.upload' });
+      // ?source=: the web address the picture was fetched from (an AI agent's add_image), kept as its credit
+      const source = ctx.query.get('source');
+      const credit = from?.credit ? JSON.parse(from.credit) : source ? webCredit(source) : null;
+      const row = await storeImage(ctx, raw, from && !ctx.query.get('keepName') ? `${from.filename.replace(/\.[^.]*$/, '')}-edited` : name, { from, alt, credit, action: from ? 'media.edit' : 'media.upload' });
       ctx.status = 201;
       return toPublic(row);
     },

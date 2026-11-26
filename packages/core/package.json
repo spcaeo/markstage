@@ -1,6 +1,6 @@
 {
   "name": "@markstage/core",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Markstage core: Markdown <-> editor document with block packs, surgical saves, frontmatter.",
   "keywords": [
     "markstage",
@@ -48,6 +48,8 @@
       "types": "./src/csp.d.ts",
       "default": "./src/csp.mjs"
     },
+    "./html-tree": "./src/html-tree.mjs",
+    "./head": "./src/head.mjs",
     "./json": "./src/json/index.mjs",
     "./json/keystatic": "./src/json/adapters/keystatic.mjs",
     "./release": {

@@ -1,0 +1,191 @@
+/* Site settings → Search & AI and Tracking (site-settings/head/): switches with a hint under them, text fields with a
+   hint and a message under them, the feeds list, the Save bar. They sit inside .ms-site-settings, so the tokens of the
+   theme (light and dark) apply and the rows reuse the Locks list's look. */
+.ms-hk {
+  display: grid;
+  gap: 4px;
+}
+.ms-hk__switches {
+  display: grid;
+}
+.ms-hk__switch {
+  padding: 12px 14px;
+  border-top: 1px solid var(--ms-line-2);
+}
+.ms-hk__switch:first-child {
+  border-top: 0;
+}
+.ms-hk__switchlabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ms-text);
+  cursor: pointer;
+}
+.ms-hk__hint {
+  margin: 2px 0 0;
+  color: var(--ms-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.ms-hk__switch > .ms-hk__hint {
+  padding-left: 24px;
+}
+.ms-hk__extra:empty {
+  display: none;
+}
+.ms-hk__extra {
+  padding: 6px 0 0 24px;
+}
+.ms-hk__addrs {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-hk__addrs li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+  min-width: 0;
+  color: var(--ms-text);
+  font: 12px/1.6 var(--ms-mono);
+}
+.ms-hk__what {
+  color: var(--ms-muted);
+  font-family: var(--ms-sans);
+}
+.ms-hk__fields {
+  display: grid;
+  gap: 16px;
+  margin-top: 12px;
+}
+.ms-hk__field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.ms-hk__label {
+  color: var(--ms-text);
+  font-weight: 600;
+}
+.ms-hk__field .ms-hk__hint {
+  margin: 0;
+}
+.ms-hk__msg {
+  margin: 0;
+  color: var(--ms-danger);
+  font-size: 12px;
+}
+.ms-hk__msg:empty {
+  display: none;
+}
+.ms-hk__field input[aria-invalid='true'] {
+  border-color: var(--ms-danger);
+}
+.ms-hk__radios {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 20px 0 0;
+  padding: 0;
+  border: 0;
+}
+.ms-hk__radios legend {
+  padding: 0;
+  margin-bottom: 6px;
+}
+.ms-hk__radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ms-text);
+  cursor: pointer;
+}
+.ms-hk__empty {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--ms-muted);
+}
+.ms-hk__skips {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ms-hk__skips .ms-hk__empty {
+  padding: 0;
+}
+.ms-hk__skip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ms-hk__skip .ms-hk__field {
+  flex: 1;
+  max-width: 420px;
+}
+.ms-hk__skips + .ms-btn,
+.ms-hk__feeds + .ms-btn {
+  margin-top: 10px;
+}
+.ms-hk__feeds {
+  margin-bottom: 0;
+}
+.ms-hk__feed {
+  border-top: 1px solid var(--ms-line-2);
+}
+.ms-hk__feed:first-child {
+  border-top: 0;
+}
+.ms-hk__feed.is-picked {
+  box-shadow: inset 3px 0 0 var(--ms-accent);
+}
+.ms-hk__feed > .ms-locks__row {
+  border-top: 0;
+}
+.ms-hk__feedname {
+  flex: 1;
+  flex-wrap: wrap;
+}
+.ms-hk__feedname strong {
+  white-space: normal;
+}
+.ms-hk__feedform {
+  display: grid;
+  gap: 16px;
+  max-width: 560px;
+  padding: 4px 14px 16px 14px;
+}
+.ms-hk__feedform .ms-hk__radios {
+  margin-top: 0;
+}
+.ms-hk__num {
+  max-width: 120px;
+}
+.ms-hk__problems ul {
+  margin: 6px 0;
+  padding-left: 18px;
+}
+.ms-hk__bar {
+  margin-top: 24px;
+}
+.ms-hk__stale {
+  color: var(--ms-text);
+}
+@media (max-width: 720px) {
+  .ms-hk__switch > .ms-hk__hint,
+  .ms-hk__extra {
+    padding-left: 0;
+  }
+  .ms-hk__skip .ms-hk__field {
+    max-width: none;
+  }
+  .ms-hk__bar {
+    flex-wrap: wrap;
+  }
+  .ms-hk__feedname .ms-copyable {
+    flex-basis: 100%;
+  }
+}

@@ -9,7 +9,7 @@ import { ic } from './icons';
 import { fmtDateTime } from './dates';
 import { screenIndex, searchScreens } from './palette-screens';
 import { screens } from './host';
-import { viewerRole } from './runtime';
+import { config, viewerRole } from './runtime';
 
 const RECENT_KEY = 'markstage.recent';
 const RECENT_MAX = 6;
@@ -215,7 +215,7 @@ export class EntryPalette {
       }
     } else {
       // the editor's own screens and settings, by their plain words (palette-screens.ts)
-      const hits = searchScreens(q, viewerRole(), screenIndex(viewerRole(), screens()));
+      const hits = searchScreens(q, viewerRole(), screenIndex(viewerRole(), screens(), { head: !!config().head }));
       if (hits.length) {
         this.list.append(this.head('Screens', 'sliders'));
         for (const s of hits) this.list.append(this.screenRow(s));

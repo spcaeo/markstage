@@ -71,7 +71,8 @@ function blocks(content, notes) {
           out += link(url, `Embedded content: ${hostOf(url)}`);
         } else out += placeholder(notes, 'embed', 'An embed with no address was left out.');
       } else if (core === 'html') {
-        if (/<(script|iframe|form|style|object|embed)\b/i.test(out.slice(b.start))) notes.push({ kind: 'html', text: 'A Custom HTML block had a script, a form or an embed; only its text and links came in. Check it.' });
+        // a script or a style is noted where it is left out (convert/html.mjs); a form or a player is content to check
+        if (/<(iframe|form|object|embed)\b/i.test(out.slice(b.start))) notes.push({ kind: 'html', text: 'A Custom HTML block had a form or an embedded player; only its text and links came in. Check it.' });
       } else if (core === 'spacer') out = out.slice(0, b.start);
       else if (!core || (!STATIC.has(core) && !DYNAMIC.has(core))) notes.push({ kind: 'block', text: `The block “${name}” came in from its HTML. Check how it reads.` });
       continue;

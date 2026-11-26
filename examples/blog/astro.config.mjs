@@ -5,6 +5,8 @@ import mdx from '@astrojs/mdx';
 import markstage from '@markstage/astro';
 
 export default defineConfig({
+  // the head kit writes absolute links, so it needs the site's address
+  site: 'https://blog.example.com',
   trailingSlash: 'always',
   integrations: [mdx(), markstage()],
 });

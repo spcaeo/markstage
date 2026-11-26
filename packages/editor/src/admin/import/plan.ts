@@ -9,7 +9,9 @@ import { button, chips, el, failure, message, searchBox, select, state } from '.
 import * as api from './api';
 import { ACTION_WORD, COLLISION_WORD, PRODUCT, count, planLines, planSentence, resultLines, reviewKind } from './words';
 
-const ROLE_LABEL: Record<string, string> = { title: 'Title', date: 'Date', updated: 'Updated', author: 'Author', tags: 'Tags', categories: 'Categories', excerpt: 'Excerpt', cover: 'Cover image', coverAlt: 'Cover alt text', seoTitle: 'Search title', seoDescription: 'Search description', body: 'Text', url: 'Address', sections: 'Sections' };
+const ROLE_LABEL: Record<string, string> = { title: 'Title', date: 'Date', updated: 'Updated', author: 'Author', tags: 'Tags', categories: 'Categories', excerpt: 'Excerpt', cover: 'Cover image', coverAlt: 'Cover alt text', seoTitle: 'Search title', seoDescription: 'Search description', body: 'Text', url: 'Address', sections: 'Sections', seoRobots: 'Search robots', seoImage: 'Share image', canonical: 'Canonical address' };
+/** A field's name on screen: its label, or a WordPress ACF field by its own name. */
+const roleLabel = (role: string) => ROLE_LABEL[role] ?? (role.startsWith('acf.') ? `ACF field ${role.slice(4)}` : role);
 const STEP_WORD: Record<string, string> = { media: 'Images and files', authors: 'Authors', entries: 'Pages and posts', redirects: 'Old addresses' };
 
 /** A site path with copy and open (on the site); a full address with both too. */
@@ -101,7 +103,7 @@ export function planView(body: HTMLElement, actions: HTMLElement, bar: HTMLEleme
       for (const [role, key] of Object.entries(keys)) {
         const id = `ms-imp-${cid}-${role}`;
         const input = el('input.ms-input', { id, name: `field:${cid}:${role}`, value: key ?? '', placeholder: 'left out', spellcheck: 'false', autocomplete: 'off' });
-        grid.append(el('label.ms-imp-key', { for: id }, el('span', ROLE_LABEL[role] ?? role), input));
+        grid.append(el('label.ms-imp-key', { for: id }, el('span', roleLabel(role)), input));
       }
       box.append(el('details.ms-imp-fields', el('summary', `Fields of ${c?.label ?? cid}`), el('p.ms-adm-sub', 'The frontmatter (or JSON) key each field is written to. Empty leaves it out.'), grid));
     }

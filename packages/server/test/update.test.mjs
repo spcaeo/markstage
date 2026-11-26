@@ -118,7 +118,7 @@ test('the real CLI: version, and check loads the config and the code without tou
   const fx = makeFixture({ checks: false });
   const bin = new URL('../bin/markstage-server.mjs', import.meta.url).pathname;
   const env = { ...process.env, MARKSTAGE_DATA_DIR: fx.data, NODE_ENV: 'test' };
-  assert.match(execFileSync(process.execPath, [bin, 'version'], { encoding: 'utf8', env }), /^Markstage v\d+\.\d+\.\d+( · build \d+)?( · \w{3} \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M [A-Z]{2,5}(\+\d+)?)?( \([0-9a-f]{12}\))?\n$/);
+  assert.match(execFileSync(process.execPath, [bin, 'version'], { encoding: 'utf8', env }), /^Markstage v\d+\.\d+\.\d+( · build \d+)?( · \w{3} \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M [A-Z]{2,5}([+-]\d{1,2}(:\d{2})?)?)?( \([0-9a-f]{12}\))?\n$/);
   assert.match(execFileSync(process.execPath, [bin, 'check'], { encoding: 'utf8', env }), /^Configuration OK; Markstage \d+\.\d+\.\d+ loads\.\n$/);
   assert.equal(fs.existsSync(path.join(fx.data, 'markstage.db')), false, 'no database made or migrated');
   fs.writeFileSync(path.join(fx.data, 'config.json'), '{ "contentRoot": "relative" }');

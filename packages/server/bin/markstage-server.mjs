@@ -131,11 +131,23 @@ async function main() {
     } else if (cmd === 'import') {
       const { importCommand } = await import('../src/import/cli.mjs');
       process.exitCode = await importCommand(app, args);
+    } else if (cmd === 'live') {
+      // A deploy made outside Markstage (by hand, from CI, a ship script): say which commit is live now, so what
+      // Markstage shows as live (env status, history's "live", health) and a rollback's step back are right.
+      if (args[0]) {
+        const sha = (await app.git.git(['rev-parse', '--verify', '--quiet', `${args[0]}^{commit}`], { allowFail: true })).stdout.trim();
+        if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error(`"${args[0]}" is not a commit of the site's repository.`);
+        if (app.jobs.liveHead() !== sha) {
+          app.jobs.deployed(sha);
+          app.audit.log({ actorName: 'markstage-server live' }, 'deploy.recorded', { target: sha, detail: { via: 'cli' } });
+        }
+      }
+      console.log(`Live: ${app.jobs.liveHead() ?? 'nothing recorded yet'}`);
     } else if (cmd === 'translate') {
       const { translateCommand } = await import('../src/translate/cli.mjs');
       process.exitCode = await translateCommand(app, args);
     } else {
-      throw new Error(`Unknown command "${cmd}". Commands: serve, init, setup-code, reset-password, backup, forms import-wordpress, geoip update, env, library, media import, media index, import, translate.`);
+      throw new Error(`Unknown command "${cmd}". Commands: serve, init, setup-code, reset-password, backup, live, forms import-wordpress, geoip update, env, library, media import, media index, import, translate.`);
     }
   } finally {
     await app.close();

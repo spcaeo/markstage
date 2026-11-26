@@ -1,6 +1,6 @@
 {
   "name": "@markstage/editor",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Markstage editor: the browser client (TipTap 3, vanilla TypeScript) that edits content on the site's own design.",
   "keywords": [
     "markstage",
@@ -54,7 +54,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.38.1",
     "@lezer/highlight": "^1.2.5",
-    "@markstage/core": "0.4.0",
+    "@markstage/core": "0.5.0",
     "@tiptap/core": "3.32.2",
     "@tiptap/extension-drag-handle": "3.32.2",
     "@tiptap/extension-link": "3.32.2",

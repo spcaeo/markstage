@@ -528,6 +528,7 @@ export function loadConfig({ env = process.env, overrides = {} } = {}) {
     siteUrl: null,
     redirects: null,
     design: null,
+    head: null,
     decorativeClass: 'decorative',
     checks,
     verify,

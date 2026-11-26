@@ -1,0 +1,4 @@
+{
+  "markdown": { "pages": true, "okf": true, "llms": true },
+  "feeds": [{ "id": "posts", "title": "Example blog", "path": "/rss.xml", "collections": ["posts"] }]
+}

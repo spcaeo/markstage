@@ -488,8 +488,8 @@ Both change many entries in **one commit**. Each change is checked like a save o
 status keys, own author, raw HTML, safe links, the site's `validate`); one that fails is left out with the reason,
 and so is one that changed since the preview (its `version`). When a live entry changed (or was unpublished or
 trashed), one job builds, verifies every locale and deploys; if it fails, the entries nobody touched since are put
-back (and trashed ones taken out of the trash) in a revert commit. A JSON entry's `modified` follows the change, as
-an editor save does.
+back (and trashed ones taken out of the trash) in a revert commit. An entry's `modified` follows the change, as
+an editor save does (docs/CONFIG.md `fields`).
 
 | Route | Does |
 |---|---|
@@ -577,7 +577,8 @@ the same lock (docs/SCALING.md); a tab not heard from for 60 s is gone, after a 
 
 `Media` = `{id, filename, path, url, type, width, height, bytes, alt, uploadedBy, uploadedAt, derivedFrom, credit}`
 (`derivedFrom`: the media id it was edited from; `credit`: a stock photo's `{provider, label, id, author, authorUrl,
-sourceUrl}`). `path` is the
+sourceUrl}`, or for a picture fetched from a web address (an import from addresses, an AI agent's `add_image`, an
+upload with `?source=<address>`) `{provider: 'web', label: <host>, sourceUrl}`, so its licence can be checked later). `path` is the
 repo-relative file (`src/assets/uploads/2026/10/name.webp`), `url` is what to put in content (from the site config).
 Uploads: JPEG, PNG, GIF, WebP and AVIF images, and PDF documents, by content sniffing (the extension and
 `Content-Type` are ignored). SVG, HTML and everything else is `415`, with what can be uploaded. An iPhone photo
@@ -676,6 +677,17 @@ may read; writing needs owner or administrator (`design.write`, `code.inject`), 
   only, size-checked), alone or with the unsaved entry. The preview clone shows those files with that text, so the
   site's dev server swaps the styles in the frame (Vite CSS HMR). An autosave keeps them; `DELETE …/state` drops them.
   Injected code never runs in the CMS: only on the preview origin and the built site.
+
+## Head settings
+
+The head kit's one settings file (docs/HEAD-KIT.md), `head.file` in `markstage.config` (default `src/site/head.json`): a
+Markdown copy of every page, the OKF bundle, llms.txt, feeds and tracking tags by ID. Everyone who may read the design
+may read it; changing it needs owner or administrator (`head.write`), checked on the server and audited as `head.write`.
+
+| Method + path | Answer |
+|---|---|
+| `GET head` | `{enabled: false, canEdit}` when the site has no `head`. Else `{enabled, canEdit, file, version, settings, head, issues, collections: [{id, label}], trackers: [{id, label, hint, example, pattern}], gtmLoads}`. `version` = sha1 of the file, `null` while it does not exist; `settings` the file's own JSON (`null` when missing or not JSON); `head` the settings with every default filled in; `issues: [{path, message}]` what the file gets wrong, in plain words; `trackers` the tools with their words and the shape of their ID (`pattern` is the source of a regular expression); `gtmLoads`: `first-interaction`, `at-once` |
+| `PUT head` `{version, settings}` | `202 {ok, version, commit, job}` (`200` with `commit: null, job: null` when nothing changed): the settings written pretty-printed, committed as the person ("Site settings: search and AI" / "…: tracking"), then built and deployed as one job; a job that fails puts the file back. `403` below administrator, or when the file is a link; `404` when the site has no `head`; `409 {version}` when the file changed since it was read; `422 {issues: [{path, message}]}` from the same checks as the build (a wrong ID, a feed of a collection the site does not have, a page path that does not start with `/`), nothing written; `400` when `settings` is not an object |
 
 ## Library (templates, sections, snippets)
 

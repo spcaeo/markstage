@@ -1,0 +1,71 @@
+{
+  "$comment": "A small rules file in the shape a real site uses (docs/IMPORT.md, Converter rules): a call-to-action box with a fallback, and an FAQ block. A site keeps its own full rules file in its own repository.",
+  "components": {
+    "CtaBand": {
+      "import": "../../components/blocks/CtaBand.astro"
+    },
+    "Callout": {
+      "import": "../../components/blocks/Callout.astro"
+    },
+    "Faq": {
+      "import": "../../components/blocks/Faq.astro"
+    }
+  },
+  "report": [
+    "site-"
+  ],
+  "rules": [
+    {
+      "$comment": "a reading-progress bar: the new site's own",
+      "match": "site-progress",
+      "drop": true
+    },
+    {
+      "match": "callout_box",
+      "component": "CtaBand",
+      "props": {
+        "tone": {
+          "value": "light"
+        },
+        "heading": {
+          "from": "text",
+          "select": ".call_heading",
+          "required": true
+        },
+        "text": {
+          "from": "markdown",
+          "exclude": ".call_heading, .wp-block-buttons"
+        },
+        "action": {
+          "from": "link",
+          "select": ".wp-block-buttons"
+        }
+      }
+    },
+    {
+      "$comment": "a callout box that is not a call to action",
+      "match": "callout_box",
+      "component": "Callout",
+      "children": {
+        "from": "markdown",
+        "required": true
+      }
+    },
+    {
+      "match": "faq_blog",
+      "component": "Faq",
+      "props": {
+        "heading": {
+          "from": "heading",
+          "select": "h2"
+        },
+        "items": {
+          "from": "qa",
+          "question": "h3",
+          "trimNumber": true,
+          "required": true
+        }
+      }
+    }
+  ]
+}

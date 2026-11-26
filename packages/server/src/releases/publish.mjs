@@ -147,7 +147,7 @@ export function createReleasePublish(app, { rs, builds }) {
       store.writeRel(it.rel, rs.bytesOf(it));
       if (it.kind === 'media') {
         const m = JSON.parse(it.meta);
-        db.prepare('INSERT OR IGNORE INTO media (id, path, filename, type, width, height, bytes, alt, uploaded_by, uploaded_at, derived_from, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)').run(m.mediaId, it.rel, m.filename, m.type, m.width, m.height, it.bytes, m.alt ?? '', it.added_by, nowIso(clock()));
+        db.prepare('INSERT OR IGNORE INTO media (id, path, filename, type, width, height, bytes, alt, uploaded_by, uploaded_at, derived_from, credit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)').run(m.mediaId, it.rel, m.filename, m.type, m.width, m.height, it.bytes, m.alt ?? '', it.added_by, nowIso(clock()), m.credit ? JSON.stringify(m.credit) : null);
       }
     }
     return git.commit(list.map((i) => i.rel), `Release “${r.name}”${by ? ` (${by})` : ''}`, author(who));

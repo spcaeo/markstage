@@ -12,11 +12,15 @@
 //      site's redirects hook; ?p=, ?page_id=, ?attachment_id= for the id map, since a static host cannot match a query);
 //   7. the review list: pictures with no alt text, blocks, cards, shortcodes and slices that became placeholders,
 //      embeds that became links, links to old pages that were not imported, collisions.
+// With a public address (mapping.publicUrl), the source's own host and the public one are both the old site: links
+// to either find the imported entries, and what is left (a page not imported, a canonical) is written on the public
+// host. An MDX collection gets the site's converter rules (convert/rules.mjs), when they are given.
 import { sha1, slugify } from '../../util.mjs';
 import { badFrom, keyOf } from '../../redirects/check.mjs';
-import { cleanSlug, fromPath, isMediaFile, oldPlace, originalGhostImage, originalPrismicImage, originalUpload, pathKey, PLACEHOLDER } from '../convert/bundle.mjs';
+import { bareHost, cleanSlug, fromPath, isMediaFile, oldPlace, originalGhostImage, originalPrismicImage, originalUpload, pathKey, PLACEHOLDER } from '../convert/bundle.mjs';
 import { ghostTransform } from '../convert/ghost.mjs';
 import { htmlToMarkdown } from '../convert/html.mjs';
+import { checkRules } from '../convert/rules.mjs';
 import { DOC_LINK, isRichText, richTextToHtml, richTextWords } from '../convert/prismic.mjs';
 import { makePlan } from '../plan.mjs';
 import { resolveMapping } from './mapping.mjs';
@@ -57,13 +61,40 @@ export function sourceKey(bundle) {
  * The plan: {payload, plan (../plan.mjs's), items, media, authors, redirects, ids, review, counts, mapping}.
  * `mediaAt` as for the JSON import; `stored` for the run's second look (the media are in the library by then).
  */
-export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }, { mediaAt, stored = false }) {
+export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given, rules: givenRules = null }, { mediaAt, stored = false }) {
   const { store, converter, db } = app;
   const source = sourceKey(bundle);
   const mapping = resolveMapping(store.collections, bundle, given);
+  const rules = givenRules ? checkRules(givenRules) : null;
   const site = bundle.site;
   const base = site.url || 'https://old-site.invalid';
-  const review = [];
+  const review = [...(bundle.notes ?? [])];
+  // ---- the public address: its host is the old site's too, and what stays on the old site is written on it
+  const pub = mapping.publicUrl ? new URL(mapping.publicUrl) : null;
+  const pubHost = pub ? bareHost(pub.hostname) : null;
+  const hosts = pub ? [...new Set([...site.hosts, pubHost])] : site.hosts;
+  const srcOrigin = site.url ? new URL(site.url).origin : null;
+  const toPublic = (u) => {
+    if (!pub) return u;
+    try {
+      const x = new URL(u);
+      if (site.hosts.includes(bareHost(x.hostname)) && bareHost(x.hostname) !== pubHost) return `${pub.origin}${x.pathname}${x.search}${x.hash}`;
+    } catch {
+      // not an address: as it is
+    }
+    return u;
+  };
+  // a file written on the public host is fetched from the source's own (the public site may not serve its uploads)
+  const fromSource = (u) => {
+    if (!pub || !srcOrigin) return u;
+    try {
+      const x = new URL(u);
+      if (bareHost(x.hostname) === pubHost && !site.hosts.includes(pubHost)) return `${srcOrigin}${x.pathname}${x.search}`;
+    } catch {
+      // not an address
+    }
+    return u;
+  };
   // one note per thing per entry: the same icon twenty times on a page is one thing to look at
   const noted = new Set();
   const noteFor = (item) => (n) => {
@@ -75,12 +106,12 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
   const mapped = (kind, sid) => db.prepare('SELECT * FROM import_map WHERE source = ? AND kind = ? AND source_id = ?').get(source, kind, sid);
 
   // ---- media: the export's own list first, then every picture the texts show (one entry per original file)
-  const original = (u) => (bundle.kind === 'ghost' ? originalGhostImage(u) : bundle.kind === 'prismic' ? originalPrismicImage(u) : originalUpload(u));
+  const original = (u) => (bundle.kind === 'ghost' ? originalGhostImage(fromSource(u)) : bundle.kind === 'prismic' ? originalPrismicImage(u) : originalUpload(fromSource(u)));
   const media = new Map();
   const ownImage = (u) => {
     try {
       const h = new URL(u).hostname.toLowerCase();
-      return site.hosts.includes(h.replace(/^www\./, '')) || (bundle.kind === 'prismic' && isPrismicHost(h));
+      return hosts.includes(h.replace(/^www\./, '')) || (bundle.kind === 'prismic' && isPrismicHost(h));
     } catch {
       return false;
     }
@@ -109,11 +140,39 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
   const byOld = new Map(); // old path key -> new address
   const byWpId = { p: new Map(), page_id: new Map() };
   const byDoc = new Map();
+  const knownAt = (item, url) => {
+    for (const u of item.oldUrls) {
+      const [p, q] = u.split('?');
+      if (q) {
+        const qs = new URLSearchParams(q);
+        for (const k of ['p', 'page_id']) if (qs.get(k)) byWpId[k].set(qs.get(k), url);
+      } else byOld.set(pathKey(p), url);
+    }
+    if (item.path) byOld.set(pathKey(item.path), url);
+    byDoc.set(item.sourceId.replace(/^doc-/, ''), url);
+  };
+  const inOnly = (item) => {
+    if (!mapping.only.length) return true;
+    const at = item.path ?? item.oldUrls.find((u) => !u.includes('?'));
+    return Boolean(at) && mapping.only.some((p) => pathKey(at).startsWith(pathKey(p)));
+  };
+  let outside = 0;
   for (const item of bundle.items) {
     const cid = mapping.types[item.type];
     const c = cid ? store.collections.find((x) => x.id === cid) : null;
     if (!c) {
       left[item.type] = (left[item.type] ?? 0) + 1;
+      continue;
+    }
+    if (!inOnly(item)) {
+      // another part of the site: left out now; when an earlier import brought it, links to it find it there
+      outside++;
+      const was = mapped('entry', item.sourceId);
+      const wc = was && store.collections.find((x) => x.id === was.collection);
+      if (wc && store.exists(wc, was.target)) {
+        const url = store.summarize(wc, was.target, store.read(wc, was.target).text).url;
+        if (url) knownAt(item, url);
+      }
       continue;
     }
     const F = mapping.fields[c.id];
@@ -126,7 +185,10 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     const was = mapped('entry', item.sourceId);
     let id = was?.collection === c.id ? was.target : null;
     if (!id) {
-      const wanted = cleanSlug(item.slug) || cleanSlug(slugify(item.title)) || `${c.format === 'json' ? 'page' : 'post'}-${item.sourceId.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`.slice(0, 100);
+      // ids from the path only where the entry keeps its path (a url field): a collection whose address is made from
+      // the id (url: '/blog/{id}/') would put the path in its address twice
+      const fromAddress = mapping.ids === 'path' && F.url && item.path ? cleanSlug(item.path.replace(/\//g, '-')) : '';
+      const wanted = fromAddress || cleanSlug(item.slug) || cleanSlug(slugify(item.title)) || `${c.format === 'json' ? 'page' : 'post'}-${item.sourceId.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`.slice(0, 100);
       const taken = (x) => store.exists(c, x) || claimed.has(`${c.id}/${x}`);
       id = wanted;
       if (taken(wanted)) {
@@ -140,26 +202,22 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     row.id = id;
     if (row.problem) continue;
     // a page that keeps its old address, unless another entry of the site has it already (then its new id's)
-    const firstPath = item.oldUrls.find((u) => !u.includes('?'));
-    const urlOf = (keep) => store.summarize(c, id, c.format === 'json' ? JSON.stringify(keep ? Object.fromEntries([[F.url, keep]]) : {}) : converter.setFrontmatter('---\n---\n', { [c.fields.title]: item.title })).url ?? null;
+    // (its real permalink: a custom type's, a child page's under its parent's path)
+    const firstPath = item.path ?? item.oldUrls.find((u) => !u.includes('?'));
+    const urlOf = (keep) => {
+      const f = c.format === 'json' ? {} : { [c.fields.title]: item.title };
+      if (keep) setPath(f, F.url, keep);
+      return store.summarize(c, id, c.format === 'json' ? JSON.stringify(f) : converter.setFrontmatter('---\n---\n', f)).url ?? null;
+    };
     const holder = (u) => (u ? existing.get(u) : undefined);
-    row.keepUrl = F.url && c.format === 'json' ? fromPath(firstPath ?? `/${id}/`) : null;
+    row.keepUrl = F.url ? fromPath(firstPath ?? `/${id}/`) : null;
     row.url = urlOf(row.keepUrl);
     if (row.keepUrl && holder(row.url) && holder(row.url) !== `${c.id}/${id}`) {
       noteFor(item)({ kind: 'collision', text: `Its old address ${row.keepUrl} belongs to ${holder(row.url)} here, so it comes in at /${id}/.` });
       row.keepUrl = fromPath(`/${id}/`);
       row.url = urlOf(row.keepUrl);
     }
-    if (row.url) {
-      for (const u of item.oldUrls) {
-        const [p, q] = u.split('?');
-        if (q) {
-          const qs = new URLSearchParams(q);
-          for (const k of ['p', 'page_id']) if (qs.get(k)) byWpId[k].set(qs.get(k), row.url);
-        } else byOld.set(pathKey(p), row.url);
-      }
-      byDoc.set(item.sourceId.replace(/^doc-/, ''), row.url);
-    }
+    if (row.url) knownAt(item, row.url);
   }
   if (planned.filter((r) => !r.problem).length > SITE_LIMITS.entries) throw new Error(`This site has more than ${SITE_LIMITS.entries} items to import at once. Leave some kinds out, or import it in parts.`);
 
@@ -184,7 +242,7 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
   // ---- 2 and 3: the texts, links and fields
   const linkOf = (item, note) => (u) => {
     if (u.startsWith(DOC_LINK)) return byDoc.get(decodeURIComponent(u.slice(DOC_LINK.length))) ?? null;
-    const place = oldPlace(u, { base, hosts: site.hosts });
+    const place = oldPlace(u, { base, hosts });
     if (!place) return u;
     for (const k of ID_KEYS) {
       const v = place.query.get(k);
@@ -205,7 +263,7 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     const to = byOld.get(pathKey(place.path));
     if (to) return `${to}${place.hash}`;
     if (pathKey(place.path) !== '/') note({ kind: 'link', text: `A link to ${place.path} on the old site still points there: that page was not imported.` });
-    return u;
+    return toPublic(u);
   };
   const imageOf = (note) => (u, n) => {
     const m = mediaFor(u, n?.attrs?.alt ?? '');
@@ -219,12 +277,18 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     if (n && !String(n.attrs.alt ?? '').trim() && m.alt) n.attrs.alt = m.alt;
     return `media:${m.sourceId}`;
   };
-  const markdownOf = (item, html, extra = {}) => {
+  const components = {};
+  const rulesLeft = new Set();
+  const markdownOf = (item, html, extra = {}, c = null) => {
     const note = noteFor(item);
-    const out = htmlToMarkdown(html, { base, image: imageOf(note), link: linkOf(item, note), transform: bundle.kind === 'ghost' ? ghostTransform : undefined, ...extra });
+    const mdx = Boolean(c?.mdx);
+    if (rules && c && !mdx) rulesLeft.add(c.label);
+    const out = htmlToMarkdown(html, { base, image: imageOf(note), link: linkOf(item, note), transform: bundle.kind === 'ghost' ? ghostTransform : undefined, mdx, rules: mdx ? rules : null, ...extra });
     for (const n of out.notes) note(n);
+    for (const [k, v] of Object.entries(out.components ?? {})) components[k] = (components[k] ?? 0) + v;
     return out.markdown;
   };
+  const unkept = new Map(); // collection label -> Set of the SEO fields it has no key for
 
   const payloadEntries = [];
   const rowOf = new Map();
@@ -237,7 +301,7 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     // Markdown that came as it was (a Ghost Markdown card) has its links to the old site put right here, its pictures
     // brought in; the HTML's own links and pictures were handled once, while it was read
     const pieces = (item.markdown ?? []).map((piece) => String(piece).replace(/\]\((https?:\/\/[^)\s]+)\)/g, (all, u) => `](${linkOf(item, note)(u) ?? u})`));
-    const body = markdownOf(item, item.html, { markdown: pieces });
+    const body = markdownOf(item, item.html, { markdown: pieces }, c);
     const fm = c.format === 'md' ? { [c.fields.title]: item.title || row.id } : {};
     const put = (role, v) => {
       if (v === null || v === undefined || v === '' || (Array.isArray(v) && !v.length)) return;
@@ -265,8 +329,22 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     if (item.seo) {
       put('seoTitle', item.seo.title);
       put('seoDescription', item.seo.description);
+      put('seoRobots', item.seo.robots);
+      if (item.seo.image && F.seoImage) {
+        const m = mediaFor(fromSource(item.seo.image));
+        put('seoImage', m ? `media:${m.sourceId}` : item.seo.image);
+      }
+      put('canonical', item.seo.canonical ? toPublic(item.seo.canonical) : null);
       if (!F.seoTitle && !F.seoDescription) note({ kind: 'seo', text: `Its search title and description were not kept: ${c.label} has no SEO setting. Map them on the mapping step.` });
+      for (const [role, k] of [['seoRobots', 'robots'], ['seoImage', 'image'], ['canonical', 'canonical']]) {
+        if (item.seo[k] && !F[role]) {
+          if (!unkept.has(c.label)) unkept.set(c.label, new Map());
+          unkept.get(c.label).set(role, (unkept.get(c.label).get(role) ?? 0) + 1);
+        }
+      }
     }
+    // ACF fields, to the keys the mapping gives (fields.<collection>["acf.<name>"])
+    for (const role of Object.keys(F).filter((r) => r.startsWith('acf.'))) put(role, item.acf?.[role.slice(4)]);
     if (item.status !== 'published' && c.hasStatus) {
       // a draft stays a draft; a published one comes in as a draft too, which the report says once
     } else if (item.status === 'private') note({ kind: 'status', text: `It was private in ${productName(bundle.kind)}.` });
@@ -278,6 +356,7 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
       e.data = fm;
     } else {
       if (c.fields.slug) fm[c.fields.slug] = row.id;
+      if (row.keepUrl) setPath(fm, F.url, row.keepUrl);
       e.frontmatter = fm;
       e.body = body ? `${body}\n` : '';
     }
@@ -357,6 +436,9 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
   }
 
   // ---- 7. what a person should look at
+  for (const label of rulesLeft) review.push({ kind: 'rule', text: `The converter rules are for MDX collections; ${label} is Markdown, so its entries came in as plain Markdown. Choose an MDX collection to get the components.` });
+  const SEO_WORDS = { seoRobots: 'a robots setting', seoImage: 'a share picture', canonical: 'a canonical address' };
+  for (const [label, roles] of unkept) for (const [role, n] of roles) review.push({ kind: 'seo', text: `${n === 1 ? 'An entry has' : `${n} entries have`} ${SEO_WORDS[role]} in the source that ${label} keeps nowhere: give fields.${role} a key to keep it.` });
   for (const m of mediaList) if (!m.alt) review.push({ kind: 'alt', text: `${m.url.split('/').pop().split('?')[0]} has no alt text.`, media: m.sourceId });
   for (const row of planned) if (row.collision) review.push({ kind: 'collision', text: row.problem ?? (row.replace ? `It replaces the entry already at ${row.c.id}/${row.id}.` : `${row.c.id}/${row.item.slug} was taken, so it comes in as ${row.c.id}/${row.id}.`), entry: row.item.sourceId });
   const items = planned.map((row) => {
@@ -391,9 +473,13 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     embeds: kinds.embed ?? 0,
     published: planned.filter((r) => r.item.status === 'published' && r.c.hasStatus && !r.problem).length,
     left,
+    outside,
+    components,
     unusedMedia: unused,
     other: bundle.left ?? {},
   };
+  // the kinds of content the source has, with where each goes (WordPress's own types, with their names, when read)
+  const typeList = (bundle.types?.length ? bundle.types : Object.entries(counts.types).map(([type, count]) => ({ type, label: type, hierarchical: false, count }))).map((t) => ({ ...t, count: counts.types[t.type] ?? 0, collection: mapping.types[t.type] ?? null }));
   return {
     source,
     mapping,
@@ -407,6 +493,8 @@ export async function makeSitePlan(app, ctx, entries, { bundle, mapping: given }
     ids,
     review,
     counts,
+    types: typeList,
+    components,
     placeholder: PLACEHOLDER,
   };
 }

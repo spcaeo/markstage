@@ -1,10 +1,11 @@
 // The site import's routes (docs/IMPORT.md, docs/API-IMPORT.md "A whole site"): a WordPress, Ghost or Prismic site
 // read, planned (a dry run: nothing written, nothing fetched but the source itself), then run as a job through the
 // same runs as the JSON import (POST import/:rid/run, GET import/:rid). Editors and up.
-//   POST /import/site            multipart {file, source, mapping?, siteUrl?} (an export), or JSON {source, from:
-//                                'api', url, user?, password? | url, key | repo, token?, endpoint?; mapping?}
-//                                -> 201 {run, plan}
-//   POST /import/:rid/replan     {mapping} -> 201 {run, plan}: the same source planned again with another mapping
+//   POST /import/site            multipart {file, source, mapping?, siteUrl?, publicUrl?, rules?} (an export), or JSON
+//                                {source, from: 'api', url, user?, password? | url, key | repo, token?, endpoint?;
+//                                mapping?, publicUrl?, rules?} -> 201 {run, plan}
+//   POST /import/:rid/replan     {mapping, rules?} -> 201 {run, plan}: the same source planned again with another
+//                                mapping (and the same converter rules, unless new ones are given)
 // The source is read once, at the plan, and kept as a bundle with the run (no credential is kept: sources.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,10 +13,12 @@ import { readJson, readToFile } from '../../http.mjs';
 import { DEFAULT_IMPORT_MAX } from '../../media/import.mjs';
 import { parseMultipart } from '../../library/multipart.mjs';
 import { HttpError, badRequest, conflict, forbidden, newId, nowIso } from '../../util.mjs';
+import { checkRules, isRuleError } from '../convert/rules.mjs';
 import { defaultFields } from './mapping.mjs';
 import { makeSitePlan, productName, sourceKey } from './plan.mjs';
 import { idsFileOf } from './run.mjs';
-import { readExportFile, readGhostApi, readPrismicApi, readWordpressApi, siteAddress } from './sources.mjs';
+import { readExportFile, readGhostApi, readPrismicApi, siteAddress } from './sources.mjs';
+import { readWordpressApi } from './wp-api.mjs';
 
 const EXPIRES_MS = 60 * 60 * 1000;
 const SOURCES = ['wordpress', 'ghost', 'prismic'];
@@ -34,6 +37,20 @@ export function createSiteImport(app, entries, { mediaAt, load, runView, may }) 
     }
   };
 
+  /**
+   * Converter rules (convert/rules.mjs) checked: the rules file's JSON as it was given (kept with the run, and made
+   * ready again by each plan), or null; 422 naming the place when they are wrong.
+   */
+  const rulesFrom = (v) => {
+    try {
+      if (!checkRules(v)) return null;
+      return typeof v === 'string' || Buffer.isBuffer(v) ? JSON.parse(String(v)) : v;
+    } catch (e) {
+      if (isRuleError(e)) throw new HttpError(422, 'invalid', `The converter rules are not right: ${e.message}`, { field: 'rules' });
+      throw e;
+    }
+  };
+
   /** The plan as the API and the Import screen show it: no texts, no internals. */
   function view(p, meta) {
     return {
@@ -44,7 +61,9 @@ export function createSiteImport(app, entries, { mediaAt, load, runView, may }) 
       site: { url: meta.bundle.site.url || null, title: meta.bundle.site.title || null },
       source: p.source,
       mapping: p.mapping,
-      collections: store.collections.map((c) => ({ id: c.id, label: c.label, format: c.format, hasStatus: c.hasStatus, defaults: defaultFields(c) })),
+      collections: store.collections.map((c) => ({ id: c.id, label: c.label, format: c.format, mdx: Boolean(c.mdx), hasStatus: c.hasStatus, defaults: defaultFields(c) })),
+      types: p.types,
+      rules: meta.rules ? { rules: meta.rules.rules.length, components: p.components } : null,
       counts: p.counts,
       items: p.items,
       media: p.media.slice(0, SHOWN.media),
@@ -58,9 +77,9 @@ export function createSiteImport(app, entries, { mediaAt, load, runView, may }) 
   }
 
   /** Plan a bundle and keep it as a run: {run, plan}. */
-  async function keep(ctx, { bundle, mapping, product, from, name }) {
+  async function keep(ctx, { bundle, mapping, product, from, name, rules = null }) {
     if (!bundle.items.length) throw new HttpError(422, 'nothing', `There is nothing to import: the ${productName(product)} source has no posts or pages we can read.`);
-    const stored = { kind: 'site', bundle, mapping, product, from, name };
+    const stored = { kind: 'site', bundle, mapping, product, from, name, rules };
     let p;
     try {
       p = await makeSitePlan(app, ctx, entries, stored, { mediaAt });
@@ -81,12 +100,15 @@ export function createSiteImport(app, entries, { mediaAt, load, runView, may }) 
   /**
    * Read a source and plan it: {run, plan}. `input` is {source, data (a Buffer: an export), name, siteUrl, mapping}
    * for a file, or {source, url, user, password | url, key | repo, token, endpoint, siteUrl, routes, fields;
-   * mapping} for an API. The routes and the command line (markstage-server import) both come here.
+   * mapping} for an API; either with `publicUrl` (the address readers use, mapping.publicUrl) and `rules` (the
+   * converter rules, as JSON). The routes and the command line (markstage-server import) both come here.
    */
   async function planSource(ctx, input) {
     const product = input.source;
     if (!SOURCES.includes(product)) throw new HttpError(422, 'invalid', 'Say where it comes from: wordpress, ghost or prismic.', { field: 'source' });
     const mapping = mappingFrom(input.mapping);
+    if (input.publicUrl) mapping.publicUrl = String(input.publicUrl);
+    const rules = rulesFrom(input.rules);
     if (input.data) {
       const opts = {};
       if (product === 'ghost') {
@@ -95,14 +117,14 @@ export function createSiteImport(app, entries, { mediaAt, load, runView, may }) 
         opts.permalink = mapping.permalink ?? {};
       }
       const bundle = readExportFile(product, String(input.name ?? ''), input.data, opts);
-      return keep(ctx, { bundle, mapping, product, from: 'file', name: String(input.name ?? '').slice(0, 200) });
+      return keep(ctx, { bundle, mapping, product, from: 'file', name: String(input.name ?? '').slice(0, 200), rules });
     }
     let bundle;
-    if (product === 'wordpress') bundle = await readWordpressApi(app, { url: input.url, user: input.user, password: input.password });
+    if (product === 'wordpress') bundle = await readWordpressApi(app, { url: input.url, user: input.user, password: input.password, media: mapping.media === 'all' ? 'all' : 'used' });
     else if (product === 'ghost') bundle = await readGhostApi(app, { url: input.url, key: input.key, permalink: mapping.permalink });
     else bundle = await readPrismicApi(app, { repo: input.repo, token: input.token, endpoint: input.endpoint, siteUrl: input.siteUrl, fields: input.fields, routes: input.routes, slices: mapping.slices });
     const name = product === 'prismic' ? `${input.repo} (Prismic API)` : `${new URL(siteAddress(input.url)).host} (${product === 'ghost' ? 'Content API' : 'REST API'})`;
-    return keep(ctx, { bundle, mapping, product, from: 'api', name });
+    return keep(ctx, { bundle, mapping, product, from: 'api', name, rules });
   }
 
   /** POST /import/site: an upload (multipart: file, source, siteUrl?, mapping?) or an API's details (JSON). */
@@ -133,7 +155,8 @@ export function createSiteImport(app, entries, { mediaAt, load, runView, may }) 
     if (r.status !== 'planned') throw conflict(`This import is ${r.status} already.`, { status: r.status });
     const stored = JSON.parse(r.payload);
     if (stored.kind !== 'site') throw badRequest('Only a site import has a mapping to change.');
-    const out = await keep(ctx, { ...stored, mapping: mappingFrom(ctx.body?.mapping) });
+    const rules = ctx.body?.rules !== undefined ? rulesFrom(ctx.body.rules) : stored.rules ?? null;
+    const out = await keep(ctx, { ...stored, mapping: mappingFrom(ctx.body?.mapping), rules });
     db.prepare("UPDATE import_runs SET status = 'replaced' WHERE id = ?").run(r.id);
     return out;
   }

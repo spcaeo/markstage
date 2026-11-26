@@ -147,6 +147,8 @@ export async function applySiteConfig(config, mod) {
       locks: site.config.locks ?? { pages: {}, articles: {} },
       // Design & Code: the stylesheets, scripts and injected code the site lets the editor show (design/config.mjs)
       design: designOf(own.design, config.contentRoot),
+      // the head kit's settings file ({file, absFile, …} from core's headOf), or null when the site does not use it
+      head: site.config.head ?? null,
       // the figure class that marks an image decorative (no alt text needed): core's editor.images
       decorativeClass: site.config.editor?.images?.decorativeClass ?? 'decorative',
       // the site's own link-card data (core's editor.linkCards {url, fields}): served on the CMS origin (app.mjs)

@@ -4,9 +4,74 @@ What changed in each Markstage release, in plain words. The newest is first. Ver
 [semantic versioning](https://semver.org); while Markstage is 0.x, a minor version may change how things work.
 docs/RELEASES.md says how a release is made.
 
-## Unreleased
+## 0.5.0 (26 November 2026)
 
 ### Added
+
+- The head kit (docs/HEAD-KIT.md): with `head` in `markstage.config`, `astro build` gives every site what AI tools,
+  feed readers and analytics need, set by the owner in the editor (Site settings → Search & AI, Tracking) and kept as
+  one JSON file in the content repo. A Markdown copy of every indexed page next to it (`/posts/hello.md`, the home
+  page `/index.md`), made from the built page, so Markdown, MDX and JSON pages are all covered; the OKF bundle
+  (`/okf/index.md` and one file per page, linked to each other); `llms.txt` and `llms-full.txt`; RSS feeds of the
+  collections the owner picks; and one tracking loader for Google Tag Manager, Google Analytics 4, Ahrefs, Skald and
+  Plausible, set by ID only (no pasted code), started only on a page the visitor sees, allowed in the page's own CSP.
+  Each gets its `<link>` in every page's head. `@markstage/core/head` checks the settings for the build, the server
+  and the editor alike; the tolerant HTML reader is now `@markstage/core/html-tree`. A page that is not live
+  (protected, draft, scheduled) is never copied or listed, even while it is still in the output folder; release
+  previews, branch previews and the checks build with `MARKSTAGE_NO_TRACKING=1`, so they never count in analytics.
+- A picture fetched from a web address keeps that address: an import from a list of addresses, an AI agent's
+  `add_image` with `url` (also into a release), or an upload with `?source=<address>`. The media library shows it as
+  "Fetched from", so a person can open where it came from and check its licence (`credit`, docs/API.md "Media").
+- AI agents can make small edits cheaply: the MCP tool `edit_entry {collection, id, version, edits: [{find, replace,
+  all?}], release?}` sends only the words to find and what to put there, not the whole file, and answers with only
+  the changed lines. Without `release` it changes a draft as `update_entry` does; with `release` it puts the change
+  into that release as `add_to_release` does, with the same rules (version, locks, synced blocks). An edit that finds
+  its text in no place, or in several, is refused in words and nothing changes. `get_entry` takes `find` too, to read
+  only the passages around a phrase instead of the whole source (docs/API-MCP.md "Small edits").
+- `markstage-server live <commit>` tells Markstage which commit is live after a deploy made outside it (by hand, from
+  CI, a script of your own), so its status, history and an AI agent's `env_status` stop showing the last commit
+  Markstage deployed itself (docs/DEPLOY.md).
+- AI agents can read why a publish failed: the MCP tool `get_job {job}` gives a job's status, its steps, the error
+  and, for a failed job, the failed step's own output (a check's words), so an agent reports and fixes a refusal
+  itself instead of waiting. A step that only warned (the push after going live) gives its own words too (`output`
+  on each failed or warned step). `get_job` also takes `wait` (up to 90 seconds) and answers when the job ends, so an agent
+  asks once instead of again and again.
+- AI agents can start a release: the MCP tool `create_release {name, description?}` (an `mcp:draft` token, editors and
+  above) opens one that is never scheduled, so an agent can make a change end to end without a person opening the
+  editor: `create_release`, then `add_to_release` and `add_image`, then `publish_release`.
+- AI agents can add pictures: the MCP tool `add_image` (an `mcp:draft` token) takes one picture from a web address
+  or as its bytes in base64, with alt text, and answers what to write in an entry (`use.field` for a cover or image
+  field, `use.markdown` for the text). It goes through the editor's own upload, as the token's person: the type told
+  from the bytes, never SVG or a PDF, re-encoded, named and listed in the media library, the size limit, the role's
+  rights (an address is an import: author and up). An address is fetched through the same guard as the media import,
+  so nothing on the server's own network is reached. Without a release the picture is committed like an upload, its
+  commit naming the agent; with `release` it waits in that release and goes live with the page that shows it, in
+  one commit. A site whose media folder is under `public/` (put on the site as it is) always needs a release
+  (docs/API-MCP.md "Pictures").
+- Docs: a reverse proxy must pass `Authorization: Bearer mst_…` through to Markstage, or AI agents and the command
+  line cannot sign in; basic auth in front of the editor is not forwarded and is left off for the MCP and `/env`
+  addresses; an nginx example, and the sign that the header is lost (docs/SECURITY.md "Operator checklist",
+  docs/API-MCP.md "Tokens").
+- The MCP endpoint takes a request big enough for a picture at `media.maxBytes` in base64 from a token that may
+  draft; every other request keeps `maxBodyBytes`. A picture an agent puts into a release is named with its other
+  items (`mcpItems`), and a scheduled release refuses it, as it refuses an entry.
+
+- The WordPress import moves a whole site (docs/IMPORT.md "WordPress in depth"). Every public custom post type is
+  read (REST: `/wp-json/wp/v2/types`; an export: every `post_type` in it), listed in the plan with its count, and
+  mapped to a collection with `types`. Each entry keeps its real path, a child under its parent, and a collection
+  with a url field writes it there. With an application password every list is read with `context=edit` (the block
+  markup itself, drafts too); a list that refuses it is read as the public sees it, with a note. Only GET requests
+  are sent.
+- ACF fields (`acf.<name>`) and Rank Math's head (title, description, robots, share picture, canonical, read from
+  `rankmath/v1/getHead` two at a time) map to front matter keys. New field roles: `seoRobots`, `seoImage`,
+  `canonical`.
+- New mapping keys: `publicUrl` (links, canonicals and old addresses on the WordPress host become the public
+  address), `only` (one part of the site at a time) and `ids: 'path'` (ids from the whole path). CLI: `--public-url`,
+  `--only`, `--rules`.
+- Converter rules (docs/IMPORT.md "Converter rules"): a per-site JSON file turns old HTML patterns (by class) into MDX
+  components, with props taken from headings, text, Markdown, lists, links, pictures, question and answer pairs and
+  repeated items. The plan notes blocks with no rule and words a component did not keep. A site keeps its rules file
+  in its own repository.
 
 - The real page on the server, too: with `canvas.shell` on, the built editor on a Markstage server draws each
   article inside its real page, as `astro dev` does (the site's header, columns and footer, its widths and
@@ -94,6 +159,14 @@ docs/RELEASES.md says how a release is made.
   (docs/STARTER.md).
 
 ### Fixed
+
+- An entry's `modified` date now follows every real change, not only a person's JSON save: a Markdown save, a
+  change made from the source, a release item, an AI agent's `add_to_release` or `update_entry`. It is written in
+  the format the entry already uses (a plain date, or a date and time in UTC); a change that sets the date itself
+  keeps that value, and a change to nothing or to the status only leaves it alone. Before this, a page an agent
+  changed kept its old date, so the site's structured data and sitemap said it had not changed.
+- The import's MDX output escapes `{` and `}` in text, and takes out chat-assistant citation markers
+  (`:contentReference[oaicite:…]`) with a note. The Custom HTML note fires only for a form or an embedded player.
 
 - Installed from npm, two things broke that a linked checkout never shows: the editor in `astro dev` did not open
   (core's CommonJS, `extend` through unified, reached the browser as it is; the integration now has Vite pre-bundle

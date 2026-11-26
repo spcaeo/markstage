@@ -200,7 +200,7 @@ export function createSiteGate(app, { ops, rules }) {
         });
         if (config.commands.build) {
           await step('build', async (log) => {
-            const { code } = await runCommand(config.commands.build, { cwd: dir, env: { ...config.commands.env, MARKSTAGE_BUILD_TIME: nowIso(clock()) }, timeoutSeconds: config.commands.timeoutSeconds, onOutput: log });
+            const { code } = await runCommand(config.commands.build, { cwd: dir, env: { ...config.commands.env, MARKSTAGE_BUILD_TIME: nowIso(clock()), MARKSTAGE_NO_TRACKING: '1' }, timeoutSeconds: config.commands.timeoutSeconds, onOutput: log });
             return code;
           });
         }

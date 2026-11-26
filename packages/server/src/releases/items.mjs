@@ -7,6 +7,7 @@ import { atLeast, can } from '../roles.mjs';
 import { statusText } from '../publish.mjs';
 import { stampLocks } from '../content/locks.mjs';
 import { HttpError, conflict, forbidden, invalid, newId, notFound, nowIso, sha1 } from '../util.mjs';
+import { webCredit } from '../media/source.mjs';
 
 const CONTENT_KEYS = ['doc', 'frontmatter', 'source', 'data', 'changes'];
 
@@ -37,6 +38,8 @@ export function createReleaseItems(app, { rs, entries }) {
     if (!rights.edit) throw forbidden('You cannot edit this entry.');
     if (c.hasStatus && !rights.publish) throw forbidden('An entry in a release goes live with it, and your role cannot publish it. Ask an editor.');
     let text = CONTENT_KEYS.some((k) => body[k] !== undefined) ? entries.textFromBody(c, cur.text, body).text : cur.text;
+    // the modified date follows the change, as a save does (entries.stampModified)
+    text = entries.stampModified(c, cur.text, text);
     text = statusText(converter, c, text, { draft: null, publishAt: null });
     // a password goes on and off through Protect only, never with a release
     if (JSON.stringify(store.fieldsOf(c, text).protected ?? null) !== JSON.stringify(store.fieldsOf(c, cur.text).protected ?? null)) throw new HttpError(422, 'invalid', '"protected" changes only through Protect.', { fields: { protected: 'Use Protect.' } });
@@ -84,17 +87,22 @@ export function createReleaseItems(app, { rs, entries }) {
    * A picture: made ready as an upload is (never SVG, re-encoded), its name in the media folder kept for it (an
    * upload meanwhile takes another), stored and listed in the media library when the release goes live.
    */
-  async function addMedia(ctx, r, raw, name, alt) {
+  async function addMedia(ctx, r, raw, name, alt, source = null) {
     if (!can(ctx.user, 'media.upload')) throw forbidden('Your role cannot upload files.');
     if (!app.mediaPrepare) throw new HttpError(503, 'unavailable', 'The media library is not running.');
     if (typeof alt !== 'string' || alt.length > 500) throw invalid({ alt: 'Alt text up to 500 characters.' });
+    const credit = source ? webCredit(source) : null;
     const { out, base, ext } = await app.mediaPrepare.prepare(raw, name);
     const now = new Date(clock());
     const dir = [app.config.media.dir.split(path.sep).join('/'), String(now.getUTCFullYear()), String(now.getUTCMonth() + 1).padStart(2, '0')].join('/');
     let file = `${base}.${ext}`;
     const taken = (f) => store.readRelBytes(`${dir}/${f}`) !== null || rs.reserved(`${dir}/${f}`);
     for (let n = 2; taken(file); n++) file = `${base}-${n}.${ext}`;
-    const it = rs.putItem(r, { id: newId('ri'), kind: 'media', rel: `${dir}/${file}`, title: file, base: null, meta: { type: out.type, width: out.width ?? null, height: out.height ?? null, alt: alt.trim(), filename: file, mediaId: newId('m') }, addedBy: ctx.user.id }, out.buffer);
+    // an AI agent's picture: asked again with no wait before it is kept, so a schedule made meanwhile is seen; it is
+    // named with the agent's other items when the release goes out (mcpItems)
+    if (ctx.via) notScheduled(rs.must(r.id));
+    const via = ctx.via ? { via: ctx.via.kind, tokenId: ctx.via.tokenId, tokenName: ctx.via.tokenName } : {};
+    const it = rs.putItem(r, { id: newId('ri'), kind: 'media', rel: `${dir}/${file}`, title: file, base: null, meta: { type: out.type, width: out.width ?? null, height: out.height ?? null, alt: alt.trim(), filename: file, mediaId: newId('m'), ...(credit ? { credit } : {}), ...via }, addedBy: ctx.user.id }, out.buffer);
     audit.log(ctx, 'release.item', { target: r.id, detail: { add: it.rel, kind: 'media', bytes: out.buffer.length } });
     return it;
   }

@@ -64,6 +64,12 @@ Shipped with the server package. Point `commands.deploy` at it; it runs in the s
 - `markstage-deploy rollback --to /srv/site` steps back one release (no rebuild). Options: `--from dist`,
   `--private dist-private`.
 - Markstage's `protectedPages.dir` is `/srv/site/current/private`.
+- A deploy made outside Markstage (by hand, from CI, a script of your own) is not seen by it: Markstage knows what is
+  live from its own deploys. After such a deploy, run `markstage-server live <commit>` (any name git knows, such as
+  `HEAD`) where Markstage runs, e.g. `docker exec markstage markstage-server live HEAD`. Markstage then shows that
+  commit as live (the environments' status, history's "live", an AI agent's `env_status`), and the commit live
+  before it is the one its rollback steps back to. With no commit it prints what is recorded. Each change is in the
+  audit log (`deploy.recorded`).
 
 ## Option 1: Docker compose (one server, or local)
 

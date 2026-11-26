@@ -141,12 +141,13 @@ export function createReleases(app, entries) {
       '/releases/:rid/media',
       async (ctx) => {
         const r = changeable(ctx, ctx.params.rid, ctx.query.get('releaseVersion') ?? undefined);
+        if (ctx.via) notScheduled(r);
         // the right to upload is checked before the file is read (S7); addMedia checks it again
         if (!can(ctx.user, 'media.upload')) throw forbidden('Your role cannot upload files.');
         const name = String(ctx.query.get('filename') ?? '');
         if (!name || name.length > 200) throw invalid({ filename: 'Send the file name.' });
         const raw = await readRaw(ctx.req, config.media.maxBytes);
-        const it = await items.addMedia(ctx, r, raw, name, ctx.query.get('alt') ?? '');
+        const it = await items.addMedia(ctx, r, raw, name, ctx.query.get('alt') ?? '', ctx.query.get('source'));
         ctx.status = 201;
         const out = await fresh(ctx, r.id);
         return { item: out.items.find((x) => x.id === it.id), release: out };

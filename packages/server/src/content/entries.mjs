@@ -194,7 +194,7 @@ export function createEntries(app) {
       const can = canOverride ?? assertEditable(ctx, c, summary);
       if (check) check(summary, can);
       const built = await build(current);
-      let text = built.text;
+      let text = stampModified(c, current.text, built.text);
       const { changedBlocks } = built;
       if (text === current.text) return { version: current.version, changedBlocks: 0, commit: null, before: current.text, after: text, summary };
       const checked = {};
@@ -577,11 +577,28 @@ export function createEntries(app) {
   }
 
   /** Drop draft/publishAt from an imported file: createEntry makes it a draft. */
+  /**
+   * The entry's modified date follows a real change, whoever makes it and however it is sent (the editor, its Source
+   * view, a release item, an AI agent's source): written in the date's own format (stampLike), unless the change sets
+   * the date itself, there is no date to follow, or only the status (draft, publishAt, protected) changed.
+   */
+  function stampModified(c, before, after) {
+    const mod = c.fields?.modified;
+    if (!mod || typeof before !== 'string' || typeof after !== 'string' || after === before) return after;
+    const was = store.fieldsOf(c, before)?.[mod];
+    if (typeof was !== 'string' || store.fieldsOf(c, after)?.[mod] !== was) return after;
+    const set = (t, v) => (c.format === 'md' ? converter.setFrontmatter(t, { [mod]: v }) : converter.applyJsonChanges(t, [v === null ? { path: mod, delete: true } : { path: mod, value: v }], c));
+    const bare = (t) => stripStatus(c, set(t, null));
+    if (bare(before) === bare(after)) return after;
+    const stamp = stampLike(was, new Date(app.clock()));
+    return stamp ? set(after, stamp) : after;
+  }
+
   function stripStatus(c, source) {
     return c.format === 'md' ? converter.setFrontmatter(source, { draft: null, publishAt: null, protected: null }) : converter.applyJsonChanges(source, STATUS_KEYS.map((path) => ({ path, delete: true })), c);
   }
 
-  return { routes, saveEntry, createEntry, createMany, textFromBody, view, parse, guard, validate, assertEditable, permissions, authorOf, injectionChanged };
+  return { routes, saveEntry, createEntry, createMany, textFromBody, stampModified, view, parse, guard, validate, assertEditable, permissions, authorOf, injectionChanged };
 }
 
 /** `now` written the way `was` is: a date, or a date and time in UTC with "Z" or "+00:00"; null for anything else. */

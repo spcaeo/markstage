@@ -307,7 +307,10 @@ export function mountMedia(host: HTMLElement, ctx: ScreenCtx) {
     const lineage: [string, Node | string][] = [];
     if (m.derivedFrom) lineage.push(['Edited from', itemLink(m.derivedFrom, 'the original image')]);
     if (m.derivatives?.length) lineage.push([`Edits (${m.derivatives.length})`, el('span.ms-adm-stack', ...m.derivatives.map((x) => itemLink(x.id, x.filename)))]);
-    if (m.credit) {
+    if (m.credit?.provider === 'web') {
+      // fetched from a web address (an AI agent's add_image, an import from addresses): where it came from, to check its licence
+      if (m.credit.sourceUrl) lineage.push(['Fetched from', link(m.credit.sourceUrl, 'where the picture came from')]);
+    } else if (m.credit) {
       // the credit to show with it, then where it came from
       lineage.push(['Photo by', value(`${m.credit.author} on ${m.credit.label}`, 'photo credit')]);
       if (m.credit.authorUrl) lineage.push(['Photographer', link(m.credit.authorUrl, 'photographer page')]);

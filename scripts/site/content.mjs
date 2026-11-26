@@ -30,6 +30,13 @@ export const DOC_GROUPS = [
         summary: 'Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas.',
       },
       {
+        id: 'head-kit',
+        file: 'HEAD-KIT.md',
+        title: 'Markdown for AI tools, feeds and tracking',
+        seo: 'Markdown Copies, llms.txt, RSS and Analytics in Markstage',
+        summary: 'What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings.',
+      },
+      {
         id: 'deploy',
         file: 'DEPLOY.md',
         title: 'Deploying Markstage',

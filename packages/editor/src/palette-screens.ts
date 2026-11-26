@@ -27,6 +27,8 @@ const WORDS: Record<string, string> = {
   releases: 'go live release publish together launch',
   jobs: 'scheduled history jobs publishing builds log queue',
   settings: 'site settings locks alerts tokens rules roles options preferences',
+  searchAi: 'markdown llms.txt llms okf ai tools feed feeds rss search engines assistants',
+  tracking: 'tracking analytics google tag manager gtm ga4 ahrefs skald plausible',
   translations: 'languages regions locales translate',
   users: 'people access users team invite roles accounts',
   health: 'site check-up health checks alt text links headings deploy backups',
@@ -58,10 +60,16 @@ const PARTS: ScreenHit[] = [
   { label: 'Backups', href: '#/health?part=backups', hint: 'the last backup, Back up now' },
 ];
 
+/** The parts of the head kit (config `head`): only a site that uses it has them. */
+const HEAD_PARTS: (ScreenHit & { words: string })[] = [
+  { label: 'Site settings · Search & AI', href: '#/settings/search-ai', hint: 'Markdown copies, llms.txt, feeds', words: '' },
+  { label: 'Site settings · Tracking', href: '#/settings/tracking', hint: 'analytics and tag IDs', words: '' },
+];
+
 const norm = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}\s&-]/gu, ' ');
 
 /** Every screen this role may open, with its words. */
-export function screenIndex(role: string, defs: ScreenLike[]): (ScreenHit & { words: string })[] {
+export function screenIndex(role: string, defs: ScreenLike[], opts: { head?: boolean } = {}): (ScreenHit & { words: string })[] {
   const out: (ScreenHit & { words: string })[] = [];
   for (const d of defs) {
     if (d.public || (d.roles && !d.roles.includes(role))) continue;
@@ -71,6 +79,9 @@ export function screenIndex(role: string, defs: ScreenLike[]): (ScreenHit & { wo
   }
   const manager = role === 'owner' || role === 'administrator';
   for (const p of PARTS) if (manager || p.href === '#/settings/tokens') out.push({ ...p, words: norm(`${p.label} ${p.hint} ${WORDS.settings} ${p.label.includes('Backups') ? WORDS.health : ''}`) });
+  if (manager && opts.head) {
+    for (const [i, p] of HEAD_PARTS.entries()) out.push({ ...p, words: norm(`${p.label} ${p.hint} ${WORDS.settings} ${i ? WORDS.tracking : WORDS.searchAi}`) });
+  }
   return out;
 }
 

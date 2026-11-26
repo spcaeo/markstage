@@ -36,9 +36,11 @@ first: a rule that denies takes a right away, one that allows gives a right the 
 | My alerts (one's own) | yes | yes | yes | yes | yes |
 | Design & Code: read the files, tokens, revisions | yes | yes | yes | yes | yes |
 | Design & Code: save CSS, tokens, scripts; add code to the site or a page | yes | yes | no | no | no |
+| Site settings → Search & AI, Tracking: read / change (`head.write`) | yes / yes | yes / yes | yes / no | yes / no | yes / no |
 | An AI assistant (MCP token) reads: entries, the pages a Library item is on, a release's entries | all | all | all | live + own drafts | live + own drafts |
 | An AI assistant (MCP token) reads promotion plans | yes | yes | yes | no | no |
 | An AI assistant (MCP token) writes: drafts (`mcp:draft`), and changes into a release that is not scheduled | as above | as above | as above | as above | own drafts, no release |
+| An AI assistant (MCP token) adds a picture (`add_image`): its bytes / from a web address / into a release | yes | yes | yes | yes | bytes only |
 | AI suggestions (in the editor): alt text, search title and description, a translation draft, for the entries one may read | all | all | all | live + own drafts | live + own drafts |
 | AI suggestions: a promotion plan's summary | yes | yes | yes | no | no |
 | Translate the site with AI (plan, run, pause, resume, cancel: the person who planned it; an administrator may pause or cancel); a custom role that writes the region's words may too. Never a token or an agent | yes | yes | yes | no | no |

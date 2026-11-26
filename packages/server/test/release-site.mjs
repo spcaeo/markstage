@@ -55,8 +55,11 @@ fs.renameSync(tmp, live);
 console.log('deployed');
 `;
 
-/** A fresh release site and server; `clock` is the settable fake clock the server reads ({now}). */
-export async function releaseServer({ share = true, overrides = {}, checks = true, sharePort: fixed = null } = {}) {
+/**
+ * A fresh release site and server; `clock` is the settable fake clock the server reads ({now}); `outbound` the web
+ * fetch seam (test/web-site.mjs) when a test fetches from its own server.
+ */
+export async function releaseServer({ share = true, overrides = {}, checks = true, sharePort: fixed = null, outbound } = {}) {
   const fx = makeFixture({ checks });
   fs.writeFileSync(path.join(fx.site, 'scripts/build.mjs'), BUILD);
   fs.writeFileSync(path.join(fx.site, 'scripts/deploy.mjs'), DEPLOY);
@@ -67,6 +70,7 @@ export async function releaseServer({ share = true, overrides = {}, checks = tru
   const shareOrigin = `http://127.0.0.1:${sharePort}`;
   const srv = await startServer(fx, {
     clock,
+    ...(outbound ? { outbound } : {}),
     core: await loadCore(),
     overrides: { verify: { public: 'dist' }, scheduler: { intervalSeconds: 3600 }, ...(share ? { share: { origin: shareOrigin, port: sharePort } } : {}), ...overrides },
   });

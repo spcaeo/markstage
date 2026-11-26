@@ -1,22 +1,27 @@
 // Site settings (#/settings/<part>): what an owner or administrator sets for the whole site, a part at a time (Locks,
-// Alerts, the promotion rules at #/settings/environments/rules, the custom roles at #/settings/roles), with the parts
+// Alerts, Search & AI and Tracking (the head kit, only on a site that uses it), the promotion rules at #/settings/environments/rules, the custom roles at #/settings/roles), with the parts
 // as links at the top. Tokens
 // (#/settings/tokens) are each person's own, so everyone signed in reaches that part. My alerts (#/my-alerts) is each
 // person's own; the shell imports this file with the admin screens.
 import { registerScreen, type ScreenCtx } from '../host';
 import '../styles/site-settings.css';
+import '../styles/head-settings.css';
 import { mountRules } from '../environments/rules';
 import { mountTokens } from '../environments/tokens';
 import { mountRoles } from '../roles';
-import { viewerRole } from '../runtime';
+import { config, viewerRole } from '../runtime';
 import { mountAlerts } from './alerts';
+import { mountSearchAi } from './head/search-ai';
+import { mountTracking } from './head/tracking';
 import { mountLocks } from './locks';
 import { mountMyAlerts } from './my-alerts';
 
 const MANAGERS = ['owner', 'administrator'];
-const PARTS: Record<string, { title: string; href?: string; everyone?: boolean; mount: (el: HTMLElement, ctx: ScreenCtx) => { update(c: ScreenCtx): void } }> = {
+const PARTS: Record<string, { title: string; href?: string; everyone?: boolean; /** only where the site's config has `head` */ head?: boolean; mount: (el: HTMLElement, ctx: ScreenCtx) => { update(c: ScreenCtx): void } }> = {
   locks: { title: 'Locks', mount: mountLocks },
   alerts: { title: 'Alerts', mount: mountAlerts },
+  'search-ai': { title: 'Search & AI', head: true, mount: mountSearchAi },
+  tracking: { title: 'Tracking', head: true, mount: mountTracking },
   environments: { title: 'Promotion rules', href: '#/settings/environments/rules', mount: mountRules },
   roles: { title: 'Roles', mount: mountRoles },
   tokens: { title: 'Tokens', everyone: true, mount: mountTokens },
@@ -32,14 +37,16 @@ registerScreen({
   roles: MANAGERS,
   mount(el, ctx) {
     const manager = MANAGERS.includes(viewerRole());
-    const allowed = Object.keys(PARTS).filter((k) => manager || PARTS[k]!.everyone);
+    const uses = (k: string) => !PARTS[k]!.head || !!config().head;
+    const allowed = Object.keys(PARTS).filter((k) => uses(k) && (manager || PARTS[k]!.everyone));
     const asked = ctx.args[0] ?? '';
     const part = PARTS[asked] ? asked : allowed[0]!;
     el.classList.add('ms-site-settings');
     // a link opened by someone whose role can't change these says so plainly
     if (!allowed.includes(part)) {
       ctx.setTitle('Not available · Site settings');
-      const p = Object.assign(document.createElement('p'), { className: 'ms-locks__note', textContent: 'Not available to you: only an owner or an administrator sets these. Your own alerts are in My alerts, and your tokens (command line and AI assistant) in Tokens (your menu).' });
+      const unused = PARTS[asked] && !uses(asked) && manager;
+      const p = Object.assign(document.createElement('p'), { className: 'ms-locks__note', textContent: unused ? 'Not available: this site does not use these settings. A developer turns them on with “head” in markstage.config.' : 'Not available to you: only an owner or an administrator sets these. Your own alerts are in My alerts, and your tokens (command line and AI assistant) in Tokens (your menu).' });
       el.replaceChildren(p);
       return { destroy: () => el.replaceChildren() };
     }

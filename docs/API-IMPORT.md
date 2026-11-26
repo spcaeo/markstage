@@ -96,9 +96,9 @@ Editors and up.
 
 | Route | What |
 |---|---|
-| `POST import/site` (multipart) | An export: `file`, `source` (`wordpress` or `ghost`), `siteUrl` (Ghost: the old site's address), `mapping` (JSON, optional) -> `201 {run, plan}` |
-| `POST import/site` (JSON) | An API: `{source: 'wordpress', url, user?, password?}`, `{source: 'ghost', url, key}` or `{source: 'prismic', repo, token?, siteUrl?, routes?, fields?, endpoint?}`, each with `mapping?` -> `201 {run, plan}` |
-| `POST import/:rid/replan` | `{mapping}`: the same source planned again (by its maker, while it is planned) -> `201 {run, plan}`; the old run becomes `replaced` |
+| `POST import/site` (multipart) | An export: `file`, `source` (`wordpress` or `ghost`), `siteUrl` (Ghost: the old site's address), `mapping` (JSON, optional), `publicUrl`, `rules` (JSON) -> `201 {run, plan}` |
+| `POST import/site` (JSON) | An API: `{source: 'wordpress', url, user?, password?}`, `{source: 'ghost', url, key}` or `{source: 'prismic', repo, token?, siteUrl?, routes?, fields?, endpoint?}`, each with `mapping?`, `publicUrl?` (the address readers use, as `mapping.publicUrl`) and `rules?` (converter rules, docs/IMPORT.md "Converter rules") -> `201 {run, plan}` |
+| `POST import/:rid/replan` | `{mapping, rules?}`: the same source planned again (by its maker, while it is planned), with the same converter rules unless new ones are given -> `201 {run, plan}`; the old run becomes `replaced` |
 
 `run.kind` is `site` and `run.product` the source. The plan (`plan`, also in `GET import/:rid`):
 
@@ -106,13 +106,15 @@ Editors and up.
 |---|---|
 | `product`, `from`, `name`, `site` | the source (`wordpress`, `ghost`, `prismic`), `file` or `api`, the file's or API's name, the old site's address and title |
 | `mapping` | the mapping in full, defaults filled in (docs/IMPORT.md "The mapping") |
-| `collections` | the site's collections with each one's default keys, for a screen to offer |
-| `counts` | `{types, entries, media, authors, redirects, ids, collisions, needsAlt, notConverted, embeds, published, left, unusedMedia, other}` |
+| `collections` | the site's collections with each one's default keys and whether it is MDX (`mdx`), for a screen to offer |
+| `types` | the kinds of content the source has: `[{type, label, hierarchical, count, collection}]` (WordPress: every public post type, custom ones too) |
+| `rules` | `{rules, components: {Name: count}}`: how many converter rules were given and the components they made, or `null` |
+| `counts` | `{types, entries, media, authors, redirects, ids, collisions, needsAlt, notConverted, embeds, published, left, outside, components, unusedMedia, other}` (`outside`: entries outside `mapping.only`) |
 | `items` | each post or page: `{sourceId, type, title, sourceStatus, collection, id, url, action, problem?, collision?, rules?, notes}` |
 | `media` | each picture or file: `{sourceId, url, action: fetch|reuse|skip, path?, problem?, alt}` (the first 2,000) |
 | `authors` | `{sourceId, slug, name, action: create|existing|none}` |
 | `redirects` | `[{from, to}]`, the paths for the site's redirects hook (the first 1,000) |
-| `review` | `[{kind, text, entry?, media?}]`: `alt`, `block`, `shortcode`, `card`, `slice`, `embed`, `html`, `image`, `link`, `file`, `collision`, `cover`, `seo`, `status`, `author` |
+| `review` | `[{kind, text, entry?, media?}]`: `alt`, `block`, `shortcode`, `card`, `slice`, `embed`, `html`, `image`, `link`, `file`, `collision`, `cover`, `seo`, `status`, `author`, `rule` (converter rules), `text` (text taken out), `source` (a list read as the public sees it) |
 | `hook`, `idsFile` | whether the site has a redirects hook; where the `?p=` / `?page_id=` / `?attachment_id=` links (and the paths, without a hook) are written |
 
 The run's job has the steps `media`, `authors`, `entries` and `redirects`. Its `result`: `{commits, entries, media,
@@ -122,8 +124,9 @@ accounts for everything the plan did: `entries` and `media` list every item of t
 with its `problem`), and `counts.left` and `counts.other` repeat the kinds the plan left out before any item was made.
 
 Errors: `422` with `field` for a wrong source, address, key or mapping key (`types.post`, `fields.posts.excerpt`,
-`onCollision`…); `422 source-refused` when the source did not let us in (the credential is never repeated);
+`onCollision`, `publicUrl`, `only`…), and `rules` for converter rules that are not right (the message names the place); `422 source-refused` when the source did not let us in (the credential is never repeated);
 `400 unsafe-url` for an address the guard refuses; `413 too-large` over 5,000 entries or files; `409 busy` while
 another upload is read.
 
-Tests: `import-wordpress.test.mjs`, `import-sources.test.mjs`, `import-cli.test.mjs`, `import-convert.test.mjs`.
+Tests: `import-wordpress.test.mjs`, `import-sources.test.mjs`, `import-cli.test.mjs`, `import-convert.test.mjs`,
+`import-wp-types.test.mjs`, `import-rules.test.mjs`.

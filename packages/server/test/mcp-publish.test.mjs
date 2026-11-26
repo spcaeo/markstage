@@ -94,6 +94,56 @@ describe('the MCP publish tool', () => {
     assert.deepEqual([call.ok, JSON.parse(call.detail).token], [1, 'Release bot']);
   });
 
+  test('get_job: a publish job read back, and a failed one gives its failed step and that step’s own words', async () => {
+    const r = await releaseWith('First paragraph, read back by the bot.', 'Bot job');
+    const out = await agent.tool('publish_release', { release: r.id, version: r.version });
+    assert.equal(out.ok, true, out.text);
+    await srv.app.jobs.idle();
+    const ok = await agent.tool('get_job', { job: out.data.job });
+    assert.equal(ok.ok, true, ok.text);
+    assert.deepEqual([ok.data.status, ok.data.failedStep, ok.data.failedOutput], ['succeeded', null, null]);
+    assert.ok(ok.data.steps.some((s) => s.name === 'commit' && s.status === 'succeeded'));
+    // a job that fails after its build, as an after-build check does: the step and its words come back
+    const user = srv.app.users.get(admin.user.id);
+    const failed = srv.app.jobs.enqueue({ kind: 'release', user, run: async (step) => {
+      await step('build', (log) => (log('built\n'), 0));
+      await step('check: Crawl checks of the whole build', (log) => (log('error: page.html: names old WordPress wp.example.com\n'), 1));
+    } });
+    await srv.app.jobs.idle();
+    const bad = await agent.tool('get_job', { job: failed });
+    assert.equal(bad.ok, true, bad.text);
+    assert.equal(bad.data.status, 'failed');
+    assert.equal(bad.data.failedStep, 'check: Crawl checks of the whole build');
+    assert.match(bad.data.failedOutput, /names old WordPress wp\.example\.com/);
+    assert.doesNotMatch(bad.data.failedOutput, /built/);
+    assert.equal(bad.data.steps.find((s) => s.status === 'failed').output, bad.data.failedOutput);
+    assert.equal(bad.data.steps.find((s) => s.name === 'build').output, undefined);
+    // a warned step (it did not stop the job, as the push after going live) carries its own words too
+    const warned = srv.app.jobs.enqueue({ kind: 'release', user, run: async (step) => {
+      await step('deploy', (log) => (log('deployed\n'), 0));
+      await step('push', (log) => (log('rejected: origin/live has commits this server does not have\n'), 1), { soft: true });
+    } });
+    await srv.app.jobs.idle();
+    const w = (await agent.tool('get_job', { job: warned })).data;
+    assert.deepEqual([w.status, w.failedStep], ['succeeded', null]);
+    assert.deepEqual(w.steps.map((s) => [s.name, s.status]), [['deploy', 'succeeded'], ['push', 'warned']]);
+    assert.match(w.steps[1].output, /has commits this server does not have/);
+    // wait: one call answers when the job ends, instead of asking again and again
+    const slow = srv.app.jobs.enqueue({ kind: 'release', user, run: async (step) => {
+      await step('build', async (log) => (await new Promise((ok) => setTimeout(ok, 1500)), log('built\n'), 0));
+    } });
+    assert.equal((await agent.tool('get_job', { job: slow })).data.status === 'succeeded', false, 'not done yet at once');
+    const t0 = Date.now();
+    const waited = (await agent.tool('get_job', { job: slow, wait: 10 })).data;
+    assert.equal(waited.status, 'succeeded');
+    assert.ok(Date.now() - t0 < 8000, 'answered when it ended, not after the whole wait');
+    const tooLong = await agent.tool('get_job', { job: slow, wait: 91 });
+    assert.equal(tooLong.ok, false);
+    assert.match(tooLong.text, /0 to 90|maximum|wait/);
+    // someone else's job, for a person below editor: refused in words
+    assert.equal((await agent.tool('get_job', { job: 'j_nope' })).ok, false);
+  });
+
   test('refused by a check: a blocking check fails on what it holds, nothing is written, the refusal is audited', async () => {
     const r = await releaseWith('First paragraph with FORBIDDEN-WORD in it.');
     const start = head();

@@ -59,6 +59,12 @@ export interface Mapping {
   onCollision: Collision;
   drafts: 'skip' | 'include';
   media: 'used' | 'all';
+  /** The address readers use (links on the WordPress host are rewritten to it), or null. */
+  publicUrl?: string | null;
+  /** One part of the site: only the entries under these paths. */
+  only?: string[];
+  /** How ids are made: from the slug, or from the whole path. */
+  ids?: 'slug' | 'path';
 }
 
 export interface Counts {

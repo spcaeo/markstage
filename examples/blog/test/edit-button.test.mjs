@@ -34,8 +34,8 @@ async function built(name, integrations) {
 
 test('the build: off is the same as no Markstage; on adds one inline script to each page and nothing else', { timeout: 180_000 }, async () => {
   const none = await built('none', []);
-  const off = await built('off', [markstage()]);
-  const on = await built('on', [markstage({ config: { ...blog, editButton: { cms: CMS } } })]);
+  const off = await built('off', [markstage({ head: false })]);
+  const on = await built('on', [markstage({ head: false, config: { ...blog, editButton: { cms: CMS } } })]);
   assert.deepEqual(Object.keys(off).sort(), Object.keys(none).sort());
   for (const f of Object.keys(none)) assert.ok(off[f].equals(none[f]), `${f} differs with Markstage and no editButton`);
 

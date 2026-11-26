@@ -179,6 +179,9 @@ describe('import from a web page, and media imports', () => {
     assert.deepEqual(site.hits.slice(hits).sort(), ['/logo.png', '/notes.txt']);
     assert.equal(fx.git('rev-list', '--count', `${head}..HEAD`).trim(), '1');
     assert.equal(fx.git('log', '-1', '--format=%s').trim(), 'Import 1 media file from the web');
+    // each picture keeps the address it came from
+    const logo = (await ed.get('/media')).json.items.find((m) => m.filename.startsWith('logo'));
+    assert.deepEqual((await ed.get(`/media/${logo.id}`)).json.credit, { provider: 'web', label: new URL(site.base).host, sourceUrl: `${site.base}/logo.png` });
     const author = await as(srv, 'contributor');
     assert.equal((await author.post('/media/import/urls', { urls, dry: true })).status, 403);
   });

@@ -97,11 +97,13 @@ export function withCspSources(policy, needs) {
   const dirs = parse(policy);
   if (!dirs.length) return '';
   const get = (n) => dirs.find(([name]) => name === n);
-  const add = (name, hashes, origins) => {
+  // a missing directive starts as a copy of the one browsers fall back to (frame-src: child-src, then default-src),
+  // so adding an origin never allows more than the page did before
+  const add = (name, hashes, origins, fallbacks = ['default-src']) => {
     if (!hashes.length && !origins.length) return;
     let d = get(name);
     if (!d) {
-      const fallback = get('default-src');
+      const fallback = fallbacks.map(get).find(Boolean);
       if (!fallback) return; // nothing restricts these: nothing to add
       d = [name, [...fallback[1]]];
       dirs.push(d);
@@ -112,6 +114,12 @@ export function withCspSources(policy, needs) {
     for (const s of [...(inlineOnly ? [] : hashes), ...origins]) if (!d[1].includes(s)) d[1].push(s);
   };
   add('script-src', needs?.script ?? [], needs?.scriptOrigins ?? []);
+  // a policy with script-src-elem checks <script> elements against it, not script-src
+  if (get('script-src-elem')) add('script-src-elem', needs?.script ?? [], needs?.scriptOrigins ?? []);
   add('style-src', needs?.style ?? [], needs?.styleOrigins ?? []);
+  // what a tracking tag talks to, loads in a frame or as a pixel (the head kit's loader, docs/HEAD-KIT.md)
+  add('connect-src', [], needs?.connectOrigins ?? []);
+  add('img-src', [], needs?.imgOrigins ?? []);
+  add('frame-src', [], needs?.frameOrigins ?? [], ['child-src', 'default-src']);
   return dirs.map(([n, s]) => [n, ...s].join(' ')).join('; ');
 }

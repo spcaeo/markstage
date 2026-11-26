@@ -266,7 +266,7 @@ export function createPlans(app, { ops, words, rules, deps = {} }) {
         await step('build', async (log) => {
           log(`$ ${build.join(' ')}   (in a work tree of ${short(p.merged_sha)})\n`);
           let out = '';
-          const { code, timedOut } = await runCommand(build, { cwd: wt.dir, env: { ...config.commands.env, MARKSTAGE_BUILD_TIME: nowIso(clock()) }, timeoutSeconds: config.commands.timeoutSeconds, onOutput: (s) => (log(s), (out = (out + s).slice(-4000))) });
+          const { code, timedOut } = await runCommand(build, { cwd: wt.dir, env: { ...config.commands.env, MARKSTAGE_BUILD_TIME: nowIso(clock()), MARKSTAGE_NO_TRACKING: '1' }, timeoutSeconds: config.commands.timeoutSeconds, onOutput: (s) => (log(s), (out = (out + s).slice(-4000))) });
           built = code === 0 && !timedOut;
           checks.push({ id: 'build', label: 'The site builds', blocking: true, status: built ? 'passed' : 'failed', words: built ? 'The merged site builds.' : `The build failed${timedOut ? ' (timed out)' : ''}: ${out.trim().split('\n').slice(-3).join(' ').slice(0, 300)}` });
           return 0;

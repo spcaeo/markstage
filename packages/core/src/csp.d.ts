@@ -4,5 +4,6 @@ export interface CspNeeds { script: string[]; style: string[]; scriptOrigins: st
 export function cspHash(text: string): string;
 /** What the inline code of an HTML text needs from the page's Content-Security-Policy. */
 export function cspHashes(html: string): CspNeeds;
-/** The policy with those added to script-src and style-src (never next to a bare 'unsafe-inline'). */
-export function withCspSources(policy: string, needs: Partial<CspNeeds>): string;
+/** The policy with those added to script-src and style-src (never next to a bare 'unsafe-inline'), and the extra origins to connect-src, img-src and frame-src. */
+export interface CspExtraOrigins { connectOrigins: string[]; imgOrigins: string[]; frameOrigins: string[] }
+export function withCspSources(policy: string, needs: Partial<CspNeeds & CspExtraOrigins>): string;

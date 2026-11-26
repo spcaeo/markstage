@@ -26,6 +26,7 @@ Tagline: Type it. Ship it. Writers edit with Notion-style blocks ("/" for any bl
 
 - [Writing with Markstage](https://spcaeo.github.io/markstage/docs/writing/): How writers use Markstage: open and start articles, add blocks, save and go live, use the Library, fix links, check SEO and bring back an older version.
 - [markstage.config: every key](https://spcaeo.github.io/markstage/docs/config/): Set up an Astro site for Markstage in one file: collections, page URLs, settings fields, frames, page types, topics, forms, media and the editor canvas.
+- [Markdown for AI tools, feeds and tracking](https://spcaeo.github.io/markstage/docs/head-kit/): What the head kit builds: a Markdown copy of every page, the OKF bundle, llms.txt, RSS feeds and analytics tags by ID, all set in Site settings.
 - [Deploying Markstage](https://spcaeo.github.io/markstage/docs/deploy/): Run the Markstage server next to your static site with Docker compose, or with systemd and nginx: data dir, config, the built editor, previews and backups.
 - [Several server processes on one data dir](https://spcaeo.github.io/markstage/docs/scaling/): Run several Markstage server processes on one data dir and one machine: what they share, how locks and limits hold across them, and what is still limited.
 - [Markstage with Docker](https://spcaeo.github.io/markstage/docs/docker/): Run the Markstage server image next to your site with one docker run or compose: what happens at start, folders, settings, secrets, updates and tests.

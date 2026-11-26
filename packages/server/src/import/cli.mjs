@@ -6,7 +6,8 @@
 //   import wordpress <export.xml> | --url <https://site> [--user <name>]
 //   import ghost <export.json> --site-url <https://site> | --url <https://site>
 //   import prismic --repo <name> [--site-url <https://site>] [--routes <routes.json>]
-//   and for all: [--mapping <mapping.json>] [--on-collision both|skip|replace] [--drafts skip|include] [--dry] --as <email>
+//   and for all: [--mapping <mapping.json>] [--rules <rules.json>] [--public-url <https://site>] [--only </path/,…>]
+//                [--on-collision both|skip|replace] [--drafts skip|include] [--dry] --as <email>
 import fs from 'node:fs';
 import path from 'node:path';
 import { can } from '../roles.mjs';
@@ -19,7 +20,9 @@ const USAGE = `Usage:
   markstage-server import ghost <export.json> --site-url <https://site> [options] --as <email>
   markstage-server import ghost --url <https://site> --key-file <file> [options] --as <email>
   markstage-server import prismic --repo <name> [--token-file <file>] [--site-url <https://site>] [--routes <file.json>] [options] --as <email>
-Options: --mapping <file.json>  --on-collision both|skip|replace  --drafts skip|include  --dry (plan only, nothing written)
+Options: --mapping <file.json>  --rules <file.json> (converter rules)  --public-url <https://www.example.com>
+  --only </services/,/about/> (only these parts of the site)  --on-collision both|skip|replace  --drafts skip|include
+  --dry (plan only, nothing written)
 A password, key or token comes from its file or from MARKSTAGE_IMPORT_SECRET, never from the command line.`;
 
 const value = (args, flag) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : undefined);
@@ -44,7 +47,7 @@ function secretFrom(args, flag, env) {
 export function planLines(plan) {
   const c = plan.counts;
   const n = (o, k) => o?.[k] ?? 0;
-  const types = Object.entries(c.types).map(([t, k]) => plural(k, t)).join(', ');
+  const types = (plan.types?.length ? plan.types.filter((t) => t.count).map((t) => [t.type, t.count]) : Object.entries(c.types)).map(([t, k]) => plural(k, t)).join(', ');
   const entries = Object.values(c.entries).reduce((a, b) => a + b, 0);
   const lines = [
     `${plan.name}: ${types || 'nothing'} in ${productName(plan.product)}.`,
@@ -58,6 +61,12 @@ export function planLines(plan) {
   if (c.notConverted) lines.push(`${plural(c.notConverted, 'block')} we could not convert (each is an “Import note:” in its text).`);
   if (c.published) lines.push(`${plural(c.published, 'published entry', 'published entries')} come in as drafts: publish them when they are checked.`);
   for (const [t, k] of Object.entries(c.left ?? {})) lines.push(`${plural(k, t)} left out: no collection is chosen for them.`);
+  if (c.outside) lines.push(`${plural(c.outside, 'entry', 'entries')} left out: outside ${plan.mapping.only.join(', ')}.`);
+  const comps = Object.entries(c.components ?? {});
+  if (comps.length) lines.push(`Converter rules made ${comps.map(([n, k]) => `${k} ${n}`).join(', ')}.`);
+  const kinds = {};
+  for (const r of plan.review) kinds[r.kind] = (kinds[r.kind] ?? 0) + 1;
+  if (plan.review.length) lines.push(`${plural(plan.review.length, 'note')} to review: ${Object.entries(kinds).map(([k, n]) => `${n} ${k}`).join(', ')}.`);
   return lines;
 }
 
@@ -73,7 +82,10 @@ export async function importCommand(app, args, { out = console.log, env = proces
   const mapping = value(args, '--mapping') ? readJsonFile(value(args, '--mapping'), 'The mapping') : {};
   if (value(args, '--on-collision')) mapping.onCollision = value(args, '--on-collision');
   if (value(args, '--drafts')) mapping.drafts = value(args, '--drafts');
+  if (value(args, '--public-url')) mapping.publicUrl = value(args, '--public-url');
+  if (value(args, '--only')) mapping.only = value(args, '--only').split(',').map((x) => x.trim()).filter(Boolean);
   const input = { source: product, mapping, siteUrl: value(args, '--site-url') };
+  if (value(args, '--rules')) input.rules = readJsonFile(value(args, '--rules'), 'The converter rules');
   const file = target && !target.startsWith('--') ? path.resolve(target) : null;
   if (file) Object.assign(input, { data: fs.readFileSync(file), name: path.basename(file) });
   else if (product === 'wordpress') Object.assign(input, { url: value(args, '--url'), user: value(args, '--user'), password: value(args, '--user') ? secretFrom(args, '--password-file', env) : undefined });

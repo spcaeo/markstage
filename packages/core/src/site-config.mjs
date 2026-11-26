@@ -310,6 +310,22 @@ export const CONFIG_FILES = ['markstage.config.mjs', 'markstage.config.js', 'mar
 /** editor.goLive: one sentence on how a change saved in dev mode reaches the live site (after "Saved on this
  *  computer, not live yet."). */
 export const GO_LIVE = 'It goes live when the change is committed and the site is built and deployed, or published from the Markstage server.';
+// The head kit (docs/HEAD-KIT.md): `file` is the JSON the editor's Site settings write (Search & AI, Tracking), inside
+// the site; `main` the simple selector of each page's main content for its Markdown copy; `transform` a module whose
+// default export (markdown, {path, lang}) => markdown runs on every Markdown output (a site's own spelling, say).
+// null when the site does not use it, so a build adds nothing.
+const MAIN_SELECTOR = /^[a-z][a-z0-9-]*(?:[#.][A-Za-z0-9_-]+|\[[A-Za-z0-9_:-]+(?:="[^"\]]*")?\])*$|^(?:[#.][A-Za-z0-9_-]+|\[[A-Za-z0-9_:-]+(?:="[^"\]]*")?\])+$/;
+function headOf(raw, root, fail) {
+  if (raw === undefined || raw === null || raw === false) return null;
+  if (typeof raw !== 'object' || Array.isArray(raw)) fail('head must be an object (or left out).');
+  const file = raw.file ?? 'src/site/head.json';
+  if (typeof file !== 'string' || path.isAbsolute(file) || file.split(/[\\/]/).includes('..') || !file.endsWith('.json')) fail('head.file must be a .json path inside the site, such as src/site/head.json.');
+  const main = raw.main ?? 'main';
+  if (typeof main !== 'string' || !MAIN_SELECTOR.test(main)) fail('head.main is one simple selector: a tag, #id, .class or [attr="value"], or a tag with those (main, main#content, [data-content]).');
+  if (raw.transform !== undefined && (typeof raw.transform !== 'string' || !raw.transform)) fail('head.transform must be a path to a module.');
+  return { file, absFile: path.resolve(root, file), main, transform: raw.transform ? path.resolve(root, raw.transform) : null };
+}
+
 function goLiveOf(v) {
   if (v === undefined || v === null) return GO_LIVE;
   if (typeof v !== 'string' || !v.trim() || v.length > 300) fail('editor.goLive must be one sentence (at most 300 characters) on how a change goes live.');
@@ -418,6 +434,7 @@ export function normalizeConfig(raw, root, { site = null } = {}) {
     pageTypes,
     topics: topics && { ...topics, absDir: path.resolve(root, topics.dir) },
     editButton: editButtonOf(raw.editButton, fail),
+    head: headOf(raw.head, root, fail),
     // author files and the author page (authors.mjs); null when the site keeps none
     authors: authors && { ...authors, absDir: path.resolve(root, authors.dir) },
     // read by the server, which checks them itself (docs/API.md: schema for JSON entries, redirects on a move)
@@ -497,6 +514,8 @@ export function clientConfig(cfg) {
     ...topicsClientConfig(cfg),
     // a moved entry's old address redirects (the site's redirects hook; the server runs it)
     redirects: !!cfg.redirects,
+    // the head kit's settings file (Site settings → Search & AI, Tracking); null when the site does not use it
+    head: cfg.head ? { file: cfg.head.file } : null,
     // the spelling modules are functions: the editor's client module imports them (hasSpelling marks which)
     locales: cfg.locales && {
       list: cfg.locales.list.map(({ spelling, ...l }) => ({ ...l, hasSpelling: spelling !== null })),

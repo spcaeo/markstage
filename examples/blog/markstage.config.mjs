@@ -6,6 +6,8 @@ import { defineConfig } from '@markstage/astro';
 
 export default defineConfig({
   siteName: 'Example blog',
+  // the address the head kit writes its links with (also `site` in astro.config.mjs, which a build that skips that file lacks)
+  siteUrl: 'https://blog.example.com',
   collections: [
     {
       id: 'posts',
@@ -85,6 +87,8 @@ export default defineConfig({
   // covers are plain files served as they are (/uploads/…)
   media: { dir: 'public/uploads' },
   compat: { collection: 'posts' },
+  // the head kit (docs/HEAD-KIT.md): Markdown copies, the OKF bundle and llms.txt for AI tools, set in src/site/head.json
+  head: {},
   editor: {
     css: ['./src/styles/blog.css'],
     // shell: the canvas is drawn inside the post's own page (its header, widths, frame), docs/CANVAS-FIDELITY.md

@@ -394,7 +394,9 @@ Only what the code has today, each with its own doc.
   to public HTTPS addresses, never with a page's text or a person's email
   ([docs/API-WEBHOOKS.md](docs/API-WEBHOOKS.md)).
 - **AI agents (MCP).** A Model Context Protocol endpoint with read tools and, for a draft token, `create_draft`,
-  `update_entry` and `add_to_release`; the relay `markstage mcp` connects a local client
+  `update_entry`, `edit_entry` (a small change sent as find and replace, not the whole file), `add_to_release` and
+  `add_image` (a picture with alt text, through the editor's own upload); the
+  relay `markstage mcp` connects a local client
   ([docs/API-MCP.md](docs/API-MCP.md)).
 - **AI suggestions.** Alt text, search titles and descriptions, a promotion plan's summary and translation drafts from
   Anthropic's Messages API, with your own key in the server's environment; a suggestion never saves itself
@@ -620,7 +622,7 @@ allows, where the site's checks and publish rules decide as they do for a person
 and Import from WordPress, Ghost and Prismic: posts, pages, media, authors and redirects, with a dry run first
 ([docs/IMPORT.md](docs/IMPORT.md)).
 
-Shipped since 0.4.0, on main:
+Shipped in 0.5.0:
 
 - **AI link and SEO suggestions.** Suggest links with AI picks pages of the site from its link index and the words to
   link, each checked on the server before a writer sees it; Suggest a fix in the SEO check offers a fix for a long or

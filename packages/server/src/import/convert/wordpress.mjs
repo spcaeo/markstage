@@ -1,11 +1,12 @@
 // A WordPress site as a bundle (convert/bundle.mjs), from either of its two doors:
 //   - a WXR export (Tools → Export, "All content"): posts, pages and other post types, attachments, authors,
 //     categories and tags, postmeta (featured image, the alt text of each picture, Yoast and Rank Math fields);
-//   - the REST API's answers (/wp-json/wp/v2: posts, pages, media, users, categories, tags), read by
-//     import/site/sources.mjs.
+//   - the REST API's answers (/wp-json/wp/v2: every public post type, media, users, categories, tags; an SEO
+//     plugin's head per page), read by import/site/wp-api.mjs.
 // Each post's content goes through wp-content.mjs (blocks, the classic editor, shortcodes) into plain HTML. Old
 // addresses kept for the redirects: the permalink, ?p=<id> (?page_id=<id> for a page), an attachment's page and
-// ?attachment_id=<id>, an author's archive. Pure.
+// ?attachment_id=<id>, an author's archive. Every post type that is content comes in (custom ones too, with their
+// ACF fields); a hierarchical one keeps its parent's path. Pure.
 import { decodeEntities, hostsOf, isoOf, plainText, seoText } from './bundle.mjs';
 import { wpContentToHtml } from './wp-content.mjs';
 import { attr, closeOf, elements, field } from './xml.mjs';
@@ -13,7 +14,10 @@ import { attr, closeOf, elements, field } from './xml.mjs';
 // post types that are WordPress's own machinery, not content
 const MACHINERY = /^(?:attachment|revision|nav_menu_item|custom_css|customize_changeset|oembed_cache|user_request|wp_block|wp_template|wp_template_part|wp_global_styles|wp_navigation|wp_font_family|wp_font_face|wpcf7_contact_form|feedback|acf-field|acf-field-group|elementor_library|jp_[\w-]+|wp_[\w-]+)$/;
 const STATUS = { publish: 'published', future: 'scheduled', draft: 'draft', pending: 'draft', private: 'private' };
-const SEO_KEYS = { title: ['_yoast_wpseo_title', 'rank_math_title'], description: ['_yoast_wpseo_metadesc', 'rank_math_description'] };
+const SEO_KEYS = { title: ['_yoast_wpseo_title', 'rank_math_title'], description: ['_yoast_wpseo_metadesc', 'rank_math_description'], canonical: ['_yoast_wpseo_canonical', 'rank_math_canonical_url'], image: ['_yoast_wpseo_opengraph-image', 'rank_math_facebook_image'] };
+const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
+/** WordPress post types that are its machinery, not content (menus, revisions, templates, forms, field groups). */
+export const isMachinery = (type) => MACHINERY.test(String(type ?? ''));
 
 /** A path from a full address (with its query), or null. */
 function pathOf(url) {
@@ -25,11 +29,34 @@ function pathOf(url) {
   }
 }
 
-/** The SEO title and description of a post from its meta (Yoast first, then Rank Math), variables filled in. */
-function seoOf(meta, { title, site, excerpt }) {
+/**
+ * The SEO fields of a post: the head the SEO plugin draws for it (`head`, Rank Math's getHead: what readers and
+ * search engines get), else its meta (Yoast first, then Rank Math), variables filled in. {title, description,
+ * robots?, image?, canonical?} or null.
+ */
+function seoOf(meta, { title, site, excerpt }, head = null) {
   const pick = (keys) => keys.map((k) => meta[k]).find((v) => typeof v === 'string' && v.trim());
   const out = { title: seoText(pick(SEO_KEYS.title), { title, site, excerpt }), description: seoText(pick(SEO_KEYS.description), { title, site, excerpt }) };
-  return out.title || out.description ? out : null;
+  const canonical = pick(SEO_KEYS.canonical)?.trim();
+  const image = pick(SEO_KEYS.image)?.trim();
+  if (canonical) out.canonical = canonical;
+  if (image) out.image = image;
+  if (head) for (const k of ['title', 'description', 'robots', 'image', 'canonical']) if (head[k]) out[k] = head[k];
+  for (const k of Object.keys(out)) if (!out[k]) delete out[k];
+  return Object.keys(out).length ? { title: out.title ?? null, description: out.description ?? null, ...out } : null;
+}
+
+/** The ACF fields of an export's post: a meta key whose "_<key>" twin names an ACF field (field_…). */
+function acfOfMeta(meta) {
+  const out = {};
+  for (const [k, v] of Object.entries(meta)) if (!k.startsWith('_') && /^field_[0-9a-f]+$/i.test(String(meta[`_${k}`] ?? ''))) out[k] = v;
+  return Object.keys(out).length ? out : null;
+}
+
+/** The path of a page address, or null (a ?p= link, another kind of address). */
+function prettyPath(link) {
+  const p = link ? pathOf(link) : null;
+  return p && !p.includes('?') ? p : null;
 }
 
 /** The item's old addresses: its permalink (when it has a real one) and its id link. */
@@ -43,9 +70,30 @@ function oldUrlsOf({ link, id, type, status }) {
 
 /**
  * Turn the read posts into bundle items. `posts`: [{id, type, status, title, slug, date, updated, author, tags,
- * categories, excerpt, content, link, thumbnail, meta, parent}], `attachments` by id.
+ * categories, excerpt, content, link, thumbnail, meta, parent, acf?, head?, headProblem?, template?}], `attachments`
+ * by id. Each item's `path` is its address on the site: its permalink, else (a draft) its permalink template's or its
+ * parent's path with its slug.
  */
 function itemsOf(posts, { attachments, site }) {
+  const sid = (p) => `${p.type === 'page' ? 'page' : 'post'}-${p.id}`;
+  const byId = new Map(posts.map((p) => [String(p.id), p]));
+  const pathOfPost = (p, seen = new Set()) => {
+    const own = p.status === 'publish' ? prettyPath(p.link) : null;
+    if (own) return own;
+    const slug = String(p.slug || p.generatedSlug || '').trim();
+    if (!slug) return null;
+    if (p.template && /%(?:postname|pagename|[a-z_-]+)%/.test(p.template)) {
+      const t = prettyPath(p.template.replace(/%(?:postname|pagename|[a-z_-]+)%/, encodeURIComponent(slug)));
+      if (t && !t.includes('%')) return t;
+    }
+    const parent = p.parent && byId.get(String(p.parent));
+    if (parent && !seen.has(parent)) {
+      seen.add(p);
+      const up = pathOfPost(parent, seen);
+      if (up) return `${up.replace(/\/?$/, '/')}${encodeURIComponent(slug)}/`;
+    }
+    return null;
+  };
   const byParent = new Map();
   for (const a of attachments.values()) {
     if (!a.parent) continue;
@@ -57,8 +105,10 @@ function itemsOf(posts, { attachments, site }) {
     const excerpt = plainText(p.excerpt);
     const title = decodeEntities(p.title).trim();
     const cover = p.thumbnail && attachments.get(String(p.thumbnail));
+    const notes = [...conv.notes];
+    if (p.headProblem) notes.push({ kind: 'seo', text: `Its SEO head could not be read from WordPress (${p.headProblem}); its search title and description come from its own fields.` });
     return {
-      sourceId: `${p.type === 'page' ? 'page' : 'post'}-${p.id}`,
+      sourceId: sid(p),
       type: p.type,
       status: STATUS[p.status] ?? 'draft',
       title,
@@ -72,10 +122,12 @@ function itemsOf(posts, { attachments, site }) {
       html: conv.html,
       markdown: [],
       cover: cover ? { sourceId: cover.sourceId, url: cover.url, alt: cover.alt } : null,
-      seo: seoOf(p.meta, { title, site: site.title, excerpt }),
+      seo: seoOf(p.meta, { title, site: site.title, excerpt }, p.head ?? null),
       oldUrls: oldUrlsOf(p),
-      notes: conv.notes,
-      parent: p.parent ? `page-${p.parent}` : null,
+      path: pathOfPost(p),
+      notes,
+      parent: p.parent ? (byId.has(String(p.parent)) ? sid(byId.get(String(p.parent))) : `${p.type === 'page' ? 'page' : 'post'}-${p.parent}`) : null,
+      acf: isObj(p.acf) ? p.acf : acfOfMeta(p.meta ?? {}),
     };
   });
 }
@@ -158,17 +210,31 @@ export function readWxr(xml) {
   for (const login of new Set(posts.map((p) => p.author).filter(Boolean))) {
     if (!known.has(login)) authors.push({ sourceId: `author-${login}`, slug: login, name: login, bio: null, website: null, oldUrls: [`/author/${login}/`] });
   }
-  return { kind: 'wordpress', site, items: itemsOf(posts, { attachments, site }), media: mediaOf(attachments), authors, left: leftOf(left) };
+  const items = itemsOf(posts, { attachments, site });
+  return { kind: 'wordpress', site, items, media: mediaOf(attachments), authors, left: leftOf(left), types: typesOf(items) };
+}
+
+/** The kinds of content a bundle has: [{type, label, hierarchical, count}], from the REST API's types when read. */
+function typesOf(items, known = []) {
+  const out = new Map();
+  for (const t of known) out.set(t.slug, { type: t.slug, label: decodeEntities(t.name ?? t.slug), hierarchical: Boolean(t.hierarchical), count: 0 });
+  for (const i of items) {
+    if (!out.has(i.type)) out.set(i.type, { type: i.type, label: i.type === 'post' ? 'Posts' : i.type === 'page' ? 'Pages' : i.type, hierarchical: i.type === 'page' || Boolean(i.parent), count: 0 });
+    out.get(i.type).count++;
+  }
+  return [...out.values()];
 }
 
 const rendered = (v) => (v && typeof v === 'object' ? (typeof v.raw === 'string' ? v.raw : v.rendered ?? '') : String(v ?? ''));
 
 /**
- * The REST API's answers as a bundle: {site: {url, name}, posts, pages, media, users, categories, tags} (the lists
- * as WordPress sends them; with an application password they are the `context=edit` forms, with drafts and the
- * blocks' own text). Yoast's yoast_head_json and Rank Math's fields in `meta` give the SEO title and description.
+ * The REST API's answers as a bundle: {site: {url, name}, posts, pages, entries (every other public type), types,
+ * media, users, categories, tags} (the lists as WordPress sends them; with an application password they are the
+ * `context=edit` forms, with drafts and the blocks' own text). An entry's `rankMathHead` (read by wp-api.mjs) gives
+ * its SEO fields as readers get them; else Yoast's yoast_head_json and Rank Math's fields in `meta`. ACF fields come
+ * from each entry's `acf`.
  */
-export function fromRest({ site: s, posts = [], pages = [], media = [], users = [], categories = [], tags = [] }) {
+export function fromRest({ site: s, posts = [], pages = [], entries = [], types = [], media = [], users = [], categories = [], tags = [] }) {
   const url = String(s?.url ?? '').replace(/\/+$/, '');
   const site = { url, hosts: hostsOf(url, s?.home ?? ''), title: decodeEntities(s?.name ?? '').trim() };
   const cat = new Map(categories.map((c) => [c.id, decodeEntities(c.name)]));
@@ -177,7 +243,8 @@ export function fromRest({ site: s, posts = [], pages = [], media = [], users = 
   const attachments = new Map(
     media.map((m) => [String(m.id), { id: String(m.id), sourceId: `att-${m.id}`, url: m.source_url ?? '', alt: String(m.alt_text ?? '').trim(), title: plainText(rendered(m.title)), caption: plainText(rendered(m.caption)), link: m.link ?? '', parent: m.post ? String(m.post) : null }]),
   );
-  const list = [...posts, ...pages].filter((p) => p && (p.type === 'post' || p.type === 'page' || !MACHINERY.test(p.type ?? '')) && Object.hasOwn(STATUS, p.status));
+  const seen = new Set();
+  const list = [...posts, ...pages, ...entries].filter((p) => p && (p.type === 'post' || p.type === 'page' || !MACHINERY.test(p.type ?? '')) && Object.hasOwn(STATUS, p.status) && !seen.has(p.id) && seen.add(p.id));
   const raw = list.map((p) => {
     const meta = { ...(p.meta && typeof p.meta === 'object' && !Array.isArray(p.meta) ? p.meta : {}) };
     if (p.yoast_head_json) {
@@ -201,8 +268,14 @@ export function fromRest({ site: s, posts = [], pages = [], media = [], users = 
       thumbnail: p.featured_media ? String(p.featured_media) : null,
       meta,
       parent: p.parent ? String(p.parent) : null,
+      acf: isObj(p.acf) ? p.acf : null,
+      head: p.rankMathHead ?? null,
+      headProblem: p.rankMathProblem ?? null,
+      template: typeof p.permalink_template === 'string' ? p.permalink_template : null,
+      generatedSlug: typeof p.generated_slug === 'string' ? p.generated_slug : null,
     };
   });
   const authors = users.map((u) => ({ sourceId: `author-${u.slug}`, slug: u.slug, name: decodeEntities(u.name ?? u.slug).trim(), bio: plainText(u.description ?? '') || null, website: /^https?:\/\//.test(u.url ?? '') ? u.url : null, oldUrls: [`/author/${u.slug}/`] }));
-  return { kind: 'wordpress', site, items: itemsOf(raw, { attachments, site }), media: mediaOf(attachments), authors, left: {} };
+  const items = itemsOf(raw, { attachments, site });
+  return { kind: 'wordpress', site, items, media: mediaOf(attachments), authors, left: {}, types: typesOf(items, types) };
 }
